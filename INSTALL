@@ -1,0 +1,15 @@
+
+
+    Prerequisites
+
+* libcurl >= 7.18.0
+* libpcre >= 7.8.0
+
+
+    Installation
+
+./configure && make install
+
+"make dox" generates the C API documentation using doxygen.
+
+

@@ -1,0 +1,23 @@
+0.1.0
+-----
+
+0.1.1
+-----
+* quvi(1) manual page
+    - in pod markup language
+* libquvi(3) manual page (short overview on how to use the library)
+    - ditto
+
+0.1.2
+-----
+* embed link to video page link conversions
+* dailymotion.c
+* ehrensenf.c
+* spiegel.c
+* "make check"
+
+0.2?.x
+-----
+* bindings for other languages (swig?)
+
+
