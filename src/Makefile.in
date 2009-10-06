@@ -35,7 +35,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-bin_PROGRAMS = quvi$(EXEEXT)
+@ENABLE_EXE_TRUE@bin_PROGRAMS = quvi$(EXEEXT)
 subdir = src
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -51,14 +51,16 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am__objects_1 = quvi-quvi.$(OBJEXT) quvi-cmdline.$(OBJEXT)
+am__quvi_SOURCES_DIST = quvi.c cmdline.c cmdline.h
+@ENABLE_EXE_TRUE@am__objects_1 = quvi-quvi.$(OBJEXT) \
+@ENABLE_EXE_TRUE@	quvi-cmdline.$(OBJEXT)
 am__objects_2 =
-am_quvi_OBJECTS = $(am__objects_1) $(am__objects_2)
+@ENABLE_EXE_TRUE@am_quvi_OBJECTS = $(am__objects_1) $(am__objects_2)
 quvi_OBJECTS = $(am_quvi_OBJECTS)
 am__DEPENDENCIES_1 =
-quvi_DEPENDENCIES = $(top_builddir)/lib/libquvi.la \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+@ENABLE_EXE_TRUE@quvi_DEPENDENCIES = $(top_builddir)/lib/libquvi.la \
+@ENABLE_EXE_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+@ENABLE_EXE_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 quvi_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(quvi_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
@@ -76,7 +78,7 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(quvi_SOURCES)
-DIST_SOURCES = $(quvi_SOURCES)
+DIST_SOURCES = $(am__quvi_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -214,30 +216,30 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = \
-    makecmdline \
-    cmdline.ggo \
-    README
+@ENABLE_EXE_TRUE@EXTRA_DIST = \
+@ENABLE_EXE_TRUE@    makecmdline \
+@ENABLE_EXE_TRUE@    cmdline.ggo \
+@ENABLE_EXE_TRUE@    README
 
-src = \
-    quvi.c \
-    cmdline.c
+@ENABLE_EXE_TRUE@src = \
+@ENABLE_EXE_TRUE@    quvi.c \
+@ENABLE_EXE_TRUE@    cmdline.c
 
-hdr = \
-    cmdline.h
+@ENABLE_EXE_TRUE@hdr = \
+@ENABLE_EXE_TRUE@    cmdline.h
 
-quvi_SOURCES = $(src) $(hdr)
-quvi_CFLAGS = \
-    -I$(top_srcdir)/include \
-    $(libcurl_CFLAGS) \
-    $(libpcre_CFLAGS)
+@ENABLE_EXE_TRUE@quvi_SOURCES = $(src) $(hdr)
+@ENABLE_EXE_TRUE@quvi_CFLAGS = \
+@ENABLE_EXE_TRUE@    -I$(top_srcdir)/include \
+@ENABLE_EXE_TRUE@    $(libcurl_CFLAGS) \
+@ENABLE_EXE_TRUE@    $(libpcre_CFLAGS)
 
-quvi_LDADD = \
-    $(top_builddir)/lib/libquvi.la \
-    $(libcurl_LIBS) \
-    $(libpcre_LIBS) \
-    $(LIBICONV) \
-    $(LTLIBICONV)
+@ENABLE_EXE_TRUE@quvi_LDADD = \
+@ENABLE_EXE_TRUE@    $(top_builddir)/lib/libquvi.la \
+@ENABLE_EXE_TRUE@    $(libcurl_LIBS) \
+@ENABLE_EXE_TRUE@    $(libpcre_LIBS) \
+@ENABLE_EXE_TRUE@    $(LIBICONV) \
+@ENABLE_EXE_TRUE@    $(LTLIBICONV)
 
 all: all-am
 

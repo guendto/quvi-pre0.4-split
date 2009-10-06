@@ -98,6 +98,14 @@ AC_CHECK_FUNCS([vasprintf], [
 ])
 AM_CONDITIONAL([NO_ASPRINTF], [test x"$have_asprintf" != "xyes"])
 
+# --enable-exe
+AC_ARG_ENABLE([exe],
+    [AS_HELP_STRING([--enable-exe],
+        [build quvi(1) executable @<:@default=yes@:>@])],
+    [],
+    [enable_exe=yes])
+AM_CONDITIONAL([ENABLE_EXE], [test x"$enable_exe" != "xno"])
+
 AC_CONFIG_FILES([
     Makefile
     include/Makefile

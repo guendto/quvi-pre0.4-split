@@ -1,3 +1,4 @@
+if ENABLE_EXE
 EXTRA_DIST = \
     makecmdline \
     cmdline.ggo \
@@ -24,5 +25,5 @@ quvi_LDADD =  \
     $(libpcre_LIBS) \
     $(LIBICONV) \
     $(LTLIBICONV)
-
+endif
 
