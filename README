@@ -1,4 +1,5 @@
-QuVi
+About
+-----
 
 Query video (quvi) library with C API for Youtube like websites.
 quvi is a spinoff library of the cclive project.
@@ -7,5 +8,22 @@ See src/quvi.c and examples/simple.c to get started. See also the
 INSTALL file for details on how to generate the C API documentation.
 
 Home: http://quvi.googlecode.com/
+
+
+Supported websites
+------------------
+
+* break.com
+* cctv.com
+* clipfish.de
+* evisor.tv
+* funnyhub.com
+* golem.de
+* video.google.com
+* liveleak.com
+* myubo.com
+* sevenload.com
+* vimeo.com
+* youtube.com
 
 
