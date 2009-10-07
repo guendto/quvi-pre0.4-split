@@ -11,5 +11,7 @@
 ./configure && make install
 
 "make dox" generates the C API documentation using doxygen.
+The current documentation is also available at:
+    http://quvi.googlecode.com/svn/docs/html/index.html
 
 
