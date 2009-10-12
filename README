@@ -2,7 +2,7 @@ About
 -----
 
 Query video is a spin-off library of the cclive project for
-parsing video download links from Youtube and similar websites.
+parsing video download links of Youtube and similar websites.
 
 quvi is a cross-platform library written in C. It has an easy
 to use C API.
