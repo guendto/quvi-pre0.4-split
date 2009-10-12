@@ -20,7 +20,7 @@
 _host_constants(google, "video.google.", "flv|mp4");
 
 _host_re(re_id,     "(?i)docid:'(.*?)'");
-_host_re(re_title,  "(?i)id=video-title>(.*?)</");
+_host_re(re_title,  "(?i)<title>(.*?)</");
 _host_re(re_lnk,    "(?i)videourl\\W+x3d(.*?)\\W+x26");
 _host_re(re_mp4,    "(?i)href=(.*?)=ck1");
 
