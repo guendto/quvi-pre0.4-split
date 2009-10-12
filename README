@@ -1,29 +1,48 @@
 About
 -----
 
-Query video (quvi) library with C API for Youtube like websites.
-quvi is a spinoff library of the cclive project.
+Query video is a spin-off library of the cclive project for
+parsing video download links from Youtube and similar websites.
 
-See src/quvi.c and examples/simple.c to get started. See also the
-INSTALL file for details on how to generate the C API documentation.
+quvi is a cross-platform library written in C. It has an easy
+to use C API.
 
 Home: http://quvi.googlecode.com/
+Repo: git://repo.or.cz/quvi.git
+Docs: http://quvi.googlecode.com/svn/docs/html/index.html
+
+
+Supported platforms
+-------------------
+
+  * Linux
+  * BSD
+
+w32 compilation is also possible. See the w32/ subdir in the
+repo for a mingw wrapper script.
 
 
 Supported websites
 ------------------
 
-* break.com
-* cctv.com
-* clipfish.de
-* evisor.tv
-* funnyhub.com
-* golem.de
-* video.google.com
-* liveleak.com
-* myubo.com
-* sevenload.com
-* vimeo.com
-* youtube.com
+  * break.com
+  * cctv.com
+  * clipfish.de
+  * evisor.tv
+  * funnyhub.com
+  * golem.de
+  * video.google.com
+  * liveleak.com
+  * myubo.com
+  * sevenload.com
+  * vimeo.com
+  * youtube.com
+
+
+Getting started
+---------------
+
+See src/quvi.c and examples/simple.c to get started. See also the
+INSTALL file for details on how to generate the C API documentation.
 
 
