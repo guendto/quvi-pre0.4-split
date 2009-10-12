@@ -2,13 +2,17 @@
 
     Prerequisites
 
-* libcurl >= 7.18.0
-* libpcre >= 7.8.0
+* libcurl   7.18.0+  <http://curl.haxx.se/>
+* libpcre   7.8.0+   <http://pcre.org/>
+* libiconv  1.12.0+  <http://www.gnu.org/software/libiconv/>
 
 
     Installation
 
 ./configure && make install
+
+See also ./configure --help. For example, --disable-exe disables compilation
+and installation of the quvi(1) executable.
 
 "make dox" generates the C API documentation using doxygen.
 The current documentation is also available at:
