@@ -18,8 +18,7 @@ Supported platforms
   * Linux
   * BSD
 
-w32 compilation is also possible. See the w32/ subdir in the
-repo for a mingw wrapper script.
+quvi should also compile for w32, see the w32/ subdir.
 
 
 Supported websites
