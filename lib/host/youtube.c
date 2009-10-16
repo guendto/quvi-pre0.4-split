@@ -52,8 +52,8 @@ handle_youtube(const char *url, _quvi_video_t video) {
         return (rc);
     }
 
-    /* fmap, ignore return code */
-    regexp_capture(
+    /* fmt_map */
+    rc = regexp_capture(
         video->quvi,
         content,
         re_fmap,
@@ -91,7 +91,7 @@ handle_youtube(const char *url, _quvi_video_t video) {
         * defaults to by leaving "&fmt=" from the video link.
         */
 
-        if (!strcmp(format, "best") && fmap)
+        if (rc == QUVI_OK && !strcmp(format, "best") && fmap)
             fmt = fmap;
         else {
             if (!strcmp(format, "fmt18") || !strcmp(format, "mp4"))
@@ -115,7 +115,8 @@ handle_youtube(const char *url, _quvi_video_t video) {
         }
     }
 
-    _free(fmap);
+    if (rc == QUVI_OK)
+        _free(fmap);
 
     return (QUVI_OK);
 }
