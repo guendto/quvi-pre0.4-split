@@ -32,6 +32,12 @@
 /* C99 header */
 #include <stdint.h>
 
+/** @enum QUVIversion Types for quvi_version() */
+typedef enum {
+QUVI_VERSION = 0x00,    /**< Version string only */
+QUVI_VERSION_LONG,      /**< Version string, build date and misc. features */
+} QUVIversion;
+
 /** @enum QUVIcode Return codes */
 typedef enum {
 /* Static */
@@ -292,12 +298,14 @@ char *quvi_strerror(quvi_t quvi, QUVIcode code);
 
 /** 
 * @brief Return libquvi version
+*
+* @param type Version type
 * 
 * @return Null-terminated string
 *
 * @warning Do not attempt to free the memory returned by this function
 */
-char *quvi_version(void);
+char *quvi_version(QUVIversion type);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

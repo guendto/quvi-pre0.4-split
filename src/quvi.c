@@ -72,7 +72,7 @@ static const char notice[] =
 static void
 version() {
     printf("quvi, version %s.\n%s\n",
-        quvi_version(), notice);
+        quvi_version(QUVI_VERSION_LONG), notice);
     exit (0);
 }
 

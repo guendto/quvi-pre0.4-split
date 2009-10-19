@@ -462,8 +462,9 @@ quvi_iter_host(char **domain, char **formats) {
 /* quvi_version */
 
 char *
-quvi_version(void) {
-    static const char version[] =
+quvi_version(QUVIversion type) {
+    static const char version[] = PACKAGE_VERSION;
+    static const char version_long[] =
     PACKAGE_VERSION
     " ("
 #ifdef BUILD_DATE
@@ -475,6 +476,8 @@ quvi_version(void) {
     " *iconv"
 #endif
     ;
+    if (type == QUVI_VERSION_LONG)
+        return ((char *)version_long);
     return ((char *)version);
 }
 
