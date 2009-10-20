@@ -109,7 +109,7 @@ regexp_capture(
     while ((dst = va_arg(ap, char **)) != 0
             && i < count)
     {
-        *dst = strdup(results[i]);
+        *dst = strdup(results[i++]);
     }
     va_end(ap);
 
