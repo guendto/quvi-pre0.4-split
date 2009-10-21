@@ -131,6 +131,7 @@ dump_error(quvi_t quvi, QUVIcode rc, opts_s opts) {
 }
 
 static const char *tests[] = {
+"http://www.spiegel.de/video/video-1012584.html",
 "http://vimeo.com/1485507",
 "http://en.sevenload.com/videos/IUL3gda-Funny-Football-Clips",
 "http://www.myubo.com/page/media_detail.html?movieid=1308f0fb-47c6-40c5-a6f9-1324dac12896",

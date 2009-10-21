@@ -15,25 +15,16 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef platform_h
-#define platform_h
+#include <ctype.h>
 
-#include "config.h"
+#include "platform.h"
 
-#include <stdarg.h>
-
-#ifndef HAVE_VASPRINTF
-int vasprintf(char **dst, const char *fmt, va_list ap);
-#endif
-
-#ifndef HAVE_ASPRINTF
-int asprintf(char **dst, const char *fmt, ...);
-#endif
-
-#ifndef HAVE_STRUPR
-char *strupr(char *src);
-#endif
-
-#endif
+char *
+strupr(char *s) {
+    char *r = s;
+    while (*s)
+        *(s++) = toupper(*s);
+    return (r);
+}
 
 

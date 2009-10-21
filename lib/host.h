@@ -48,6 +48,7 @@ _host(liveleak);
 _host(myubo);
 _host(sevenload);
 _host(vimeo);
+_host(spiegel);
 /* Add new ones below. */
 
 #undef _host

@@ -9,6 +9,10 @@ if NO_ASPRINTF
 src += vasprintf.c asprintf.c
 endif
 
+if NO_STRUPR
+src += strupr.c
+endif
+
 src_host = \
     host/break.c \
     host/cctv.c \
@@ -21,6 +25,7 @@ src_host = \
     host/myubo.c \
     host/sevenload.c \
     host/vimeo.c \
+    host/spiegel.c \
     host/youtube.c
 
 hdr = \
