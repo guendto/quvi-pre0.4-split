@@ -50,6 +50,9 @@ quvi_init(quvi_t *dst) {
         return (QUVI_CURLINIT);
     }
 
+    /* set defaults */
+    quvi_setopt(quvi, QUVIOPT_FORMAT, "flv");
+
     csetopt(CURLOPT_USERAGENT,      "Mozilla/5.0");
     csetopt(CURLOPT_FOLLOWLOCATION, 1L);
     csetopt(CURLOPT_NOBODY,         0L);
