@@ -58,26 +58,11 @@ match_fname(_quvi_video_t video,
     return (rc);
 }
 
-static QUVIcode
-match_best(_quvi_video_t video,
-           const char *config,
-           char **fname)
-{
-    QUVIcode rc;
-
-    /* TODO: go over each <filename> and capture "_(\d+)\."
-      from it, store matched filename temporarely (setvid?),
-      replace existing one if captured number is higher
-      than the last one */
-
-    return (rc);
-}
-
 /* handler */
 
 QUVIcode
 handle_spiegel(const char *url, _quvi_video_t video) {
-    char *content, *playlist_url, *playlist, *config_url, *config;
+    char *playlist_url, *playlist, *config_url, *config;
     char *format, *fname;
     QUVIcode rc;
 
