@@ -52,6 +52,9 @@ match_fname(_quvi_video_t video,
         "http://video.spiegel.de/flash/%s%s%s",
             prefix, strupr(format), suffix);
 
+    _free(prefix);
+    _free(suffix);
+
     return (rc);
 }
 
