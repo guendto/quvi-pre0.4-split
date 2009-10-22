@@ -27,6 +27,7 @@ src_host = \
     host/vimeo.c \
     host/spiegel.c \
     host/ehrensenf.c \
+    host/dailymotion.c \
     host/youtube.c
 
 hdr = \

@@ -90,22 +90,23 @@ struct handle_host_lookup_s {
 
 static const struct handle_host_lookup_s
 hosts[] = {
-    _host(youtube)
-    _host(break)
-    _host(cctv)
-    _host(evisor)
-    _host(clipfish)
-    _host(funnyhub)
-    _host(golem)
-    _host(google)
-    _host(liveleak)
-    _host(myubo)
-    _host(sevenload)
-    _host(vimeo)
-    _host(spiegel)
-    _host(ehrensenf)
-    /* Add new ones below. */
-    {NULL, NULL, NULL}
+_host(youtube)
+_host(break)
+_host(cctv)
+_host(evisor)
+_host(clipfish)
+_host(funnyhub)
+_host(golem)
+_host(google)
+_host(liveleak)
+_host(myubo)
+_host(sevenload)
+_host(vimeo)
+_host(spiegel)
+_host(ehrensenf)
+_host(dailymotion)
+/* Add new ones below. */
+{NULL, NULL, NULL}
 };
 
 #undef _host

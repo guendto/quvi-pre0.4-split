@@ -50,6 +50,7 @@ _host(sevenload);
 _host(vimeo);
 _host(spiegel);
 _host(ehrensenf);
+_host(dailymotion);
 /* Add new ones below. */
 
 #undef _host

@@ -1,5 +1,9 @@
 0.1.0
 -----
+*escape video links
+* host specific format checks
+  - host handlers should ignore any other formats
+  - discreetly default to "flv"
 
 0.1.1
 -----
