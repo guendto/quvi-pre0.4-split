@@ -22,9 +22,6 @@ _host_constants(spiegel, "spiegel.de", "vp6_64|vp6_576|vp6_928|h264_1400");
 _host_re(re_id,     "(?i)\\/video\\/video-(.*?)\\.");
 _host_re(re_title,  "(?i)<headline>(.*?)</");
 
-/* TODO: -f best by rate */
-/* TODO: default to vp6_64 if $fmt remains unmatched */
-
 static QUVIcode
 match_fname(_quvi_video_t video,
             const char *config,
