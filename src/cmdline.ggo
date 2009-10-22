@@ -19,6 +19,10 @@ option "no-verify"
     n "Do not verify video link"
     optional
 
+option "no-escape"
+    E "Do not escape video link"
+    optional
+
 option "test-all"
     a "Run built-in tests"
     optional

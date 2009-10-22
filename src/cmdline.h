@@ -43,6 +43,7 @@ struct gengetopt_args_info
   const char *quiet_help; /**< @brief Turn off all output help description.  */
   const char *debug_help; /**< @brief Turn on libcurl verbose mode help description.  */
   const char *no_verify_help; /**< @brief Do not verify video link help description.  */
+  const char *no_escape_help; /**< @brief Do not escape video link help description.  */
   const char *test_all_help; /**< @brief Run built-in tests help description.  */
   char * test_arg;	/**< @brief match regexp to a built-in test link.  */
   char * test_orig;	/**< @brief match regexp to a built-in test link original value given at command line.  */
@@ -67,6 +68,7 @@ struct gengetopt_args_info
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */
   unsigned int debug_given ;	/**< @brief Whether debug was given.  */
   unsigned int no_verify_given ;	/**< @brief Whether no-verify was given.  */
+  unsigned int no_escape_given ;	/**< @brief Whether no-escape was given.  */
   unsigned int test_all_given ;	/**< @brief Whether test-all was given.  */
   unsigned int test_given ;	/**< @brief Whether test was given.  */
   unsigned int dump_given ;	/**< @brief Whether dump was given.  */

@@ -53,6 +53,9 @@ strepl(const char *s, const char *what, const char *with);
 char *
 unescape(_quvi_t quvi, char *s);
 
+char *
+escape(_quvi_t quvi, char *s);
+
 #endif
 
 

@@ -218,6 +218,9 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
     if (!video->quvi->no_verify)
         rc = query_file_length(video); 
 
+    if (rc == QUVI_OK && !video->quvi->no_escape)
+        video->link = escape(video->quvi, video->link);
+
     return (rc);
 }
 
@@ -261,6 +264,7 @@ _setopt(_quvi_t quvi, QUVIoption opt, va_list arg) {
         quvi->status_func = 
             va_arg(arg, quvi_callback_status);
         break;
+    case QUVIOPT_NOESCAPE      : _seti(quvi->no_escape);
     default: return (QUVI_INVARG);
     }
 #undef _sets
