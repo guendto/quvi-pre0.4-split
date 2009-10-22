@@ -49,6 +49,7 @@ _host(myubo);
 _host(sevenload);
 _host(vimeo);
 _host(spiegel);
+_host(ehrensenf);
 /* Add new ones below. */
 
 #undef _host

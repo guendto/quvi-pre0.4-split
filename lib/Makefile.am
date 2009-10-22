@@ -26,6 +26,7 @@ src_host = \
     host/sevenload.c \
     host/vimeo.c \
     host/spiegel.c \
+    host/ehrensenf.c \
     host/youtube.c
 
 hdr = \

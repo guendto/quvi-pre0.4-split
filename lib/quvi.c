@@ -103,6 +103,7 @@ hosts[] = {
     _host(sevenload)
     _host(vimeo)
     _host(spiegel)
+    _host(ehrensenf)
     /* Add new ones below. */
     {NULL, NULL, NULL}
 };
