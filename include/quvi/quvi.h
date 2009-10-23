@@ -82,7 +82,6 @@ typedef enum {
 QUVIOPT_FORMAT = 0x00,  /**< Requested video file format */
 QUVIOPT_NOVERIFY,       /**< Do not verify video link */
 QUVIOPT_STATUSFUNCTION, /**< Callback function for status updates */
-QUVIOPT_NOESCAPE,       /**< Do not escape video link */
 } QUVIoption;
 
 /** @enum QUVIconst Misc. constants */

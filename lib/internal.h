@@ -50,7 +50,6 @@ struct _quvi_s {
     char *format;
     int no_verify;
     quvi_callback_status status_func;
-    int no_escape;
     void *curl;
     long httpcode;
     long curlcode;

@@ -257,9 +257,6 @@ init_quvi(opts_s opts) {
 
     quvi_setopt(quvi, QUVIOPT_STATUSFUNCTION, status_callback);
 
-    if (opts.no_escape_given)
-        quvi_setopt(quvi, QUVIOPT_NOESCAPE, 1L);
-
     /* We can use the quvi created cURL handle for our means. */
 
     quvi_getinfo(quvi, QUVII_CURL, &curl);

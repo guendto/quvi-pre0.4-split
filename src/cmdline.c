@@ -38,7 +38,6 @@ const char *gengetopt_args_info_help[] = {
   "  -q, --quiet                Turn off all output",
   "      --debug                Turn on libcurl verbose mode",
   "  -n, --no-verify            Do not verify video link",
-  "  -E, --no-escape            Do not escape video link",
   "  -a, --test-all             Run built-in tests",
   "  -t, --test=<regexp>        match regexp to a built-in test link",
   "  -d, --dump                 Dump video details when running tests",
@@ -81,7 +80,6 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->quiet_given = 0 ;
   args_info->debug_given = 0 ;
   args_info->no_verify_given = 0 ;
-  args_info->no_escape_given = 0 ;
   args_info->test_all_given = 0 ;
   args_info->test_given = 0 ;
   args_info->dump_given = 0 ;
@@ -119,14 +117,13 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->quiet_help = gengetopt_args_info_help[3] ;
   args_info->debug_help = gengetopt_args_info_help[4] ;
   args_info->no_verify_help = gengetopt_args_info_help[5] ;
-  args_info->no_escape_help = gengetopt_args_info_help[6] ;
-  args_info->test_all_help = gengetopt_args_info_help[7] ;
-  args_info->test_help = gengetopt_args_info_help[8] ;
-  args_info->dump_help = gengetopt_args_info_help[9] ;
-  args_info->agent_help = gengetopt_args_info_help[10] ;
-  args_info->proxy_help = gengetopt_args_info_help[11] ;
-  args_info->connect_timeout_help = gengetopt_args_info_help[12] ;
-  args_info->format_help = gengetopt_args_info_help[13] ;
+  args_info->test_all_help = gengetopt_args_info_help[6] ;
+  args_info->test_help = gengetopt_args_info_help[7] ;
+  args_info->dump_help = gengetopt_args_info_help[8] ;
+  args_info->agent_help = gengetopt_args_info_help[9] ;
+  args_info->proxy_help = gengetopt_args_info_help[10] ;
+  args_info->connect_timeout_help = gengetopt_args_info_help[11] ;
+  args_info->format_help = gengetopt_args_info_help[12] ;
   
 }
 
@@ -307,8 +304,6 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "debug", 0, 0 );
   if (args_info->no_verify_given)
     write_into_file(outfile, "no-verify", 0, 0 );
-  if (args_info->no_escape_given)
-    write_into_file(outfile, "no-escape", 0, 0 );
   if (args_info->test_all_given)
     write_into_file(outfile, "test-all", 0, 0 );
   if (args_info->test_given)
@@ -617,7 +612,6 @@ cmdline_parser_internal (
         { "quiet",	0, NULL, 'q' },
         { "debug",	0, NULL, 0 },
         { "no-verify",	0, NULL, 'n' },
-        { "no-escape",	0, NULL, 'E' },
         { "test-all",	0, NULL, 'a' },
         { "test",	1, NULL, 't' },
         { "dump",	0, NULL, 'd' },
@@ -628,7 +622,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hvqnEat:df:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hvqnat:df:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -671,18 +665,6 @@ cmdline_parser_internal (
               &(local_args_info.no_verify_given), optarg, 0, 0, ARG_NO,
               check_ambiguity, override, 0, 0,
               "no-verify", 'n',
-              additional_error))
-            goto failure;
-        
-          break;
-        case 'E':	/* Do not escape video link.  */
-        
-        
-          if (update_arg( 0 , 
-               0 , &(args_info->no_escape_given),
-              &(local_args_info.no_escape_given), optarg, 0, 0, ARG_NO,
-              check_ambiguity, override, 0, 0,
-              "no-escape", 'E',
               additional_error))
             goto failure;
         

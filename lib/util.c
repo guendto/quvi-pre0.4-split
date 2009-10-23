@@ -308,7 +308,7 @@ parse_page_common(
     return (rc);
 }
 
-char * /* note: frees src string */
+char *
 unescape(_quvi_t quvi, char *s) {
     char *tmp, *ret;
 
@@ -316,23 +316,6 @@ unescape(_quvi_t quvi, char *s) {
     assert(quvi->curl != 0);
 
     tmp = curl_easy_unescape(quvi->curl, s, 0, 0);
-    assert(tmp != 0);
-    ret = strdup(tmp);
-    curl_free(tmp);
-
-    free(s);
-
-    return (ret);
-}
-
-char * /* note: frees src string */
-escape(_quvi_t quvi, char *s) {
-    char *tmp, *ret;
-
-    assert(quvi != 0);
-    assert(quvi->curl != 0);
-
-    tmp = curl_easy_escape(quvi->curl, s, 0);
     assert(tmp != 0);
     ret = strdup(tmp);
     curl_free(tmp);
