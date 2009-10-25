@@ -115,7 +115,7 @@ static QUVIcode
 handle_url(const char *url, _quvi_video_t video) {
     int error_offset, pcre_code;
     register unsigned int i;
-    const char *error;
+    const char *pcre_errmsg;
     _quvi_t quvi;
     QUVIcode rc;
 
@@ -137,13 +137,13 @@ handle_url(const char *url, _quvi_video_t video) {
         re = pcre_compile(
             hosts[i].domain,
             PCRE_CASELESS,
-            &error,
+            &pcre_errmsg,
             &error_offset,
             NULL
         );
 
         if (!re) {
-            video->quvi->errmsg = strdup(error);
+            seterr(pcre_errmsg);
             return (QUVI_PCRE);
         }
 
