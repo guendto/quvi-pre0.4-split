@@ -53,6 +53,9 @@ strepl(const char *s, const char *what, const char *with);
 char *
 unescape(_quvi_t quvi, char *s);
 
+int
+is_format_supported(const char *fmt, const char *lst);
+
 #endif
 
 

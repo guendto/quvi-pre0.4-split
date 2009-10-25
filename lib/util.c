@@ -325,4 +325,48 @@ unescape(_quvi_t quvi, char *s) {
     return (ret);
 }
 
+int
+is_format_supported(const char *fmt, const char *lst) {
+    int pcre_code, error_offset;
+    const char *pcre_errmsg;
+    pcre *re;
+    char *m;
+
+    if (!strcmp(fmt, "best"))
+        return (1);
+
+    asprintf(&m, "\\b%s\\b", fmt);
+
+    re = pcre_compile(
+        m,
+        PCRE_CASELESS,
+        &pcre_errmsg,
+        &error_offset,
+        0
+    );
+
+    _free(m);
+
+    if (!re) {
+        /* Ignore errors. Return false (0), indicating
+         * the specified format was not in the list. */
+        return (0);
+    }
+
+    pcre_code = pcre_exec(
+        re,
+        0,
+        lst,
+        strlen(lst),
+        0,
+        0,
+        0,
+        0
+    );
+
+    pcre_free(re);
+
+    return (pcre_code >= 0);
+}
+
 

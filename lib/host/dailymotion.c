@@ -26,19 +26,23 @@ _host_re(re_paths,  "(?i)\"video\", \"(.*?)\"");
 
 static QUVIcode
 parse(const _quvi_video_t video, char *paths) {
+    static const char default_format[] = "spark";
     int best_width, best_flag;
-    char *s, *t, *format;
+    const char *format;
+    char *s, *t;
     QUVIcode rc;
 
     format = 
         !strcmp(video->quvi->format, "flv")
-        ? "spark"
-        : video->quvi->format;
+        ? default_format /* flv -> spark which is dmotion's default fmt */
+        : !is_format_supported(video->quvi->format, formats_dailymotion)
+          ? default_format /* -> spark if requested fmt unsupported */
+          : video->quvi->format;
 
     best_width = 0;
     best_flag  = !strcmp(format, "best");
 
-    s = paths; /* we're not gonna take, no-o, we're not gonna take it */
+    s = paths;
     t = strtok(s, "||");
 
     while (t) {

@@ -63,6 +63,7 @@ match_fname(_quvi_video_t video,
 QUVIcode
 handle_spiegel(const char *url, _quvi_video_t video) {
     char *playlist_url, *playlist, *config_url, *config;
+    static const char default_format[] = "vp6_64";
     char *format, *fname;
     QUVIcode rc;
 
@@ -129,12 +130,13 @@ handle_spiegel(const char *url, _quvi_video_t video) {
     /* link */
     format = strdup(
         !strcmp(video->quvi->format,"flv")
-        ? "vp6_64" /* same as "flv" */
-        : video->quvi->format
+        ? default_format /* flv -> vp6_64 which is spiegel's default fmt */
+        : !is_format_supported(video->quvi->format, formats_spiegel)
+          ? default_format /* -> vp6_64 if requested fmt unsupported */
+          : video->quvi->format
     );
 
-    /* Let's go ahead and make a bold assumption this
-    is their best. */
+    /* Let's go ahead and assume h264_1400 is their best format available. */
     if (!strcmp(format, "best"))
         format = strdup("h264_1400");
 
