@@ -1,7 +1,5 @@
 0.1.0
 -----
-* ptrdiff_t check
-  - if not found, use "typedef long ptrdiff_t"?
 
 0.1.1
 -----
@@ -15,6 +13,8 @@
 -----
 * embed link to video page link conversions
 * "make check"
+  - host specific (port from cclive)
+  - title (ascii, utf8)
 
 0.2?.x
 -----

@@ -20,10 +20,6 @@
 #include <stddef.h>
 #include <string.h>
 
-#ifndef HAVE_PTRDIFF_T
-#error Requires ptrdiff_t to compile.
-#endif
-
 char *
 strepl (const char *str, const char *old, const char *new) {
     size_t oldlen, count, retlen, newlen;
@@ -45,7 +41,11 @@ strepl (const char *str, const char *old, const char *new) {
         return 0;
 
     for (r=ret, p=str; (q=strstr(p,old)) != 0; p=q+oldlen) {
+#ifdef HAVE_PTRDIFF_T
         ptrdiff_t l = q-p;
+#else
+        long l = q-p;
+#endif
         memcpy(r,p,l);
         r += l;
         memcpy(r,new,newlen);
