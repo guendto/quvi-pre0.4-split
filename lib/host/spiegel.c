@@ -17,7 +17,7 @@
 
 #include "host.h"
 
-_host_constants(spiegel, "spiegel.de", "vp6_64|vp6_576|vp6_928|h264_1400");
+_host_constants(spiegel, "spiegel.de", "flv|vp6_576|vp6_928|h264_1400");
 
 _host_re(re_id,     "(?i)\\/video\\/video-(.*?)\\.");
 _host_re(re_title,  "(?i)<headline>(.*?)</");
