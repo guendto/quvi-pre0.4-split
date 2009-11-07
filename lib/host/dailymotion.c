@@ -18,7 +18,7 @@
 #include "host.h"
 
 _host_constants(dailymotion,
-    "dailymotion.com", "flv|spark-mini|vp6-hq|vp6-hd|vp6|h264");
+    "dailymotion.", "flv|spark-mini|vp6-hq|vp6-hd|vp6|h264");
 
 _host_re(re_id,     "(?i)video\\/(.*?)_");
 _host_re(re_title,  "(?i)<h1 class=\"dmco_title\">(.*?)</");
