@@ -44,7 +44,7 @@ const char *gengetopt_args_info_help[] = {
   "      --agent=<string>       Identify cclive as string to servers  \n                               (default=`Mozilla/5.0')",
   "      --proxy=<host[:port]>  Use specified proxy",
   "      --connect-timeout=<s>  Max seconds allowed connection to server take  \n                               (default=`30')",
-  "  -f, --format=<format_id>   Query video format  (possible values=\"flv\", \n                               \"best\", \"fmt17\", \"fmt18\", \"fmt22\", \n                               \"fmt34\", \"fmt35\", \"hq\", \"3gp\", \n                               \"spark-mini\", \"vp6-hq\", \"vp6-hd\", \"vp6\", \n                               \"h264\", \"hd\", \"mp4\", \"high\", \"ipod\", \n                               \"vp6_64\", \"vp6_576\", \"vp6_928\", \n                               \"h264_1400\" default=`flv')",
+  "  -f, --format=<format_id>   Query video format  (possible values=\"flv\", \n                               \"best\", \"fmt17\", \"fmt18\", \"fmt22\", \n                               \"fmt34\", \"fmt35\", \"hq\", \"3gp\", \n                               \"spark-mini\", \"vp6-hq\", \"vp6-hd\", \"vp6\", \n                               \"h264\", \"hd\", \"mp4\", \"high\", \"ipod\", \n                               \"vp6_576\", \"vp6_928\", \"h264_1400\" \n                               default=`flv')",
   "\nExaples:\n\n  quvi -a         # run all built-in tests\n  quvi URL        # test URL\n  quvi -d URL     # test URL and dump video details\n  quvi -t youtube # match 'youtube' to built-in links and test it\n  quvi URL -f mp4 # query 'mp4' format of the video\n",
     0
 };
@@ -66,7 +66,7 @@ cmdline_parser_internal (int argc, char * const *argv, struct gengetopt_args_inf
 static int
 cmdline_parser_required2 (struct gengetopt_args_info *args_info, const char *prog_name, const char *additional_error);
 
-const char *cmdline_parser_format_values[] = {"flv", "best", "fmt17", "fmt18", "fmt22", "fmt34", "fmt35", "hq", "3gp", "spark-mini", "vp6-hq", "vp6-hd", "vp6", "h264", "hd", "mp4", "high", "ipod", "vp6_64", "vp6_576", "vp6_928", "h264_1400", 0}; /*< Possible values for format. */
+const char *cmdline_parser_format_values[] = {"flv", "best", "fmt17", "fmt18", "fmt22", "fmt34", "fmt35", "hq", "3gp", "spark-mini", "vp6-hq", "vp6-hd", "vp6", "h264", "hd", "mp4", "high", "ipod", "vp6_576", "vp6_928", "h264_1400", 0}; /*< Possible values for format. */
 
 static char *
 gengetopt_strdup (const char *s);
