@@ -2,6 +2,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = \
 libquvi.pc.in \
+libquvi.ver \
 doxygen.conf.in
 
 pkgconfigdir = $(libdir)/pkgconfig

@@ -41,7 +41,6 @@ case "$host" in
         fi
     ;;
 esac
-
 EXTRA_LIBQUVI_LDFLAGS="$NO_UNDEFINED"
 AC_SUBST(EXTRA_LIBQUVI_LDFLAGS)
 
@@ -109,6 +108,9 @@ AC_ARG_ENABLE([exe],
     [],
     [enable_exe=yes])
 AM_CONDITIONAL([ENABLE_EXE], [test x"$enable_exe" != "xno"])
+
+# GNU ld?
+AM_CONDITIONAL([HAVE_GNU_LD], [test x"$with_gnu_ld" = "xyes"])
 
 AC_CONFIG_FILES([
     Makefile
