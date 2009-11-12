@@ -19,10 +19,9 @@
 
 _host_constants(sevenload, "sevenload.com", "flv");
 
-_host_re(re_id,     "(?i)itemid%3D(.*?)%");
-_host_re(re_title,  "(?i)<title>(.*?)</title>");
-_host_re(re_config, "(?i)configpath=(.*?)\"");
-_host_re(re_lnk,    "(?i)<location seeking=\"yes\">(.*?)</");
+_host_re(re_id_title, "(?i)item id=\"(\\w+)\">\\s+<title>(.*?)</");
+_host_re(re_config,   "(?i)configpath=(.*?)\"");
+_host_re(re_lnk,      "(?i)<location seeking=\"yes\">(.*?)</");
 
 QUVIcode
 handle_sevenload(const char *url, _quvi_video_t video) {
@@ -33,7 +32,7 @@ handle_sevenload(const char *url, _quvi_video_t video) {
     _host_id("sevenload");
 
     /* common */
-    rc = parse_page_common(url, video, &content, re_id, re_title);
+    rc = parse_page_common(url, video, &content, 0, 0);
 
     if (rc != QUVI_OK)
         return (rc);
@@ -60,6 +59,19 @@ handle_sevenload(const char *url, _quvi_video_t video) {
 
     if (rc != QUVI_OK)
         return (rc);
+
+    /* video id and title */
+    _free(video->id);
+    _free(video->title);
+
+    rc = regexp_capture(
+        video->quvi,
+        config,
+        re_id_title,
+        &video->id,
+        &video->title,
+        0
+    );
 
     /* video link */
     _free(video->link);
