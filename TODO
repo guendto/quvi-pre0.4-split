@@ -8,9 +8,11 @@
 * libquvi(3) manual page (short overview on how to use the library)
     - ditto
 * AC_ARG_ENABLE([manual])
+* write docs/ howtos
 
 0.1.2
 -----
+* smart (mode) fetch
 * embed link to video page link conversions
 * "make check"
   - host specific (port from cclive)
@@ -21,3 +23,4 @@
 * bindings for other languages (swig?)
 
 
+* fetch_to_mem: from_html_entities on url
