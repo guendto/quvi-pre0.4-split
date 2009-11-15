@@ -369,4 +369,33 @@ is_format_supported(const char *fmt, const char *lst) {
     return (pcre_code >= 0);
 }
 
+char *
+from_html_entities(char *src) {
+    struct lookup_s {
+        const char *from;
+        const char *to;
+    };
+
+    static const struct lookup_s conv[] = {
+        {"&quot;", "\""},
+        {"&#34;",  "\""},
+        {"&amp;",  "&"},
+        {"&#38;",  "&"},
+        {"&apos;", "'"},
+        {"&#39;",  "'"},
+        {"&lt;",   "<"},
+        {"&#60;",  "<"},
+        {"&gt;",   ">"},
+        {"&#62;",  ">"},
+        {0,0}
+    };
+
+    int i;
+
+    for (i=0; conv[i].from; ++i)
+        src = strepl(src, conv[i].from, conv[i].to);
+
+    return (src);
+}
+
 

@@ -161,12 +161,7 @@ handle_url(const char *url, _quvi_video_t video) {
         pcre_free(re);
 
         if (pcre_code >= 0) /* match */ {
-            rc = hosts[i].func(url, video);
-#ifdef HAVE_ICONV /* Convert character set encoding to utf8. */
-            if (rc == QUVI_OK && video->charset)
-                to_utf8(video);
-#endif
-            return (rc);
+            return (hosts[i].func(url, video));
         }
         else if (pcre_code == PCRE_ERROR_NOMATCH)
             continue; /* move to next */
@@ -214,6 +209,13 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
     rc = handle_url(url, video);
     if (rc != QUVI_OK)
         return (rc);
+
+#ifdef HAVE_ICONV /* Convert character set encoding to utf8. */
+    if (video->charset)
+        to_utf8(video);
+#endif
+    video->title = from_html_entities(video->title);
+    video->link  = from_html_entities(video->link);
 
     if (!video->quvi->no_verify)
         rc = query_file_length(video); 

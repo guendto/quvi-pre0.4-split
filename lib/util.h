@@ -56,6 +56,9 @@ unescape(_quvi_t quvi, char *s);
 int
 is_format_supported(const char *fmt, const char *lst);
 
+char *
+from_html_entities(char *src);
+
 #endif
 
 
