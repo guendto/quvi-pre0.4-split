@@ -270,11 +270,14 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = \
 libquvi.pc.in \
 libquvi.ver \
-doxygen.conf.in
+doxygen.conf.in \
+docs/howto/HowtoHelp \
+docs/howto/HowtoAddSupport \
+docs/howto/HowtoSubmitPatches
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libquvi.pc
-SUBDIRS = include lib src examples docs
+SUBDIRS = include lib src examples
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

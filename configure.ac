@@ -119,7 +119,6 @@ AC_CONFIG_FILES([
     lib/Makefile
     src/Makefile
     examples/Makefile
-    docs/Makefile
     libquvi.pc
     doxygen.conf
 ])

@@ -16920,7 +16920,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile include/Makefile include/quvi/Makefile lib/Makefile src/Makefile examples/Makefile docs/Makefile libquvi.pc doxygen.conf"
+ac_config_files="$ac_config_files Makefile include/Makefile include/quvi/Makefile lib/Makefile src/Makefile examples/Makefile libquvi.pc doxygen.conf"
 
 
 cat >confcache <<\_ACEOF
@@ -18021,7 +18021,6 @@ do
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
-    "docs/Makefile") CONFIG_FILES="$CONFIG_FILES docs/Makefile" ;;
     "libquvi.pc") CONFIG_FILES="$CONFIG_FILES libquvi.pc" ;;
     "doxygen.conf") CONFIG_FILES="$CONFIG_FILES doxygen.conf" ;;
 

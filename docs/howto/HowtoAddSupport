@@ -1,0 +1,96 @@
+Howto: Add support for another video website
+============================================
+
+About
+-----
+
+libquvi fetches and parses video page contents for various
+video details and constructs the video download link from
+these parsed details. The project also contains the "quvi"
+executable which can be used to develop support for another
+website.
+
+
+Checklist: Before you get started
+---------------------------------
+
+* Does the website allow video downloading already?
+  - If yes, then there is little reason to add support for it
+  - libquvi is intended to work around the flash requirement
+  - We will likely turn down any patches that add support for such websites
+
+
+Programming is easy, data mining isn't
+--------------------------------------
+
+The steps to produce the video download link can vary
+greatly for each website. To get an idea of this, see
+lib/host/evisor.c and compare it with lib/host/liveleak.c.
+
+Sometimes extra steps are necessary:
+  http://code.google.com/p/clive/issues/detail?id=6#c7
+
+Once the data has been analyzed and the link construction
+figured out, the only part left is to program it into
+the project. That's usually the easiest part. We cover
+those steps below.
+
+
+Program it into the project
+---------------------------
+
+Edit the following files in the source tree:
+
+* lib/quvi.c 
+  - add: _host($domain_name) to the "hosts" lookup table
+
+* lib/host.h
+  - add: _host($domain_name)
+
+* lib/host/$domain_name.c (impl. file, create this file)
+  - you can use other impl. files as templates in lib/host dir
+  - change copyright notice
+    - check the year
+    - replace with your name
+    - consider adding your email address
+  - replace $domain_name specifics
+    - be sure to replace all of them
+  - implementation follows those guidelines figured out earlier
+
+* lib/Makefile.am
+  - add host/$domain_name.c to src_host
+
+* src/quvi.c
+  - add a test link to the "tests" array
+
+TODO: tests/Makefile.am
+TODO: tests/$domain_name.c
+
+
+Checklist: Before you submit your patch
+---------------------------------------
+
+* Does the website support multiple formats?
+  - If yes, then consider adding support for them as well
+    - If there's limited data available on this, skip it
+    - We can always look into this later when more data is available
+
+* Does your code parse everything correctly?
+  - Video ID
+  - Video title
+  - Video link
+
+* Does your code cleanup the video title?
+  - We want the video title only
+  - Anything else, e.g. domain name should be excluded from the title
+
+* Did you confirm that all of the above works?
+  - quvi URL
+
+TODO: "Consider writing a test"
+
+
+Submitting patches
+------------------
+
+See HowtoSubmitPatches.
