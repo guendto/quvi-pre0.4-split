@@ -1,5 +1,5 @@
 
 EXTRA_DIST = \
-CONTRIB
+HowtoHelp
 
 
