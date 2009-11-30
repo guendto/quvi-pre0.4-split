@@ -198,8 +198,13 @@ to_utf8(_quvi_video_t video) {
     if (cd == (iconv_t)-1) {
         if (errno == EINVAL)
             seterr("conversion from %s to %s unavailable", from, to);
-        else
+        else {
+#ifdef HAVE_STRERROR
+            seterr("iconv_open: %s", strerror(errno));
+#else
             perror("iconv_popen");
+#endif
+        }
 
         _free(from);
 
