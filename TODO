@@ -18,6 +18,10 @@
   - host specific (port from cclive)
   - title (ascii, utf8)
 
+When due
+--------
+* youtube "feather"
+
 0.2?.x
 -----
 * bindings for other languages (swig?)
