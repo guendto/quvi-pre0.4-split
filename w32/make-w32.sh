@@ -35,8 +35,8 @@ pack_it()
     && cp $curl_dll dist/bin \
     && cp $pcre_dll dist/bin \
     && cp $iconv_dll dist/bin \
-    && cp ../COPYING dist/quvi-COPYING.TXT \
-    && cp ../ChangeLog dist/ChangeLog.TXT \
+    && cp ../COPYING dist/quvi-COPYING.txt \
+    && cp ../ChangeLog dist/ChangeLog.txt \
     && rm -rf dist/share \
     && cp -r docs/html dist/docs \
     && mv dist $distdir \
