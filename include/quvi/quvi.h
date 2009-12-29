@@ -164,7 +164,7 @@ typedef uint8_t  quvi_byte;
 /** @brief Return a high word from a long type variable */
 #define quvi_hiword(l) ((quvi_word)((uint64_t)(l) >> 16))
 
-/** @brief String deliminator used for video links, lengths, etc. */
+/** @brief String delimiter used for video links, lengths, etc. */
 #define quvi_delim  "@"
 
 #ifdef __cplusplus
