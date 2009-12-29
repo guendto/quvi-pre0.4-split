@@ -39,6 +39,8 @@ regexp_capture(
     _quvi_t quvi,
     const char *content,
     const char *regexp,
+    int *dst_ovector,
+    int ovector_count,
     ...)
 {
     int ovector[128], i, count;
@@ -73,8 +75,8 @@ regexp_capture(
         strlen(content),
         0,
         0,
-        ovector,
-        sizeof(ovector)/sizeof(int)
+        dst_ovector ? dst_ovector   : ovector,
+        dst_ovector ? ovector_count : sizeof(ovector)/sizeof(int)
     );
 
     if (pcre_code == PCRE_ERROR_NOMATCH) {
@@ -92,7 +94,7 @@ regexp_capture(
 
     pcre_code = pcre_get_substring_list(
         content,
-        ovector,
+        dst_ovector ? dst_ovector : ovector,
         count,
         &results
     );
@@ -105,7 +107,7 @@ regexp_capture(
     }
 
     i = 1;
-    va_start(ap, regexp);
+    va_start(ap, ovector_count);
     while ((dst = va_arg(ap, char **)) != 0
             && i < count)
     {
@@ -120,6 +122,7 @@ regexp_capture(
 
 QUVIcode
 contenttype_to_suffix(_quvi_video_t video) {
+    char *suffix;
     QUVIcode rc;
 
     assert(video != 0);
@@ -128,28 +131,39 @@ contenttype_to_suffix(_quvi_video_t video) {
     if (!video->content_type)
         return (QUVI_INVARG);
 
-    _free(video->suffix);
-
     rc = regexp_capture(
         video->quvi,
         video->content_type,
         ".*/(.*)",
-        &video->suffix,
+        0,
+        0,
+        &suffix,
         0
     );
 
     if (rc != QUVI_OK)
         return (rc);
 
-    video->suffix = strepl(video->suffix, "x-", "");
+    suffix = strepl(suffix, "x-", "");
 
-    if (strstr(video->suffix, "octet")
-        || strstr(video->suffix, "swf")
-        || strstr(video->suffix, "flash")
-        || strstr(video->suffix, "plain"))
+    if (strstr(suffix, "octet")
+        || strstr(suffix, "swf")
+        || strstr(suffix, "flash")
+        || strstr(suffix, "plain"))
     {
-        setvid(video->suffix, "%s", "flv");
+        setvid(suffix, "%s", "flv");
     }
+
+    if (video->suffix) {
+        char *dup = strdup(video->suffix);
+        setvid(video->suffix, "%s%s%s", dup, quvi_delim, suffix);
+        _free(dup);
+    }
+    else {
+        setvid(video->suffix, "%s", suffix);
+    }
+
+    _free(suffix);
     
     return (QUVI_OK);
 }
@@ -241,6 +255,8 @@ parse_charset(_quvi_video_t video, const char *content) {
         video->quvi,
         content,
         "(?i)charset=\"?(.*?)([\"\\/>\\s]|$)",
+        0,
+        0,
         &charset,
         0
     );
@@ -283,6 +299,8 @@ parse_page_common(
             video->quvi,
             *content,
             re_id,
+            0,
+            0,
             &video->id,
             0
         );
@@ -299,6 +317,8 @@ parse_page_common(
             video->quvi,
             *content,
             re_title,
+            0,
+            0,
             &video->title,
             0
         );

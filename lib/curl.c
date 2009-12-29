@@ -132,7 +132,7 @@ fetch_to_mem(
 }
 
 QUVIcode
-query_file_length(_quvi_video_t video) {
+query_file_length(_quvi_video_t video, const char *url) {
     CURLcode curlcode;
     struct mem_s mem;
     long httpcode;
@@ -158,7 +158,7 @@ query_file_length(_quvi_video_t video) {
     csetopt(CURLOPT_WRITEDATA, &mem);
     csetopt(CURLOPT_WRITEFUNCTION, writemem_callback);
 
-    csetopt(CURLOPT_URL, video->link);
+    csetopt(CURLOPT_URL, url);
     csetopt(CURLOPT_NOBODY, 1L); /* get -> head */
 
     curlcode = curl_easy_perform(quvi->curl);
@@ -175,6 +175,7 @@ query_file_length(_quvi_video_t video) {
 
         if (httpcode == 200 || httpcode == 206) {
             const char *ct;
+            double length;
 
             curl_easy_getinfo(quvi->curl,
                 CURLINFO_CONTENT_TYPE, &ct);
@@ -183,7 +184,17 @@ query_file_length(_quvi_video_t video) {
             video->content_type = strdup(ct);
 
             curl_easy_getinfo(quvi->curl,
-                CURLINFO_CONTENT_LENGTH_DOWNLOAD, &video->length);
+                CURLINFO_CONTENT_LENGTH_DOWNLOAD, &length);
+
+            if (video->length) {
+                char *dup = strdup(video->length);
+                setvid(video->length,
+                    "%s%s%.0f", dup, quvi_delim, length);
+                _free(dup);
+            }
+            else {
+                setvid(video->length, "%.0f", length);
+            }
 
             if (quvi->status_func)
                 quvi->status_func(makelong(QUVIS_VERIFY, QUVIST_DONE), 0);

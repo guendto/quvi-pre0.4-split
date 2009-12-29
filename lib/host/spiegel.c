@@ -38,6 +38,8 @@ match_fname(_quvi_video_t video,
         video->quvi,
         config,
         re_fname,
+        0,
+        0,
         &prefix,
         &suffix,
         0
@@ -81,6 +83,8 @@ handle_spiegel(const char *url, _quvi_video_t video) {
         video->quvi,
         video->page_link,
         re_id,
+        0,
+        0,
         &video->id,
         0
     );
@@ -107,6 +111,8 @@ handle_spiegel(const char *url, _quvi_video_t video) {
         video->quvi,
         playlist,
         re_title,
+        0,
+        0,
         &video->title,
         0
     );

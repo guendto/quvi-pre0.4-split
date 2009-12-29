@@ -19,15 +19,21 @@
 
 _host_constants(cctv, "cctv.com", "flv");
 
-_host_re(re_id,     "(?i)videoid=(.*?)&");
-_host_re(re_title,  "(?i)<meta name=\"description\"\\s+content=\"(.*?)\"");
-_host_re(re_domain, "http:\\/\\/(.*?)\\/");
-_host_re(re_path,   "url\":\"(.*?)\"");
+_host_re(re_id,       "(?i)videoid=(.*?)&");
+_host_re(re_title,    "(?i)<meta name=\"description\"\\s+content=\"(.*?)\"");
+_host_re(re_domain,   "http:\\/\\/(.*?)\\/");
+_host_re(re_chapters, "(?i)\"chapters\":\\[(.*?)\\]");
+_host_re(re_path,
+    "(?i)\\{\"url\":\"(.*?)\",\"image\":\"(.*?)\",\"duration\":\"(.*?)\"\\}");
 
 QUVIcode
 handle_cctv(const char *url, _quvi_video_t video) {
-    char *content, *domain, *config_url, *config, *path;
+    char *content, *domain, *config_url, *config, *chapters;
+    int ovector[30];
     QUVIcode rc;
+    int offset;
+
+    memset(&ovector, 0, sizeof(ovector));
 
     /* host id */
     _host_id("cctv");
@@ -45,6 +51,8 @@ handle_cctv(const char *url, _quvi_video_t video) {
         video->quvi,
         url,
         re_domain,
+        0,
+        0,
         &domain,
         0
     );
@@ -66,12 +74,14 @@ handle_cctv(const char *url, _quvi_video_t video) {
     if (rc != QUVI_OK)
         return (rc);
 
-    /* video path */
+    /* chapters */
     rc = regexp_capture(
         video->quvi,
         config,
-        re_path,
-        &path,
+        re_chapters,
+        0,
+        0,
+        &chapters,
         0
     );
 
@@ -80,11 +90,45 @@ handle_cctv(const char *url, _quvi_video_t video) {
     if (rc != QUVI_OK)
         return (rc);
 
-    /* video link */
-    setvid(video->link,
-        "http://v.cctv.com/flash/%s", path);
+    /* paths */
+    _free(video->link);
+    offset = 0;
+    do {
+        char *path;
 
-    _free(path);
+        rc = regexp_capture(
+            video->quvi,
+            chapters+offset,
+            re_path,
+            ovector,
+            sizeof(ovector)/sizeof(int),
+            &path,
+            0
+        );
+
+        if (rc == QUVI_OK) {
+
+            if (video->link) {
+                char *dup = strdup(video->link);
+                setvid(video->link,
+                    "%s%shttp://v.cctv.com/flash/%s",
+                        dup, quvi_delim, path);
+                _free(dup);
+            }
+            else {
+                setvid(video->link,
+                    "http://v.cctv.com/flash/%s", path);
+            }
+
+            offset += ovector[1];
+            _free(path);
+        }
+    } while (rc == QUVI_OK);
+
+    _free(chapters);
+
+    if (rc != QUVI_OK && !video->link)
+        return (rc);
 
     return (QUVI_OK);
 }

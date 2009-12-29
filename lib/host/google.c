@@ -51,6 +51,8 @@ handle_google(const char *url, _quvi_video_t video) {
                 video->quvi,
                 content,
                 re_mp4,
+                0,
+                0,
                 &mp4,
                 0
             );
@@ -67,6 +69,8 @@ handle_google(const char *url, _quvi_video_t video) {
             video->quvi,
             content,
             re_lnk,
+            0,
+            0,
             &lnk,
             0
         );

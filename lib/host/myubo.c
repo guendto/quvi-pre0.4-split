@@ -44,6 +44,8 @@ handle_myubo(const char *url, _quvi_video_t video) {
         video->quvi,
         content,
         re_lnk,
+        0,
+        0,
         &video->link,
         0
     );

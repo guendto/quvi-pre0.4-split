@@ -43,6 +43,8 @@ handle_youtube(const char *url, _quvi_video_t video) {
         video->quvi,
         content,
         re_t,
+        0,
+        0,
         &t,
         0
     );
@@ -57,6 +59,8 @@ handle_youtube(const char *url, _quvi_video_t video) {
         video->quvi,
         content,
         re_fmap,
+        0,
+        0,
         &fmap,
         0
     );

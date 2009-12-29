@@ -57,6 +57,8 @@ handle_golem(const char *url, _quvi_video_t video) {
         video->quvi,
         config,
         re_title,
+        0,
+        0,
         &video->title,
         0
     );

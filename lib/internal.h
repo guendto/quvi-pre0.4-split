@@ -68,7 +68,7 @@ struct _quvi_video_s {
     char *page_link;
     char *content_type;
     char *suffix;
-    double length;
+    char *length;
 };
 
 typedef struct _quvi_video_s *_quvi_video_t;

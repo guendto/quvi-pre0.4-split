@@ -62,6 +62,8 @@ handle_vimeo(const char *url, _quvi_video_t video) {
         video->quvi,
         config,
         re_title,
+        0,
+        0,
         &video->title,
         0
     );
@@ -76,6 +78,8 @@ handle_vimeo(const char *url, _quvi_video_t video) {
         video->quvi,
         config,
         re_sign,
+        0,
+        0,
         &sign,
         0
     );
@@ -86,6 +90,8 @@ handle_vimeo(const char *url, _quvi_video_t video) {
             video->quvi,
             config,
             re_exp,
+            0,
+            0,
             &exp,
             0
         );
@@ -98,6 +104,8 @@ handle_vimeo(const char *url, _quvi_video_t video) {
                 video->quvi,
                 config,
                 re_hd,
+                0,
+                0,
                 &hd,
                 0
             );

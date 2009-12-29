@@ -43,6 +43,8 @@ handle_break(const char *url, _quvi_video_t video) {
         video->quvi,
         content,
         re_fpath,
+        0,
+        0,
         &fpath,
         0
     );
@@ -57,6 +59,8 @@ handle_break(const char *url, _quvi_video_t video) {
         video->quvi,
         content,
         re_fname,
+        0,
+        0,
         &fname,
         0
     );

@@ -46,6 +46,8 @@ handle_liveleak(const char *url, _quvi_video_t video) {
         video->quvi,
         content,
         re_config,
+        0,
+        0,
         &config_url,
         0
     );
@@ -69,6 +71,8 @@ handle_liveleak(const char *url, _quvi_video_t video) {
         video->quvi,
         config,
         re_playlist,
+        0,
+        0,
         &playlist_url,
         0
     );
@@ -94,6 +98,8 @@ handle_liveleak(const char *url, _quvi_video_t video) {
         video->quvi,
         playlist,
         re_lnk,
+        0,
+        0,
         &video->link,
         0
     );

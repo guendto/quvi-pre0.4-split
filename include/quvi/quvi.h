@@ -129,12 +129,12 @@ typedef enum {
 QUVIP_NONE           = 0x00, /**< Unused */
 QUVIP_ID             = QUVIPROPERTY_STRING + 1, /**< Video ID */
 QUVIP_HOSTID         = QUVIPROPERTY_STRING + 2, /**< Host ID */
-QUVIP_LINK           = QUVIPROPERTY_STRING + 3, /**< Video link */
+QUVIP_LINK           = QUVIPROPERTY_STRING + 3, /**< Video links delimited by quvi_delim */
 QUVIP_TITLE          = QUVIPROPERTY_STRING + 4, /**< Video title */
-QUVIP_LENGTH         = QUVIPROPERTY_DOUBLE + 5, /**< Video length in bytes */
+QUVIP_LENGTH         = QUVIPROPERTY_STRING + 5, /**< Video lengths in bytes delimited by quvi_delim */
 QUVIP_PAGELINK       = QUVIPROPERTY_STRING + 6, /**< Video page link */
 QUVIP_CONTENTTYPE    = QUVIPROPERTY_STRING + 7, /**< Video file content-type */
-QUVIP_SUFFIX         = QUVIPROPERTY_STRING + 8, /**< Video file suffix */
+QUVIP_SUFFIX         = QUVIPROPERTY_STRING + 8, /**< Video file suffices delimited by quvi_delim */
 QUVIP_HTTPCODE       = QUVIPROPERTY_LONG   + 9, /**< Last returned HTTP code */
 /* Add new ones below. */
 QUVIP_LAST           = 9 /**< Placeholder */
@@ -163,6 +163,9 @@ typedef uint8_t  quvi_byte;
 #define quvi_loword(l) ((quvi_word)((uint64_t)(l) & 0xffff))
 /** @brief Return a high word from a long type variable */
 #define quvi_hiword(l) ((quvi_word)((uint64_t)(l) >> 16))
+
+/** @brief String deliminator used for video links, lengths, etc. */
+#define quvi_delim  "@"
 
 #ifdef __cplusplus
 extern "C" {

@@ -89,27 +89,52 @@ supports() {
 
 static void
 dump_video(quvi_video_t video, opts_s opts) {
-    char *id, *title, *link, *page_link, *suffix;
+    char *page_link, *id, *title, *link, *length, *suffix;
+    char *_link, *_length, *_suffix;
+    char *tl, *tle, *ts;
+    char *rl, *rle, *rs;
     long httpcode;
-    double length;
+    int i;
 
-    quvi_getprop(video, QUVIP_LENGTH, &length);
     quvi_getprop(video, QUVIP_PAGELINK, &page_link);
     quvi_getprop(video, QUVIP_ID, &id);
     quvi_getprop(video, QUVIP_TITLE, &title);
     quvi_getprop(video, QUVIP_LINK, &link);
+    quvi_getprop(video, QUVIP_LENGTH, &length);
     quvi_getprop(video, QUVIP_SUFFIX, &suffix);
     quvi_getprop(video, QUVIP_HTTPCODE, &httpcode);
 
     printf(" > Dump video:\n"
         "url     : %s\n"
         "title   : %s\n"
-        "id      : %s\n"
-        "length  : %.0f bytes\n"
-        "suffix  : %s\n"
-        "link    : %s\n"
-        "httpcode: %ld (last)\n",
-        page_link, title, id, length, suffix, link, httpcode);
+        "id      : %s\n",
+        page_link, title, id);
+
+    _link   = strdup(link);
+    _length = strdup(length);
+    _suffix = strdup(suffix);
+
+    for (i  =0,
+         tl =strtok_r(  _link, quvi_delim, &rl),
+         tle=strtok_r(_length, quvi_delim, &rle),
+         ts =strtok_r(_suffix, quvi_delim, &rs);
+         tl && tle && ts;
+         ++i)
+    {
+        printf(
+            "link %02d  : %s\n:: length: %s\n:: suffix: %s\n",
+            i+1, tl, tle, ts
+        );
+        tl  = strtok_r(0, quvi_delim, &rl);
+        tle = strtok_r(0, quvi_delim, &rle);
+        ts  = strtok_r(0, quvi_delim, &rs);
+    }
+
+    free(_link);
+    free(_length);
+    free(_suffix);
+
+    printf("httpcode: %ld (last)\n", httpcode);
 }
 
 static void
@@ -142,8 +167,8 @@ static const char *tests[] = {
 "http://video.golem.de/internet/2174/firefox-3.5-test.html",
 "http://www.funnyhub.com/videos/pages/crazy-hole-in-one.html",
 "http://www.clipfish.de/video/3100131/matratzendomino/",
-/*"http://sports.cctv.com/20090916/100687.shtml",*/
-"http://space.tv.cctv.com/video/VIDE1212909276513233",
+"http://space.tv.cctv.com/video/VIDE1212909276513233", /* single-segment */
+"http://space.tv.cctv.com/video/VIDE1247468077860061", /* multi-segment */
 "http://www.youtube.com/watch?v=DeWsZ2b_pK4",
 "http://break.com/index/beach-tackle-whip-lash.html",
 "http://www.evisor.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",

@@ -52,6 +52,8 @@ parse(const _quvi_video_t video, char *paths) {
             video->quvi,
             t,
             "(.*?)@@(.*?)$",
+            0,
+            0,
             &path,
             &id,
             0
@@ -75,6 +77,8 @@ parse(const _quvi_video_t video, char *paths) {
                 video->quvi,
                 path,
                 "-(\\d+)x(\\d+)",
+                0,
+                0,
                 &w,
                 &h,
                 0
@@ -123,6 +127,8 @@ handle_dailymotion(const char *url, _quvi_video_t video) {
         video->quvi,
         content,
         re_paths,
+        0,
+        0,
         &paths,
         0
     );

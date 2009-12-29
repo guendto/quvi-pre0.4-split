@@ -217,8 +217,22 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
     video->title = from_html_entities(video->title);
     video->link  = from_html_entities(video->link);
 
-    if (!video->quvi->no_verify)
-        rc = query_file_length(video); 
+    if (!video->quvi->no_verify) {
+        char *tmp, *tok, *dup;
+
+        _free(video->length);
+        _free(video->suffix);
+
+        dup = strdup(video->link);
+        tok = strtok_r(dup, quvi_delim, &tmp);
+        while (tok) {
+            rc = query_file_length(video, tok);
+            if (rc != QUVI_OK)
+                break;
+            tok = strtok_r(0, quvi_delim, &tmp);
+        }
+        _free(dup);
+    }
 
     return (rc);
 }
@@ -239,6 +253,7 @@ quvi_parse_close(quvi_video_t *handle) {
         _free((*video)->page_link);
         _free((*video)->content_type);
         _free((*video)->suffix);
+        _free((*video)->length);
         _free((*video)->charset);
         _free(*video);
     }
@@ -316,7 +331,7 @@ _getprop(_quvi_video_t video, QUVIproperty prop, ...) {
     case QUVIPROPERTY_DOUBLE : _initv(dp, double *);
     case QUVIPROPERTY_STRING : _initv(sp, char **);
     case QUVIPROPERTY_LONG   : _initv(lp, long *);
-    default                 : return (QUVI_INVARG);
+    default                  : return (QUVI_INVARG);
     }
 
 #define _sets(with) \
@@ -330,7 +345,7 @@ _getprop(_quvi_video_t video, QUVIproperty prop, ...) {
     case QUVIP_HOSTID        : _sets(video->host_id);
     case QUVIP_LINK          : _sets(video->link);
     case QUVIP_TITLE         : _sets(video->title);
-    case QUVIP_LENGTH        : _setn(dp, video->length);
+    case QUVIP_LENGTH        : _sets(video->length);
     case QUVIP_PAGELINK      : _sets(video->page_link);
     case QUVIP_CONTENTTYPE   : _sets(video->content_type);
     case QUVIP_SUFFIX        : _sets(video->suffix);

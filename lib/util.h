@@ -23,6 +23,8 @@ regexp_capture(
     _quvi_t quvi,
     const char *content,
     const char *regexp,
+    int *ovector,
+    int ovector_count,
     ...
 );
 

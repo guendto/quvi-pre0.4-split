@@ -40,6 +40,8 @@ handle_ehrensenf(const char *url, _quvi_video_t video) {
         video->quvi,
         content,
         re_date,
+        0,
+        0,
         &d,
         &m,
         &y,
