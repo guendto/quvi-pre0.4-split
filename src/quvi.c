@@ -29,6 +29,8 @@
 #include <curl/curl.h>
 #include <pcre.h>
 
+#include "platform.h"
+
 #include "quvi/quvi.h"
 #include "cmdline.h"
 

@@ -38,6 +38,7 @@ target_triplet = @target@
 @HAVE_GNU_LD_TRUE@am__append_1 = -Wl,--version-script=$(top_srcdir)/libquvi.ver
 @NO_ASPRINTF_TRUE@am__append_2 = vasprintf.c asprintf.c
 @NO_STRUPR_TRUE@am__append_3 = strupr.c
+@NO_STRTOK_R_TRUE@am__append_4 = strtok_r.c
 subdir = lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -76,19 +77,20 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libquvi_la_LIBADD =
 am__libquvi_la_SOURCES_DIST = quvi.c util.c curl.c strepl.c \
-	vasprintf.c asprintf.c strupr.c host/break.c host/cctv.c \
-	host/clipfish.c host/evisor.c host/funnyhub.c host/golem.c \
-	host/google.c host/liveleak.c host/myubo.c host/sevenload.c \
-	host/vimeo.c host/spiegel.c host/ehrensenf.c \
+	vasprintf.c asprintf.c strupr.c strtok_r.c host/break.c \
+	host/cctv.c host/clipfish.c host/evisor.c host/funnyhub.c \
+	host/golem.c host/google.c host/liveleak.c host/myubo.c \
+	host/sevenload.c host/vimeo.c host/spiegel.c host/ehrensenf.c \
 	host/dailymotion.c host/youtube.c curl.h host.h internal.h \
 	util.h platform.h
 @NO_ASPRINTF_TRUE@am__objects_1 = libquvi_la-vasprintf.lo \
 @NO_ASPRINTF_TRUE@	libquvi_la-asprintf.lo
 @NO_STRUPR_TRUE@am__objects_2 = libquvi_la-strupr.lo
-am__objects_3 = libquvi_la-quvi.lo libquvi_la-util.lo \
+@NO_STRTOK_R_TRUE@am__objects_3 = libquvi_la-strtok_r.lo
+am__objects_4 = libquvi_la-quvi.lo libquvi_la-util.lo \
 	libquvi_la-curl.lo libquvi_la-strepl.lo $(am__objects_1) \
-	$(am__objects_2)
-am__objects_4 = libquvi_la-break.lo libquvi_la-cctv.lo \
+	$(am__objects_2) $(am__objects_3)
+am__objects_5 = libquvi_la-break.lo libquvi_la-cctv.lo \
 	libquvi_la-clipfish.lo libquvi_la-evisor.lo \
 	libquvi_la-funnyhub.lo libquvi_la-golem.lo \
 	libquvi_la-google.lo libquvi_la-liveleak.lo \
@@ -96,9 +98,9 @@ am__objects_4 = libquvi_la-break.lo libquvi_la-cctv.lo \
 	libquvi_la-vimeo.lo libquvi_la-spiegel.lo \
 	libquvi_la-ehrensenf.lo libquvi_la-dailymotion.lo \
 	libquvi_la-youtube.lo
-am__objects_5 =
-am_libquvi_la_OBJECTS = $(am__objects_3) $(am__objects_4) \
-	$(am__objects_5)
+am__objects_6 =
+am_libquvi_la_OBJECTS = $(am__objects_4) $(am__objects_5) \
+	$(am__objects_6)
 libquvi_la_OBJECTS = $(am_libquvi_la_OBJECTS)
 libquvi_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libquvi_la_CFLAGS) \
@@ -255,7 +257,8 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-src = quvi.c util.c curl.c strepl.c $(am__append_2) $(am__append_3)
+src = quvi.c util.c curl.c strepl.c $(am__append_2) $(am__append_3) \
+	$(am__append_4)
 src_host = \
 host/break.c \
 host/cctv.c \
@@ -386,6 +389,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-sevenload.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-spiegel.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-strepl.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-strtok_r.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-strupr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-util.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-vasprintf.Plo@am__quote@
@@ -461,6 +465,13 @@ libquvi_la-strupr.lo: strupr.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strupr.c' object='libquvi_la-strupr.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-strupr.lo `test -f 'strupr.c' || echo '$(srcdir)/'`strupr.c
+
+libquvi_la-strtok_r.lo: strtok_r.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-strtok_r.lo -MD -MP -MF $(DEPDIR)/libquvi_la-strtok_r.Tpo -c -o libquvi_la-strtok_r.lo `test -f 'strtok_r.c' || echo '$(srcdir)/'`strtok_r.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libquvi_la-strtok_r.Tpo $(DEPDIR)/libquvi_la-strtok_r.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strtok_r.c' object='libquvi_la-strtok_r.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-strtok_r.lo `test -f 'strtok_r.c' || echo '$(srcdir)/'`strtok_r.c
 
 libquvi_la-break.lo: host/break.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-break.lo -MD -MP -MF $(DEPDIR)/libquvi_la-break.Tpo -c -o libquvi_la-break.lo `test -f 'host/break.c' || echo '$(srcdir)/'`host/break.c

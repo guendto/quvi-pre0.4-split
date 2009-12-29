@@ -17,6 +17,10 @@ if NO_STRUPR
 src += strupr.c
 endif
 
+if NO_STRTOK_R
+src += strtok_r.c
+endif
+
 src_host = \
 host/break.c \
 host/cctv.c \

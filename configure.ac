@@ -101,6 +101,10 @@ have_strupr=no
 AC_CHECK_FUNCS([strupr], [have_strupr=yes])
 AM_CONDITIONAL([NO_STRUPR], [test x"$have_strupr" != "xyes"])
 
+have_strtok_r=no
+AC_CHECK_FUNCS([strtok_r], [have_strtok_r=yes])
+AM_CONDITIONAL([NO_STRTOK_R], [test x"$have_strtok_r" != "xyes"])
+
 # --enable-exe
 AC_ARG_ENABLE([exe],
     [AS_HELP_STRING([--enable-exe],

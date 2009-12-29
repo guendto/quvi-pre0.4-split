@@ -8,6 +8,10 @@ src = \
     quvi.c \
     cmdline.c
 
+if NO_STRTOK_R
+src += $(top_srcdir)/lib/strtok_r.c
+endif
+
 hdr = \
     cmdline.h
 
@@ -18,6 +22,10 @@ quvi_CFLAGS = \
     -I$(top_srcdir)/include \
     $(libcurl_CFLAGS) \
     $(libpcre_CFLAGS)
+
+if NO_STRTOK_R
+quvi_CFLAGS += -I$(top_srcdir)/lib
+endif
 
 quvi_LDADD =  \
     $(top_builddir)/lib/libquvi.la \
