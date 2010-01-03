@@ -44,7 +44,7 @@ main (int argc, char **argv) {
     quvi_init(&q);
     quvi_setopt(q, QUVIOPT_STATUSFUNCTION, &status_callback);
     quvi_parse(q, "http://www.youtube.com/watch?v=DeWsZ2b_pK4", &v);
-    quvi_getprop(v, QUVIP_LINK, &lnk);
+    quvi_getprop(v, QUVIP_VIDEOURL, &lnk);
     puts(lnk);
     quvi_parse_close(&v);
     quvi_close(&q);

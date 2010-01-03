@@ -341,15 +341,15 @@ _getprop(_quvi_video_t video, QUVIproperty prop, ...) {
     do { *var = with; } while(0); break
 
     switch (prop) {
-    case QUVIP_ID            : _sets(video->id);
-    case QUVIP_HOSTID        : _sets(video->host_id);
-    case QUVIP_LINK          : _sets(video->link);
-    case QUVIP_TITLE         : _sets(video->title);
-    case QUVIP_LENGTH        : _sets(video->length);
-    case QUVIP_PAGELINK      : _sets(video->page_link);
-    case QUVIP_CONTENTTYPE   : _sets(video->content_type);
-    case QUVIP_SUFFIX        : _sets(video->suffix);
-    case QUVIP_HTTPCODE      : _setn(lp, video->quvi->httpcode);
+    case QUVIP_HOSTID       : _sets(video->host_id);
+    case QUVIP_PAGEURL      : _sets(video->page_link);
+    case QUVIP_PAGETITLE    : _sets(video->title);
+    case QUVIP_VIDEOID      : _sets(video->id);
+    case QUVIP_VIDEOURL     : _sets(video->link);
+    case QUVIP_VIDEOFILELENGTH      : _sets(video->length);
+    case QUVIP_VIDEOFILECONTENTTYPE : _sets(video->content_type);
+    case QUVIP_VIDEOFILESUFFIX      : _sets(video->suffix);
+    case QUVIP_HTTPCODE     : _setn(lp, video->quvi->httpcode);
     default                 : return (QUVI_INVARG);
     }
 

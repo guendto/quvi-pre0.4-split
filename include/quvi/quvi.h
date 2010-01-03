@@ -121,23 +121,23 @@ QUVII_CURL        = QUVIINFO_VOID + 1,/**< Session libcurl handle */
 QUVII_CURLCODE    = QUVIINFO_LONG + 2,/**< Last libcurl returned code */
 QUVII_HTTPCODE    = QUVIINFO_LONG + 3,/**< Last libcurl returned HTTP code */
 /* Add new ones below. */
-QUVII_LAST        = 3                 /**< A placeholder */
+QUVII_LAST        = 3                 /**< Placeholder */
 } QUVIinfo;
 
 /** @enum QUVIproperty Video property codes to be used with quvi_getprop() */
 typedef enum {
-QUVIP_NONE           = 0x00, /**< Unused */
-QUVIP_ID             = QUVIPROPERTY_STRING + 1, /**< Video ID */
-QUVIP_HOSTID         = QUVIPROPERTY_STRING + 2, /**< Host ID */
-QUVIP_LINK           = QUVIPROPERTY_STRING + 3, /**< Video links delimited by quvi_delim */
-QUVIP_TITLE          = QUVIPROPERTY_STRING + 4, /**< Video title */
-QUVIP_LENGTH         = QUVIPROPERTY_STRING + 5, /**< Video lengths in bytes delimited by quvi_delim */
-QUVIP_PAGELINK       = QUVIPROPERTY_STRING + 6, /**< Video page link */
-QUVIP_CONTENTTYPE    = QUVIPROPERTY_STRING + 7, /**< Video file content-type */
-QUVIP_SUFFIX         = QUVIPROPERTY_STRING + 8, /**< Video file suffices delimited by quvi_delim */
-QUVIP_HTTPCODE       = QUVIPROPERTY_LONG   + 9, /**< Last returned HTTP code */
+QUVIP_NONE          = 0x00, /**< Unused */
+QUVIP_HOSTID        = QUVIPROPERTY_STRING + 1, /**< Host ID */
+QUVIP_PAGEURL       = QUVIPROPERTY_STRING + 2, /**< Video page link */
+QUVIP_PAGETITLE     = QUVIPROPERTY_STRING + 3, /**< Video title */
+QUVIP_VIDEOID       = QUVIPROPERTY_STRING + 4, /**< Video ID */
+QUVIP_VIDEOURL      = QUVIPROPERTY_STRING + 5, /**< Video link(s) delimited by quvi_delim */
+QUVIP_VIDEOFILELENGTH       = QUVIPROPERTY_STRING + 6, /**< Video length(s) in bytes delimited by quvi_delim */
+QUVIP_VIDEOFILECONTENTTYPE  = QUVIPROPERTY_STRING + 7, /**< Video file content-type(s) delimited by quvi_delim */
+QUVIP_VIDEOFILESUFFIX       = QUVIPROPERTY_STRING + 8, /**< Video file suffix(es) delimited by quvi_delim */
+QUVIP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP code */
 /* Add new ones below. */
-QUVIP_LAST           = 9 /**< Placeholder */
+QUVIP_LAST          = 9 /**< Placeholder */
 } QUVIproperty;
 
 

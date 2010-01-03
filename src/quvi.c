@@ -98,12 +98,12 @@ dump_video(quvi_video_t video, opts_s opts) {
     long httpcode;
     int i;
 
-    quvi_getprop(video, QUVIP_PAGELINK, &page_link);
-    quvi_getprop(video, QUVIP_ID, &id);
-    quvi_getprop(video, QUVIP_TITLE, &title);
-    quvi_getprop(video, QUVIP_LINK, &link);
-    quvi_getprop(video, QUVIP_LENGTH, &length);
-    quvi_getprop(video, QUVIP_SUFFIX, &suffix);
+    quvi_getprop(video, QUVIP_PAGEURL, &page_link);
+    quvi_getprop(video, QUVIP_PAGETITLE, &title);
+    quvi_getprop(video, QUVIP_VIDEOID, &id);
+    quvi_getprop(video, QUVIP_VIDEOURL, &link);
+    quvi_getprop(video, QUVIP_VIDEOFILELENGTH, &length);
+    quvi_getprop(video, QUVIP_VIDEOFILESUFFIX, &suffix);
     quvi_getprop(video, QUVIP_HTTPCODE, &httpcode);
 
     printf(" > Dump video:\n"
