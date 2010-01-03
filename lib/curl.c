@@ -180,8 +180,15 @@ query_file_length(_quvi_video_t video, const char *url) {
             curl_easy_getinfo(quvi->curl,
                 CURLINFO_CONTENT_TYPE, &ct);
 
-            _free(video->content_type);
-            video->content_type = strdup(ct);
+            if (video->content_type) {
+                char *dup = strdup(video->content_type);
+                setvid(video->content_type,
+                    "%s%s%s", dup, quvi_delim, ct);
+                _free(dup);
+            }
+            else {
+                setvid(video->content_type, "%s", ct);
+            }
 
             curl_easy_getinfo(quvi->curl,
                 CURLINFO_CONTENT_LENGTH_DOWNLOAD, &length);
