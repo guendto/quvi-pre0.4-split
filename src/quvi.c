@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -67,7 +67,7 @@ status_callback(long param, void *data) {
 }
 
 static const char notice[] =
-"Copyright (C) 2009,2010 Toni Gundogdu. License GPLv3+: GNU GPL version 3 or later\n"
+"Copyright (C) 2009,2010 Toni Gundogdu. License: GNU GPL version  3  or later\n"
 "This is free software; see the  source for  copying conditions.  There is NO\n"
 "warranty;  not even for MERCHANTABILITY or FITNESS FOR A  PARTICULAR PURPOSE.";
 
