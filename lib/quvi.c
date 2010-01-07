@@ -107,6 +107,7 @@ _host(ehrensenf)
 _host(dailymotion)
 #ifdef ENABLE_SMUT
 _host(tube8)
+_host(xvideos)
 #endif
 /* Add new ones below. */
 {NULL, NULL, NULL}

@@ -40,7 +40,8 @@ target_triplet = @target@
 @NO_STRUPR_TRUE@am__append_3 = strupr.c
 @NO_STRTOK_R_TRUE@am__append_4 = strtok_r.c
 @ENABLE_SMUT_TRUE@am__append_5 = \
-@ENABLE_SMUT_TRUE@host/tube8.c
+@ENABLE_SMUT_TRUE@host/tube8.c \
+@ENABLE_SMUT_TRUE@host/xvideos.c
 
 subdir = lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -84,8 +85,8 @@ am__libquvi_la_SOURCES_DIST = quvi.c util.c curl.c strepl.c \
 	host/cctv.c host/clipfish.c host/evisor.c host/funnyhub.c \
 	host/golem.c host/google.c host/liveleak.c host/myubo.c \
 	host/sevenload.c host/vimeo.c host/spiegel.c host/ehrensenf.c \
-	host/dailymotion.c host/youtube.c host/tube8.c curl.h host.h \
-	internal.h util.h platform.h
+	host/dailymotion.c host/youtube.c host/tube8.c host/xvideos.c \
+	curl.h host.h internal.h util.h platform.h
 @NO_ASPRINTF_TRUE@am__objects_1 = libquvi_la-vasprintf.lo \
 @NO_ASPRINTF_TRUE@	libquvi_la-asprintf.lo
 @NO_STRUPR_TRUE@am__objects_2 = libquvi_la-strupr.lo
@@ -93,7 +94,8 @@ am__libquvi_la_SOURCES_DIST = quvi.c util.c curl.c strepl.c \
 am__objects_4 = libquvi_la-quvi.lo libquvi_la-util.lo \
 	libquvi_la-curl.lo libquvi_la-strepl.lo $(am__objects_1) \
 	$(am__objects_2) $(am__objects_3)
-@ENABLE_SMUT_TRUE@am__objects_5 = libquvi_la-tube8.lo
+@ENABLE_SMUT_TRUE@am__objects_5 = libquvi_la-tube8.lo \
+@ENABLE_SMUT_TRUE@	libquvi_la-xvideos.lo
 am__objects_6 = libquvi_la-break.lo libquvi_la-cctv.lo \
 	libquvi_la-clipfish.lo libquvi_la-evisor.lo \
 	libquvi_la-funnyhub.lo libquvi_la-golem.lo \
@@ -387,6 +389,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-util.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-vasprintf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-vimeo.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-xvideos.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-youtube.Plo@am__quote@
 
 .c.o:
@@ -577,6 +580,13 @@ libquvi_la-tube8.lo: host/tube8.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='host/tube8.c' object='libquvi_la-tube8.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-tube8.lo `test -f 'host/tube8.c' || echo '$(srcdir)/'`host/tube8.c
+
+libquvi_la-xvideos.lo: host/xvideos.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-xvideos.lo -MD -MP -MF $(DEPDIR)/libquvi_la-xvideos.Tpo -c -o libquvi_la-xvideos.lo `test -f 'host/xvideos.c' || echo '$(srcdir)/'`host/xvideos.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libquvi_la-xvideos.Tpo $(DEPDIR)/libquvi_la-xvideos.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='host/xvideos.c' object='libquvi_la-xvideos.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-xvideos.lo `test -f 'host/xvideos.c' || echo '$(srcdir)/'`host/xvideos.c
 
 mostlyclean-libtool:
 	-rm -f *.lo
