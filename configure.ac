@@ -148,6 +148,7 @@ AC_MSG_NOTICE([Configured to build quvi/libquvi:
     install prefix: ${prefix}
     compiler:       ${CC}
     cflags:         ${CFLAGS}
+    build libquvi:  shared=${enable_shared} static=${enable_static}
     build quvi exe: ${enable_exe}
     adult support:  ${enable_smut}
 ])
