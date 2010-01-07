@@ -23,7 +23,7 @@ _host_constants(tube8, "tube8.com", "flv");
 
 _host_re(re_id,     "(?i)name=\"vidid\" value=\"(\\d+)\"");
 _host_re(re_title,  "(?i)<h1 class=\"main-title main-sprite-img\">(.*?)</");
-_host_re(re_lnk,    "(?i)videoUrl=(http://.*?)&");
+_host_re(re_lnk,    "(?i)videourl=\"(.*?)\"");
 
 QUVIcode
 handle_tube8(const char *url, _quvi_video_t video) {
