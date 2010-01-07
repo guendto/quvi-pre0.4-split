@@ -41,7 +41,8 @@ host/youtube.c
 if ENABLE_SMUT
 src_host += \
 host/tube8.c \
-host/xvideos.c
+host/xvideos.c \
+host/youjizz.c
 endif
 
 hdr = \

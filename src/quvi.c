@@ -177,6 +177,7 @@ static const char *tests[] = {
 #ifdef ENABLE_SMUT
 "http://www.tube8.com/fetish/japanese-melon-gal-censored/186133/",
 "http://www.xvideos.com/video243887/devi_emmerson_body_painting",
+"http://www.youjizz.com/videos/glamour-girls---melissa-125602.html",
 #endif
 NULL
 };

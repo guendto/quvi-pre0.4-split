@@ -54,6 +54,7 @@ _host(dailymotion);
 #ifdef ENABLE_SMUT
 _host(tube8);
 _host(xvideos);
+_host(youjizz);
 #endif
 /* Add new ones below. */
 
