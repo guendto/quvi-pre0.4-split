@@ -7,13 +7,13 @@ PREFIX=`pwd`/dist # ./configure --prefix=$PREFIX
 CFLAGS="-Wall -Werror -Os -pipe -march=i686"
 
 CURL_CONFIG=\
-"/home/legatvs/src/non-installed/curl-7.19.6/debug/dist/bin/curl-config"
+"/home/legatvs/src/non-installed/curl-7.19.7/release/dist/bin/curl-config"
 
 PCRE_CONFIG=\
-"/home/legatvs/src/non-installed/pcre-8.00/debug/dist/bin/pcre-config"
+"/home/legatvs/src/non-installed/pcre-8.00/release/dist/bin/pcre-config"
 
 ICONV_PREFIX=\
-"/home/legatvs/src/non-installed/libiconv-1.13.1/debug/dist"
+"/home/legatvs/src/non-installed/libiconv-1.13.1/release/dist"
 
 pack_it()
 {
