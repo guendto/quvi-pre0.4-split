@@ -19634,4 +19634,23 @@ $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: Configured to build quvi/libquvi:
+
+    quvi version:   ${VERSION}
+    host setup:     ${host}
+    install prefix: ${prefix}
+    compiler:       ${CC}
+    build quvi exe: ${enable_exe}
+    adult support:  ${enable_smut}
+" >&5
+$as_echo "$as_me: Configured to build quvi/libquvi:
+
+    quvi version:   ${VERSION}
+    host setup:     ${host}
+    install prefix: ${prefix}
+    compiler:       ${CC}
+    build quvi exe: ${enable_exe}
+    adult support:  ${enable_smut}
+" >&6;}
+
 

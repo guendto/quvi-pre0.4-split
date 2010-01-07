@@ -141,4 +141,14 @@ AC_CONFIG_FILES([
 
 AC_OUTPUT
 
+AC_MSG_NOTICE([Configured to build quvi/libquvi:
+
+    quvi version:   ${VERSION}
+    host setup:     ${host}
+    install prefix: ${prefix}
+    compiler:       ${CC}
+    build quvi exe: ${enable_exe}
+    adult support:  ${enable_smut}
+])
+
 
