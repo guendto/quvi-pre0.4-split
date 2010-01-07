@@ -73,7 +73,7 @@ static const char notice[] =
 
 static void
 version() {
-    printf("quvi, version %s.\n%s\n",
+    printf("quvi, version %s\n%s\n",
         quvi_version(QUVI_VERSION_LONG), notice);
     exit (0);
 }
@@ -174,6 +174,9 @@ static const char *tests[] = {
 "http://www.youtube.com/watch?v=DeWsZ2b_pK4",
 "http://break.com/index/beach-tackle-whip-lash.html",
 "http://www.evisor.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",
+#ifdef ENABLE_SMUT
+"http://www.tube8.com/fetish/japanese-melon-gal-censored/186133/",
+#endif
 NULL
 };
 

@@ -105,6 +105,9 @@ _host(vimeo)
 _host(spiegel)
 _host(ehrensenf)
 _host(dailymotion)
+#ifdef ENABLE_SMUT
+_host(tube8)
+#endif
 /* Add new ones below. */
 {NULL, NULL, NULL}
 };
@@ -494,9 +497,12 @@ quvi_version(QUVIversion type) {
     BUILD_DATE"-"
 #endif
     CANONICAL_TARGET
-    ")"
+    ") "
 #ifdef HAVE_ICONV
-    " *iconv"
+    "*iconv "
+#endif
+#ifdef ENABLE_SMUT
+    "*smut "
 #endif
     ;
     if (type == QUVI_VERSION_LONG)

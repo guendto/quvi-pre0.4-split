@@ -38,6 +38,11 @@ host/ehrensenf.c \
 host/dailymotion.c \
 host/youtube.c
 
+if ENABLE_SMUT
+src_host += \
+host/tube8.c
+endif
+
 hdr = \
 curl.h \
 host.h \

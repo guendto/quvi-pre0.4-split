@@ -113,6 +113,18 @@ AC_ARG_ENABLE([exe],
     [enable_exe=yes])
 AM_CONDITIONAL([ENABLE_EXE], [test x"$enable_exe" != "xno"])
 
+# --enable-smut
+AC_ARG_ENABLE([smut],
+    [AS_HELP_STRING([--enable-smut],
+        [build with adult website support @<:@default=no@:>@])],
+    [],
+    [enable_smut=no])
+AM_CONDITIONAL([ENABLE_SMUT], [test x"$enable_smut" != "xno"])
+
+if [ test x"$enable_smut" != "xno" ]; then
+    AC_DEFINE([ENABLE_SMUT], [1], [Define to enable smut])
+fi
+
 # GNU ld?
 AM_CONDITIONAL([HAVE_GNU_LD], [test x"$with_gnu_ld" = "xyes"])
 

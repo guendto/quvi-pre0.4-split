@@ -9,6 +9,9 @@
 /* ... */
 #undef CANONICAL_TARGET
 
+/* Define to enable smut */
+#undef ENABLE_SMUT
+
 /* Define to 1 if you have the `asprintf' function. */
 #undef HAVE_ASPRINTF
 

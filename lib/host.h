@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -51,6 +51,9 @@ _host(vimeo);
 _host(spiegel);
 _host(ehrensenf);
 _host(dailymotion);
+#ifdef ENABLE_SMUT
+_host(tube8);
+#endif
 /* Add new ones below. */
 
 #undef _host
