@@ -147,6 +147,7 @@ AC_MSG_NOTICE([Configured to build quvi/libquvi:
     host setup:     ${host}
     install prefix: ${prefix}
     compiler:       ${CC}
+    cflags:         ${CFLAGS}
     build quvi exe: ${enable_exe}
     adult support:  ${enable_smut}
 ])
