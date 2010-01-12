@@ -38,7 +38,7 @@ quvi_init(quvi_t *dst) {
 
     *dst = 0;
 
-    quvi = calloc(sizeof(*quvi), 1);
+    quvi = calloc(1, sizeof(*quvi));
     if (!quvi)
         return (QUVI_MEM);
 
