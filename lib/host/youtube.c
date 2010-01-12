@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ _host_re(re_fmap,   "(?i)\"fmt_map\": \"(\\d+)");
 
 QUVIcode
 handle_youtube(const char *url, _quvi_video_t video) {
-    char *content, *t, *fmap, *format;
+    char *content, *t, *fmap, *format, *lnk, *fmt_lnk;
     QUVIcode rc;
 
     /* host id */
@@ -66,7 +66,7 @@ handle_youtube(const char *url, _quvi_video_t video) {
     );
 
     /* video link */
-    setvid(video->link,
+    asprintf(&lnk,
         "http://youtube.com/get_video?video_id=%s&t=%s", video->id, t);
 
     _free(t);
@@ -74,6 +74,7 @@ handle_youtube(const char *url, _quvi_video_t video) {
 
     /* format */
     format = video->quvi->format;
+    fmt_lnk = 0;
 
     if (format) {
         char *fmt = 0;
@@ -111,16 +112,21 @@ handle_youtube(const char *url, _quvi_video_t video) {
         }
 
         if (fmt) {
-            char *tmp;
-
-            asprintf(&tmp, "%s&fmt=%s", video->link, fmt);
-            _free(video->link);
-            video->link = tmp;
+            _free(fmt_lnk);
+            asprintf(&fmt_lnk, "%s&fmt=%s", lnk, fmt);
         }
     }
 
-    if (rc == QUVI_OK)
-        _free(fmap);
+    _free(fmap);
+
+    if (rc == QUVI_OK) {
+        rc = add_video_link(&video->link, "%s",
+            fmt_lnk
+            ? fmt_lnk
+            : lnk);
+    }
+
+    _free(lnk);
 
     return (QUVI_OK);
 }

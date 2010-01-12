@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -152,7 +152,7 @@ handle_spiegel(const char *url, _quvi_video_t video) {
     _free(config);
 
     if (rc == QUVI_OK)
-        setvid(video->link, "%s", fname);
+        rc = add_video_link(&video->link, "%s", fname);
 
     _free(fname);
 

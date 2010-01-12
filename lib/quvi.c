@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -220,24 +220,19 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
         to_utf8(video);
 #endif
     video->title = from_html_entities(video->title);
-    video->link  = from_html_entities(video->link);
 
     if (!video->quvi->no_verify) {
-        char *tmp, *tok, *dup;
-
-        _free(video->length);
-        _free(video->suffix);
-
-        dup = strdup(video->link);
-        tok = strtok_r(dup, quvi_delim, &tmp);
-        while (tok) {
-            rc = query_file_length(video, tok);
+        llst_node_t curr = video->link;
+        while (curr) {
+            rc = query_file_length(video->quvi, curr);
             if (rc != QUVI_OK)
                 break;
-            tok = strtok_r(0, quvi_delim, &tmp);
+            curr = curr->next;
         }
-        _free(dup);
     }
+
+    /* set current video link to first link in the list. */
+    video->curr = video->link;
 
     return (rc);
 }
@@ -251,14 +246,21 @@ quvi_parse_close(quvi_video_t *handle) {
     video = (_quvi_video_t*)handle;
 
     if (video && *video) {
+        llst_node_t curr = (*video)->link;
+
+        while (curr) {
+            _quvi_video_link_t l = (_quvi_video_link_t) curr->data;
+            _free(l->url);
+            _free(l->suffix);
+            _free(l->content_type);
+            curr = curr->next;
+        }
+        llst_free(&(*video)->link);
+
         _free((*video)->id);
-        _free((*video)->link);
         _free((*video)->title);
         _free((*video)->host_id);
         _free((*video)->page_link);
-        _free((*video)->content_type);
-        _free((*video)->suffix);
-        _free((*video)->length);
         _free((*video)->charset);
         _free(*video);
     }
@@ -313,11 +315,15 @@ static const char empty[] = "";
 
 static QUVIcode
 _getprop(_quvi_video_t video, QUVIproperty prop, ...) {
+    _quvi_video_link_t qvl;
     va_list arg;
     double *dp;
     char **sp;
     long *lp;
     int type;
+
+    qvl = (_quvi_video_link_t) video->curr->data;
+    assert(qvl != 0);
 
     dp = 0;
     sp = 0;
@@ -350,10 +356,10 @@ _getprop(_quvi_video_t video, QUVIproperty prop, ...) {
     case QUVIP_PAGEURL      : _sets(video->page_link);
     case QUVIP_PAGETITLE    : _sets(video->title);
     case QUVIP_VIDEOID      : _sets(video->id);
-    case QUVIP_VIDEOURL     : _sets(video->link);
-    case QUVIP_VIDEOFILELENGTH      : _sets(video->length);
-    case QUVIP_VIDEOFILECONTENTTYPE : _sets(video->content_type);
-    case QUVIP_VIDEOFILESUFFIX      : _sets(video->suffix);
+    case QUVIP_VIDEOURL     : _sets(qvl->url);
+    case QUVIP_VIDEOFILELENGTH      : _setn(dp, qvl->length);
+    case QUVIP_VIDEOFILECONTENTTYPE : _sets(qvl->content_type);
+    case QUVIP_VIDEOFILESUFFIX      : _sets(qvl->suffix);
     case QUVIP_HTTPCODE     : _setn(lp, video->quvi->httpcode);
     default                 : return (QUVI_INVARG);
     }
@@ -439,6 +445,33 @@ quvi_getprop(quvi_video_t video, QUVIproperty prop, ...) {
     return (_getprop(video, prop, p));
 }
 
+/* quvi_next_videolink */
+
+QUVIcode
+quvi_next_videolink (quvi_video_t handle) {
+    _quvi_video_t video;
+
+    assert(handle != 0);
+
+    if (!handle) 
+        return (QUVI_BADHANDLE);
+
+    video = (_quvi_video_t) handle;
+
+    /* start from the first */
+    if (!video->curr) {
+        video->curr = video->link;
+        return (QUVI_OK);
+    }
+
+    /* move to the next */
+    video->curr = video->curr->next;
+    if (!video->curr)
+        return (QUVI_LASTLINK);
+
+    return (QUVI_OK);
+}
+
 /* quvi_strerror */
 
 char *
@@ -450,6 +483,7 @@ quvi_strerror(quvi_t handle, QUVIcode code) {
         "invalid argument to function",
         "curl initialization failed",
         "last host entry",
+        "last video link",
         "invalid error code (internal _QUVI_LAST)"
     };
 

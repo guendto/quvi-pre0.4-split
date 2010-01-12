@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 #define internal_h
 
 #include "platform.h"
+#include "llst.h"
 
 #define makelong(low,high) \
     ((long)   (((quvi_word)((uint64_t)(low)  & 0xffff)) | \
@@ -58,17 +59,31 @@ struct _quvi_s {
 
 typedef struct _quvi_s *_quvi_t;
 
+struct _quvi_video_link_s {
+    char *url;
+    char *suffix;
+    char *content_type;
+    double length;
+};
+
+typedef struct _quvi_video_link_s *_quvi_video_link_t;
+
+/* TODO: re-arrange variables in a more sensible order */
 struct _quvi_video_s {
     _quvi_t quvi;
     char *id;
-    char *link;
-    char *title;
+    char *title; /* TODO: -> page_title */
     char *host_id;
     char *charset;
     char *page_link;
+    llst_node_t link; /* holds all essential to video links */
+    llst_node_t curr; /* current link node in link list */
+#ifdef _1_
+    char *link;
     char *content_type;
     char *suffix;
     char *length;
+#endif
 };
 
 typedef struct _quvi_video_s *_quvi_video_t;

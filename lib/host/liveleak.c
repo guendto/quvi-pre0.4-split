@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ QUVIcode
 handle_liveleak(const char *url, _quvi_video_t video) {
     char *content, *config_url, *config, *playlist_url, *playlist;
     QUVIcode rc;
+    char *lnk;
 
     /* host id */
     _host_id("liveleak");
@@ -92,19 +93,24 @@ handle_liveleak(const char *url, _quvi_video_t video) {
         return (rc);
 
     /* video link */
-    _free(video->link);
-
     rc = regexp_capture(
         video->quvi,
         playlist,
         re_lnk,
         0,
         0,
-        &video->link,
+        &lnk,
         0
     );
 
     _free(playlist);
+
+    if (rc != QUVI_OK)
+        return (rc);
+
+    rc = add_video_link(&video->link, "%s", lnk);
+
+    _free(lnk);
 
     return (rc);
 }

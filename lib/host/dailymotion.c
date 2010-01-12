@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,7 @@ parse(const _quvi_video_t video, char *paths) {
     static const char default_format[] = "spark";
     int best_width, best_flag;
     const char *format;
+    char *best_link;
     char *s, *t;
     QUVIcode rc;
 
@@ -41,6 +42,7 @@ parse(const _quvi_video_t video, char *paths) {
 
     best_width = 0;
     best_flag  = !strcmp(format, "best");
+    best_link   = 0;
 
     s = paths;
     t = strtok(s, "||");
@@ -64,7 +66,7 @@ parse(const _quvi_video_t video, char *paths) {
 
         if (!best_flag) {
             if (!strcmp(id,format)) {
-                setvid(video->link, "%s", path);
+                rc = add_video_link(&video->link, "%s", path);
                 _free(path);
                 _free(id);
                 return (rc);
@@ -92,7 +94,8 @@ parse(const _quvi_video_t video, char *paths) {
 
             if (atoi(w) > best_width) {
                 best_width = atoi(w);
-                setvid(video->link, "%s", path);
+                _free(best_link);
+                asprintf(&best_link, "%s", path);
             }
 
             _free(w);
@@ -104,6 +107,10 @@ parse(const _quvi_video_t video, char *paths) {
 
         t = strtok(0, "||");
     }
+
+    rc = add_video_link(&video->link, "%s", best_link);
+
+    _free(best_link);
 
     return (rc);
 }

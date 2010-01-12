@@ -90,51 +90,42 @@ supports() {
 }
 
 static void
+dump_video_links(quvi_video_t video) {
+    int i = 0;
+    do {
+        char *video_url, *file_suffix, *file_ct;
+        double file_length;
+
+        quvi_getprop(video, QUVIP_VIDEOURL, &video_url);
+        quvi_getprop(video, QUVIP_VIDEOFILECONTENTTYPE, &file_ct);
+        quvi_getprop(video, QUVIP_VIDEOFILESUFFIX, &file_suffix);
+        quvi_getprop(video, QUVIP_VIDEOFILELENGTH, &file_length);
+
+        printf(
+            "link %02d  : %s\n"
+            ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
+            ++i, video_url, file_length, file_suffix, file_ct
+        );
+    } while (quvi_next_videolink(video) == QUVI_OK);
+}
+
+static void
 dump_video(quvi_video_t video, opts_s opts) {
-    char *page_link, *id, *title, *link, *length, *suffix;
-    char *_link, *_length, *_suffix;
-    char *tl, *tle, *ts;
-    char *rl, *rle, *rs;
+    char *page_link, *page_title, *video_id;
     long httpcode;
-    int i;
 
     quvi_getprop(video, QUVIP_PAGEURL, &page_link);
-    quvi_getprop(video, QUVIP_PAGETITLE, &title);
-    quvi_getprop(video, QUVIP_VIDEOID, &id);
-    quvi_getprop(video, QUVIP_VIDEOURL, &link);
-    quvi_getprop(video, QUVIP_VIDEOFILELENGTH, &length);
-    quvi_getprop(video, QUVIP_VIDEOFILESUFFIX, &suffix);
+    quvi_getprop(video, QUVIP_PAGETITLE, &page_title);
+    quvi_getprop(video, QUVIP_VIDEOID, &video_id);
     quvi_getprop(video, QUVIP_HTTPCODE, &httpcode);
 
     printf(" > Dump video:\n"
         "url     : %s\n"
         "title   : %s\n"
         "id      : %s\n",
-        page_link, title, id);
+        page_link, page_title, video_id);
 
-    _link   = strdup(link);
-    _length = strdup(length);
-    _suffix = strdup(suffix);
-
-    for (i  =0,
-         tl =strtok_r(  _link, quvi_delim, &rl),
-         tle=strtok_r(_length, quvi_delim, &rle),
-         ts =strtok_r(_suffix, quvi_delim, &rs);
-         tl && tle && ts;
-         ++i)
-    {
-        printf(
-            "link %02d  : %s\n:: length: %s\n:: suffix: %s\n",
-            i+1, tl, tle, ts
-        );
-        tl  = strtok_r(0, quvi_delim, &rl);
-        tle = strtok_r(0, quvi_delim, &rle);
-        ts  = strtok_r(0, quvi_delim, &rs);
-    }
-
-    free(_link);
-    free(_length);
-    free(_suffix);
+    dump_video_links(video);
 
     printf("httpcode: %ld (last)\n", httpcode);
 }

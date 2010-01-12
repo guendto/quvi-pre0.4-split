@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -91,7 +91,6 @@ handle_cctv(const char *url, _quvi_video_t video) {
         return (rc);
 
     /* paths */
-    _free(video->link);
     offset = 0;
     do {
         char *path;
@@ -108,21 +107,14 @@ handle_cctv(const char *url, _quvi_video_t video) {
 
         if (rc == QUVI_OK) {
 
-            if (video->link) {
-                char *dup = strdup(video->link);
-                setvid(video->link,
-                    "%s%shttp://v.cctv.com/flash/%s",
-                        dup, quvi_delim, path);
-                _free(dup);
-            }
-            else {
-                setvid(video->link,
-                    "http://v.cctv.com/flash/%s", path);
-            }
+            rc = add_video_link(&video->link,
+                "http://v.cctv.com/flash/%s", path);
 
             offset += ovector[1];
+
             _free(path);
         }
+
     } while (rc == QUVI_OK);
 
     _free(chapters);

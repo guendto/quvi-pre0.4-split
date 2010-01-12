@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@
 
 #include <string.h>
 #include <errno.h>
+#include <stdarg.h>
 #include <assert.h>
 
 #include <curl/curl.h>
@@ -121,19 +122,19 @@ regexp_capture(
 }
 
 QUVIcode
-contenttype_to_suffix(_quvi_video_t video) {
+contenttype_to_suffix(_quvi_t quvi, _quvi_video_link_t qvl) {
     char *suffix;
     QUVIcode rc;
 
-    assert(video != 0);
-    assert(video->content_type != 0);
+    assert(qvl != 0);
+    assert(qvl->content_type != 0);
 
-    if (!video->content_type)
+    if (!qvl->content_type)
         return (QUVI_INVARG);
 
     rc = regexp_capture(
-        video->quvi,
-        video->content_type,
+        quvi,
+        qvl->content_type,
         ".*/(.*)",
         0,
         0,
@@ -151,17 +152,12 @@ contenttype_to_suffix(_quvi_video_t video) {
         || strstr(suffix, "flash")
         || strstr(suffix, "plain"))
     {
-        setvid(suffix, "%s", "flv");
+        _free(suffix);
+        asprintf(&suffix, "%s", "flv");
     }
 
-    if (video->suffix) {
-        char *dup = strdup(video->suffix);
-        setvid(video->suffix, "%s%s%s", dup, quvi_delim, suffix);
-        _free(dup);
-    }
-    else {
-        setvid(video->suffix, "%s", suffix);
-    }
+    _free(qvl->suffix);
+    asprintf(&qvl->suffix, "%s", suffix);
 
     _free(suffix);
     
@@ -421,6 +417,41 @@ from_html_entities(char *src) {
         src = strepl(src, conv[i].from, conv[i].to);
 
     return (src);
+}
+
+static int
+new_video_link(_quvi_video_link_t *dst) {
+    struct _quvi_video_link_s *qvl;
+
+    qvl = calloc(1, sizeof(*qvl));
+    if (!qvl)
+        return (QUVI_MEM);
+
+    *dst = qvl;
+
+    return (QUVI_OK);
+}
+
+int
+add_video_link(llst_node_t *lst, const char *fmt, ...) {
+    _quvi_video_link_t qvl;
+    va_list args;
+    int rc;
+
+    rc = new_video_link(&qvl);
+    if (rc != QUVI_OK)
+        return (rc);
+
+    va_start(args, fmt);
+    vasprintf((char **)&qvl->url, fmt, args);
+    va_end(args);
+
+    if (!qvl->url) {
+        _free(qvl);
+        return (QUVI_MEM);
+    }
+
+    return (llst_add(lst, qvl));
 }
 
 

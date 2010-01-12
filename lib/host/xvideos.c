@@ -56,8 +56,8 @@ handle_xvideos(const char *url, _quvi_video_t video) {
         return (rc);
 
     /* video link */
-    lnk = unescape(video->quvi, lnk);
-    setvid(video->link, "%s", lnk);
+    lnk = unescape(video->quvi, lnk); /* orig. lnk freed by unescape. */
+    rc = add_video_link(&video->link, "%s", lnk);
 
     _free(lnk);
 

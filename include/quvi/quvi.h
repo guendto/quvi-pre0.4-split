@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 * @brief Query video library C API
 * @author Toni Gundogdu
 * @version 0.1.0
-* @date 2009-09-23
+* @date 2010-01-12
 */
 
 /** @example quvi.c */
@@ -46,7 +46,8 @@ QUVI_MEM,             /**< Memory allocation failed */
 QUVI_BADHANDLE,       /**< Bad session handle */
 QUVI_INVARG,          /**< Invalid function argument */
 QUVI_CURLINIT,        /**< libcurl initialization failed */
-QUVI_LASTHOST,        /**< Reached the last host */
+QUVI_LASTHOST,        /**< Indicates the end of hosts */
+QUVI_LASTLINK,        /**< Indicates the end of video links */
 _QUVI_LAST,           /**< Unused: for libquvi internal use only */
 /* Dynamic */
 QUVI_PCRE = 0xff + 1, /**< libpcre error occurred */
@@ -131,10 +132,10 @@ QUVIP_HOSTID        = QUVIPROPERTY_STRING + 1, /**< Host ID */
 QUVIP_PAGEURL       = QUVIPROPERTY_STRING + 2, /**< Video page link */
 QUVIP_PAGETITLE     = QUVIPROPERTY_STRING + 3, /**< Video title */
 QUVIP_VIDEOID       = QUVIPROPERTY_STRING + 4, /**< Video ID */
-QUVIP_VIDEOURL      = QUVIPROPERTY_STRING + 5, /**< Video link(s) delimited by quvi_delim */
-QUVIP_VIDEOFILELENGTH       = QUVIPROPERTY_STRING + 6, /**< Video length(s) in bytes delimited by quvi_delim */
-QUVIP_VIDEOFILECONTENTTYPE  = QUVIPROPERTY_STRING + 7, /**< Video file content-type(s) delimited by quvi_delim */
-QUVIP_VIDEOFILESUFFIX       = QUVIPROPERTY_STRING + 8, /**< Video file suffix(es) delimited by quvi_delim */
+QUVIP_VIDEOURL      = QUVIPROPERTY_STRING + 5, /**< Video URL */
+QUVIP_VIDEOFILELENGTH       = QUVIPROPERTY_DOUBLE + 6, /**< Video file length */
+QUVIP_VIDEOFILECONTENTTYPE  = QUVIPROPERTY_STRING + 7, /**< Video file content-type */
+QUVIP_VIDEOFILESUFFIX       = QUVIPROPERTY_STRING + 8, /**< Video file suffix */
 QUVIP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP code */
 /* Add new ones below. */
 QUVIP_LAST          = 9 /**< Placeholder */
@@ -163,9 +164,6 @@ typedef uint8_t  quvi_byte;
 #define quvi_loword(l) ((quvi_word)((uint64_t)(l) & 0xffff))
 /** @brief Return a high word from a long type variable */
 #define quvi_hiword(l) ((quvi_word)((uint64_t)(l) >> 16))
-
-/** @brief String delimiter used for video links, lengths, etc. */
-#define quvi_delim  "@"
 
 #ifdef __cplusplus
 extern "C" {
@@ -265,6 +263,23 @@ QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
 * @sa QUVIproperty
 */
 QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
+
+
+/**
+* @brief Move to next video link (if any)
+*
+* Used to iterate video links for the parsed video page.
+* While most of the supported websites typically do not
+* split videos into segments, some, like cctv are known
+* to do so.
+*
+* @param video Handle to a video session
+* 
+* @return Non-zero if an error occurred (QUVI_LASTLINK indicates the end of the list)
+*
+* @sa quvi_getprop
+*/
+QUVIcode quvi_next_videolink(quvi_video_t video);
 
 
 /** 

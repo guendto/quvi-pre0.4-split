@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ regexp_capture(
 );
 
 QUVIcode
-contenttype_to_suffix(_quvi_video_t video);
+contenttype_to_suffix(_quvi_t, _quvi_video_link_t);
 
 QUVIcode
 parse_charset(_quvi_video_t video, const char *content);
@@ -60,6 +60,9 @@ is_format_supported(const char *fmt, const char *lst);
 
 char *
 from_html_entities(char *src);
+
+int
+add_video_link(llst_node_t *lst, const char *fmt, ...);
 
 #endif
 

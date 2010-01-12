@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -74,12 +74,17 @@ handle_google(const char *url, _quvi_video_t video) {
             &lnk,
             0
         );
+
+        if (rc != QUVI_OK)
+            return (rc);
     }
 
     _free(content);
-    _free(video->link);
 
-    video->link = unescape(video->quvi, lnk); /* lnk freed by unescape */
+    lnk = unescape(video->quvi, lnk); /* orig. lnk freed by unescape */
+    rc = add_video_link(&video->link, "%s", lnk);
+
+    _free(lnk);
 
     return (rc);
 }

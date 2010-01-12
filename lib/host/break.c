@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ handle_break(const char *url, _quvi_video_t video) {
     }
 
     /* video link */
-    setvid(video->link,
+    add_video_link(&video->link,
         "http://video1.break.com/dnet/media/%s/%s.flv", fpath, fname);
 
     _free(fpath);

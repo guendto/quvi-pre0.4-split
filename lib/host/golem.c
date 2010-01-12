@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ _host_re(re_title,  "(?i)<title>(.*?)</title>");
 
 QUVIcode
 handle_golem(const char *url, _quvi_video_t video) {
-    char *content, *config_url, *config, *format;
+    char *content, *config_url, *config, *format, *lnk, *fmt_lnk;
     QUVIcode rc;
 
     format = video->quvi->format;
@@ -69,9 +69,10 @@ handle_golem(const char *url, _quvi_video_t video) {
         return (rc);
 
     /* video link */
-    setvid(video->link, "http://video.golem.de/download/%s", video->id);
+    asprintf(&lnk, "http://video.golem.de/download/%s", video->id);
 
     /* format */
+    fmt_lnk = 0;
     if (format) {
         char *fmt;
 
@@ -95,15 +96,20 @@ handle_golem(const char *url, _quvi_video_t video) {
         }
 
         if (fmt) {
-            char *tmp;
-
-            asprintf(&tmp, "%s?q=%s", video->link, fmt);
-            _free(video->link);
-            video->link = tmp;
+            _free(fmt_lnk);
+            asprintf(&fmt_lnk, "%s?q=%s", lnk, fmt);
         }
     }
 
-    return (QUVI_OK);
+    rc = add_video_link(&video->link, "%s",
+        fmt_lnk
+        ? fmt_lnk
+        : lnk);
+
+    _free(fmt_lnk);
+    _free(lnk);
+
+    return (rc);
 }
 
 

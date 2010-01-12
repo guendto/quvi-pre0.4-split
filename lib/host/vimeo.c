@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -30,6 +30,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
     char *content, *config_url, *config, *sign, *exp, *format;
     QUVIcode rc;
     int hd_avail;
+    char *lnk;
 
     hd_avail = 0;
 
@@ -126,7 +127,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
     }
 
     /* video link */
-    setvid(video->link,
+    asprintf(&lnk,
         "http://vimeo.com/moogaloop/play/clip:%s/%s/%s",
         video->id, sign, exp);
 
@@ -140,13 +141,16 @@ handle_vimeo(const char *url, _quvi_video_t video) {
             || !strcmp(format, "best"))
             && hd_avail)
         {
-            char *tmp;
-
-            asprintf(&tmp, "%s/?q=hd", video->link);
-            _free(video->link);
-            video->link = tmp;
+            char *tmp = strdup(lnk);
+            _free(lnk);
+            asprintf(&lnk, "%s/?q=hd", tmp);
+            _free(tmp);
         }
     }
+
+    rc = add_video_link(&video->link, "%s", lnk);
+
+    _free(lnk);
 
     return (QUVI_OK);
 }

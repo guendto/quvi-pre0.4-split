@@ -7,7 +7,8 @@ src = \
 quvi.c \
 util.c \
 curl.c \
-strepl.c
+strepl.c \
+llst.c
 
 if NO_ASPRINTF
 src += vasprintf.c asprintf.c
@@ -50,7 +51,8 @@ curl.h \
 host.h \
 internal.h \
 util.h \
-platform.h
+platform.h \
+llst.h
 
 lib_LTLIBRARIES = libquvi.la
 libquvi_la_SOURCES = $(src) $(src_host) $(hdr)

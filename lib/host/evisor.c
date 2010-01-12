@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@ _host_re(re_lnk,    "(?i)file=(.*?)\"");
 
 QUVIcode
 handle_evisor(const char *url, _quvi_video_t video) {
-    char *content;
+    char *content, *lnk;
     QUVIcode rc;
 
     /* host id */
@@ -38,19 +38,24 @@ handle_evisor(const char *url, _quvi_video_t video) {
         return (rc);
 
     /* video link */
-    _free(video->link);
-
     rc = regexp_capture(
         video->quvi,
         content,
         re_lnk,
         0,
         0,
-        &video->link,
+        &lnk,
         0
     );
 
     _free(content);
+
+    if (rc != QUVI_OK)
+        return (rc);
+
+    rc = add_video_link(&video->link, "%s", lnk);
+
+    _free(lnk);
 
     return (rc);
 }

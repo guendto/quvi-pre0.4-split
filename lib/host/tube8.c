@@ -56,7 +56,7 @@ handle_tube8(const char *url, _quvi_video_t video) {
         return (rc);
 
     /* video link */
-    setvid(video->link, "%s", lnk);
+    rc = add_video_link(&video->link, "%s", lnk);
 
     _free(lnk);
 

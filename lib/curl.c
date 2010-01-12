@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -132,22 +132,26 @@ fetch_to_mem(
 }
 
 QUVIcode
-query_file_length(_quvi_video_t video, const char *url) {
+query_file_length(_quvi_t quvi, llst_node_t lnk) {
+    _quvi_video_link_t qvl;
     CURLcode curlcode;
     struct mem_s mem;
     long httpcode;
-    _quvi_t quvi;
     QUVIcode rc;
 
-    assert(video != 0);
-
-    if (!video) 
-        return (QUVI_BADHANDLE);
-
-    quvi = video->quvi;
     assert(quvi != 0);
+    assert(lnk != 0);
 
     if (!quvi)
+        return (QUVI_BADHANDLE);
+
+    if (!lnk) 
+        return (QUVI_BADHANDLE);
+
+    qvl = (_quvi_video_link_t) lnk->data;
+    assert(qvl != 0);
+
+    if (!qvl)
         return (QUVI_BADHANDLE);
 
     if (quvi->status_func)
@@ -158,7 +162,9 @@ query_file_length(_quvi_video_t video, const char *url) {
     csetopt(CURLOPT_WRITEDATA, &mem);
     csetopt(CURLOPT_WRITEFUNCTION, writemem_callback);
 
-    csetopt(CURLOPT_URL, url);
+    qvl->url = from_html_entities(qvl->url);
+
+    csetopt(CURLOPT_URL, qvl->url);
     csetopt(CURLOPT_NOBODY, 1L); /* get -> head */
 
     curlcode = curl_easy_perform(quvi->curl);
@@ -175,39 +181,21 @@ query_file_length(_quvi_video_t video, const char *url) {
 
         if (httpcode == 200 || httpcode == 206) {
             const char *ct;
-            double length;
 
             curl_easy_getinfo(quvi->curl,
                 CURLINFO_CONTENT_TYPE, &ct);
 
-            if (video->content_type) {
-                char *dup = strdup(video->content_type);
-                setvid(video->content_type,
-                    "%s%s%s", dup, quvi_delim, ct);
-                _free(dup);
-            }
-            else {
-                setvid(video->content_type, "%s", ct);
-            }
+            _free(qvl->content_type);
+            asprintf(&qvl->content_type, "%s", ct);
 
             curl_easy_getinfo(quvi->curl,
-                CURLINFO_CONTENT_LENGTH_DOWNLOAD, &length);
-
-            if (video->length) {
-                char *dup = strdup(video->length);
-                setvid(video->length,
-                    "%s%s%.0f", dup, quvi_delim, length);
-                _free(dup);
-            }
-            else {
-                setvid(video->length, "%.0f", length);
-            }
+                CURLINFO_CONTENT_LENGTH_DOWNLOAD, &qvl->length);
 
             if (quvi->status_func)
                 quvi->status_func(makelong(QUVIS_VERIFY, QUVIST_DONE), 0);
 
             /* Content-Type -> suffix. */
-            rc = contenttype_to_suffix(video);
+            rc = contenttype_to_suffix(quvi, qvl);
         }
         else {
             seterr("server returned http/%ld", httpcode);
@@ -220,8 +208,8 @@ query_file_length(_quvi_video_t video, const char *url) {
         rc = QUVI_CURL;
     }
 
-    video->quvi->httpcode = httpcode;
-    video->quvi->curlcode = curlcode;
+    quvi->httpcode = httpcode;
+    quvi->curlcode = curlcode;
 
     if (mem.p)
         _free(mem.p);

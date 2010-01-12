@@ -81,20 +81,21 @@ am__base_list = \
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libquvi_la_LIBADD =
-am__libquvi_la_SOURCES_DIST = quvi.c util.c curl.c strepl.c \
+am__libquvi_la_SOURCES_DIST = quvi.c util.c curl.c strepl.c llst.c \
 	vasprintf.c asprintf.c strupr.c strtok_r.c host/break.c \
 	host/cctv.c host/clipfish.c host/evisor.c host/funnyhub.c \
 	host/golem.c host/google.c host/liveleak.c host/myubo.c \
 	host/sevenload.c host/vimeo.c host/spiegel.c host/ehrensenf.c \
 	host/dailymotion.c host/youtube.c host/tube8.c host/xvideos.c \
-	host/youjizz.c curl.h host.h internal.h util.h platform.h
+	host/youjizz.c curl.h host.h internal.h util.h platform.h \
+	llst.h
 @NO_ASPRINTF_TRUE@am__objects_1 = libquvi_la-vasprintf.lo \
 @NO_ASPRINTF_TRUE@	libquvi_la-asprintf.lo
 @NO_STRUPR_TRUE@am__objects_2 = libquvi_la-strupr.lo
 @NO_STRTOK_R_TRUE@am__objects_3 = libquvi_la-strtok_r.lo
 am__objects_4 = libquvi_la-quvi.lo libquvi_la-util.lo \
-	libquvi_la-curl.lo libquvi_la-strepl.lo $(am__objects_1) \
-	$(am__objects_2) $(am__objects_3)
+	libquvi_la-curl.lo libquvi_la-strepl.lo libquvi_la-llst.lo \
+	$(am__objects_1) $(am__objects_2) $(am__objects_3)
 @ENABLE_SMUT_TRUE@am__objects_5 = libquvi_la-tube8.lo \
 @ENABLE_SMUT_TRUE@	libquvi_la-xvideos.lo libquvi_la-youjizz.lo
 am__objects_6 = libquvi_la-break.lo libquvi_la-cctv.lo \
@@ -264,8 +265,8 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-src = quvi.c util.c curl.c strepl.c $(am__append_2) $(am__append_3) \
-	$(am__append_4)
+src = quvi.c util.c curl.c strepl.c llst.c $(am__append_2) \
+	$(am__append_3) $(am__append_4)
 src_host = host/break.c host/cctv.c host/clipfish.c host/evisor.c \
 	host/funnyhub.c host/golem.c host/google.c host/liveleak.c \
 	host/myubo.c host/sevenload.c host/vimeo.c host/spiegel.c \
@@ -276,7 +277,8 @@ curl.h \
 host.h \
 internal.h \
 util.h \
-platform.h
+platform.h \
+llst.h
 
 lib_LTLIBRARIES = libquvi.la
 libquvi_la_SOURCES = $(src) $(src_host) $(hdr)
@@ -379,6 +381,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-golem.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-google.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-liveleak.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-llst.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-myubo.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-quvi.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-sevenload.Plo@am__quote@
@@ -442,6 +445,13 @@ libquvi_la-strepl.lo: strepl.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strepl.c' object='libquvi_la-strepl.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-strepl.lo `test -f 'strepl.c' || echo '$(srcdir)/'`strepl.c
+
+libquvi_la-llst.lo: llst.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-llst.lo -MD -MP -MF $(DEPDIR)/libquvi_la-llst.Tpo -c -o libquvi_la-llst.lo `test -f 'llst.c' || echo '$(srcdir)/'`llst.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libquvi_la-llst.Tpo $(DEPDIR)/libquvi_la-llst.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='llst.c' object='libquvi_la-llst.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-llst.lo `test -f 'llst.c' || echo '$(srcdir)/'`llst.c
 
 libquvi_la-vasprintf.lo: vasprintf.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-vasprintf.lo -MD -MP -MF $(DEPDIR)/libquvi_la-vasprintf.Tpo -c -o libquvi_la-vasprintf.lo `test -f 'vasprintf.c' || echo '$(srcdir)/'`vasprintf.c

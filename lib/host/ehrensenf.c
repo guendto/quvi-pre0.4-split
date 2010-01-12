@@ -1,5 +1,5 @@
 /* 
-* Copyright (C) 2009 Toni Gundogdu.
+* Copyright (C) 2009,2010 Toni Gundogdu.
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -61,11 +61,10 @@ handle_ehrensenf(const char *url, _quvi_video_t video) {
     _free(m);
     _free(y);
 
-    setvid(video->title,
-        "%s", video->id);
+    setvid(video->title, "%s", video->id);
 
     /* link */
-    setvid(video->link, 
+    rc = add_video_link(&video->link,
         "http://www.ehrensenf.de/misc/"
         "load-balancing/lb.php?file=%s.flv",
             video->id);
