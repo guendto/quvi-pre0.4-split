@@ -202,7 +202,7 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
     if (!dst)
         return (QUVI_INVARG);
 
-    video = calloc(sizeof(*video), 1);
+    video = calloc(1, sizeof(*video));
     if (!video)
         return (QUVI_MEM);
 
