@@ -466,8 +466,10 @@ quvi_next_videolink (quvi_video_t handle) {
 
     /* move to the next */
     video->curr = video->curr->next;
-    if (!video->curr)
+    if (!video->curr) {
+        video->curr = video->link; /* reset */
         return (QUVI_LASTLINK);
+    }
 
     return (QUVI_OK);
 }
