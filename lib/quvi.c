@@ -468,8 +468,32 @@ quvi_next_videolink (quvi_video_t handle) {
     video->curr = video->curr->next;
     if (!video->curr) {
         video->curr = video->link; /* reset */
-        return (QUVI_LASTLINK);
+        return (QUVI_LAST);
     }
+
+    return (QUVI_OK);
+}
+
+static int curr_host = -1;
+
+/* quvi_next_host */
+
+QUVIcode
+quvi_next_host(char **domain, char **formats) {
+
+    assert(domain != 0);
+    assert(formats != 0);
+
+    if (!domain || !formats)
+        return (QUVI_BADHANDLE);
+
+    if (!hosts[++curr_host].domain) {
+        curr_host = -1;
+        return (QUVI_LAST);
+    }
+
+    *domain  = (char *)hosts[curr_host].domain;
+    *formats = (char *)hosts[curr_host].formats;
 
     return (QUVI_OK);
 }
@@ -484,43 +508,23 @@ quvi_strerror(quvi_t handle, QUVIcode code) {
         "bad handle argument to function",
         "invalid argument to function",
         "curl initialization failed",
-        "last host entry",
-        "last video link",
-        "invalid error code (internal _QUVI_LAST)"
+        "end of list iteration",
+        "invalid error code (internal _INTERNAL_QUVI_LAST)"
     };
 
     _quvi_t quvi = (_quvi_t)handle;
 
     if (quvi) {
-        if (code > _QUVI_LAST)
+        if (code > _INTERNAL_QUVI_LAST)
             return (quvi->errmsg);
     }
     else {
-        if (code > _QUVI_LAST)
-            code = _QUVI_LAST;
+        if (code > _INTERNAL_QUVI_LAST)
+            code = _INTERNAL_QUVI_LAST;
     }
 
     return ((char *)errormsgs[code]);
 
-}
-
-static int curr_host;
-
-/* quvi_next_host */
-
-QUVIcode
-quvi_next_host(char **domain, char **formats) {
-
-    if ( !(*domain) && !(*formats) )
-        curr_host = -1; /* reset counter */
-
-    if (!hosts[++curr_host].domain)
-        return (QUVI_LASTHOST);
-
-    *domain  = (char *)hosts[curr_host].domain;
-    *formats = (char *)hosts[curr_host].formats;
-
-    return (QUVI_OK);
 }
 
 /* quvi_version */
