@@ -40,16 +40,15 @@ QUVI_VERSION_LONG,      /**< Version string, build date and misc. features */
 
 /** @enum QUVIcode Return codes */
 typedef enum {
-/* Static */
+/* Static errors */
 QUVI_OK  = 0x00,      /**< OK */
 QUVI_MEM,             /**< Memory allocation failed */
 QUVI_BADHANDLE,       /**< Bad session handle */
 QUVI_INVARG,          /**< Invalid function argument */
 QUVI_CURLINIT,        /**< libcurl initialization failed */
-QUVI_LASTHOST,        /**< Indicates the end of hosts */
-QUVI_LASTLINK,        /**< Indicates the end of video links */
-_QUVI_LAST,           /**< Unused: for libquvi internal use only */
-/* Dynamic */
+QUVI_LAST,            /**< Indicates end of list iteration */
+_INTERNAL_QUVI_LAST,  /**< For library internal use only */
+/* Dynamically generated errors */
 QUVI_PCRE = 0xff + 1, /**< libpcre error occurred */
 QUVI_NOSUPPORT,       /**< libquvi does not support the video host */
 QUVI_CURL,            /**< libcurl error occurred */
@@ -122,7 +121,7 @@ QUVII_CURL        = QUVIINFO_VOID + 1,/**< Session libcurl handle */
 QUVII_CURLCODE    = QUVIINFO_LONG + 2,/**< Last libcurl returned code */
 QUVII_HTTPCODE    = QUVIINFO_LONG + 3,/**< Last libcurl returned HTTP code */
 /* Add new ones below. */
-QUVII_LAST        = 3                 /**< Placeholder */
+_QUVII_LAST        = 3                 /**< Placeholder */
 } QUVIinfo;
 
 /** @enum QUVIproperty Video property codes to be used with quvi_getprop() */
@@ -138,7 +137,7 @@ QUVIP_VIDEOFILECONTENTTYPE  = QUVIPROPERTY_STRING + 7, /**< Video file content-t
 QUVIP_VIDEOFILESUFFIX       = QUVIPROPERTY_STRING + 8, /**< Video file suffix */
 QUVIP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP code */
 /* Add new ones below. */
-QUVIP_LAST          = 9 /**< Placeholder */
+_QUVIP_LAST          = 9 /**< Placeholder */
 } QUVIproperty;
 
 
@@ -274,8 +273,8 @@ QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
 * to do so.
 *
 * @param video Handle to a video session
-* 
-* @return Non-zero if an error occurred (QUVI_LASTLINK indicates the end of the list)
+*
+* @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
 *
 * @sa quvi_getprop
 */
@@ -283,19 +282,14 @@ QUVIcode quvi_next_videolink(quvi_video_t video);
 
 
 /** 
-* @brief Return the next video host
+* @brief Next supported video host
 *
-* Iterates through the list of the supported video hosts
-* returning domain and the supported video formats.
+* Iterate over the list of the supported video hosts.
 * 
-* @param domain Pointer to a null-terminated string
-* @param formats Pointer to a null-terminated string (delim. '|')
+* @param domain Pointer to a null-terminated string (e.g. youtube.com)
+* @param formats Pointer to a null-terminated string (e.g. flv, delim. '|')
 *
-* @note
-*   - Set both params to NULL to start (or reset) the iteration
-*   - Check return code for QUVI_LASTHOST which indicates the end-of-interation
-* 
-* @return Non-zero if reached the last host
+* @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
 *
 * @warning Do not attempt to free the memory returned by this function
 */
