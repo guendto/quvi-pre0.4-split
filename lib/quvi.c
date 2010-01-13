@@ -506,10 +506,10 @@ quvi_strerror(quvi_t handle, QUVIcode code) {
 
 static int curr_host;
 
-/* quvi_iter_host */
+/* quvi_next_host */
 
 QUVIcode
-quvi_iter_host(char **domain, char **formats) {
+quvi_next_host(char **domain, char **formats) {
 
     if ( !(*domain) && !(*formats) )
         curr_host = -1; /* reset counter */

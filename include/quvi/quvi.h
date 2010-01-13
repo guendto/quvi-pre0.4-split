@@ -299,7 +299,7 @@ QUVIcode quvi_next_videolink(quvi_video_t video);
 *
 * @warning Do not attempt to free the memory returned by this function
 */
-QUVIcode quvi_iter_host(char **domain, char **formats);
+QUVIcode quvi_next_host(char **domain, char **formats);
 
 
 /** 

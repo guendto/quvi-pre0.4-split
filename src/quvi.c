@@ -83,7 +83,7 @@ supports() {
     char *domain, *formats;
 
     domain = formats = 0;
-    while (quvi_iter_host(&domain, &formats) != QUVI_LASTHOST)
+    while (quvi_next_host(&domain, &formats) != QUVI_LASTHOST)
         printf("%s\t%s\n", domain, formats);
 
     exit (0);
