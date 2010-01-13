@@ -72,19 +72,21 @@ static const char notice[] =
 "warranty;  not even for MERCHANTABILITY or FITNESS FOR A  PARTICULAR PURPOSE.";
 
 static void
-version() {
+version(opts_s opts) {
     printf("quvi, version %s\n%s\n",
         quvi_version(QUVI_VERSION_LONG), notice);
+    cmdline_parser_free(&opts);
     exit (0);
 }
 
 static void
-supports() {
+supports(opts_s opts) {
     char *domain, *formats;
 
     while (quvi_next_host(&domain, &formats) == QUVI_OK)
         printf("%s\t%s\n", domain, formats);
 
+    cmdline_parser_free(&opts);
     exit (0);
 }
 
@@ -191,6 +193,7 @@ match_test(quvi_t quvi, opts_s opts) {
 
         if (!re) {
             fprintf(stderr, "%s\n", errmsg);
+            cmdline_parser_free(&opts);
             exit (1);
         }
 
@@ -218,6 +221,7 @@ match_test(quvi_t quvi, opts_s opts) {
             dump_video(v, opts);
             quvi_parse_close(&v);
 
+            cmdline_parser_free(&opts);
             exit (0);
         }
         else if (rc == PCRE_ERROR_NOMATCH) {
@@ -225,11 +229,13 @@ match_test(quvi_t quvi, opts_s opts) {
         }
         else {
             fprintf(stderr, "error: pcre_exec: rc = %d\n", rc);
+            cmdline_parser_free(&opts);
             exit (1);
         }
     }
 
     fprintf(stderr, "error: nothing matched `%s'", opts.test_arg);
+    cmdline_parser_free(&opts);
     exit (1);
 }
 
@@ -318,10 +324,10 @@ main (int argc, char *argv[]) {
         return (1);
 
     if (opts.version_given)
-        version();
+        version(opts);
 
     if (opts.hosts_given)
-        supports();
+        supports(opts);
 
     /* Init quvi. */
 
