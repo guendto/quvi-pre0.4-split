@@ -68,16 +68,15 @@ struct _quvi_video_link_s {
 
 typedef struct _quvi_video_link_s *_quvi_video_link_t;
 
-/* TODO: re-arrange variables in a more sensible order */
 struct _quvi_video_s {
     _quvi_t quvi;
     char *id;
-    char *title; /* TODO: -> page_title */
-    char *host_id;
-    char *charset;
     char *page_link;
+    char *page_title;
+    char *page_charset;
     llst_node_t link; /* holds all essential to video links */
-    llst_node_t curr; /* current link node in link list */
+    llst_node_t curr; /* current (link) node */
+    char *host_id;
 };
 
 typedef struct _quvi_video_s *_quvi_video_t;

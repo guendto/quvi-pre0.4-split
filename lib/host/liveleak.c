@@ -40,7 +40,8 @@ handle_liveleak(const char *url, _quvi_video_t video) {
     if (rc != QUVI_OK)
         return (rc);
 
-    video->title = strepl(video->title, "LiveLeak.com - ", "");
+    video->page_title =
+        strepl(video->page_title, "LiveLeak.com - ", "");
 
     /* config */
     rc = regexp_capture(

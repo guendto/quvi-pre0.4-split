@@ -51,7 +51,7 @@ handle_golem(const char *url, _quvi_video_t video) {
     if (rc != QUVI_OK)
         return (rc);
 
-    _free(video->title);
+    _free(video->page_title);
 
     rc = regexp_capture(
         video->quvi,
@@ -59,7 +59,7 @@ handle_golem(const char *url, _quvi_video_t video) {
         re_title,
         0,
         0,
-        &video->title,
+        &video->page_title,
         0
     );
 

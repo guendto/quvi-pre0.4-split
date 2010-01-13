@@ -177,14 +177,14 @@ to_utf8(_quvi_video_t video) {
 
     assert(video != 0);
     assert(video->quvi != 0);
-    assert(video->title != 0);
-    assert(video->charset != 0);
+    assert(video->page_title != 0);
+    assert(video->page_charset != 0);
 
     quvi     = video->quvi;
     wptr    = outbuf;
     inptr   = inbuf;
     avail   = sizeof(outbuf);
-    insize  = strlen(video->title);
+    insize  = strlen(video->page_title);
 
     if (insize >= sizeof(inbuf))
         insize = sizeof(inbuf);
@@ -192,16 +192,16 @@ to_utf8(_quvi_video_t video) {
     memset(wptr, 0, sizeof(outbuf));
 
     snprintf(inbuf, sizeof(inbuf),
-        "%s", video->title);
+        "%s", video->page_title);
 
     /* Try with TRANSLIT first. */
-    asprintf(&from, "%s//TRANSLIT", video->charset);
+    asprintf(&from, "%s//TRANSLIT", video->page_charset);
     cd = iconv_open(to, from);
 
     /* If that fails, then without TRANSLIT. */
     if (cd == (iconv_t)-1) {
         _free(from);
-        asprintf(&from, "%s", video->charset);
+        asprintf(&from, "%s", video->page_charset);
         cd = iconv_open(to, from);
     }
 
@@ -231,7 +231,7 @@ to_utf8(_quvi_video_t video) {
         return (QUVI_ICONV);
     }
     else
-        setvid(video->title, "%s", outbuf);
+        setvid(video->page_title, "%s", outbuf);
 
     _free(from);
 
@@ -258,7 +258,7 @@ parse_charset(_quvi_video_t video, const char *content) {
     );
 
     if (rc == QUVI_OK) {
-        setvid(video->charset, "%s", charset);
+        setvid(video->page_charset, "%s", charset);
         _free(charset);
     }
 
@@ -281,7 +281,7 @@ parse_page_common(
     /* re_id, re_title may be null. */
 
     _free(video->id);
-    _free(video->title);
+    _free(video->page_title);
 
     /* fetch */
     rc = fetch_to_mem(video, url, QUVIST_PAGE, content);
@@ -315,7 +315,7 @@ parse_page_common(
             re_title,
             0,
             0,
-            &video->title,
+            &video->page_title,
             0
         );
 

@@ -61,7 +61,7 @@ handle_ehrensenf(const char *url, _quvi_video_t video) {
     _free(m);
     _free(y);
 
-    setvid(video->title, "%s", video->id);
+    setvid(video->page_title, "%s", video->id);
 
     /* link */
     rc = add_video_link(&video->link,
