@@ -78,12 +78,6 @@ struct _quvi_video_s {
     char *page_link;
     llst_node_t link; /* holds all essential to video links */
     llst_node_t curr; /* current link node in link list */
-#ifdef _1_
-    char *link;
-    char *content_type;
-    char *suffix;
-    char *length;
-#endif
 };
 
 typedef struct _quvi_video_s *_quvi_video_t;
