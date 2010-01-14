@@ -81,6 +81,7 @@ export libpcre_LIBS="`$PCRE_CONFIG --libs`"
 CFLAGS=$CFLAGS ../configure \
     --prefix="$PREFIX" \
     --host="$HOST" \
-    --with-libiconv-prefix="$ICONV_PREFIX"
+    --with-libiconv-prefix="$ICONV_PREFIX" \
+    --enable-smut
 
 
