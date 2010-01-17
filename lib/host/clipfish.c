@@ -38,8 +38,8 @@ handle_clipfish(const char *url, _quvi_video_t video) {
     if (rc != QUVI_OK)
         return (rc);
 
-    video->page_title = strepl(video->page_title, "Video: ", "");
-    video->page_title = strepl(video->page_title, " - Clipfish", "");
+    video->title = strepl(video->title, "Video: ", "");
+    video->title = strepl(video->title, " - Clipfish", "");
 
     /* config */
     asprintf(&config_url,

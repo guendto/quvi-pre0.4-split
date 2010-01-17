@@ -71,9 +71,9 @@ typedef struct _quvi_video_link_s *_quvi_video_link_t;
 struct _quvi_video_s {
     _quvi_t quvi;
     char *id;
+    char *title;
+    char *charset;
     char *page_link;
-    char *page_title;
-    char *page_charset;
     llst_node_t link; /* holds all essential to video links */
     llst_node_t curr; /* current (link) node */
     char *host_id;

@@ -221,11 +221,11 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
         return (rc);
 
 #ifdef HAVE_ICONV /* Convert character set encoding to utf8. */
-    if (video->page_charset)
+    if (video->charset)
         to_utf8(video);
 #endif
-    video->page_title =
-        from_html_entities(video->page_title);
+    video->title =
+        from_html_entities(video->title);
 
     if (!video->quvi->no_verify) {
         llst_node_t curr = video->link;
@@ -264,9 +264,9 @@ quvi_parse_close(quvi_video_t *handle) {
         llst_free(&(*video)->link);
 
         _free((*video)->id);
+        _free((*video)->title);
+        _free((*video)->charset);
         _free((*video)->page_link);
-        _free((*video)->page_title);
-        _free((*video)->page_charset);
         _free((*video)->host_id);
 
         _free(*video);
@@ -361,7 +361,7 @@ _getprop(_quvi_video_t video, QUVIproperty prop, ...) {
     switch (prop) {
     case QUVIP_HOSTID       : _sets(video->host_id);
     case QUVIP_PAGEURL      : _sets(video->page_link);
-    case QUVIP_PAGETITLE    : _sets(video->page_title);
+    case QUVIP_PAGETITLE    : _sets(video->title);
     case QUVIP_VIDEOID      : _sets(video->id);
     case QUVIP_VIDEOURL     : _sets(qvl->url);
     case QUVIP_VIDEOFILELENGTH      : _setn(dp, qvl->length);

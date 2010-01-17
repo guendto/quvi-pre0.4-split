@@ -57,7 +57,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
         return (rc);
 
     /* title */
-    _free(video->page_title);
+    _free(video->title);
 
     rc = regexp_capture(
         video->quvi,
@@ -65,7 +65,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
         re_title,
         0,
         0,
-        &video->page_title,
+        &video->title,
         0
     );
 

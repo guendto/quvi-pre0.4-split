@@ -31,13 +31,13 @@ video_id(_quvi_video_t video) {
     char *id, *tmp;
     int i;
 
-    id = calloc(1, strlen(video->page_title)*2+1);
+    id = calloc(1, strlen(video->title)*2+1);
     if (!id)
         return (QUVI_MEM);
 
     /* video title -> hex string. */
-    for (i=0; i<strlen(video->page_title); ++i) {
-        asprintf(&tmp, "%02x", video->page_title[i]);
+    for (i=0; i<strlen(video->title); ++i) {
+        asprintf(&tmp, "%02x", video->title[i]);
         strcat(id, tmp);
         _free(tmp);
     }
@@ -77,7 +77,7 @@ handle_spyfilms(const char *url, _quvi_video_t video) {
         return (rc);
 
     /* cleanup title */
-    video->page_title = strepl(video->page_title, "+", " ");
+    video->title = strepl(video->title, "+", " ");
 
     /* flv link */
     rc = regexp_capture(

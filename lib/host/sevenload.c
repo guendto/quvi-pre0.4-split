@@ -64,7 +64,7 @@ handle_sevenload(const char *url, _quvi_video_t video) {
 
     /* video id and title */
     _free(video->id);
-    _free(video->page_title);
+    _free(video->title);
 
     rc = regexp_capture(
         video->quvi,
@@ -73,7 +73,7 @@ handle_sevenload(const char *url, _quvi_video_t video) {
         0,
         0,
         &video->id,
-        &video->page_title,
+        &video->title,
         0
     );
 
