@@ -37,6 +37,7 @@ host/vimeo.c \
 host/spiegel.c \
 host/ehrensenf.c \
 host/dailymotion.c \
+host/spyfilms.c \
 host/youtube.c
 
 if ENABLE_SMUT

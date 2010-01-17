@@ -51,6 +51,7 @@ _host(vimeo);
 _host(spiegel);
 _host(ehrensenf);
 _host(dailymotion);
+_host(spyfilms);
 #ifdef ENABLE_SMUT
 _host(tube8);
 _host(xvideos);

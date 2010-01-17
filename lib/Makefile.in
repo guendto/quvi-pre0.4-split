@@ -86,9 +86,9 @@ am__libquvi_la_SOURCES_DIST = quvi.c util.c curl.c strepl.c llst.c \
 	host/cctv.c host/clipfish.c host/evisor.c host/funnyhub.c \
 	host/golem.c host/google.c host/liveleak.c host/myubo.c \
 	host/sevenload.c host/vimeo.c host/spiegel.c host/ehrensenf.c \
-	host/dailymotion.c host/youtube.c host/tube8.c host/xvideos.c \
-	host/youjizz.c curl.h host.h internal.h util.h platform.h \
-	llst.h
+	host/dailymotion.c host/spyfilms.c host/youtube.c host/tube8.c \
+	host/xvideos.c host/youjizz.c curl.h host.h internal.h util.h \
+	platform.h llst.h
 @NO_ASPRINTF_TRUE@am__objects_1 = libquvi_la-vasprintf.lo \
 @NO_ASPRINTF_TRUE@	libquvi_la-asprintf.lo
 @NO_STRUPR_TRUE@am__objects_2 = libquvi_la-strupr.lo
@@ -105,7 +105,7 @@ am__objects_6 = libquvi_la-break.lo libquvi_la-cctv.lo \
 	libquvi_la-myubo.lo libquvi_la-sevenload.lo \
 	libquvi_la-vimeo.lo libquvi_la-spiegel.lo \
 	libquvi_la-ehrensenf.lo libquvi_la-dailymotion.lo \
-	libquvi_la-youtube.lo $(am__objects_5)
+	libquvi_la-spyfilms.lo libquvi_la-youtube.lo $(am__objects_5)
 am__objects_7 =
 am_libquvi_la_OBJECTS = $(am__objects_4) $(am__objects_6) \
 	$(am__objects_7)
@@ -270,8 +270,8 @@ src = quvi.c util.c curl.c strepl.c llst.c $(am__append_2) \
 src_host = host/break.c host/cctv.c host/clipfish.c host/evisor.c \
 	host/funnyhub.c host/golem.c host/google.c host/liveleak.c \
 	host/myubo.c host/sevenload.c host/vimeo.c host/spiegel.c \
-	host/ehrensenf.c host/dailymotion.c host/youtube.c \
-	$(am__append_5)
+	host/ehrensenf.c host/dailymotion.c host/spyfilms.c \
+	host/youtube.c $(am__append_5)
 hdr = \
 curl.h \
 host.h \
@@ -386,6 +386,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-quvi.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-sevenload.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-spiegel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-spyfilms.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-strepl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-strtok_r.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-strupr.Plo@am__quote@
@@ -578,6 +579,13 @@ libquvi_la-dailymotion.lo: host/dailymotion.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='host/dailymotion.c' object='libquvi_la-dailymotion.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-dailymotion.lo `test -f 'host/dailymotion.c' || echo '$(srcdir)/'`host/dailymotion.c
+
+libquvi_la-spyfilms.lo: host/spyfilms.c
+@am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-spyfilms.lo -MD -MP -MF $(DEPDIR)/libquvi_la-spyfilms.Tpo -c -o libquvi_la-spyfilms.lo `test -f 'host/spyfilms.c' || echo '$(srcdir)/'`host/spyfilms.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/libquvi_la-spyfilms.Tpo $(DEPDIR)/libquvi_la-spyfilms.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='host/spyfilms.c' object='libquvi_la-spyfilms.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-spyfilms.lo `test -f 'host/spyfilms.c' || echo '$(srcdir)/'`host/spyfilms.c
 
 libquvi_la-youtube.lo: host/youtube.c
 @am__fastdepCC_TRUE@	$(LIBTOOL)  --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-youtube.lo -MD -MP -MF $(DEPDIR)/libquvi_la-youtube.Tpo -c -o libquvi_la-youtube.lo `test -f 'host/youtube.c' || echo '$(srcdir)/'`host/youtube.c

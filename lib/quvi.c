@@ -105,6 +105,7 @@ _host(vimeo)
 _host(spiegel)
 _host(ehrensenf)
 _host(dailymotion)
+_host(spyfilms)
 #ifdef ENABLE_SMUT
 _host(tube8)
 _host(xvideos)
@@ -211,7 +212,11 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
 
     setvid(video->page_link, "%s", url);
 
-    rc = handle_url(url, video);
+    video->page_link = /* specific to spyvideos */
+        strepl(video->page_link, "#", "");
+
+    rc = handle_url(video->page_link, video);
+
     if (rc != QUVI_OK)
         return (rc);
 

@@ -166,6 +166,7 @@ static const char *tests[] = {
 "http://www.youtube.com/watch?v=DeWsZ2b_pK4",
 "http://break.com/index/beach-tackle-whip-lash.html",
 "http://www.evisor.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",
+"http://www.spyfilms.com/#neill_blomkamp/alive_in_joburg",
 #ifdef ENABLE_SMUT
 "http://www.tube8.com/fetish/japanese-melon-gal-censored/186133/",
 "http://www.xvideos.com/video243887/devi_emmerson_body_painting",
