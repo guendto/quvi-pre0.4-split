@@ -37,7 +37,6 @@ host_triplet = @host@
 target_triplet = @target@
 @ENABLE_EXE_TRUE@@NO_STRTOK_R_TRUE@am__append_1 = $(top_srcdir)/lib/strtok_r.c
 @ENABLE_EXE_TRUE@bin_PROGRAMS = quvi$(EXEEXT)
-@ENABLE_EXE_TRUE@@NO_STRTOK_R_TRUE@am__append_2 = -I$(top_srcdir)/lib
 subdir = src
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -231,9 +230,12 @@ top_srcdir = @top_srcdir@
 @ENABLE_EXE_TRUE@    cmdline.h
 
 @ENABLE_EXE_TRUE@quvi_SOURCES = $(src) $(hdr)
-@ENABLE_EXE_TRUE@quvi_CFLAGS = -I$(top_srcdir)/include \
-@ENABLE_EXE_TRUE@	$(libcurl_CFLAGS) $(libpcre_CFLAGS) \
-@ENABLE_EXE_TRUE@	$(am__append_2)
+@ENABLE_EXE_TRUE@quvi_CFLAGS = \
+@ENABLE_EXE_TRUE@    -I$(top_srcdir)/include \
+@ENABLE_EXE_TRUE@    -I$(top_srcdir)/lib \
+@ENABLE_EXE_TRUE@    $(libcurl_CFLAGS) \
+@ENABLE_EXE_TRUE@    $(libpcre_CFLAGS)
+
 @ENABLE_EXE_TRUE@quvi_LDADD = \
 @ENABLE_EXE_TRUE@    $(top_builddir)/lib/libquvi.la \
 @ENABLE_EXE_TRUE@    $(libcurl_LIBS) \

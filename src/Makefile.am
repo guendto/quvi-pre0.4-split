@@ -20,12 +20,9 @@ quvi_SOURCES = $(src) $(hdr)
 
 quvi_CFLAGS = \
     -I$(top_srcdir)/include \
+    -I$(top_srcdir)/lib \
     $(libcurl_CFLAGS) \
     $(libpcre_CFLAGS)
-
-if NO_STRTOK_R
-quvi_CFLAGS += -I$(top_srcdir)/lib
-endif
 
 quvi_LDADD =  \
     $(top_builddir)/lib/libquvi.la \
