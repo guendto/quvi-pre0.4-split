@@ -41,7 +41,7 @@
 /* quvi_init */
 
 QUVIcode
-quvi_init(quvi_t *dst) {
+quvi_init (quvi_t *dst) {
     _quvi_t quvi;
 
     is_invarg(dst);
@@ -72,7 +72,7 @@ quvi_init(quvi_t *dst) {
 /* quvi_close */
 
 void
-quvi_close(quvi_t *handle) {
+quvi_close (quvi_t *handle) {
     _quvi_t *quvi;
 
     quvi = (_quvi_t *)handle;
@@ -126,7 +126,7 @@ _host(youjizz)
 #undef _host
 
 static QUVIcode
-handle_url(const char *url, _quvi_video_t video) {
+handle_url (const char *url, _quvi_video_t video) {
     int error_offset, pcre_code;
     register unsigned int i;
     const char *pcre_errmsg;
@@ -187,7 +187,7 @@ handle_url(const char *url, _quvi_video_t video) {
 /* quvi_parse */
 
 QUVIcode
-quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
+quvi_parse (quvi_t quvi, char *url, quvi_video_t *dst) {
     _quvi_video_t video;
     QUVIcode rc;
 
@@ -239,7 +239,7 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
 /* quvi_parse_close */
 
 void
-quvi_parse_close(quvi_video_t *handle) {
+quvi_parse_close (quvi_video_t *handle) {
     _quvi_video_t *video;
     
     video = (_quvi_video_t*)handle;
@@ -267,7 +267,7 @@ quvi_parse_close(quvi_video_t *handle) {
 }
 
 static QUVIcode
-_setopt(_quvi_t quvi, QUVIoption opt, va_list arg) {
+_setopt (_quvi_t quvi, QUVIoption opt, va_list arg) {
 
 #define _sets(opt) \
     do { \
@@ -295,7 +295,7 @@ _setopt(_quvi_t quvi, QUVIoption opt, va_list arg) {
 /* quvi_setopt */
 
 QUVIcode
-quvi_setopt(quvi_t quvi, QUVIoption opt, ...) {
+quvi_setopt (quvi_t quvi, QUVIoption opt, ...) {
     va_list arg;
     QUVIcode rc;
 
@@ -311,7 +311,7 @@ quvi_setopt(quvi_t quvi, QUVIoption opt, ...) {
 static const char empty[] = "";
 
 static QUVIcode
-_getprop(_quvi_video_t video, QUVIproperty prop, ...) {
+_getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     _quvi_video_link_t qvl;
     va_list arg;
     double *dp;
@@ -365,7 +365,7 @@ _getprop(_quvi_video_t video, QUVIproperty prop, ...) {
 }
 
 static QUVIcode
-_getinfo(_quvi_t quvi, QUVIinfo info, ...) {
+_getinfo (_quvi_t quvi, QUVIinfo info, ...) {
     va_list arg;
     double *dp;
     char **sp;
@@ -409,7 +409,7 @@ _getinfo(_quvi_t quvi, QUVIinfo info, ...) {
 /* quvi_getinfo */
 
 QUVIcode
-quvi_getinfo(quvi_t quvi, QUVIinfo info, ...) {
+quvi_getinfo (quvi_t quvi, QUVIinfo info, ...) {
     va_list arg;
     void *p;
 
@@ -424,7 +424,7 @@ quvi_getinfo(quvi_t quvi, QUVIinfo info, ...) {
 /* quvi_getprop */
 
 QUVIcode
-quvi_getprop(quvi_video_t video, QUVIproperty prop, ...) {
+quvi_getprop (quvi_video_t video, QUVIproperty prop, ...) {
     va_list arg;
     void *p;
 
@@ -467,7 +467,7 @@ static int curr_host = -1;
 /* quvi_next_host */
 
 QUVIcode
-quvi_next_host(char **domain, char **formats) {
+quvi_next_host (char **domain, char **formats) {
 
     assert(domain != 0);
     assert(formats != 0);
@@ -492,7 +492,7 @@ quvi_next_host(char **domain, char **formats) {
 /* quvi_strerror */
 
 char *
-quvi_strerror(quvi_t handle, QUVIcode code) {
+quvi_strerror (quvi_t handle, QUVIcode code) {
     static const char *errormsgs[] = {
         "no error",
         "memory allocation failed",
@@ -521,7 +521,7 @@ quvi_strerror(quvi_t handle, QUVIcode code) {
 /* quvi_version */
 
 char *
-quvi_version(QUVIversion type) {
+quvi_version (QUVIversion type) {
     static const char version[] = PACKAGE_VERSION;
     static const char version_long[] =
     PACKAGE_VERSION
