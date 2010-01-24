@@ -15,50 +15,51 @@ Checklist: Before you get started
 ---------------------------------
 
 * Does the website allow video downloading already?
-  - If yes, then there is little reason to add support for it
-  - libquvi is intended to work around the flash requirement
-  - We will likely turn down any patches that add support for such websites
+  - If yes, then there is no reason to add support for it
+    - libquvi is intended to work around the flash requirement
+    - Such patches will not be committed to the development tree
 
 
-Programming is easy, data mining isn't
---------------------------------------
+Figuring out the video dl link scheme
+-------------------------------------
 
 The steps to produce the video download link can vary
-greatly for each website. To get an idea of this, see
-lib/host/evisor.c and compare it with lib/host/liveleak.c.
+greatly for each website. For a comparison, see:
 
-Sometimes extra steps are necessary:
+    lib/host/evisor.c
+    lib/host/liveleak.c
+
+Sometimes extra steps may be required:
   http://code.google.com/p/clive/issues/detail?id=6#c7
 
 Once the data has been analyzed and the link construction
-figured out, the only part left is to program it into
-the project. That's usually the easiest part. We cover
-those steps below.
+figured out, the only part left is to whip up the code.
 
 
-Program it into the project
----------------------------
+Writing the code
+----------------
 
 Edit the following files in the source tree:
 
 * lib/quvi.c 
   - add: _host($domain_name) to the "hosts" lookup table
+  - if this is an "adult website", make sure you put it inside ENABLE_SMUT
 
 * lib/host.h
   - add: _host($domain_name)
-
-* lib/host/$domain_name.c (impl. file, create this file)
-  - you can use other impl. files as templates in lib/host dir
-  - change copyright notice
-    - check the year
-    - replace with your name
-    - consider adding your email address
-  - replace $domain_name specifics
-    - be sure to replace all of them
-  - implementation follows those guidelines figured out earlier
+  - if this is an "adult website", make sure you put it inside ENABLE_SMUT
 
 * lib/Makefile.am
   - add host/$domain_name.c to src_host
+  - if this is an "adult website", make sure you put it inside ENABLE_SMUT
+
+* lib/host/$domain_name.c (impl. file, create this file)
+  - you can use other impl. files as templates (see lib/host/)
+  - update copyright notice (use current year, your name, email)
+  - add: _host_constants($domain_id, $domain, $supported_formats)
+    - formats should be separated with '|', e.g. "flv|hd"
+  - add: handle_$domain_name function
+    - quvi calls this function when it parses the fetched video page
 
 * src/quvi.c
   - add a test link to the "tests" array
@@ -85,9 +86,7 @@ Checklist: Before you submit your patch
   - Anything else, e.g. domain name should be excluded from the title
 
 * Did you confirm that all of the above works?
-  - quvi URL
-
-TODO: "Consider writing a test"
+  - e.g. quvi URL
 
 
 Submitting patches
