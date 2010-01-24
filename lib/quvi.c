@@ -26,16 +26,25 @@
 #include "internal.h"
 #include "host.h"
 
+#define is_invarg(p) \
+    do { \
+        assert(p != 0); \
+        if (!p) return (QUVI_INVARG); \
+    } while (0)
+
+#define is_badhandle(h) \
+    do { \
+        assert(h != 0); \
+        if (!h) return (QUVI_BADHANDLE); \
+    } while (0)
+
 /* quvi_init */
 
 QUVIcode
 quvi_init(quvi_t *dst) {
     _quvi_t quvi;
 
-    assert(dst != 0);
-    if (!dst)
-        return (QUVI_INVARG);
-
+    is_invarg(dst);
     *dst = 0;
 
     quvi = calloc(1, sizeof(*quvi));
@@ -114,7 +123,6 @@ _host(youjizz)
 /* Add new ones below. */
 {NULL, NULL, NULL}
 };
-
 #undef _host
 
 static QUVIcode
@@ -125,14 +133,8 @@ handle_url(const char *url, _quvi_video_t video) {
     _quvi_t quvi;
     QUVIcode rc;
 
-    assert(url != 0);
-    assert(video->quvi != 0);
-
-    if (!url)
-        return (QUVI_INVARG);
-
-    if (!video->quvi)
-        return (QUVI_BADHANDLE);
+    is_invarg(url);
+    is_badhandle(video->quvi);
 
     quvi = video->quvi;
     rc   = QUVI_OK;
@@ -189,19 +191,10 @@ quvi_parse(quvi_t quvi, char *url, quvi_video_t *dst) {
     _quvi_video_t video;
     QUVIcode rc;
 
-    assert(quvi != 0);
-    assert(url != 0);
-    assert(dst != 0);
+    is_invarg(dst);
     *dst = 0;
-
-    if (!quvi)
-        return (QUVI_BADHANDLE);
-
-    if (!url)
-        return (QUVI_INVARG);
-
-    if (!dst)
-        return (QUVI_INVARG);
+    is_invarg(url);
+    is_badhandle(quvi);
 
     video = calloc(1, sizeof(*video));
     if (!video)
@@ -306,10 +299,7 @@ quvi_setopt(quvi_t quvi, QUVIoption opt, ...) {
     va_list arg;
     QUVIcode rc;
 
-    assert(quvi != 0);
-
-    if (!quvi)
-        return (QUVI_BADHANDLE);
+    is_badhandle(quvi);
 
     va_start(arg, opt);
     rc = _setopt(quvi, opt, arg);
@@ -423,10 +413,7 @@ quvi_getinfo(quvi_t quvi, QUVIinfo info, ...) {
     va_list arg;
     void *p;
 
-    assert(quvi != 0);
-
-    if (!quvi)
-        return (QUVI_BADHANDLE);
+    is_badhandle(quvi);
 
     va_start(arg, info);
     p = va_arg(arg, void *);
@@ -441,10 +428,7 @@ quvi_getprop(quvi_video_t video, QUVIproperty prop, ...) {
     va_list arg;
     void *p;
 
-    assert(video != 0);
-
-    if (!video)
-        return (QUVI_BADHANDLE);
+    is_badhandle(video);
 
     va_start(arg, prop);
     p = va_arg(arg, void *);
@@ -458,10 +442,7 @@ QUVIcode
 quvi_next_videolink (quvi_video_t handle) {
     _quvi_video_t video;
 
-    assert(handle != 0);
-
-    if (!handle) 
-        return (QUVI_BADHANDLE);
+    is_badhandle(handle);
 
     video = (_quvi_video_t) handle;
 
@@ -491,8 +472,8 @@ quvi_next_host(char **domain, char **formats) {
     assert(domain != 0);
     assert(formats != 0);
 
-    if (!domain || !formats)
-        return (QUVI_BADHANDLE);
+    is_invarg(domain);
+    is_invarg(formats);
 
     if (!hosts[++curr_host].domain) {
         curr_host = -1;
@@ -504,6 +485,9 @@ quvi_next_host(char **domain, char **formats) {
 
     return (QUVI_OK);
 }
+
+#undef is_badhandle
+#undef is_invarg
 
 /* quvi_strerror */
 
