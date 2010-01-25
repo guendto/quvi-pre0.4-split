@@ -53,6 +53,12 @@ quvi_init (quvi_t *dst) {
 
     *dst = (quvi_t)quvi;
 
+#ifndef IS_W32
+    curl_global_init(CURL_GLOBAL_NOTHING);
+#else
+    curl_global_init(CURL_GLOBAL_WIN32);
+#endif
+
     quvi->curl = curl_easy_init();
     if (!quvi->curl) {
         _free(quvi);
@@ -82,6 +88,7 @@ quvi_close (quvi_t *handle) {
         _free((*quvi)->errmsg);
         curl_easy_cleanup((*quvi)->curl);
         _free(*quvi);
+        curl_global_cleanup();
     }
 }
 
