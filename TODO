@@ -1,7 +1,7 @@
 
 0.1.0
 -----
-* call curl_global_init and curl_global_cleanup
+* rename QUVIinfo, QUVIproperty enums (e.g. QUVII_HTTPCODE -> QUVIINFO_HTTPCODE)
 * libquvi(3), libquvi-tutorial(3)  (doxy?)
 * configure.ac, Makefile.am: "make man"
 * AC_ARG_WITH([manual])  install with manual pages
