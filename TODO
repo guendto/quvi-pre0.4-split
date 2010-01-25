@@ -1,14 +1,15 @@
 
 0.1.0
 -----
-* quvi(1) manual page (in pod markup)
-* libquvi(3) manual page (ditto, short overview on how to use the library)
+* call curl_global_init and curl_global_cleanup
+* libquvi(3), libquvi-tutorial(3)  (doxy?)
 * configure.ac, Makefile.am: "make man"
 * AC_ARG_WITH([manual])  install with manual pages
 * embed link to video page link conversions
 
 0.1.1
 -----
+* quvi(1) manual page (in pod markup)
 * "make check"
 
 When due
