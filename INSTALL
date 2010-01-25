@@ -11,11 +11,10 @@
 
 ./configure && make install
 
-See also ./configure --help. For example, --disable-exe disables compilation
-and installation of the quvi(1) executable.
+See also ./configure --help. For example:
+
+    --enable-smut   enables adult website support
+    --disable-quvi  disables building of the quvi program
 
 "make dox" generates the C API documentation using doxygen.
-The current documentation is also available at:
-    http://quvi.googlecode.com/svn/docs/html/index.html
-
-
+Both html and latex documentation are build by default.
