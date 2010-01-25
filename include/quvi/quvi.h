@@ -410,13 +410,13 @@ QUVIcode quvi_next_videolink(quvi_video_t video);
 *
 * Example:
 * @code
+* quvi_t quvi;
 * quvi_video_t video;
 * ...
-* quvi_init(...);
-* ...
-* quvi_parse(..., &video);
-* ...
+* quvi_init(&quvi);
+* quvi_parse(quvi, ..., &video);
 * quvi_parse_close(&video);
+* quvi_close(&quvi);
 * @endcode
 */
 void quvi_parse_close(quvi_video_t *video);
