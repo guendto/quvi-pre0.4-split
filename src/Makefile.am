@@ -1,4 +1,4 @@
-if ENABLE_EXE
+if ENABLE_QUVI
 EXTRA_DIST = \
     makecmdline \
     cmdline.ggo \

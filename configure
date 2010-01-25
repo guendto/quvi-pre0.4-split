@@ -750,8 +750,8 @@ HAVE_GNU_LD_FALSE
 HAVE_GNU_LD_TRUE
 ENABLE_SMUT_FALSE
 ENABLE_SMUT_TRUE
-ENABLE_EXE_FALSE
-ENABLE_EXE_TRUE
+ENABLE_QUVI_FALSE
+ENABLE_QUVI_TRUE
 NO_STRTOK_R_FALSE
 NO_STRTOK_R_TRUE
 NO_STRUPR_FALSE
@@ -905,7 +905,7 @@ with_gnu_ld
 enable_libtool_lock
 enable_rpath
 with_libiconv_prefix
-enable_exe
+enable_quvi
 enable_smut
 '
       ac_precious_vars='build_alias
@@ -1554,7 +1554,7 @@ Optional Features:
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --disable-rpath         do not hardcode runtime library paths
-  --enable-exe            build quvi(1) executable [default=yes]
+  --enable-quvi           build quvi(1) program [default=yes]
   --enable-smut           build with adult website support [default=no]
 
 Optional Packages:
@@ -16949,20 +16949,20 @@ else
 fi
 
 
-# --enable-exe
-# Check whether --enable-exe was given.
-if test "${enable_exe+set}" = set; then :
-  enableval=$enable_exe;
+# --enable-quvi
+# Check whether --enable-quvi was given.
+if test "${enable_quvi+set}" = set; then :
+  enableval=$enable_quvi;
 else
-  enable_exe=yes
+  enable_quvi=yes
 fi
 
- if test x"$enable_exe" != "xno"; then
-  ENABLE_EXE_TRUE=
-  ENABLE_EXE_FALSE='#'
+ if test x"$enable_quvi" != "xno"; then
+  ENABLE_QUVI_TRUE=
+  ENABLE_QUVI_FALSE='#'
 else
-  ENABLE_EXE_TRUE='#'
-  ENABLE_EXE_FALSE=
+  ENABLE_QUVI_TRUE='#'
+  ENABLE_QUVI_FALSE=
 fi
 
 
@@ -17143,8 +17143,8 @@ if test -z "${NO_STRTOK_R_TRUE}" && test -z "${NO_STRTOK_R_FALSE}"; then
   as_fn_error "conditional \"NO_STRTOK_R\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${ENABLE_EXE_TRUE}" && test -z "${ENABLE_EXE_FALSE}"; then
-  as_fn_error "conditional \"ENABLE_EXE\" was never defined.
+if test -z "${ENABLE_QUVI_TRUE}" && test -z "${ENABLE_QUVI_FALSE}"; then
+  as_fn_error "conditional \"ENABLE_QUVI\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_SMUT_TRUE}" && test -z "${ENABLE_SMUT_FALSE}"; then
@@ -19642,7 +19642,7 @@ fi
     compiler:       ${CC}
     cflags:         ${CFLAGS}
     build libquvi:  shared=${enable_shared} static=${enable_static}
-    build quvi exe: ${enable_exe}
+    build quvi:     ${enable_quvi}
     adult support:  ${enable_smut}
 " >&5
 $as_echo "$as_me: Configured to build quvi/libquvi:
@@ -19653,7 +19653,7 @@ $as_echo "$as_me: Configured to build quvi/libquvi:
     compiler:       ${CC}
     cflags:         ${CFLAGS}
     build libquvi:  shared=${enable_shared} static=${enable_static}
-    build quvi exe: ${enable_exe}
+    build quvi:     ${enable_quvi}
     adult support:  ${enable_smut}
 " >&6;}
 

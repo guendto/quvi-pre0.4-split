@@ -105,13 +105,13 @@ have_strtok_r=no
 AC_CHECK_FUNCS([strtok_r], [have_strtok_r=yes])
 AM_CONDITIONAL([NO_STRTOK_R], [test x"$have_strtok_r" != "xyes"])
 
-# --enable-exe
-AC_ARG_ENABLE([exe],
-    [AS_HELP_STRING([--enable-exe],
-        [build quvi(1) executable @<:@default=yes@:>@])],
+# --enable-quvi
+AC_ARG_ENABLE([quvi],
+    [AS_HELP_STRING([--enable-quvi],
+        [build quvi(1) program @<:@default=yes@:>@])],
     [],
-    [enable_exe=yes])
-AM_CONDITIONAL([ENABLE_EXE], [test x"$enable_exe" != "xno"])
+    [enable_quvi=yes])
+AM_CONDITIONAL([ENABLE_QUVI], [test x"$enable_quvi" != "xno"])
 
 # --enable-smut
 AC_ARG_ENABLE([smut],
@@ -149,7 +149,7 @@ AC_MSG_NOTICE([Configured to build quvi/libquvi:
     compiler:       ${CC}
     cflags:         ${CFLAGS}
     build libquvi:  shared=${enable_shared} static=${enable_static}
-    build quvi exe: ${enable_exe}
+    build quvi:     ${enable_quvi}
     adult support:  ${enable_smut}
 ])
 
