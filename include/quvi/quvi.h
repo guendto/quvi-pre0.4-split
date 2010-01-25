@@ -15,24 +15,32 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/** 
-* @file quvi.h
-* @brief Query video library C API
-* @author Toni Gundogdu
-* @version 0.1.0
-* @date 2010-01-12
-*/
-
-/** @example quvi.c */
-/** @example simple.c */
+/**
+ * @file quvi.h
+ * @mainpage libquvi C API
+ *
+ * This documentation describes the libquvi C API.
+ *
+ * @author Toni Gundogdu
+ * @version 0.1.0
+ * @date 2010-01-12
+ * @example quvi.c
+ * @example simple.c
+ */
 
 #ifndef quvi_h
 #define quvi_h
 
-/* C99 header */
-#include <stdint.h>
+#ifndef DOXY_SKIP
+#include <stdint.h> /* C99 header */
+#endif
 
-/** @enum QUVIversion Types for quvi_version() */
+/** @defgroup libquvi_types Types
+ * Describes the constants and the types used with the API.
+ * @{
+ */
+
+/** @enum QUVIversion Types used with quvi_version() */
 typedef enum {
 QUVI_VERSION = 0x00,    /**< Version string only */
 QUVI_VERSION_LONG,      /**< Version string, build date and misc. features */
@@ -140,7 +148,6 @@ QUVIP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP c
 _QUVIP_LAST          = 9 /**< Placeholder */
 } QUVIproperty;
 
-
 /** @brief libquvi session handle */
 typedef void *quvi_t;
 /** @brief Video parsing session handle */
@@ -154,6 +161,14 @@ typedef uint32_t quvi_word;
 /** @brief Byte type */
 typedef uint8_t  quvi_byte;
 
+/** @} */ /* End of types group. */
+
+
+/** @defgroup libquvi_macros Macros
+ * Describes the available macros.
+ * @{
+ */
+
 /** @brief Return a low byte from a word type variable  */
 #define quvi_lobyte(w) ((quvi_byte)((uint64_t)(w) & 0xff))
 /** @brief Return a high byte from a word type variable */
@@ -164,9 +179,17 @@ typedef uint8_t  quvi_byte;
 /** @brief Return a high word from a long type variable */
 #define quvi_hiword(l) ((quvi_word)((uint64_t)(l) >> 16))
 
+/** @} */ /* End of macros group. */
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
+
+/** @defgroup libquvi_funcs Functions
+ * Describes the available C API functions.
+ * @{
+ */
 
 /** 
 * @brief Start a new libquvi session
@@ -181,6 +204,12 @@ extern "C" {
 * @return Non-zero if an error occurred
 *
 * @sa quvi_close
+*
+* Example:
+* @code
+* quvi_t quvi;
+* quvi_init(&quvi);
+* @endcode
 */
 QUVIcode quvi_init(quvi_t *quvi);
 
@@ -190,6 +219,11 @@ QUVIcode quvi_init(quvi_t *quvi);
 * @param quvi Handle to a session
 *
 * @sa quvi_init
+*
+* Example:
+* @code
+* quvi_close(&quvi);
+* @endcode
 */
 void quvi_close(quvi_t *quvi);
 
@@ -206,6 +240,12 @@ void quvi_close(quvi_t *quvi);
 * @return Non-zero if an error occurred
 *
 * @sa quvi_parse_close
+*
+* Example:
+* @code
+* quvi_video_t video;
+* quvi_parse(quvi, "http://www.youtube.com/watch?v=DeWsZ2b_pK4", &video);
+* @endcode
 */
 QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t *video);
 
@@ -215,6 +255,11 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t *video);
 * @param video Pointer to a video session
 *
 * @sa quvi_parse
+*
+* Example:
+* @code
+* quvi_parse_close(&video);
+* @endcode
 */
 void quvi_parse_close(quvi_video_t *video);
 
@@ -229,6 +274,11 @@ void quvi_parse_close(quvi_video_t *video);
 * @return Non-zero if an error occurred
 *
 * @sa QUVIoption
+*
+* Example:
+* @code
+* quvi_setopt(quvi, QUVIOPT_FORMAT, "hd");
+* @endcode
 */
 QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...);
 
@@ -245,6 +295,14 @@ QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...);
 * @warning Do not attempt to free the memory returned by this function
 *
 * @sa QUVIinfo
+*
+* Example:
+* @code
+* CURL curl;
+* long last_httpcode;
+* quvi_getinfo(quvi, QUVII_CURL, &curl);
+* quvi_getinfo(quvi, QUVII_HTTPCODE, &last_httpcode);
+* @endcode
 */
 QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
 
@@ -260,12 +318,19 @@ QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
 * @warning Do not attempt to free the memory returned by this function
 *
 * @sa QUVIproperty
+*
+* Example:
+* @code
+* char *url;
+* quvi_getprop(video, QUVIP_VIDEOURL, &url);
+* puts(url);
+* @endcode
 */
 QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
 
 
 /**
-* @brief Move to next video link (if any)
+* @brief Move to the next video link (if any)
 *
 * Used to iterate video links for the parsed video page.
 * While most of the supported websites typically do not
@@ -277,6 +342,15 @@ QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
 * @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
 *
 * @sa quvi_getprop
+*
+* Example:
+* @code
+* char *url;
+* do {
+*   quvi_getprop(video, QUVIP_VIDEOURL, &url);
+*   puts(url);
+* } while (quvi_next_videolink(video) == QUVI_OK);
+* @endcode
 */
 QUVIcode quvi_next_videolink(quvi_video_t video);
 
@@ -292,6 +366,13 @@ QUVIcode quvi_next_videolink(quvi_video_t video);
 * @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
 *
 * @warning Do not attempt to free the memory returned by this function
+*
+* Example:
+* @code
+* char *domain=0, *formats=0;
+* while (quvi_next_host(&domain, &formats) == QUVI_OK)
+*   printf("%s\t%s\n", domain, formats);
+* @endcode
 */
 QUVIcode quvi_next_host(char **domain, char **formats);
 
@@ -305,6 +386,17 @@ QUVIcode quvi_next_host(char **domain, char **formats);
 * @return Null-terminated string
 *
 * @warning Do not attempt to free the memory returned by this function
+*
+* Example:
+* @code
+* quvi_t quvi;
+* QUVIcode rc = quvi_init(&quvi);
+* if (rc != QUVI_OK) {
+*   fprintf(stderr, "error: %s\n", quvi_strerror(quvi,rc));
+*   exit (rc);
+* }
+* quvi_close(&quvi);
+* @endcode
 */
 char *quvi_strerror(quvi_t quvi, QUVIcode code);
 
@@ -316,8 +408,16 @@ char *quvi_strerror(quvi_t quvi, QUVIcode code);
 * @return Null-terminated string
 *
 * @warning Do not attempt to free the memory returned by this function
+*
+* Example:
+* @code
+* puts( quvi_version(QUVI_VERSION_LONG) );
+* @endcode
 */
 char *quvi_version(QUVIversion type);
+
+/** @} */ /* End of group functions. */
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
