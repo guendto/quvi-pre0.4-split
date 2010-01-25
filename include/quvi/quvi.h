@@ -124,28 +124,28 @@ QUVIPROPERTY_TYPEMASK = 0xf00000  /**< type mask */
 * leave the releasing of the handle for the library to do.
 */
 typedef enum {
-QUVII_NONE        = 0x00,             /**< Unused */
-QUVII_CURL        = QUVIINFO_VOID + 1,/**< Session libcurl handle */
-QUVII_CURLCODE    = QUVIINFO_LONG + 2,/**< Last libcurl returned code */
-QUVII_HTTPCODE    = QUVIINFO_LONG + 3,/**< Last libcurl returned HTTP code */
+QUVIINFO_NONE        = 0x00,             /**< Unused */
+QUVIINFO_CURL        = QUVIINFO_VOID + 1,/**< Session libcurl handle */
+QUVIINFO_CURLCODE    = QUVIINFO_LONG + 2,/**< Last libcurl returned code */
+QUVIINFO_HTTPCODE    = QUVIINFO_LONG + 3,/**< Last libcurl returned HTTP code */
 /* Add new ones below. */
-_QUVII_LAST        = 3                 /**< Placeholder */
+_QUVIINFO_LAST        = 3                 /**< Placeholder */
 } QUVIinfo;
 
 /** @enum QUVIproperty Video property codes to be used with quvi_getprop() */
 typedef enum {
-QUVIP_NONE          = 0x00, /**< Unused */
-QUVIP_HOSTID        = QUVIPROPERTY_STRING + 1, /**< Host ID */
-QUVIP_PAGEURL       = QUVIPROPERTY_STRING + 2, /**< Video page link */
-QUVIP_PAGETITLE     = QUVIPROPERTY_STRING + 3, /**< Video title */
-QUVIP_VIDEOID       = QUVIPROPERTY_STRING + 4, /**< Video ID */
-QUVIP_VIDEOURL      = QUVIPROPERTY_STRING + 5, /**< Video URL */
-QUVIP_VIDEOFILELENGTH       = QUVIPROPERTY_DOUBLE + 6, /**< Video file length */
-QUVIP_VIDEOFILECONTENTTYPE  = QUVIPROPERTY_STRING + 7, /**< Video file content-type */
-QUVIP_VIDEOFILESUFFIX       = QUVIPROPERTY_STRING + 8, /**< Video file suffix */
-QUVIP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP code */
+QUVIPROP_NONE          = 0x00, /**< Unused */
+QUVIPROP_HOSTID        = QUVIPROPERTY_STRING + 1, /**< Host ID */
+QUVIPROP_PAGEURL       = QUVIPROPERTY_STRING + 2, /**< Video page link */
+QUVIPROP_PAGETITLE     = QUVIPROPERTY_STRING + 3, /**< Video title */
+QUVIPROP_VIDEOID       = QUVIPROPERTY_STRING + 4, /**< Video ID */
+QUVIPROP_VIDEOURL      = QUVIPROPERTY_STRING + 5, /**< Video URL */
+QUVIPROP_VIDEOFILELENGTH       = QUVIPROPERTY_DOUBLE + 6, /**< Video file length */
+QUVIPROP_VIDEOFILECONTENTTYPE  = QUVIPROPERTY_STRING + 7, /**< Video file content-type */
+QUVIPROP_VIDEOFILESUFFIX       = QUVIPROPERTY_STRING + 8, /**< Video file suffix */
+QUVIPROP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP code */
 /* Add new ones below. */
-_QUVIP_LAST          = 9 /**< Placeholder */
+_QUVIPROP_LAST          = 9 /**< Placeholder */
 } QUVIproperty;
 
 /** @brief libquvi session handle */
@@ -295,8 +295,8 @@ QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...);
 * CURL curl;
 * long last_httpcode;
 * ...
-* quvi_getinfo(quvi, QUVII_CURL, &curl);
-* quvi_getinfo(quvi, QUVII_HTTPCODE, &last_httpcode);
+* quvi_getinfo(quvi, QUVIINFO_CURL, &curl);
+* quvi_getinfo(quvi, QUVIINFO_HTTPCODE, &last_httpcode);
 * ...
 * @endcode
 */
@@ -355,7 +355,7 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t *video);
 * @code
 * char *url;
 * ...
-* quvi_getprop(video, QUVIP_VIDEOURL, &url);
+* quvi_getprop(video, QUVIPROP_VIDEOURL, &url);
 * puts(url);
 * ...
 * @endcode
@@ -387,7 +387,7 @@ QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
 * @code
 * char *url;
 * do {
-*   quvi_getprop(video, QUVIP_VIDEOURL, &url);
+*   quvi_getprop(video, QUVIPROP_VIDEOURL, &url);
 *   puts(url);
 * } while (quvi_next_videolink(video) == QUVI_OK);
 * @endcode

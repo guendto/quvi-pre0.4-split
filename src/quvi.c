@@ -97,10 +97,10 @@ dump_video_links(quvi_video_t video) {
         char *video_url, *file_suffix, *file_ct;
         double file_length;
 
-        quvi_getprop(video, QUVIP_VIDEOURL, &video_url);
-        quvi_getprop(video, QUVIP_VIDEOFILECONTENTTYPE, &file_ct);
-        quvi_getprop(video, QUVIP_VIDEOFILESUFFIX, &file_suffix);
-        quvi_getprop(video, QUVIP_VIDEOFILELENGTH, &file_length);
+        quvi_getprop(video, QUVIPROP_VIDEOURL, &video_url);
+        quvi_getprop(video, QUVIPROP_VIDEOFILECONTENTTYPE, &file_ct);
+        quvi_getprop(video, QUVIPROP_VIDEOFILESUFFIX, &file_suffix);
+        quvi_getprop(video, QUVIPROP_VIDEOFILELENGTH, &file_length);
 
         printf(
             "link %02d  : %s\n"
@@ -115,10 +115,10 @@ dump_video(quvi_video_t video, opts_s opts) {
     char *page_link, *page_title, *video_id;
     long httpcode;
 
-    quvi_getprop(video, QUVIP_PAGEURL, &page_link);
-    quvi_getprop(video, QUVIP_PAGETITLE, &page_title);
-    quvi_getprop(video, QUVIP_VIDEOID, &video_id);
-    quvi_getprop(video, QUVIP_HTTPCODE, &httpcode);
+    quvi_getprop(video, QUVIPROP_PAGEURL, &page_link);
+    quvi_getprop(video, QUVIPROP_PAGETITLE, &page_title);
+    quvi_getprop(video, QUVIPROP_VIDEOID, &video_id);
+    quvi_getprop(video, QUVIPROP_HTTPCODE, &httpcode);
 
     printf(" > Dump video:\n"
         "url     : %s\n"
@@ -135,8 +135,8 @@ static void
 dump_error(quvi_t quvi, QUVIcode rc, opts_s opts) {
     long httpcode, curlcode;
 
-    quvi_getinfo(quvi, QUVII_HTTPCODE, &httpcode);
-    quvi_getinfo(quvi, QUVII_CURLCODE, &curlcode);
+    quvi_getinfo(quvi, QUVIINFO_HTTPCODE, &httpcode);
+    quvi_getinfo(quvi, QUVIINFO_CURLCODE, &curlcode);
 
     fprintf(stderr, "error: %s (http/%ld, curl/%ld)\n",
         quvi_strerror(quvi,rc),
@@ -288,7 +288,7 @@ init_quvi(opts_s opts) {
 
     /* We can use the quvi created cURL handle for our means. */
 
-    quvi_getinfo(quvi, QUVII_CURL, &curl);
+    quvi_getinfo(quvi, QUVIINFO_CURL, &curl);
     assert(curl != 0);
 
     if (opts.agent_given)

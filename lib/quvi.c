@@ -349,15 +349,15 @@ _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     do { *var = with; } while(0); break
 
     switch (prop) {
-    case QUVIP_HOSTID       : _sets(video->host_id);
-    case QUVIP_PAGEURL      : _sets(video->page_link);
-    case QUVIP_PAGETITLE    : _sets(video->title);
-    case QUVIP_VIDEOID      : _sets(video->id);
-    case QUVIP_VIDEOURL     : _sets(qvl->url);
-    case QUVIP_VIDEOFILELENGTH      : _setn(dp, qvl->length);
-    case QUVIP_VIDEOFILECONTENTTYPE : _sets(qvl->content_type);
-    case QUVIP_VIDEOFILESUFFIX      : _sets(qvl->suffix);
-    case QUVIP_HTTPCODE     : _setn(lp, video->quvi->httpcode);
+    case QUVIPROP_HOSTID       : _sets(video->host_id);
+    case QUVIPROP_PAGEURL      : _sets(video->page_link);
+    case QUVIPROP_PAGETITLE    : _sets(video->title);
+    case QUVIPROP_VIDEOID      : _sets(video->id);
+    case QUVIPROP_VIDEOURL     : _sets(qvl->url);
+    case QUVIPROP_VIDEOFILELENGTH      : _setn(dp, qvl->length);
+    case QUVIPROP_VIDEOFILECONTENTTYPE : _sets(qvl->content_type);
+    case QUVIPROP_VIDEOFILESUFFIX      : _sets(qvl->suffix);
+    case QUVIPROP_HTTPCODE     : _setn(lp, video->quvi->httpcode);
     default                 : return (QUVI_INVARG);
     }
 
@@ -393,9 +393,9 @@ _getinfo (_quvi_t quvi, QUVIinfo info, ...) {
     do  { *vp = with ? with:NULL; } while(0); break
 
     switch (info) {
-    case QUVII_CURL    : _setv(quvi->curl);
-    case QUVII_CURLCODE: _setn(lp, quvi->curlcode);
-    case QUVII_HTTPCODE: _setn(lp, quvi->httpcode);
+    case QUVIINFO_CURL    : _setv(quvi->curl);
+    case QUVIINFO_CURLCODE: _setn(lp, quvi->curlcode);
+    case QUVIINFO_HTTPCODE: _setn(lp, quvi->httpcode);
     default          : return (QUVI_INVARG);
     }
 
