@@ -161,7 +161,7 @@ typedef uint32_t quvi_word;
 /** @brief Byte type */
 typedef uint8_t  quvi_byte;
 
-/** @} */ /* End of types group. */
+/** @} */ /* End of libquvi_types group. */
 
 
 /** @defgroup libquvi_macros Macros
@@ -179,90 +179,75 @@ typedef uint8_t  quvi_byte;
 /** @brief Return a high word from a long type variable */
 #define quvi_hiword(l) ((quvi_word)((uint64_t)(l) >> 16))
 
-/** @} */ /* End of macros group. */
+/** @} */ /* End of libquvi_macros group. */
 
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-/** @defgroup libquvi_funcs Functions
+/** @defgroup libquvi_api Functions
  * Describes the available C API functions.
  * @{
  */
 
-/** 
+/** @defgroup libquvi_init Initializing
+ * @{
+ */
+
+/**
 * @brief Start a new libquvi session
-* 
+*
 * @param quvi Pointer to a new handle
 *
 * @note 
 *   - Close each created handle with quvi_close() when done using it
 *   - libcurl will use the http_proxy environment setting if it is set
 *   - See http://curl.haxx.se/libcurl/c/curl_easy_setopt.html on how to override that
-* 
+*
 * @return Non-zero if an error occurred
 *
 * @sa quvi_close
 *
 * Example:
 * @code
+* #include <quvi/quvi.h>
+* ...
 * quvi_t quvi;
 * quvi_init(&quvi);
 * @endcode
 */
 QUVIcode quvi_init(quvi_t *quvi);
 
-/** 
+
+/** @defgroup libquvi_release Releasing
+ * @{
+ */
+
+/**
 * @brief End a libquvi session
-* 
+*
 * @param quvi Handle to a session
 *
 * @sa quvi_init
 *
 * Example:
 * @code
+* quvi_t quvi;
+* quvi_init(&quvi);
+* ...
 * quvi_close(&quvi);
 * @endcode
 */
 void quvi_close(quvi_t *quvi);
 
+/** @} */ /* End of libquvi_release group. */
+/** @} */ /* End of libquvi_init group. */
 
-/** 
-* @brief Start a new video parsing session
-* 
-* @param quvi Handle to a session
-* @param url Null-terminated string to an URL
-* @param video Pointer to a new video session handle
-*
-* @note Close each created handle when done and/or before reusing it
-* 
-* @return Non-zero if an error occurred
-*
-* @sa quvi_parse_close
-*
-* Example:
-* @code
-* quvi_video_t video;
-* quvi_parse(quvi, "http://www.youtube.com/watch?v=DeWsZ2b_pK4", &video);
-* @endcode
-*/
-QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t *video);
 
-/** 
-* @brief End a video parsing session
-* 
-* @param video Pointer to a video session
-*
-* @sa quvi_parse
-*
-* Example:
-* @code
-* quvi_parse_close(&video);
-* @endcode
-*/
-void quvi_parse_close(quvi_video_t *video);
-
+/** @defgroup libquvi_setup Setting up
+ * @{
+ */
 
 /** 
 * @brief Set options for a libquvi session handle
@@ -277,11 +262,20 @@ void quvi_parse_close(quvi_video_t *video);
 *
 * Example:
 * @code
+* quvi_t quvi;
+* quvi_init(&quvi);
 * quvi_setopt(quvi, QUVIOPT_FORMAT, "hd");
+* ...
 * @endcode
 */
 QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...);
 
+/** @} */ /* End of libquvi_setup group. */
+
+
+/** @defgroup libquvi_getinfo Getting session information
+ * @{
+ */
 
 /** 
 * @brief Get information from a libquvi session handle
@@ -300,11 +294,49 @@ QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...);
 * @code
 * CURL curl;
 * long last_httpcode;
+* ...
 * quvi_getinfo(quvi, QUVII_CURL, &curl);
 * quvi_getinfo(quvi, QUVII_HTTPCODE, &last_httpcode);
+* ...
 * @endcode
 */
 QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
+
+/** @} */ /* End of libquvi_getinfo group. */
+
+
+/** @defgroup libquvi_parse Parsing video links
+ * @{
+ */
+
+/**
+* @brief Start a new video parsing session
+*
+* @param quvi Handle to a session
+* @param url Null-terminated string to an URL
+* @param video Pointer to a new video session handle
+*
+* @note Close each created handle when done and/or before reusing it
+*
+* @return Non-zero if an error occurred
+*
+* @sa quvi_parse_close
+*
+* Example:
+* @code
+* quvi_t quvi;
+* quvi_video_t video;
+* quvi_init(&quvi);
+* quvi_parse(quvi, "http://www.youtube.com/watch?v=DeWsZ2b_pK4", &video);
+* ...
+* @endcode
+*/
+QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t *video);
+
+
+/** @defgroup libquvi_getprop Getting parsed video properties
+ * @{
+ */
 
 /** 
 * @brief Get video property information from a video session handle
@@ -322,12 +354,20 @@ QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
 * Example:
 * @code
 * char *url;
+* ...
 * quvi_getprop(video, QUVIP_VIDEOURL, &url);
 * puts(url);
+* ...
 * @endcode
 */
 QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
 
+/** @} */ /* End of libquvi_getprop group. */
+
+
+/** @defgroup libquvi_parse_util Utility functions
+ * @{
+ */
 
 /**
 * @brief Move to the next video link (if any)
@@ -354,6 +394,40 @@ QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
 */
 QUVIcode quvi_next_videolink(quvi_video_t video);
 
+/** @} */ /* End of libquvi_parse_util group. */
+
+
+/** @defgroup libquvi_parse_release Releasing
+ * @{
+ */
+
+/**
+* @brief End a video parsing session
+*
+* @param video Pointer to a video session
+*
+* @sa quvi_parse
+*
+* Example:
+* @code
+* quvi_video_t video;
+* ...
+* quvi_init(...);
+* ...
+* quvi_parse(..., &video);
+* ...
+* quvi_parse_close(&video);
+* @endcode
+*/
+void quvi_parse_close(quvi_video_t *video);
+
+/** @} */ /* End of libquvi_parse_release group */
+/** @} */ /* End of libquvi_parse group */
+
+
+/** @defgroup libquvi_misc Misc. utility functions
+ * @{
+ */
 
 /** 
 * @brief Next supported video host
@@ -375,7 +449,6 @@ QUVIcode quvi_next_videolink(quvi_video_t video);
 * @endcode
 */
 QUVIcode quvi_next_host(char **domain, char **formats);
-
 
 /** 
 * @brief Return a string describing the error code
@@ -416,11 +489,13 @@ char *quvi_strerror(quvi_t quvi, QUVIcode code);
 */
 char *quvi_version(QUVIversion type);
 
-/** @} */ /* End of group functions. */
+/** @} */ /* End of libquvi_misc group. */
+/** @} */ /* End of libquvi_api group. */
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
 #endif /* quvi_h */
+
 
