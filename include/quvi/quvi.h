@@ -153,7 +153,45 @@ typedef void *quvi_t;
 /** @brief Video parsing session handle */
 typedef void *quvi_video_t;
 
-/** @brief Status callback function */
+/**
+ * @brief Status callback function
+ *
+ * Callback function for status changes.
+ *
+ * Example:
+ * @code
+ * static int
+ * status_callback (long param, void *data) {
+ *   quvi_word status, type;
+ *   status = quvi_loword(param);
+ *   type   = quvi_hiword(param);
+ *   switch (status) {
+ *   case QUVIS_FETCH:
+ *     switch (type) {
+ *        default             : printf(":: Fetch %s ...", (char *)data); break;
+ *        case QUVIST_CONFIG  : printf(":: Fetch config ..."); break;
+ *        case QUVIST_PLAYLIST: printf(":: Fetch playlist ..."); break;
+ *        case QUVIST_DONE    : puts("done."); break;
+ *      }
+ *      break;
+ *   case QUVIS_VERIFY:
+ *     switch (type) {
+ *     default         : printf(":: Verify video link ..."); break;
+ *     case QUVIST_DONE: puts("done."); break;
+ *     }
+ *     break;
+ *   }
+ *   fflush(stdout);
+ * }
+ * int
+ * main (int argc, char *argv[]) {
+ *   quvi_t quvi;
+ *   quvi_init(&quvi);
+ *   quvi_setopt(quvi, QUVIOPT_STATUSFUNCTION, status_callback);
+ *   ...
+ * }
+ * @endcode
+ */
 typedef int (*quvi_callback_status) (long param, void *data);
 
 /** @brief Word type */
