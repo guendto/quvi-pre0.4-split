@@ -8,10 +8,6 @@ src = \
     quvi.c \
     cmdline.c
 
-if NO_STRTOK_R
-src += $(top_srcdir)/lib/strtok_r.c
-endif
-
 hdr = \
     cmdline.h
 
