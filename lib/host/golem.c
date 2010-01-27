@@ -44,7 +44,7 @@ handle_golem(const char *url, _quvi_video_t video) {
     asprintf(&config_url,
         "http://video.golem.de/xml/%s", video->id);
 
-    rc = fetch_to_mem(video, config_url, QUVIST_CONFIG, &config);
+    rc = fetch_to_mem(video, config_url, QUVISTATUSTYPE_CONFIG, &config);
 
     _free(config_url);
 

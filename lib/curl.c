@@ -104,8 +104,12 @@ fetch_to_mem(
             CURLINFO_RESPONSE_CODE, &httpcode);
 
         if (httpcode == 200) {
-            if (quvi->status_func)
-                quvi->status_func(makelong(QUVISTATUS_FETCH, QUVIST_DONE), 0);
+            if (quvi->status_func) {
+                quvi->status_func(
+                    makelong(QUVISTATUS_FETCH, QUVISTATUSTYPE_DONE),
+                    0
+                );
+            }
         }
         else {
             seterr("server returned http/%ld", httpcode);
@@ -191,9 +195,12 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
             curl_easy_getinfo(quvi->curl,
                 CURLINFO_CONTENT_LENGTH_DOWNLOAD, &qvl->length);
 
-            if (quvi->status_func)
-                quvi->status_func(makelong(QUVISTATUS_VERIFY, QUVIST_DONE), 0);
-
+            if (quvi->status_func) {
+                quvi->status_func(
+                    makelong(QUVISTATUS_VERIFY, QUVISTATUSTYPE_DONE),
+                    0
+                );
+            }
             /* Content-Type -> suffix. */
             rc = contenttype_to_suffix(quvi, qvl);
         }

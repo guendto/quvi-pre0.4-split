@@ -55,7 +55,7 @@ handle_sevenload(const char *url, _quvi_video_t video) {
 
     config_url = unescape(video->quvi, config_url);
 
-    rc = fetch_to_mem(video, config_url, QUVIST_CONFIG, &config);
+    rc = fetch_to_mem(video, config_url, QUVISTATUSTYPE_CONFIG, &config);
 
     _free(config_url);
 

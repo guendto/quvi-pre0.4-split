@@ -284,7 +284,7 @@ parse_page_common(
     _free(video->title);
 
     /* fetch */
-    rc = fetch_to_mem(video, url, QUVIST_PAGE, content);
+    rc = fetch_to_mem(video, url, QUVISTATUSTYPE_PAGE, content);
 
     if (rc != QUVI_OK)
         return (rc);

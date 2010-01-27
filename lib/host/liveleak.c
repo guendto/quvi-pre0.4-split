@@ -60,7 +60,7 @@ handle_liveleak(const char *url, _quvi_video_t video) {
 
     config_url = unescape(video->quvi, config_url);
 
-    rc = fetch_to_mem(video, config_url, QUVIST_CONFIG, &config);
+    rc = fetch_to_mem(video, config_url, QUVISTATUSTYPE_CONFIG, &config);
 
     _free(config_url);
 
@@ -85,7 +85,7 @@ handle_liveleak(const char *url, _quvi_video_t video) {
 
     playlist_url = unescape(video->quvi, playlist_url);
 
-    rc = fetch_to_mem(video, playlist_url, QUVIST_PLAYLIST, &playlist);
+    rc = fetch_to_mem(video, playlist_url, QUVISTATUSTYPE_PLAYLIST, &playlist);
 
     _free(playlist_url);
 

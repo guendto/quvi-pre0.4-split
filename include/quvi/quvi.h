@@ -72,11 +72,11 @@ QUVISTATUS_VERIFY,         /**< Status changed to verify video link */
 /** @enum QUVIstatusType Status type codes */
 typedef enum {
 /* QUVISTATUS_FETCH: */
-QUVIST_PAGE = 0x00,   /**< Fetching video page */
-QUVIST_CONFIG,        /**< Fetching config */
-QUVIST_PLAYLIST,      /**< Fetching playlist */
+QUVISTATUSTYPE_PAGE = 0x00,   /**< Fetching video page */
+QUVISTATUSTYPE_CONFIG,        /**< Fetching config */
+QUVISTATUSTYPE_PLAYLIST,      /**< Fetching playlist */
 /* Generic types: */
-QUVIST_DONE,          /**< General purpose "done" status type */
+QUVISTATUSTYPE_DONE,          /**< General purpose "done" status type */
 } QUVIstatusType;
 
 /** @enum QUVIoption Option codes to be used with quvi_setopt()
@@ -168,16 +168,16 @@ typedef void *quvi_video_t;
  *   switch (status) {
  *   case QUVISTATUS_FETCH:
  *     switch (type) {
- *        default             : printf(":: Fetch %s ...", (char *)data); break;
- *        case QUVIST_CONFIG  : printf(":: Fetch config ..."); break;
- *        case QUVIST_PLAYLIST: printf(":: Fetch playlist ..."); break;
- *        case QUVIST_DONE    : puts("done."); break;
+ *        default: printf(":: Fetch %s ...", (char *)data); break;
+ *        case QUVISTATUSTYPE_CONFIG  : printf(":: Fetch config ..."); break;
+ *        case QUVISTATUSTYPE_PLAYLIST: printf(":: Fetch playlist ..."); break;
+ *        case QUVISTATUSTYPE_DONE    : puts("done."); break;
  *      }
  *      break;
  *   case QUVISTATUS_VERIFY:
  *     switch (type) {
- *     default         : printf(":: Verify video link ..."); break;
- *     case QUVIST_DONE: puts("done."); break;
+ *     default: printf(":: Verify video link ..."); break;
+ *     case QUVISTATUSTYPE_DONE: puts("done."); break;
  *     }
  *     break;
  *   }

@@ -97,7 +97,7 @@ handle_spiegel(const char *url, _quvi_video_t video) {
         "http://www1.spiegel.de/active/playlist/fcgi/playlist.fcgi/"
         "asset=flashvideo/mode=id/id=%s", video->id);
 
-    rc = fetch_to_mem(video, playlist_url, QUVIST_PLAYLIST, &playlist);
+    rc = fetch_to_mem(video, playlist_url, QUVISTATUSTYPE_PLAYLIST, &playlist);
 
     _free(playlist_url);
 
@@ -126,7 +126,7 @@ handle_spiegel(const char *url, _quvi_video_t video) {
     asprintf(&config_url,
         "http://video.spiegel.de/flash/%s.xml", video->id);
 
-    rc = fetch_to_mem(video, config_url, QUVIST_CONFIG, &config);
+    rc = fetch_to_mem(video, config_url, QUVISTATUSTYPE_CONFIG, &config);
 
     _free(config_url);
 

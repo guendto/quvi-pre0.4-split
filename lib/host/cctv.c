@@ -67,7 +67,7 @@ handle_cctv(const char *url, _quvi_video_t video) {
     _free(domain);
 
     /* config */
-    rc = fetch_to_mem(video, config_url, QUVIST_CONFIG, &config);
+    rc = fetch_to_mem(video, config_url, QUVISTATUSTYPE_CONFIG, &config);
 
     _free(config_url);
 

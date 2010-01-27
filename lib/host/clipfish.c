@@ -45,7 +45,7 @@ handle_clipfish(const char *url, _quvi_video_t video) {
     asprintf(&config_url,
         "http://www.clipfish.de/video_n.php?p=0|DE&vid=%s", video->id);
 
-    rc = fetch_to_mem(video, config_url, QUVIST_CONFIG, &config);
+    rc = fetch_to_mem(video, config_url, QUVISTATUSTYPE_CONFIG, &config);
     _free(config_url);
 
     /* video link */

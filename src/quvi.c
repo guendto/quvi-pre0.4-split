@@ -46,17 +46,17 @@ status_callback(long param, void *data) {
     switch (status) {
     case QUVISTATUS_FETCH: /* handle fetch */
         switch (type) {
-        default             : printf(":: Fetch %s ...", (char *)data); break;
-        case QUVIST_CONFIG  : printf(":: Fetch config ..."); break;
-        case QUVIST_PLAYLIST: printf(":: Fetch playlist ..."); break;
-        case QUVIST_DONE    : puts("done."); break;
+        default: printf(":: Fetch %s ...", (char *)data); break;
+        case QUVISTATUSTYPE_CONFIG  : printf(":: Fetch config ..."); break;
+        case QUVISTATUSTYPE_PLAYLIST: printf(":: Fetch playlist ..."); break;
+        case QUVISTATUSTYPE_DONE    : puts("done."); break;
         }
         break;
 
     case QUVISTATUS_VERIFY: /* handle verify */
         switch (type) {
-        default         : printf(":: Verify video link ..."); break;
-        case QUVIST_DONE: puts("done."); break;
+        default: printf(":: Verify video link ..."); break;
+        case QUVISTATUSTYPE_DONE: puts("done."); break;
         }
         break;
     }
