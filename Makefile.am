@@ -11,7 +11,7 @@ docs/howto/HowtoSubmitPatches
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libquvi.pc
 
-SUBDIRS = include lib src examples
+SUBDIRS = include lib src examples tests
 
 dox:
 if HAVE_DOXYGEN

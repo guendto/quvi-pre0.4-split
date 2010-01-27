@@ -18,3 +18,12 @@ See also ./configure --help. For example:
 
 "make dox" generates the C API documentation using doxygen.
 Both html and latex documentation are build by default.
+
+    Tests
+
+"NO_INTERNET=1 ./make check" disables the tests that require
+internet connection. You can also set QUVI_TEST_OPTIONS
+if you need to pass any additional options to quvi when
+the tests are run. For example: 
+    QUVI_TEST_OPTIONS="--debug -n" ./make check
+

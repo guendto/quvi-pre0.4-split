@@ -61,6 +61,10 @@ AC_PATH_PROG(DOXYGEN, doxygen, no)
 AM_CONDITIONAL([HAVE_DOXYGEN], [test x"$DOXYGEN" != "xno"])
 AC_SUBST(DOXYGEN)
 
+AC_PATH_PROG(PERL, perl, no)
+AM_CONDITIONAL([HAVE_PERL], [test x"$PERL" != "xno"])
+AC_SUBST(PERL)
+
 build_date=
 AC_PATH_PROG(DATE, date, no)
 if [ test x"$DATE" != "xno" ]; then
@@ -135,6 +139,8 @@ AC_CONFIG_FILES([
     lib/Makefile
     src/Makefile
     examples/Makefile
+    tests/Makefile
+    tests/quviTest.pm
     libquvi.pc
     doxygen.conf
 ])
@@ -151,6 +157,9 @@ AC_MSG_NOTICE([Configured to build quvi/libquvi:
     build libquvi:  shared=${enable_shared} static=${enable_static}
     build quvi:     ${enable_quvi}
     adult support:  ${enable_smut}
+    gengetopt:      ${GENGETOPT}
+    doxygen:        ${DOXYGEN}
+    perl:           ${PERL}
 ])
 
 
