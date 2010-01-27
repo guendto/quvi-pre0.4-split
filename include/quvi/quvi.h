@@ -65,13 +65,13 @@ QUVI_ICONV,           /**< libiconv error occurred */
 
 /** @enum QUVIstatus Status codes */
 typedef enum {
-QUVIS_FETCH  = 0x00,  /**< Status changed to fetch (page, config, etc.) */
-QUVIS_VERIFY,         /**< Status changed to verify video link */
+QUVISTATUS_FETCH  = 0x00,  /**< Status changed to fetch (page, config, etc.) */
+QUVISTATUS_VERIFY,         /**< Status changed to verify video link */
 } QUVIstatus;
 
 /** @enum QUVIstatusType Status type codes */
 typedef enum {
-/* QUVIS_FETCH: */
+/* QUVISTATUS_FETCH: */
 QUVIST_PAGE = 0x00,   /**< Fetching video page */
 QUVIST_CONFIG,        /**< Fetching config */
 QUVIST_PLAYLIST,      /**< Fetching playlist */
@@ -166,7 +166,7 @@ typedef void *quvi_video_t;
  *   status = quvi_loword(param);
  *   type   = quvi_hiword(param);
  *   switch (status) {
- *   case QUVIS_FETCH:
+ *   case QUVISTATUS_FETCH:
  *     switch (type) {
  *        default             : printf(":: Fetch %s ...", (char *)data); break;
  *        case QUVIST_CONFIG  : printf(":: Fetch config ..."); break;
@@ -174,7 +174,7 @@ typedef void *quvi_video_t;
  *        case QUVIST_DONE    : puts("done."); break;
  *      }
  *      break;
- *   case QUVIS_VERIFY:
+ *   case QUVISTATUS_VERIFY:
  *     switch (type) {
  *     default         : printf(":: Verify video link ..."); break;
  *     case QUVIST_DONE: puts("done."); break;

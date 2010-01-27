@@ -44,7 +44,7 @@ status_callback(long param, void *data) {
     type  = quvi_hiword(param);
 
     switch (status) {
-    case QUVIS_FETCH: /* handle fetch */
+    case QUVISTATUS_FETCH: /* handle fetch */
         switch (type) {
         default             : printf(":: Fetch %s ...", (char *)data); break;
         case QUVIST_CONFIG  : printf(":: Fetch config ..."); break;
@@ -53,7 +53,7 @@ status_callback(long param, void *data) {
         }
         break;
 
-    case QUVIS_VERIFY: /* handle verify */
+    case QUVISTATUS_VERIFY: /* handle verify */
         switch (type) {
         default         : printf(":: Verify video link ..."); break;
         case QUVIST_DONE: puts("done."); break;

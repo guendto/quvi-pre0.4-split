@@ -84,7 +84,7 @@ fetch_to_mem(
     *dst = 0;
 
     if (quvi->status_func)
-        quvi->status_func(makelong(QUVIS_FETCH, type), (void *)url);
+        quvi->status_func(makelong(QUVISTATUS_FETCH, type), (void *)url);
 
     csetopt(CURLOPT_URL,       url);
     csetopt(CURLOPT_ENCODING,  "");
@@ -105,7 +105,7 @@ fetch_to_mem(
 
         if (httpcode == 200) {
             if (quvi->status_func)
-                quvi->status_func(makelong(QUVIS_FETCH, QUVIST_DONE), 0);
+                quvi->status_func(makelong(QUVISTATUS_FETCH, QUVIST_DONE), 0);
         }
         else {
             seterr("server returned http/%ld", httpcode);
@@ -155,7 +155,7 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
         return (QUVI_BADHANDLE);
 
     if (quvi->status_func)
-        quvi->status_func(makelong(QUVIS_VERIFY,0), 0);
+        quvi->status_func(makelong(QUVISTATUS_VERIFY,0), 0);
 
     memset(&mem, 0, sizeof(mem));
 
@@ -192,7 +192,7 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
                 CURLINFO_CONTENT_LENGTH_DOWNLOAD, &qvl->length);
 
             if (quvi->status_func)
-                quvi->status_func(makelong(QUVIS_VERIFY, QUVIST_DONE), 0);
+                quvi->status_func(makelong(QUVISTATUS_VERIFY, QUVIST_DONE), 0);
 
             /* Content-Type -> suffix. */
             rc = contenttype_to_suffix(quvi, qvl);
