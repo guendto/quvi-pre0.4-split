@@ -113,12 +113,16 @@ dump_video_links(quvi_video_t video) {
 static void
 dump_video(quvi_video_t video, opts_s opts) {
     char *page_link, *page_title, *video_id;
+#ifdef _1_
     long httpcode;
+#endif
 
     quvi_getprop(video, QUVIPROP_PAGEURL, &page_link);
     quvi_getprop(video, QUVIPROP_PAGETITLE, &page_title);
     quvi_getprop(video, QUVIPROP_VIDEOID, &video_id);
+#ifdef _1_
     quvi_getprop(video, QUVIPROP_HTTPCODE, &httpcode);
+#endif
 
     printf(" > Dump video:\n"
         "url     : %s\n"
@@ -127,8 +131,9 @@ dump_video(quvi_video_t video, opts_s opts) {
         page_link, page_title, video_id);
 
     dump_video_links(video);
-
+#ifdef _1_
     printf("httpcode: %ld (last)\n", httpcode);
+#endif
 }
 
 static void
