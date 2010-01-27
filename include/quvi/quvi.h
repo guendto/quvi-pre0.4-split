@@ -57,10 +57,10 @@ QUVI_CURLINIT,        /**< libcurl initialization failed */
 QUVI_LAST,            /**< Indicates end of list iteration */
 _INTERNAL_QUVI_LAST,  /**< For library internal use only */
 /* Dynamically generated errors */
-QUVI_PCRE = 0xff + 1, /**< libpcre error occurred */
-QUVI_NOSUPPORT,       /**< libquvi does not support the video host */
-QUVI_CURL,            /**< libcurl error occurred */
-QUVI_ICONV,           /**< libiconv error occurred */
+QUVI_PCRE = 0x40, /**< libpcre error occurred */
+QUVI_NOSUPPORT,   /**< libquvi does not support the video host */
+QUVI_CURL,        /**< libcurl error occurred */
+QUVI_ICONV,       /**< libiconv error occurred */
 } QUVIcode;
 
 /** @enum QUVIstatus Status codes */
