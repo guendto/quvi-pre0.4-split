@@ -40,10 +40,11 @@ _host_re(re_hd,     "(?i)<hd_button>(\\d+)</");
 
 QUVIcode
 handle_vimeo(const char *url, _quvi_video_t video) {
-    char *content, *config_url, *config, *sign, *exp, *format;
+    char *content, *config_url, *config, *sign, *exp;
     QUVIcode rc;
 #ifdef FLV_HD
     int hd_avail;
+    char *format;
 #endif
     char *lnk;
 
