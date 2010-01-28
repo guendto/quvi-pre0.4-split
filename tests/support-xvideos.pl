@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "xvideos");
+exit quviTest::run_t("xvideos");

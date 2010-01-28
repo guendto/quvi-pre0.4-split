@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "funnyhub");
+exit quviTest::run_t("funnyhub");

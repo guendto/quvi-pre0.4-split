@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "sevenload");
+exit quviTest::run_t("sevenload");

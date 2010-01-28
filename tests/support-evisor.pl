@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "evisor");
+exit quviTest::run_t("evisor");

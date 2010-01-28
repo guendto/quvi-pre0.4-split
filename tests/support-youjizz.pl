@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "youjizz");
+exit quviTest::run_t("youjizz");

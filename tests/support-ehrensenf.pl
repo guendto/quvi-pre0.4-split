@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "ehrensenf");
+exit quviTest::run_t("ehrensenf");

@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "myubo");
+exit quviTest::run_t("myubo");

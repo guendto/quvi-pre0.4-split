@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "clipfish");
+exit quviTest::run_t("clipfish");

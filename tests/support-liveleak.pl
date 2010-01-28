@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "liveleak");
+exit quviTest::run_t("liveleak");

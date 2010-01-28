@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "break");
+exit quviTest::run_t("break");

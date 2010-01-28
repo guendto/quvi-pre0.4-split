@@ -1,1 +1,1 @@
-exit quviTest::run("-t", "tube8");
+exit quviTest::run_t("tube8");
