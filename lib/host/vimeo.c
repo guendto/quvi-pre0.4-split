@@ -17,22 +17,39 @@
 
 #include "host.h"
 
+/* Previously both flv and hd worked. Only hd seems to work now.
+ * We'll default to hd as our new flv. */
+
+#ifdef _1_
+#define FLV_HD /* The old flv|hd scheme, disabled now by default. */
+#endif
+
+#ifdef FLV_HD
 _host_constants(vimeo, "vimeo.com", "flv|hd");
+#else
+_host_constants(vimeo, "vimeo.com", "flv"); /* Make hd -> flv. */
+#endif
 
 _host_re(re_id,     "(?i)clip_id=(.*?)\"");
 _host_re(re_title,  "(?i)<caption>(.*?)</caption>");
 _host_re(re_sign,   "(?i)<request_signature>(.*?)</");
 _host_re(re_exp,    "(?i)<request_signature_expires>(.*?)</");
+#ifdef FLV_HD
 _host_re(re_hd,     "(?i)<hd_button>(\\d+)</");
+#endif
 
 QUVIcode
 handle_vimeo(const char *url, _quvi_video_t video) {
     char *content, *config_url, *config, *sign, *exp, *format;
     QUVIcode rc;
+#ifdef FLV_HD
     int hd_avail;
+#endif
     char *lnk;
 
+#ifdef FLV_HD
     hd_avail = 0;
+#endif
 
     /* host id */
     _host_id("vimeo");
@@ -97,6 +114,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
             0
         );
 
+#ifdef FLV_HD
         if (rc == QUVI_OK) {
             QUVIcode _rc; /* do not override rc which we check further below */
             char *hd;
@@ -116,6 +134,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
 
             _free(hd);
         }
+#endif
     }
 
     _free(config);
@@ -128,12 +147,16 @@ handle_vimeo(const char *url, _quvi_video_t video) {
 
     /* video link */
     asprintf(&lnk,
-        "http://vimeo.com/moogaloop/play/clip:%s/%s/%s",
-        video->id, sign, exp);
+        "http://vimeo.com/moogaloop/play/clip:%s/%s/%s"
+#ifndef FLV_HD
+        "/?q=hd&type=local&embed_location="
+#endif
+        ,video->id, sign, exp);
 
     _free(sign);
     _free(exp);
 
+#ifdef FLV_HD
     format = video->quvi->format;
 
     if (format) {
@@ -147,6 +170,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
             _free(tmp);
         }
     }
+#endif
 
     rc = add_video_link(&video->link, "%s", lnk);
 
