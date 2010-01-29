@@ -7,8 +7,6 @@
 * quvi(1), libquvi(3), libquvi-tutorial(3)  using pod
 * configure.ac, Makefile.am: "make man"
 * AC_ARG_WITH([manual])  install with manual pages
-* improved automated tests
-  - expected (title, file suffix, file length, etc.)
 
 When due
 --------
