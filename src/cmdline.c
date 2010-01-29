@@ -32,19 +32,23 @@ const char *gengetopt_args_info_usage = "Usage: quvi [OPTIONS]... [URL]...";
 const char *gengetopt_args_info_description = "";
 
 const char *gengetopt_args_info_help[] = {
-  "  -h, --help                 Print help and exit",
-  "  -v, --version              Print version and exit",
-  "      --hosts                Show supported hosts",
-  "  -q, --quiet                Turn off all output",
-  "      --debug                Turn on libcurl verbose mode",
-  "  -n, --no-verify            Do not verify video link",
-  "  -a, --test-all             Run built-in tests",
-  "  -t, --test=<regexp>        match regexp to a built-in test link",
-  "  -d, --dump                 Dump video details when running tests",
-  "      --agent=<string>       Identify cclive as string to servers  \n                               (default=`Mozilla/5.0')",
-  "      --proxy=<host[:port]>  Use specified proxy",
-  "      --connect-timeout=<s>  Max seconds allowed connection to server take  \n                               (default=`30')",
-  "  -f, --format=<format_id>   Query video format  (possible values=\"flv\", \n                               \"best\", \"fmt17\", \"fmt18\", \"fmt22\", \n                               \"fmt34\", \"fmt35\", \"hq\", \"3gp\", \n                               \"spark-mini\", \"vp6-hq\", \"vp6-hd\", \"vp6\", \n                               \"h264\", \"hd\", \"mp4\", \"high\", \"ipod\", \n                               \"vp6_576\", \"vp6_928\", \"h264_1400\" \n                               default=`flv')",
+  "  -h, --help                  Print help and exit",
+  "  -v, --version               Print version and exit",
+  "      --hosts                 Show supported hosts",
+  "  -q, --quiet                 Turn off all output",
+  "      --debug                 Turn on libcurl verbose mode",
+  "  -n, --no-verify             Do not verify video link",
+  "      --page-title=<string>   expected video page title",
+  "      --video-id=<string>     expected video id",
+  "      --file-length=<length>  expected video file length",
+  "      --file-suffix=<string>  expected video file suffix",
+  "  -a, --test-all              Run built-in tests",
+  "  -t, --test=<regexp>         match regexp to a built-in test link",
+  "  -d, --dump                  Dump video details when running tests",
+  "      --agent=<string>        Identify cclive as string to servers  \n                                (default=`Mozilla/5.0')",
+  "      --proxy=<host[:port]>   Use specified proxy",
+  "      --connect-timeout=<s>   Max seconds allowed connection to server take  \n                                (default=`30')",
+  "  -f, --format=<format_id>    Query video format  (possible values=\"flv\", \n                                \"best\", \"fmt17\", \"fmt18\", \"fmt22\", \n                                \"fmt34\", \"fmt35\", \"hq\", \"3gp\", \n                                \"spark-mini\", \"vp6-hq\", \"vp6-hd\", \n                                \"vp6\", \"h264\", \"hd\", \"mp4\", \"high\", \n                                \"ipod\", \"vp6_576\", \"vp6_928\", \n                                \"h264_1400\" default=`flv')",
   "\nExaples:\n\n  quvi -a         # run all built-in tests\n  quvi URL        # test URL\n  quvi -d URL     # test URL and dump video details\n  quvi -t youtube # match 'youtube' to built-in links and test it\n  quvi URL -f mp4 # query 'mp4' format of the video\n",
     0
 };
@@ -52,6 +56,7 @@ const char *gengetopt_args_info_help[] = {
 typedef enum {ARG_NO
   , ARG_STRING
   , ARG_INT
+  , ARG_DOUBLE
 } cmdline_parser_arg_type;
 
 static
@@ -80,6 +85,10 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->quiet_given = 0 ;
   args_info->debug_given = 0 ;
   args_info->no_verify_given = 0 ;
+  args_info->page_title_given = 0 ;
+  args_info->video_id_given = 0 ;
+  args_info->file_length_given = 0 ;
+  args_info->file_suffix_given = 0 ;
   args_info->test_all_given = 0 ;
   args_info->test_given = 0 ;
   args_info->dump_given = 0 ;
@@ -93,6 +102,13 @@ static
 void clear_args (struct gengetopt_args_info *args_info)
 {
   FIX_UNUSED (args_info);
+  args_info->page_title_arg = NULL;
+  args_info->page_title_orig = NULL;
+  args_info->video_id_arg = NULL;
+  args_info->video_id_orig = NULL;
+  args_info->file_length_orig = NULL;
+  args_info->file_suffix_arg = NULL;
+  args_info->file_suffix_orig = NULL;
   args_info->test_arg = NULL;
   args_info->test_orig = NULL;
   args_info->agent_arg = gengetopt_strdup ("Mozilla/5.0");
@@ -117,13 +133,17 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->quiet_help = gengetopt_args_info_help[3] ;
   args_info->debug_help = gengetopt_args_info_help[4] ;
   args_info->no_verify_help = gengetopt_args_info_help[5] ;
-  args_info->test_all_help = gengetopt_args_info_help[6] ;
-  args_info->test_help = gengetopt_args_info_help[7] ;
-  args_info->dump_help = gengetopt_args_info_help[8] ;
-  args_info->agent_help = gengetopt_args_info_help[9] ;
-  args_info->proxy_help = gengetopt_args_info_help[10] ;
-  args_info->connect_timeout_help = gengetopt_args_info_help[11] ;
-  args_info->format_help = gengetopt_args_info_help[12] ;
+  args_info->page_title_help = gengetopt_args_info_help[6] ;
+  args_info->video_id_help = gengetopt_args_info_help[7] ;
+  args_info->file_length_help = gengetopt_args_info_help[8] ;
+  args_info->file_suffix_help = gengetopt_args_info_help[9] ;
+  args_info->test_all_help = gengetopt_args_info_help[10] ;
+  args_info->test_help = gengetopt_args_info_help[11] ;
+  args_info->dump_help = gengetopt_args_info_help[12] ;
+  args_info->agent_help = gengetopt_args_info_help[13] ;
+  args_info->proxy_help = gengetopt_args_info_help[14] ;
+  args_info->connect_timeout_help = gengetopt_args_info_help[15] ;
+  args_info->format_help = gengetopt_args_info_help[16] ;
   
 }
 
@@ -207,6 +227,13 @@ static void
 cmdline_parser_release (struct gengetopt_args_info *args_info)
 {
   unsigned int i;
+  free_string_field (&(args_info->page_title_arg));
+  free_string_field (&(args_info->page_title_orig));
+  free_string_field (&(args_info->video_id_arg));
+  free_string_field (&(args_info->video_id_orig));
+  free_string_field (&(args_info->file_length_orig));
+  free_string_field (&(args_info->file_suffix_arg));
+  free_string_field (&(args_info->file_suffix_orig));
   free_string_field (&(args_info->test_arg));
   free_string_field (&(args_info->test_orig));
   free_string_field (&(args_info->agent_arg));
@@ -304,6 +331,14 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "debug", 0, 0 );
   if (args_info->no_verify_given)
     write_into_file(outfile, "no-verify", 0, 0 );
+  if (args_info->page_title_given)
+    write_into_file(outfile, "page-title", args_info->page_title_orig, 0);
+  if (args_info->video_id_given)
+    write_into_file(outfile, "video-id", args_info->video_id_orig, 0);
+  if (args_info->file_length_given)
+    write_into_file(outfile, "file-length", args_info->file_length_orig, 0);
+  if (args_info->file_suffix_given)
+    write_into_file(outfile, "file-suffix", args_info->file_suffix_orig, 0);
   if (args_info->test_all_given)
     write_into_file(outfile, "test-all", 0, 0 );
   if (args_info->test_given)
@@ -525,6 +560,9 @@ int update_arg(void *field, char **orig_field,
   case ARG_INT:
     if (val) *((int *)field) = strtol (val, &stop_char, 0);
     break;
+  case ARG_DOUBLE:
+    if (val) *((double *)field) = strtod (val, &stop_char);
+    break;
   case ARG_STRING:
     if (val) {
       string_field = (char **)field;
@@ -540,6 +578,7 @@ int update_arg(void *field, char **orig_field,
   /* check numeric conversion */
   switch(arg_type) {
   case ARG_INT:
+  case ARG_DOUBLE:
     if (val && !(stop_char && *stop_char == '\0')) {
       fprintf(stderr, "%s: invalid numeric value: %s\n", package_name, val);
       return 1; /* failure */
@@ -612,6 +651,10 @@ cmdline_parser_internal (
         { "quiet",	0, NULL, 'q' },
         { "debug",	0, NULL, 0 },
         { "no-verify",	0, NULL, 'n' },
+        { "page-title",	1, NULL, 0 },
+        { "video-id",	1, NULL, 0 },
+        { "file-length",	1, NULL, 0 },
+        { "file-suffix",	1, NULL, 0 },
         { "test-all",	0, NULL, 'a' },
         { "test",	1, NULL, 't' },
         { "dump",	0, NULL, 'd' },
@@ -743,6 +786,62 @@ cmdline_parser_internal (
                 &(local_args_info.debug_given), optarg, 0, 0, ARG_NO,
                 check_ambiguity, override, 0, 0,
                 "debug", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* expected video page title.  */
+          else if (strcmp (long_options[option_index].name, "page-title") == 0)
+          {
+          
+          
+            if (update_arg( (void *)&(args_info->page_title_arg), 
+                 &(args_info->page_title_orig), &(args_info->page_title_given),
+                &(local_args_info.page_title_given), optarg, 0, 0, ARG_STRING,
+                check_ambiguity, override, 0, 0,
+                "page-title", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* expected video id.  */
+          else if (strcmp (long_options[option_index].name, "video-id") == 0)
+          {
+          
+          
+            if (update_arg( (void *)&(args_info->video_id_arg), 
+                 &(args_info->video_id_orig), &(args_info->video_id_given),
+                &(local_args_info.video_id_given), optarg, 0, 0, ARG_STRING,
+                check_ambiguity, override, 0, 0,
+                "video-id", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* expected video file length.  */
+          else if (strcmp (long_options[option_index].name, "file-length") == 0)
+          {
+          
+          
+            if (update_arg( (void *)&(args_info->file_length_arg), 
+                 &(args_info->file_length_orig), &(args_info->file_length_given),
+                &(local_args_info.file_length_given), optarg, 0, 0, ARG_DOUBLE,
+                check_ambiguity, override, 0, 0,
+                "file-length", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* expected video file suffix.  */
+          else if (strcmp (long_options[option_index].name, "file-suffix") == 0)
+          {
+          
+          
+            if (update_arg( (void *)&(args_info->file_suffix_arg), 
+                 &(args_info->file_suffix_orig), &(args_info->file_suffix_given),
+                &(local_args_info.file_suffix_given), optarg, 0, 0, ARG_STRING,
+                check_ambiguity, override, 0, 0,
+                "file-suffix", '-',
                 additional_error))
               goto failure;
           

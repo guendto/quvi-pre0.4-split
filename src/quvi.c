@@ -137,6 +137,59 @@ dump_video(quvi_video_t video, opts_s opts) {
 }
 
 static void
+expect_error (const char *what, const char *expected, const char *got) {
+    fprintf(stderr,
+        "error: %s:\n  expected: \"%s\"\n  got: \"%s\"\n\n",
+            what, expected, got);
+}
+
+static void
+expect_error_d (const char *what, const double expected, const double got) {
+    fprintf(stderr,
+        "error: %s:\n  expected: \"%.0f\"\n  got: \"%.0f\"\n\n",
+            what, expected, got);
+}
+
+static int
+check_values(quvi_video_t video, opts_s opts) {
+    int rc = 0;
+
+    if (opts.page_title_given) {
+        char *title, *expect=opts.page_title_arg;
+        quvi_getprop(video, QUVIPROP_PAGETITLE, &title);
+        rc = strcmp(expect, title) != 0;
+        if (rc)
+            expect_error("page title", expect, title);
+    }
+
+    if (opts.video_id_given && !rc) {
+        char *id, *expect=opts.video_id_arg;
+        quvi_getprop(video, QUVIPROP_VIDEOID, &id);
+        rc = strcmp(expect, id) != 0;
+        if (rc)
+            expect_error("video id", expect, id);
+    }
+
+    if (opts.file_suffix_given && !rc) {
+        char *suffix, *expect=opts.file_suffix_arg;
+        quvi_getprop(video, QUVIPROP_VIDEOFILESUFFIX, &suffix);
+        rc = strcmp(expect, suffix) != 0;
+        if (rc)
+            expect_error("file suffix", expect, suffix);
+    }
+
+    if (opts.file_length_given && !rc) {
+        double length, expect=opts.file_length_arg;
+        quvi_getprop(video, QUVIPROP_VIDEOFILELENGTH, &length);
+        rc = expect != length;
+        if (rc)
+            expect_error_d("file length", expect, length);
+    }
+
+    return (rc);
+}
+
+static void
 dump_error(quvi_t quvi, QUVIcode rc, opts_s opts) {
     long httpcode, curlcode;
 
@@ -157,7 +210,7 @@ dump_error(quvi_t quvi, QUVIcode rc, opts_s opts) {
 static const char *tests[] = {
 "http://www.dailymotion.com/hd/video/x9fkzj_battlefield-1943-coral-sea-trailer_videogames",
 "http://www.ehrensenf.de/shows/ehrensenf/getarnte-bienen-schaukelmotorrad-devitohorror",
-"http://www.spiegel.de/video/video-1012584.html",
+"http://www.spiegel.de/video/video-1012582.html",
 "http://vimeo.com/1485507",
 "http://en.sevenload.com/videos/IUL3gda-Funny-Football-Clips",
 "http://www.myubo.com/page/media_detail.html?movieid=1308f0fb-47c6-40c5-a6f9-1324dac12896",
@@ -225,10 +278,11 @@ match_test(quvi_t quvi, opts_s opts) {
                 dump_error(quvi, _rc, opts);
 
             dump_video(v, opts);
+            rc = check_values(v, opts);
             quvi_parse_close(&v);
 
             cmdline_parser_free(&opts);
-            exit (0);
+            exit (rc);
         }
         else if (rc == PCRE_ERROR_NOMATCH) {
             continue;

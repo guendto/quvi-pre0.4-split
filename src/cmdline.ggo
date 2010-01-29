@@ -19,6 +19,23 @@ option "no-verify"
     n "Do not verify video link"
     optional
 
+option "page-title"
+    - "expected video page title"
+    string typestr="<string>"
+    optional
+option "video-id"
+    - "expected video id"
+    string typestr="<string>"
+    optional
+option "file-length"
+    - "expected video file length"
+    double typestr="<length>"
+    optional
+option "file-suffix"
+    - "expected video file suffix"
+    string typestr="<string>"
+    optional
+
 option "test-all"
     a "Run built-in tests"
     optional
