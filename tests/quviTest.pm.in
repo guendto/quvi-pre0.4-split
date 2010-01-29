@@ -39,17 +39,46 @@ sub no_internet {
     }
 }
 
+# Remove these from the args: we use them for
+# default "flv" runs only.
+sub remove_checks {
+    my (@args) = @_;
+
+    my @remove =
+        qw(--page-title --video-id --file-length --file-suffix);
+
+    my @tmp;
+    my $skip = 0;
+
+    foreach my $arg (@args) {
+        foreach (@remove) {
+            if ($arg =~ /$_/) {
+                $skip = 1;
+                last;
+            }
+        }
+        push @tmp, $arg  if !$skip;
+        $skip ||= $skip;
+    }
+
+    return @tmp;
+}
+
 # Wraps "-t $fmt", parses quvi --hosts output, and
 # tests all host supported formats.
 sub run_t {
     no_internet();
-    my @args = ("-t", @_);
+
+    my @args    = ("-t", @_);
     my @formats = parse_formats($_[0]);
+
     my $rc;
     foreach (@formats) {
-        $rc = run(("-f",$_,@args));
+        $rc = run( ("-f", $_, @args) );
         last if $rc != 0;
+        @args = remove_checks(@args);
     }
+
     return $rc;
 }
 
