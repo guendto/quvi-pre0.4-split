@@ -1,3 +1,7 @@
+unless ($ENV{TEST_RESTRICTED}) {
+    print STDERR "SKIP: Country restricted. Set TEST_RESTRICTED to enable.\n";
+    exit 0;
+}
 exit quviTest::run_t(
 "clipfish",
 "--page-title",
