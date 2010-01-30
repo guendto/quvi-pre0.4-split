@@ -34,7 +34,7 @@ my $QUVI_PATH = "@top_builddir@/src/quvi";
 # Exit test if NO_INTERNET is set.
 sub no_internet {
     if ($ENV{NO_INTERNET}) {
-        print STDERR "SKIP: No internet.\n";
+        print STDERR "SKIP: No internet. Unset NO_INTERNET to enable.\n";
         exit (0);
     }
 }
