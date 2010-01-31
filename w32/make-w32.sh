@@ -31,14 +31,12 @@ pack_it()
 
     rm -rf dist quvi-$version $archive \
     && make install \
-    && make dox \
     && cp $curl_dll dist/bin \
     && cp $pcre_dll dist/bin \
     && cp $iconv_dll dist/bin \
     && cp ../COPYING dist/quvi-COPYING.txt \
     && cp ../ChangeLog dist/ChangeLog.txt \
     && rm -rf dist/share \
-    && cp -r docs/html dist/docs \
     && mv dist $distdir \
     && 7za a $archive $distdir
     exit $?
