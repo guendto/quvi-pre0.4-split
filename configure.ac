@@ -94,6 +94,7 @@ if [ test x"$is_w32" = "xno" ]; then
     AC_FUNC_REALLOC
 fi
 AC_CHECK_FUNCS([memset strdup strstr strtol strerror])
+AC_FUNC_STRTOD
 
 have_asprintf=no
 AC_CHECK_FUNCS([vasprintf], [
@@ -108,6 +109,10 @@ AM_CONDITIONAL([NO_STRUPR], [test x"$have_strupr" != "xyes"])
 have_strtok_r=no
 AC_CHECK_FUNCS([strtok_r], [have_strtok_r=yes])
 AM_CONDITIONAL([NO_STRTOK_R], [test x"$have_strtok_r" != "xyes"])
+
+if [ test x"$have_strtok_r" = "xno" ]; then
+    AC_CHECK_FUNCS([strchr strpbrk strspn])
+fi
 
 # --enable-quvi
 AC_ARG_ENABLE([quvi],
