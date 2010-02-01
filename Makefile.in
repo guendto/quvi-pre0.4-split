@@ -806,7 +806,7 @@ uninstall-am: uninstall-pkgconfigDATA
 dox:
 @HAVE_DOXYGEN_TRUE@	@$(DOXYGEN) $(top_builddir)/doxygen.conf
 @HAVE_DOXYGEN_TRUE@	@echo doxygen generated pages can be found in docs/ subdir
-@HAVE_DOXYGEN_FALSE@	@echo configure did not find `doxygen'
+@HAVE_DOXYGEN_FALSE@	@echo configure did not find doxygen
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

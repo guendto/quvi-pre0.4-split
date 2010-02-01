@@ -18,7 +18,7 @@ if HAVE_DOXYGEN
 	@$(DOXYGEN) $(top_builddir)/doxygen.conf
 	@echo doxygen generated pages can be found in docs/ subdir
 else
-	@echo configure did not find `doxygen'
+	@echo configure did not find doxygen
 endif
 
 
