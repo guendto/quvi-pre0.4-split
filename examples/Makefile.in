@@ -211,7 +211,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 simple_SOURCES = simple.c
-simple_CFLAGS = -I$(top_srcdir)/include
+simple_CFLAGS = -I$(top_builddir)/include
 simple_LDFLAGS = $(top_builddir)/lib/libquvi.la
 all: all-am
 

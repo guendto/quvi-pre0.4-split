@@ -59,7 +59,7 @@ lib_LTLIBRARIES = libquvi.la
 libquvi_la_SOURCES = $(src) $(src_host) $(hdr)
 
 libquvi_la_CFLAGS = \
--I$(top_srcdir)/include \
+-I$(top_builddir)/include \
 $(libcurl_CFLAGS) \
 $(libpcre_CFLAGS)
 

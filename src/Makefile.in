@@ -232,7 +232,7 @@ top_srcdir = @top_srcdir@
 
 @ENABLE_QUVI_TRUE@quvi_SOURCES = $(src) $(hdr)
 @ENABLE_QUVI_TRUE@quvi_CFLAGS = \
-@ENABLE_QUVI_TRUE@    -I$(top_srcdir)/include \
+@ENABLE_QUVI_TRUE@    -I$(top_builddir)/include \
 @ENABLE_QUVI_TRUE@    -I$(top_srcdir)/lib \
 @ENABLE_QUVI_TRUE@    $(libcurl_CFLAGS) \
 @ENABLE_QUVI_TRUE@    $(libpcre_CFLAGS)

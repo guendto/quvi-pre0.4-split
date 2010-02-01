@@ -141,6 +141,7 @@ AC_CONFIG_FILES([
     Makefile
     include/Makefile
     include/quvi/Makefile
+    include/quvi/quvi.h
     lib/Makefile
     src/Makefile
     examples/Makefile
