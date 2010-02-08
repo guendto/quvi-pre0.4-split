@@ -123,10 +123,9 @@ fetch_to_mem(
     }
 
     if (mem.p) {
-        *dst = strdup(mem.p);
-        _free(mem.p);
+        *dst = mem.p;
         if (rc == QUVI_OK) /* charset */
-            parse_charset(video, *dst);
+            parse_charset(video, mem.p);
     }
 
     video->quvi->httpcode = httpcode;
