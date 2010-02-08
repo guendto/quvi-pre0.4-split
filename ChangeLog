@@ -1,4 +1,12 @@
 
+Version 0.1.1
+
+  * Fix: vimeo support, symptoms:
+    # length: 20
+    # suffix: html; charset=UTF-8
+    # content-type: text/html; charset=UTF-8
+
+
 Version 0.1.0
 
 2010-02-01 Toni Gundogdu
