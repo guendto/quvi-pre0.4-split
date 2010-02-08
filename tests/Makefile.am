@@ -33,7 +33,7 @@ TESTS += $(TESTS_ADULT)
 endif
 
 else # HAVE_PERL
-@echo SKIP: perl not found.
+	@echo SKIP: perl not found.
 endif # HAVE_PERL
 
 local-clean:
