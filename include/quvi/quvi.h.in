@@ -91,18 +91,11 @@ QUVIOPT_NOVERIFY,       /**< Do not verify video link */
 QUVIOPT_STATUSFUNCTION, /**< Callback function for status updates */
 } QUVIoption;
 
-/** @enum QUVIconst Misc. constants */
-typedef enum {
-QUVIINFO_VOID         = 0x100000, /**< void type */
-QUVIINFO_LONG         = 0x200000, /**< long type */
-QUVIINFO_STRING       = 0x300000, /**< string type */
-QUVIINFO_DOUBLE       = 0x400000, /**< double type */
-QUVIINFO_TYPEMASK     = 0xf00000, /**< type mask */
-QUVIPROPERTY_STRING   = 0x100000, /**< string type */
-QUVIPROPERTY_LONG     = 0x200000, /**< long type */
-QUVIPROPERTY_DOUBLE   = 0x300000, /**< double type */
-QUVIPROPERTY_TYPEMASK = 0xf00000  /**< type mask */
-} QUVIconst;
+#define QUVIINFO_VOID       0x100000 /**< void type */
+#define QUVIINFO_LONG       0x200000 /**< long type */
+#define QUVIINFO_STRING     0x300000 /**< string type */
+#define QUVIINFO_DOUBLE     0x400000 /**< double type */
+#define QUVIINFO_TYPEMASK   0xf00000 /**< type mask */
 
 /** @enum QUVIinfo Info codes to be used with quvi_getinfo()
 *
@@ -130,6 +123,11 @@ QUVIINFO_HTTPCODE    = QUVIINFO_LONG + 3,/**< Last libcurl returned HTTP code */
 /* Add new ones below. */
 _QUVIINFO_LAST        = 3                 /**< Placeholder */
 } QUVIinfo;
+
+#define QUVIPROPERTY_STRING     0x100000 /**< string type */
+#define QUVIPROPERTY_LONG       0x200000 /**< long type */
+#define QUVIPROPERTY_DOUBLE     0x300000 /**< double type */
+#define QUVIPROPERTY_TYPEMASK   0xf00000 /**< type mask */
 
 /** @enum QUVIproperty Video property codes to be used with quvi_getprop() */
 typedef enum {
