@@ -30,7 +30,9 @@
     ((quvi_word)((quvi_byte) ((uint64_t)(high) & 0xff))) << 8))
 
 #define _free(p) \
-    do { free(p); p=0; } while(0)
+    do { \
+        if (p) { free(p); p=0; } \
+    } while(0)
 
 #define seterr(args...) \
     do { \
