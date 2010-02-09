@@ -46,7 +46,7 @@ handle_youtube(const char *url, _quvi_video_t video) {
         0,
         0,
         &t,
-        0
+        (void *) 0
     );
 
     if (rc != QUVI_OK) {
@@ -62,7 +62,7 @@ handle_youtube(const char *url, _quvi_video_t video) {
         0,
         0,
         &fmap,
-        0
+        (void *) 0
     );
 
     /* video link */

@@ -42,7 +42,7 @@ match_fname(_quvi_video_t video,
         0,
         &prefix,
         &suffix,
-        0
+        (void *) 0
     );
 
     _free(re_fname);
@@ -86,7 +86,7 @@ handle_spiegel(const char *url, _quvi_video_t video) {
         0,
         0,
         &video->id,
-        0
+        (void *) 0
     );
 
     if (rc != QUVI_OK)
@@ -114,7 +114,7 @@ handle_spiegel(const char *url, _quvi_video_t video) {
         0,
         0,
         &video->title,
-        0
+        (void *) 0
     );
 
     _free(playlist);

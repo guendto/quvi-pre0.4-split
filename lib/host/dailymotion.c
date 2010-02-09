@@ -58,7 +58,7 @@ parse(const _quvi_video_t video, char *paths) {
             0,
             &path,
             &id,
-            0
+            (void *) 0
         );
 
         if (rc != QUVI_OK)
@@ -83,7 +83,7 @@ parse(const _quvi_video_t video, char *paths) {
                 0,
                 &w,
                 &h,
-                0
+                (void *) 0
             );
 
             if (rc != QUVI_OK) {
@@ -137,7 +137,7 @@ handle_dailymotion(const char *url, _quvi_video_t video) {
         0,
         0,
         &paths,
-        0
+        (void *) 0
     );
 
     _free(content);

@@ -1,6 +1,10 @@
 
 Version 0.1.1
 
+  * Fix: segfault on 64bit systems
+    # Terminate stdarg lists with a proper null pointer (0 -> (void*)0)
+    # Thanks to nix@esperi.org.uk for the fix
+
   * Fix: vimeo support, symptoms:
     # length: 20
     # suffix: html; charset=UTF-8

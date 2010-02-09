@@ -54,7 +54,7 @@ handle_cctv(const char *url, _quvi_video_t video) {
         0,
         0,
         &domain,
-        0
+        (void *) 0
     );
 
     if (rc != QUVI_OK)
@@ -82,7 +82,7 @@ handle_cctv(const char *url, _quvi_video_t video) {
         0,
         0,
         &chapters,
-        0
+        (void *) 0
     );
 
     _free(config);
@@ -102,7 +102,7 @@ handle_cctv(const char *url, _quvi_video_t video) {
             ovector,
             sizeof(ovector)/sizeof(int),
             &path,
-            0
+            (void *) 0
         );
 
         if (rc == QUVI_OK) {

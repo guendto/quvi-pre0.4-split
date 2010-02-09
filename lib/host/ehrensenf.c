@@ -45,7 +45,7 @@ handle_ehrensenf(const char *url, _quvi_video_t video) {
         &d,
         &m,
         &y,
-        0
+        (void *) 0
     );
 
     _free(content);

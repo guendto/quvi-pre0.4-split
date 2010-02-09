@@ -139,7 +139,7 @@ contenttype_to_suffix(_quvi_t quvi, _quvi_video_link_t qvl) {
         0,
         0,
         &suffix,
-        0
+        (void *) 0
     );
 
     if (rc != QUVI_OK)
@@ -254,7 +254,7 @@ parse_charset(_quvi_video_t video, const char *content) {
         0,
         0,
         &charset,
-        0
+        (void *) 0
     );
 
     if (rc == QUVI_OK) {
@@ -298,7 +298,7 @@ parse_page_common(
             0,
             0,
             &video->id,
-            0
+            (void *) 0
         );
 
         if (rc != QUVI_OK) {
@@ -316,7 +316,7 @@ parse_page_common(
             0,
             0,
             &video->title,
-            0
+            (void *) 0
         );
 
         if (rc != QUVI_OK) {

@@ -50,7 +50,7 @@ handle_liveleak(const char *url, _quvi_video_t video) {
         0,
         0,
         &config_url,
-        0
+        (void *) 0
     );
 
     _free(content);
@@ -75,7 +75,7 @@ handle_liveleak(const char *url, _quvi_video_t video) {
         0,
         0,
         &playlist_url,
-        0
+        (void *) 0
     );
 
     _free(config);
@@ -100,7 +100,7 @@ handle_liveleak(const char *url, _quvi_video_t video) {
         0,
         0,
         &lnk,
-        0
+        (void *) 0
     );
 
     _free(playlist);

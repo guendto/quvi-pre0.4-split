@@ -60,7 +60,7 @@ handle_golem(const char *url, _quvi_video_t video) {
         0,
         0,
         &video->title,
-        0
+        (void *) 0
     );
 
     _free(config);

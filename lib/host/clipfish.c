@@ -56,7 +56,7 @@ handle_clipfish(const char *url, _quvi_video_t video) {
         0,
         0,
         &lnk,
-        0
+        (void *) 0
     );
 
     _free(config);

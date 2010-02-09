@@ -54,7 +54,7 @@ handle_google(const char *url, _quvi_video_t video) {
                 0,
                 0,
                 &mp4,
-                0
+                (void *) 0
             );
 
             if (rc == QUVI_OK && mp4) {
@@ -72,7 +72,7 @@ handle_google(const char *url, _quvi_video_t video) {
             0,
             0,
             &lnk,
-            0
+            (void *) 0
         );
 
         if (rc != QUVI_OK)

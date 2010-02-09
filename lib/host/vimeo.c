@@ -66,7 +66,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
         0,
         0,
         &video->title,
-        0
+        (void *) 0
     );
 
     if (rc != QUVI_OK) {
@@ -82,7 +82,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
         0,
         0,
         &sign,
-        0
+        (void *) 0
     );
 
     if (rc == QUVI_OK) {
@@ -94,7 +94,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
             0,
             0,
             &exp,
-            0
+            (void *) 0
         );
 
         if (rc == QUVI_OK) {
@@ -108,7 +108,7 @@ handle_vimeo(const char *url, _quvi_video_t video) {
                 0,
                 0,
                 &hd,
-                0
+                (void *) 0
             );
 
             if (hd && !strcmp(hd, "1"))

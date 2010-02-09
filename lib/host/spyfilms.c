@@ -87,7 +87,7 @@ handle_spyfilms(const char *url, _quvi_video_t video) {
         0,
         0,
         &lnk,
-        0
+        (void *) 0
     );
 
     if (rc != QUVI_OK) {
@@ -108,7 +108,7 @@ handle_spyfilms(const char *url, _quvi_video_t video) {
             0,
             0,
             &hd,
-            0
+            (void *) 0
         );
 
         if (tmp == QUVI_OK) {
@@ -125,7 +125,7 @@ handle_spyfilms(const char *url, _quvi_video_t video) {
         0,
         0,
         &reel_path,
-        0
+        (void *) 0
     );
 
     if (rc != QUVI_OK) {
@@ -142,7 +142,7 @@ handle_spyfilms(const char *url, _quvi_video_t video) {
         0,
         0,
         &dir_path,
-        0
+        (void *) 0
     );
 
     _free(content);

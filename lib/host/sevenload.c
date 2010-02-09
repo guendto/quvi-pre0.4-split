@@ -45,7 +45,7 @@ handle_sevenload(const char *url, _quvi_video_t video) {
         0,
         0,
         &config_url,
-        0
+        (void *) 0
     );
 
     _free(content);
@@ -74,7 +74,7 @@ handle_sevenload(const char *url, _quvi_video_t video) {
         0,
         &video->id,
         &video->title,
-        0
+        (void *) 0
     );
 
     /* video link */
@@ -85,7 +85,7 @@ handle_sevenload(const char *url, _quvi_video_t video) {
         0,
         0,
         &lnk,
-        0
+        (void *) 0
     );
 
     _free(config);

@@ -46,7 +46,7 @@ handle_break(const char *url, _quvi_video_t video) {
         0,
         0,
         &fpath,
-        0
+        (void *) 0
     );
 
     if (rc != QUVI_OK) {
@@ -62,7 +62,7 @@ handle_break(const char *url, _quvi_video_t video) {
         0,
         0,
         &fname,
-        0
+        (void *) 0
     );
 
     _free(content);
