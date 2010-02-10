@@ -1,9 +1,16 @@
 
 Version 0.1.1
 
-  * Fix: segfault on 64bit systems
+  * Fix: segfault: _getprop (quvi.c:352)
+    # Add missing va_end()s
+    # Thanks to nix@esperi.org.uk for getting knee-deep and cooking up the fix
+    # Reported on 64bit systems
+    # Closes issue #1
+
+  * Fix: segfault: regexp_capture (util.c:114)
     # Terminate stdarg lists with a proper null pointer (0 -> (void*)0)
     # Thanks to nix@esperi.org.uk for the fix
+    # Reported on 64bit systems
     # Closes issue #2
 
   * Fix: vimeo support, symptoms:
