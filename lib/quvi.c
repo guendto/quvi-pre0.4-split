@@ -410,6 +410,9 @@ _getinfo (_quvi_t quvi, QUVIinfo info, ...) {
     }
     va_end (arg);
 
+    if (rc != QUVI_OK)
+      return rc;
+
 #define _setv(with) \
     do  { *vp = with ? with:NULL; } while(0); break
 
