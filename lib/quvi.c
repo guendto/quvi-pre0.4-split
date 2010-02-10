@@ -357,6 +357,9 @@ _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     }
     va_end (arg);
 
+    if (rc != QUVI_OK)
+      return rc;
+
 #define _sets(with) \
     do { *sp = with ? with:(char*)empty; } while(0); break
 
