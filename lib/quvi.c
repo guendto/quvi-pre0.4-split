@@ -325,6 +325,7 @@ static const char empty[] = "";
 static QUVIcode
 _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     _quvi_video_link_t qvl;
+    QUVIcode rc;
     va_list arg;
     double *dp;
     char **sp;
@@ -334,6 +335,7 @@ _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     qvl = (_quvi_video_link_t) video->curr->data;
     assert(qvl != 0);
 
+    rc = QUVI_OK;
     dp = 0;
     sp = 0;
     lp = 0;
@@ -343,16 +345,17 @@ _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
 
 #define _initv(var,type) \
     do { \
-        var = va_arg(arg,type); \
-        if (!var) return (QUVI_INVARG); \
-    } while(0); break
+        if ( !(var = va_arg(arg,type)) ) \
+            rc = QUVI_INVARG; \
+    } while (0); break
 
     switch (type) {
     case QUVIPROPERTY_DOUBLE : _initv(dp, double *);
     case QUVIPROPERTY_STRING : _initv(sp, char **);
     case QUVIPROPERTY_LONG   : _initv(lp, long *);
-    default                  : return (QUVI_INVARG);
+    default                  : rc = QUVI_INVARG;
     }
+    va_end (arg);
 
 #define _sets(with) \
     do { *sp = with ? with:(char*)empty; } while(0); break
@@ -373,11 +376,12 @@ _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     default                 : return (QUVI_INVARG);
     }
 
-    return (QUVI_OK);
+    return (rc);
 }
 
 static QUVIcode
 _getinfo (_quvi_t quvi, QUVIinfo info, ...) {
+    QUVIcode rc;
     va_list arg;
     double *dp;
     char **sp;
@@ -385,6 +389,7 @@ _getinfo (_quvi_t quvi, QUVIinfo info, ...) {
     long *lp;
     int type;
 
+    rc = QUVI_OK;
     dp = 0;
     sp = 0;
     vp = 0;
@@ -398,8 +403,9 @@ _getinfo (_quvi_t quvi, QUVIinfo info, ...) {
     case QUVIINFO_STRING: _initv(sp, char **);
     case QUVIINFO_LONG  : _initv(lp, long *);
     case QUVIINFO_VOID  : _initv(vp, void **);
-    default           : return (QUVI_INVARG);
+    default             : rc = QUVI_INVARG;
     }
+    va_end (arg);
 
 #define _setv(with) \
     do  { *vp = with ? with:NULL; } while(0); break
@@ -411,7 +417,7 @@ _getinfo (_quvi_t quvi, QUVIinfo info, ...) {
     default          : return (QUVI_INVARG);
     }
 
-    return (QUVI_OK);
+    return (rc);
 }
 #undef _setv
 #undef _setn
@@ -429,6 +435,7 @@ quvi_getinfo (quvi_t quvi, QUVIinfo info, ...) {
 
     va_start(arg, info);
     p = va_arg(arg, void *);
+    va_end (arg);
 
     return (_getinfo(quvi, info, p));
 }
@@ -444,6 +451,7 @@ quvi_getprop (quvi_video_t video, QUVIproperty prop, ...) {
 
     va_start(arg, prop);
     p = va_arg(arg, void *);
+    va_end (arg);
 
     return (_getprop(video, prop, p));
 }
