@@ -364,16 +364,16 @@ _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     do { *var = with; } while(0); break
 
     switch (prop) {
-    case QUVIPROP_HOSTID       : _sets(video->host_id);
-    case QUVIPROP_PAGEURL      : _sets(video->page_link);
-    case QUVIPROP_PAGETITLE    : _sets(video->title);
-    case QUVIPROP_VIDEOID      : _sets(video->id);
-    case QUVIPROP_VIDEOURL     : _sets(qvl->url);
+    case QUVIPROP_HOSTID        : _sets(video->host_id);
+    case QUVIPROP_PAGEURL       : _sets(video->page_link);
+    case QUVIPROP_PAGETITLE     : _sets(video->title);
+    case QUVIPROP_VIDEOID       : _sets(video->id);
+    case QUVIPROP_VIDEOURL      : _sets(qvl->url);
     case QUVIPROP_VIDEOFILELENGTH      : _setn(dp, qvl->length);
     case QUVIPROP_VIDEOFILECONTENTTYPE : _sets(qvl->content_type);
     case QUVIPROP_VIDEOFILESUFFIX      : _sets(qvl->suffix);
-    case QUVIPROP_HTTPCODE     : _setn(lp, video->quvi->httpcode);
-    default                 : return (QUVI_INVARG);
+    case QUVIPROP_HTTPCODE      : _setn(lp, video->quvi->httpcode);
+    default                     : return (QUVI_INVARG);
     }
 
     return (rc);
@@ -414,7 +414,7 @@ _getinfo (_quvi_t quvi, QUVIinfo info, ...) {
     case QUVIINFO_CURL    : _setv(quvi->curl);
     case QUVIINFO_CURLCODE: _setn(lp, quvi->curlcode);
     case QUVIINFO_HTTPCODE: _setn(lp, quvi->httpcode);
-    default          : return (QUVI_INVARG);
+    default               : return (QUVI_INVARG);
     }
 
     return (rc);
