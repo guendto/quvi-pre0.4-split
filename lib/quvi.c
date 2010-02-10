@@ -376,7 +376,7 @@ _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     case QUVIPROP_VIDEOFILECONTENTTYPE : _sets(qvl->content_type);
     case QUVIPROP_VIDEOFILESUFFIX      : _sets(qvl->suffix);
     case QUVIPROP_HTTPCODE      : _setn(lp, video->quvi->httpcode);
-    default                     : return (QUVI_INVARG);
+    default                     : rc = QUVI_INVARG;
     }
 
     return (rc);
@@ -420,7 +420,7 @@ _getinfo (_quvi_t quvi, QUVIinfo info, ...) {
     case QUVIINFO_CURL    : _setv(quvi->curl);
     case QUVIINFO_CURLCODE: _setn(lp, quvi->curlcode);
     case QUVIINFO_HTTPCODE: _setn(lp, quvi->httpcode);
-    default               : return (QUVI_INVARG);
+    default               : rc = QUVI_INVARG;
     }
 
     return (rc);
