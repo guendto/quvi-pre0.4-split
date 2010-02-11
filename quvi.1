@@ -227,6 +227,20 @@ Sure to be some. Please report them.
 .IP "quvi \-\-debug \s-1URL\s0" 4
 .IX Item "quvi --debug URL"
 Spew out libcurl verbose mode messages.
+.SH "FILES"
+.IX Header "FILES"
+.ie n .IP "\fB\fB$QUVI_HOME\fB|$HOME/.quvirc\fR" 4
+.el .IP "\fB\f(CB$QUVI_HOME\fB|$HOME/.quvirc\fR" 4
+.IX Item "$QUVI_HOME|$HOME/.quvirc"
+.Vb 4
+\& agent = some_agent/1.0     # \-\-agent
+\& proxy = http://foo:1234    # \-\-proxy
+\& no\-verify                  # \-\-no\-verify
+\& debug                      # \-\-debug
+.Ve
+.Sp
+You can define most of the command line options in the
+config file.
 .SH "EXIT STATUS"
 .IX Header "EXIT STATUS"
 quvi exits with 0 on success and >0 if an error occurred.

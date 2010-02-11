@@ -135,6 +135,22 @@ Spew out libcurl verbose mode messages.
 
 =back
 
+=head1 FILES
+
+=over 4
+
+=item B<$QUVI_HOME|$HOME/.quvirc>
+
+ agent = some_agent/1.0     # --agent
+ proxy = http://foo:1234    # --proxy
+ no-verify                  # --no-verify
+ debug                      # --debug
+
+You can define most of the command line options in the
+config file.
+
+=back
+
 =head1 EXIT STATUS
 
 quvi exits with 0 on success and E<gt>0 if an error occurred.

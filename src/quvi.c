@@ -369,19 +369,67 @@ init_quvi(opts_s opts) {
 
 int
 main (int argc, char *argv[]) {
+    const char *url, *home, *no_config, *fname;
     register unsigned int i;
     quvi_video_t video;
-    const char *url;
+    int no_config_flag;
     opts_s opts;
     QUVIcode rc;
     quvi_t quvi;
 
-    url = 0;
+    url       = 0;
+    no_config = getenv("QUVI_NO_CONFIG");
+    home      = getenv("QUVI_HOME");
+    if (!home)
+        home = getenv("HOME");
+    no_config_flag   = 1;
+
+#ifndef IS_W32
+    fname = "/.quvirc";
+#else
+    fname = "\\quvirc";
+#endif
 
     /* Init cmdline parser. */
 
-    if (cmdline_parser(argc, argv, &opts) != 0)
-        return (QUVI_INVARG);
+    if (home && !no_config) {
+        char *path;
+        FILE *f;
+
+        asprintf(&path, "%s%s", home, fname);
+        f = fopen(path, "r");
+
+        if (f != NULL) {
+            struct cmdline_parser_params *pp;
+
+            fclose(f);
+            f = NULL;
+
+            pp = cmdline_parser_params_create();
+            pp->check_required = 0;
+
+            if (cmdline_parser_config_file(path, &opts, pp) == 0) {
+                pp->initialize     = 0;
+                pp->override       = 1;
+                pp->check_required = 1;
+
+                if (cmdline_parser_ext(argc, argv, &opts, pp) == 0)
+                    no_config_flag = 0;
+            }
+            free(pp);
+            pp = NULL;
+        }
+
+        free(path);
+        path = NULL;
+    }
+
+    if (no_config_flag) {
+        if (cmdline_parser(argc, argv, &opts) != 0)
+            return (QUVI_INVARG);
+    }
+
+    /* Run and forget options. */
 
     if (opts.version_given)
         version(opts);
