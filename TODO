@@ -2,7 +2,8 @@
 0.1.1
 -----
 * libquvi(3), libquvi-tutorial(3)  using pod
-* quvirc
+* make cmdline
+* IS_W32 -> HOST_W32
 
 When due
 --------
