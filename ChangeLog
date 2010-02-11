@@ -1,6 +1,8 @@
 
 Version 0.1.1
 
+  * Add: tests/pod-check.pl
+
   * w32/make-w32.sh:
     # Add manual (html)
     # Use install-strip
