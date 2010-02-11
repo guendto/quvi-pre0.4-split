@@ -1,9 +1,0 @@
-
-    Examples
-
-quvi -a         # run all built-in tests
-quvi URL        # test URL
-quvi -d URL     # test URL and dump video details
-quvi -t youtube # match "youtube" to built-in links and test it
-
-

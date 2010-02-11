@@ -1,8 +1,7 @@
 if ENABLE_QUVI
 EXTRA_DIST = \
     makecmdline \
-    cmdline.ggo \
-    README
+    cmdline.ggo
 
 src = \
     quvi.c \
