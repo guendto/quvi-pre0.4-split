@@ -784,8 +784,8 @@ PERL
 HAVE_DOXYGEN_FALSE
 HAVE_DOXYGEN_TRUE
 DOXYGEN
-HAVE_GENGENTOPT_FALSE
-HAVE_GENGENTOPT_TRUE
+HAVE_GENGETOPT_FALSE
+HAVE_GENGETOPT_TRUE
 GENGETOPT
 CXXCPP
 am__fastdepCXX_FALSE
@@ -15270,11 +15270,11 @@ fi
 
 
  if test x"$GENGETOPT" != "xno"; then
-  HAVE_GENGENTOPT_TRUE=
-  HAVE_GENGENTOPT_FALSE='#'
+  HAVE_GENGETOPT_TRUE=
+  HAVE_GENGETOPT_FALSE='#'
 else
-  HAVE_GENGENTOPT_TRUE='#'
-  HAVE_GENGENTOPT_FALSE=
+  HAVE_GENGETOPT_TRUE='#'
+  HAVE_GENGETOPT_FALSE=
 fi
 
 
@@ -17456,8 +17456,8 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
   as_fn_error "conditional \"am__fastdepCXX\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${HAVE_GENGENTOPT_TRUE}" && test -z "${HAVE_GENGENTOPT_FALSE}"; then
-  as_fn_error "conditional \"HAVE_GENGENTOPT\" was never defined.
+if test -z "${HAVE_GENGETOPT_TRUE}" && test -z "${HAVE_GENGETOPT_FALSE}"; then
+  as_fn_error "conditional \"HAVE_GENGETOPT\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${HAVE_DOXYGEN_TRUE}" && test -z "${HAVE_DOXYGEN_FALSE}"; then

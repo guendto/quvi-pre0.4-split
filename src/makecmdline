@@ -1,5 +1,0 @@
-#!/bin/sh
-gengetopt < cmdline.ggo --unamed-opts=URL --no-version -C
-exit $?
-
-

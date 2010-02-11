@@ -865,7 +865,7 @@ uninstall-man: uninstall-man1
 	uninstall-man uninstall-man1 uninstall-pkgconfigDATA
 
 
-.PHONY: man dox
+.PHONY: man dox cmdline
 man:
 @HAVE_POD2MAN_TRUE@	@POD2MAN@ -c "quvi manual" -n quvi \
 @HAVE_POD2MAN_TRUE@		 -s 1 -r @VERSION@ $(top_srcdir)/quvi.pod $(top_builddir)/quvi.1
@@ -878,6 +878,10 @@ dox:
 @HAVE_DOXYGEN_TRUE@	@$(DOXYGEN) $(top_builddir)/doxygen.conf
 @HAVE_DOXYGEN_TRUE@	@echo doxygen generated pages can be found in docs/ subdir
 @HAVE_DOXYGEN_FALSE@	@echo configure did not find doxygen
+cmdline:
+@HAVE_GENGETOPT_TRUE@	@GENGETOPT@ < $(top_srcdir)/src/cmdline.ggo -C --unamed-opts=URL \
+@HAVE_GENGETOPT_TRUE@		--output-dir $(top_srcdir)/src --no-version
+@HAVE_GENGETOPT_FALSE@	@echo "error: configure did not find 'gengetopt' command"
 
 local-clean:
 	@rm -rf *.tmp *.core *.html

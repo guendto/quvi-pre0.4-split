@@ -1,6 +1,5 @@
 if ENABLE_QUVI
 EXTRA_DIST = \
-    makecmdline \
     cmdline.ggo
 
 src = \

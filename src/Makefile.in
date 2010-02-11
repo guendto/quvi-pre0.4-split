@@ -221,7 +221,6 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 @ENABLE_QUVI_TRUE@EXTRA_DIST = \
-@ENABLE_QUVI_TRUE@    makecmdline \
 @ENABLE_QUVI_TRUE@    cmdline.ggo
 
 @ENABLE_QUVI_TRUE@src = \

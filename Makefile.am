@@ -18,7 +18,7 @@ pkgconfig_DATA = libquvi.pc
 
 SUBDIRS = include lib src examples tests
 
-.PHONY: man dox
+.PHONY: man dox cmdline
 man:
 if HAVE_POD2MAN
 	@POD2MAN@ -c "quvi manual" -n quvi \
@@ -39,6 +39,13 @@ if HAVE_DOXYGEN
 	@echo doxygen generated pages can be found in docs/ subdir
 else
 	@echo configure did not find doxygen
+endif
+cmdline:
+if HAVE_GENGETOPT
+	@GENGETOPT@ < $(top_srcdir)/src/cmdline.ggo -C --unamed-opts=URL \
+		--output-dir $(top_srcdir)/src --no-version
+else
+	@echo "error: configure did not find 'gengetopt' command"
 endif
 
 local-clean:
