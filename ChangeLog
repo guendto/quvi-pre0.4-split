@@ -1,6 +1,8 @@
 
 Version 0.1.1
 
+  * Add: NEWS file
+
   * quvi: add ~/.quvirc support
 
   * Add: tests/pod-check.pl
