@@ -253,7 +253,7 @@ match_test(quvi_t quvi, opts_s opts) {
         if (!re) {
             fprintf(stderr, "%s\n", errmsg);
             cmdline_parser_free(&opts);
-            exit (1);
+            exit (QUVI_PCRE);
         }
 
         rc = pcre_exec(
@@ -290,13 +290,13 @@ match_test(quvi_t quvi, opts_s opts) {
         else {
             fprintf(stderr, "error: pcre_exec: rc = %d\n", rc);
             cmdline_parser_free(&opts);
-            exit (1);
+            exit (QUVI_PCRE);
         }
     }
 
     fprintf(stderr, "error: nothing matched `%s'", opts.test_arg);
     cmdline_parser_free(&opts);
-    exit (1);
+    exit (QUVI_PCRE);
 }
 
 static void
@@ -381,7 +381,7 @@ main (int argc, char *argv[]) {
     /* Init cmdline parser. */
 
     if (cmdline_parser(argc, argv, &opts) != 0)
-        return (1);
+        return (QUVI_INVARG);
 
     if (opts.version_given)
         version(opts);
@@ -433,7 +433,7 @@ main (int argc, char *argv[]) {
 
     puts(":: Exit.");
 
-    return (0);
+    return (QUVI_OK);
 }
 
 
