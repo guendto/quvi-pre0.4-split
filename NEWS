@@ -1,0 +1,6 @@
+
+Version 0.1.1
+-------------
+
+Fixes various issues that have been tormenting the users of 64bit
+systems. See ChangeLog for a more detailed list of these changes.
