@@ -40,7 +40,7 @@ DIST_COMMON = README $(am__configure_deps) $(dist_man_MANS) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/config.h.in $(srcdir)/doxygen.conf.in \
 	$(srcdir)/libquvi.pc.in $(top_srcdir)/configure COPYING \
-	ChangeLog INSTALL TODO config.aux/config.guess \
+	ChangeLog INSTALL NEWS TODO config.aux/config.guess \
 	config.aux/config.rpath config.aux/config.sub \
 	config.aux/depcomp config.aux/install-sh config.aux/ltmain.sh \
 	config.aux/missing config.guess
