@@ -65,6 +65,22 @@ AC_PATH_PROG(PERL, perl, no)
 AM_CONDITIONAL([HAVE_PERL], [test x"$PERL" != "xno"])
 AC_SUBST(PERL)
 
+have_pod_checker=no
+AC_MSG_CHECKING([for Pod::Checker])
+if [ $PERL -mPod::Checker >/dev/null 2>&1 ]; then
+    AC_MSG_RESULT([yes])
+    have_pod_checker=yes
+fi
+AM_CONDITIONAL([HAVE_PERL_POD_CHECKER], [test x"$have_pod_checker" = "xyes"])
+
+AC_PATH_PROG(POD2MAN, pod2man, no)
+AM_CONDITIONAL([HAVE_POD2MAN], [test x"$POD2MAN" != "xno"])
+AC_SUBST(POD2MAN)
+
+AC_PATH_PROG(POD2HTML, pod2html, no)
+AM_CONDITIONAL([HAVE_POD2HTML], [test x"$POD2HTML" != "xno"])
+AC_SUBST(POD2HTML)
+
 build_date=
 AC_PATH_PROG(DATE, date, no)
 if [ test x"$DATE" != "xno" ]; then
@@ -134,6 +150,14 @@ if [ test x"$enable_smut" != "xno" ]; then
     AC_DEFINE([ENABLE_SMUT], [1], [Define to enable smut])
 fi
 
+# --with-man
+AC_ARG_WITH([man],
+    [AS_HELP_STRING([--with-man],
+        [install manual pages @<:@default=yes@:>@])],
+    [],
+    [with_man=yes])
+AM_CONDITIONAL([WITH_MAN], [test x"$with_man" != "xno"])
+
 # GNU ld?
 AM_CONDITIONAL([HAVE_GNU_LD], [test x"$with_gnu_ld" = "xyes"])
 
@@ -162,10 +186,14 @@ AC_MSG_NOTICE([Configured to build quvi/libquvi:
     cflags:         ${CFLAGS}
     build libquvi:  shared=${enable_shared} static=${enable_static}
     build quvi:     ${enable_quvi}
+    install manuals:${with_man}
     adult support:  ${enable_smut}
     gengetopt:      ${GENGETOPT}
     doxygen:        ${DOXYGEN}
     perl:           ${PERL}
+    Pod::Checker:   ${have_pod_checker}
+    pod2man:        ${POD2MAN}
+    pod2html:       ${POD2HTML}
 ])
 
 

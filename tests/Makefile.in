@@ -34,7 +34,8 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@ENABLE_SMUT_TRUE@@HAVE_PERL_TRUE@am__append_1 = $(TESTS_ADULT)
+@HAVE_PERL_POD_CHECKER_TRUE@@HAVE_PERL_TRUE@am__append_1 = $(TESTS_POD)
+@ENABLE_SMUT_TRUE@@HAVE_PERL_TRUE@am__append_2 = $(TESTS_ADULT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/quviTest.pm.in
@@ -119,6 +120,8 @@ PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
+POD2HTML = @POD2HTML@
+POD2MAN = @POD2MAN@
 POW_LIB = @POW_LIB@
 QUVI_AGE = @QUVI_AGE@
 QUVI_CURRENT = @QUVI_CURRENT@
@@ -190,7 +193,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_ADULT)
+EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_ADULT)
 @HAVE_PERL_TRUE@TESTS_ENVIRONMENT = $(PERL) -w -mstrict -mquviTest -I $(top_builddir)/tests
 @HAVE_PERL_TRUE@TESTS = nosupport-eval.pl support-break.pl \
 @HAVE_PERL_TRUE@	support-cctv.pl support-clipfish.pl \
@@ -200,7 +203,10 @@ EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_ADULT)
 @HAVE_PERL_TRUE@	support-myubo.pl support-sevenload.pl \
 @HAVE_PERL_TRUE@	support-spiegel.pl support-spyfilms.pl \
 @HAVE_PERL_TRUE@	support-vimeo.pl support-youtube.pl \
-@HAVE_PERL_TRUE@	$(am__append_1)
+@HAVE_PERL_TRUE@	$(am__append_1) $(am__append_2)
+@HAVE_PERL_TRUE@TESTS_POD = \
+@HAVE_PERL_TRUE@pod-check.pl
+
 @HAVE_PERL_TRUE@TESTS_ADULT = \
 @HAVE_PERL_TRUE@support-tube8.pl\
 @HAVE_PERL_TRUE@support-xvideos.pl\

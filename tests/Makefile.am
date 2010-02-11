@@ -1,5 +1,5 @@
 
-EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_ADULT)
+EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_ADULT)
 
 if HAVE_PERL
 
@@ -22,6 +22,13 @@ support-spiegel.pl\
 support-spyfilms.pl\
 support-vimeo.pl\
 support-youtube.pl
+
+TESTS_POD =\
+pod-check.pl
+
+if HAVE_PERL_POD_CHECKER
+TESTS += $(TESTS_POD)
+endif
 
 TESTS_ADULT =\
 support-tube8.pl\

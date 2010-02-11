@@ -27,7 +27,7 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 
 our @ISA       = qw(Exporter);
 our @EXPORT    = ();
-our @EXPORT_OK = qw(run run_t);
+our @EXPORT_OK = qw(run run_t pod_checks);
 
 my $QUVI_PATH = "@top_builddir@/src/quvi";
 
@@ -161,6 +161,13 @@ sub parse_formats {
         @r = split(/\|/,$1);
     }
     return @r;
+}
+
+# Check the pod markup.
+sub pod_checks {
+    require Pod::Checker;
+    my $rc = Pod::Checker::podchecker("@top_srcdir@/quvi.pod");
+    return $rc;
 }
 
 1;
