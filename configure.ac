@@ -109,7 +109,7 @@ if [ test x"$is_w32" = "xno" ]; then
     AC_FUNC_MALLOC
     AC_FUNC_REALLOC
 fi
-AC_CHECK_FUNCS([memset strdup strstr strtol strerror])
+AC_CHECK_FUNCS([memset strdup strstr strtol strerror strcspn])
 AC_FUNC_STRTOD
 
 have_asprintf=no
