@@ -1,9 +1,8 @@
 
 0.1.1
 -----
-* quvi(1), libquvi(3), libquvi-tutorial(3)  using pod
-* configure.ac, Makefile.am: "make man"
-* AC_ARG_WITH([manual])  install with manual pages
+* libquvi(3), libquvi-tutorial(3)  using pod
+* quvirc
 
 When due
 --------
