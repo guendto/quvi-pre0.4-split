@@ -30,12 +30,14 @@ pack_it()
     iconv_dll="$ICONV_PREFIX/bin/libiconv-2.dll"
 
     rm -rf dist quvi-$version $archive \
-    && make install \
+    && make install-strip \
+    && make man \
     && cp $curl_dll dist/bin \
     && cp $pcre_dll dist/bin \
     && cp $iconv_dll dist/bin \
     && cp ../COPYING dist/quvi-COPYING.txt \
     && cp ../ChangeLog dist/ChangeLog.txt \
+    && cp quvi.1.html dist/ \
     && rm -rf dist/share \
     && mv dist $distdir \
     && 7za a $archive $distdir
@@ -44,7 +46,7 @@ pack_it()
 
 clean_up() {
     make distclean 2>/dev/null
-    rm -rf docs examples include lib src
+    rm -rf docs examples include lib src tests quvi.1
     exit $?
 }
 
@@ -80,6 +82,7 @@ CFLAGS=$CFLAGS ../configure \
     --prefix="$PREFIX" \
     --host="$HOST" \
     --with-libiconv-prefix="$ICONV_PREFIX" \
-    --enable-smut
+    --enable-smut \
+    --without-man
 
 
