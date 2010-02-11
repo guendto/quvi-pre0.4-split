@@ -1,7 +1,10 @@
 
 Version 0.1.1
 
-  * tests/support-cctv.pl: skip unless utf8 locale code is set
+  * tests/
+    # support-vimeo.pl: fix expected file length
+    # support-dailymotion.pl: fix expected file length
+    # support-cctv.pl: skip unless utf8 locale code is set
 
   * Add: NEWS file
 
