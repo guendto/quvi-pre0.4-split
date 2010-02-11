@@ -10,6 +10,7 @@ Version 0.1.1
     # Use install-strip
 
   * configure:
+    # Add "make cmdline"
     # Add pod2man, pod2html and Pod::Checker checks
     # Add --without-man
 
