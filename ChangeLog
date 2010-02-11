@@ -1,6 +1,14 @@
 
 Version 0.1.1
 
+  * w32/make-w32.sh:
+    # Add manual (html)
+    # Use install-strip
+
+  * configure:
+    # Add pod2man, pod2html and Pod::Checker checks
+    # Add --without-man
+
   * Fix: segfault: _getprop (quvi.c:352)
     # Add missing va_end()s
     # Thanks to nix@esperi.org.uk for getting knee-deep and cooking up the fix
