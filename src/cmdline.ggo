@@ -20,19 +20,19 @@ option "no-verify"
     optional
 
 option "page-title"
-    - "expected video page title"
+    - "Expected video page title"
     string typestr="<string>"
     optional
 option "video-id"
-    - "expected video id"
+    - "Expected video id"
     string typestr="<string>"
     optional
 option "file-length"
-    - "expected video file length"
+    - "Expected video file length"
     double typestr="<length>"
     optional
 option "file-suffix"
-    - "expected video file suffix"
+    - "Expected video file suffix"
     string typestr="<string>"
     optional
 
@@ -40,7 +40,7 @@ option "test-all"
     a "Run built-in tests"
     optional
 option "test"
-    t "match regexp to a built-in test link"
+    t "Match regexp to a built-in test link"
     string typestr="<regexp>"
     optional
 option "dump"
@@ -82,10 +82,9 @@ option "format"
     typestr="<format_id>"
     optional
 
-text "\nExaples:\n\n"
+text "\nExamples:\n\n"
 text "  quvi -a         # run all built-in tests\n"
 text "  quvi URL        # test URL\n"
-text "  quvi -d URL     # test URL and dump video details\n"
 text "  quvi -t youtube # match 'youtube' to built-in links and test it\n"
 text "  quvi URL -f mp4 # query 'mp4' format of the video\n"
 

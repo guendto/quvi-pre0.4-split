@@ -43,22 +43,22 @@ struct gengetopt_args_info
   const char *quiet_help; /**< @brief Turn off all output help description.  */
   const char *debug_help; /**< @brief Turn on libcurl verbose mode help description.  */
   const char *no_verify_help; /**< @brief Do not verify video link help description.  */
-  char * page_title_arg;	/**< @brief expected video page title.  */
-  char * page_title_orig;	/**< @brief expected video page title original value given at command line.  */
-  const char *page_title_help; /**< @brief expected video page title help description.  */
-  char * video_id_arg;	/**< @brief expected video id.  */
-  char * video_id_orig;	/**< @brief expected video id original value given at command line.  */
-  const char *video_id_help; /**< @brief expected video id help description.  */
-  double file_length_arg;	/**< @brief expected video file length.  */
-  char * file_length_orig;	/**< @brief expected video file length original value given at command line.  */
-  const char *file_length_help; /**< @brief expected video file length help description.  */
-  char * file_suffix_arg;	/**< @brief expected video file suffix.  */
-  char * file_suffix_orig;	/**< @brief expected video file suffix original value given at command line.  */
-  const char *file_suffix_help; /**< @brief expected video file suffix help description.  */
+  char * page_title_arg;	/**< @brief Expected video page title.  */
+  char * page_title_orig;	/**< @brief Expected video page title original value given at command line.  */
+  const char *page_title_help; /**< @brief Expected video page title help description.  */
+  char * video_id_arg;	/**< @brief Expected video id.  */
+  char * video_id_orig;	/**< @brief Expected video id original value given at command line.  */
+  const char *video_id_help; /**< @brief Expected video id help description.  */
+  double file_length_arg;	/**< @brief Expected video file length.  */
+  char * file_length_orig;	/**< @brief Expected video file length original value given at command line.  */
+  const char *file_length_help; /**< @brief Expected video file length help description.  */
+  char * file_suffix_arg;	/**< @brief Expected video file suffix.  */
+  char * file_suffix_orig;	/**< @brief Expected video file suffix original value given at command line.  */
+  const char *file_suffix_help; /**< @brief Expected video file suffix help description.  */
   const char *test_all_help; /**< @brief Run built-in tests help description.  */
-  char * test_arg;	/**< @brief match regexp to a built-in test link.  */
-  char * test_orig;	/**< @brief match regexp to a built-in test link original value given at command line.  */
-  const char *test_help; /**< @brief match regexp to a built-in test link help description.  */
+  char * test_arg;	/**< @brief Match regexp to a built-in test link.  */
+  char * test_orig;	/**< @brief Match regexp to a built-in test link original value given at command line.  */
+  const char *test_help; /**< @brief Match regexp to a built-in test link help description.  */
   const char *dump_help; /**< @brief Dump video details when running tests help description.  */
   char * agent_arg;	/**< @brief Identify cclive as string to servers (default='Mozilla/5.0').  */
   char * agent_orig;	/**< @brief Identify cclive as string to servers original value given at command line.  */

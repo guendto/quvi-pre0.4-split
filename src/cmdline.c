@@ -38,18 +38,18 @@ const char *gengetopt_args_info_help[] = {
   "  -q, --quiet                 Turn off all output",
   "      --debug                 Turn on libcurl verbose mode",
   "  -n, --no-verify             Do not verify video link",
-  "      --page-title=<string>   expected video page title",
-  "      --video-id=<string>     expected video id",
-  "      --file-length=<length>  expected video file length",
-  "      --file-suffix=<string>  expected video file suffix",
+  "      --page-title=<string>   Expected video page title",
+  "      --video-id=<string>     Expected video id",
+  "      --file-length=<length>  Expected video file length",
+  "      --file-suffix=<string>  Expected video file suffix",
   "  -a, --test-all              Run built-in tests",
-  "  -t, --test=<regexp>         match regexp to a built-in test link",
+  "  -t, --test=<regexp>         Match regexp to a built-in test link",
   "  -d, --dump                  Dump video details when running tests",
   "      --agent=<string>        Identify cclive as string to servers  \n                                (default=`Mozilla/5.0')",
   "      --proxy=<host[:port]>   Use specified proxy",
   "      --connect-timeout=<s>   Max seconds allowed connection to server take  \n                                (default=`30')",
   "  -f, --format=<format_id>    Query video format  (possible values=\"flv\", \n                                \"best\", \"fmt17\", \"fmt18\", \"fmt22\", \n                                \"fmt34\", \"fmt35\", \"hq\", \"3gp\", \n                                \"spark-mini\", \"vp6-hq\", \"vp6-hd\", \n                                \"vp6\", \"h264\", \"hd\", \"mp4\", \"high\", \n                                \"ipod\", \"vp6_576\", \"vp6_928\", \n                                \"h264_1400\" default=`flv')",
-  "\nExaples:\n\n  quvi -a         # run all built-in tests\n  quvi URL        # test URL\n  quvi -d URL     # test URL and dump video details\n  quvi -t youtube # match 'youtube' to built-in links and test it\n  quvi URL -f mp4 # query 'mp4' format of the video\n",
+  "\nExamples:\n\n  quvi -a         # run all built-in tests\n  quvi URL        # test URL\n  quvi -t youtube # match 'youtube' to built-in links and test it\n  quvi URL -f mp4 # query 'mp4' format of the video\n",
     0
 };
 
@@ -724,7 +724,7 @@ cmdline_parser_internal (
             goto failure;
         
           break;
-        case 't':	/* match regexp to a built-in test link.  */
+        case 't':	/* Match regexp to a built-in test link.  */
         
         
           if (update_arg( (void *)&(args_info->test_arg), 
@@ -790,7 +790,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* expected video page title.  */
+          /* Expected video page title.  */
           else if (strcmp (long_options[option_index].name, "page-title") == 0)
           {
           
@@ -804,7 +804,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* expected video id.  */
+          /* Expected video id.  */
           else if (strcmp (long_options[option_index].name, "video-id") == 0)
           {
           
@@ -818,7 +818,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* expected video file length.  */
+          /* Expected video file length.  */
           else if (strcmp (long_options[option_index].name, "file-length") == 0)
           {
           
@@ -832,7 +832,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* expected video file suffix.  */
+          /* Expected video file suffix.  */
           else if (strcmp (long_options[option_index].name, "file-suffix") == 0)
           {
           
