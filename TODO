@@ -2,7 +2,6 @@
 0.1.1
 -----
 * libquvi(3), libquvi-tutorial(3)  using pod
-* IS_W32 -> HOST_W32
 * cleanup configure summary message
 
 When due

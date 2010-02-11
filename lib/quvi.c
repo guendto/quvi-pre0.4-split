@@ -53,7 +53,7 @@ quvi_init (quvi_t *dst) {
 
     *dst = (quvi_t)quvi;
 
-#ifndef IS_W32
+#ifndef HOST_W32
     curl_global_init(CURL_GLOBAL_NOTHING);
 #else
     curl_global_init(CURL_GLOBAL_WIN32);

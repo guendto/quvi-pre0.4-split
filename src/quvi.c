@@ -384,7 +384,7 @@ main (int argc, char *argv[]) {
         home = getenv("HOME");
     no_config_flag   = 1;
 
-#ifndef IS_W32
+#ifndef HOST_W32
     fname = "/.quvirc";
 #else
     fname = "\\quvirc";

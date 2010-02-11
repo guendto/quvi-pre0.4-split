@@ -101,11 +101,11 @@
 /* Define to 1 if you have the `vasprintf' function. */
 #undef HAVE_VASPRINTF
 
+/* ... */
+#undef HOST_W32
+
 /* Define as const if the declaration of iconv() needs const. */
 #undef ICONV_CONST
-
-/* ... */
-#undef IS_W32
 
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */

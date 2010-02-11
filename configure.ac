@@ -34,8 +34,8 @@ LT_PREREQ([2.2])
 NO_UNDEFINED=
 case "$host" in
     *-*-mingw32* | *-*-cygwin*)
-        AC_DEFINE([IS_W32], [1], [...])
-        is_w32=yes
+        AC_DEFINE([HOST_W32], [1], [...])
+        host_w32=yes
         if [ test x"$enable_shared" != "xno" ]; then
             NO_UNDEFINED="-no-undefined"
         fi
@@ -105,7 +105,7 @@ AC_TYPE_UINT8_T
 AC_CHECK_TYPES([ptrdiff_t])
 
 # Checks for library functions.
-if [ test x"$is_w32" = "xno" ]; then
+if [ test x"$host_w32" = "xno" ]; then
     AC_FUNC_MALLOC
     AC_FUNC_REALLOC
 fi

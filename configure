@@ -10846,9 +10846,9 @@ NO_UNDEFINED=
 case "$host" in
     *-*-mingw32* | *-*-cygwin*)
 
-$as_echo "#define IS_W32 1" >>confdefs.h
+$as_echo "#define HOST_W32 1" >>confdefs.h
 
-        is_w32=yes
+        host_w32=yes
         if  test x"$enable_shared" != "xno" ; then
             NO_UNDEFINED="-no-undefined"
         fi
@@ -16910,7 +16910,7 @@ fi
 
 
 # Checks for library functions.
-if  test x"$is_w32" = "xno" ; then
+if  test x"$host_w32" = "xno" ; then
     for ac_header in stdlib.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "stdlib.h" "ac_cv_header_stdlib_h" "$ac_includes_default"
