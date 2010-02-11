@@ -1,3 +1,7 @@
+
+# We will need utf8 for this.
+quviTest::check_codeset();
+
 my $rc = quviTest::run_t(
 "cctv",
 "--page-title",
