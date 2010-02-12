@@ -1,6 +1,11 @@
 
 Version 0.1.1
 
+  * Fix: dailymotion: format changes
+    # vp6-hd -> h264-hd
+    # vp6-hq -> h264-hq
+    # vp6    -> h264
+
   * tests/
     # support-vimeo.pl: fix expected file length
     # support-dailymotion.pl: fix expected file length
