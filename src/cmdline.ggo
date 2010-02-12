@@ -69,7 +69,7 @@ option "format"
         # youtube:
         "fmt17","fmt18","fmt22", "fmt34","fmt35","hq","3gp",
         # dmotion:
-        "spark-mini","vp6-hq","vp6-hd","vp6","h264",
+        "spark-mini","h264-hq","h264-hd","h264",
         # vimeo:
         "hd",
         # google:
