@@ -11,7 +11,9 @@ Version 0.1.1
     # support-dailymotion.pl: fix expected file length
     # support-cctv.pl: skip unless utf8 locale code is set
 
-  * Add: NEWS file
+  * Add:
+    # NEWS file
+    # quvi.1
 
   * quvi: add ~/.quvirc support
 
