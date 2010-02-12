@@ -17,7 +17,8 @@
 
 #include "host.h"
 
-_host_constants(youtube, "youtube.com", "flv|mp4|hq|hd|fmt34");
+_host_constants(youtube,
+    "youtube.com", "flv|3gp|mp4|hq|hd|fmt34|fmt17|fmt18|fmt35|fmt22");
 
 _host_re(re_id,     "(?i)\"video_id\": \"(.*?)\"");
 _host_re(re_title,  "(?i)<meta name=\"title\" content=\"(.*?)\"");
