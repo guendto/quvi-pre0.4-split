@@ -418,7 +418,7 @@ clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
-distclean-am: clean-am distclean-generic distclean-local
+distclean-am: clean-am distclean-generic
 
 dvi: dvi-am
 
@@ -482,8 +482,8 @@ uninstall-am:
 
 .PHONY: all all-am check check-TESTS check-am clean clean-generic \
 	clean-libtool distclean distclean-generic distclean-libtool \
-	distclean-local distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
+	distdir dvi dvi-am html html-am info info-am install \
+	install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
 	install-pdf install-pdf-am install-ps install-ps-am \
@@ -494,11 +494,6 @@ uninstall-am:
 
 
 @HAVE_PERL_FALSE@	@echo SKIP: perl not found.
-
-local-clean:
-	@rm -rf quvi/quviTest.pm
-
-distclean-local: local-clean
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

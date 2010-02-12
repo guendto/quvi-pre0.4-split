@@ -43,9 +43,4 @@ else # HAVE_PERL
 	@echo SKIP: perl not found.
 endif # HAVE_PERL
 
-local-clean:
-	@rm -rf quvi/quviTest.pm
-
-distclean-local: local-clean
-
 
