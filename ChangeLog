@@ -1,6 +1,8 @@
 
 Version 0.1.1
 
+  * Fix: youtube: list the fmtNN ids
+
   * Fix: dailymotion: format changes
     # vp6-hd -> h264-hd
     # vp6-hq -> h264-hq
