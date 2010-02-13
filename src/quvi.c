@@ -23,6 +23,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
 #include <assert.h>
 
@@ -33,6 +34,20 @@
 
 #include "quvi/quvi.h"
 #include "cmdline.h"
+
+static int verbose_flag = 1;
+
+static void
+spew (const char *fmt, ...) {
+    va_list ap;
+
+    if (!verbose_flag)
+        return;
+
+    va_start(ap, fmt);
+    vfprintf(stderr, fmt, ap);
+    va_end(ap);
+}
 
 typedef struct gengetopt_args_info opts_s;
 
@@ -46,17 +61,17 @@ status_callback(long param, void *data) {
     switch (status) {
     case QUVISTATUS_FETCH: /* handle fetch */
         switch (type) {
-        default: printf(":: Fetch %s ...", (char *)data); break;
-        case QUVISTATUSTYPE_CONFIG  : printf(":: Fetch config ..."); break;
-        case QUVISTATUSTYPE_PLAYLIST: printf(":: Fetch playlist ..."); break;
-        case QUVISTATUSTYPE_DONE    : puts("done."); break;
+        default: spew(":: Fetch %s ...", (char *)data); break;
+        case QUVISTATUSTYPE_CONFIG  : spew(":: Fetch config ..."); break;
+        case QUVISTATUSTYPE_PLAYLIST: spew(":: Fetch playlist ..."); break;
+        case QUVISTATUSTYPE_DONE    : spew("done.\n"); break;
         }
         break;
 
     case QUVISTATUS_VERIFY: /* handle verify */
         switch (type) {
-        default: printf(":: Verify video link ..."); break;
-        case QUVISTATUSTYPE_DONE: puts("done."); break;
+        default: spew(":: Verify video link ..."); break;
+        case QUVISTATUSTYPE_DONE: spew("done.\n"); break;
         }
         break;
     }
@@ -102,7 +117,7 @@ dump_video_links(quvi_video_t video) {
         quvi_getprop(video, QUVIPROP_VIDEOFILESUFFIX, &file_suffix);
         quvi_getprop(video, QUVIPROP_VIDEOFILELENGTH, &file_length);
 
-        printf(
+        spew(
             "link %02d  : %s\n"
             ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
             ++i, video_url, file_length, file_suffix, file_ct
@@ -124,7 +139,7 @@ dump_video(quvi_video_t video, opts_s opts) {
     quvi_getprop(video, QUVIPROP_HTTPCODE, &httpcode);
 #endif
 
-    printf(" > Dump video:\n"
+    spew(" > Dump video:\n"
         "url     : %s\n"
         "title   : %s\n"
         "id      : %s\n",
@@ -132,7 +147,7 @@ dump_video(quvi_video_t video, opts_s opts) {
 
     dump_video_links(video);
 #ifdef _1_
-    printf("httpcode: %ld (last)\n", httpcode);
+    spew("httpcode: %ld (last)\n", httpcode);
 #endif
 }
 
@@ -305,11 +320,11 @@ test_all(quvi_t quvi, opts_s opts) {
     quvi_video_t video;
     QUVIcode rc;
 
-    puts(":: Run built-in video link tests.");
+    spew(":: Run built-in video link tests.\n");
     for (m=0; tests[m]; ++m);
 
     for (i=0; i<m; ++i) {
-        printf(" > Test #%02d/%02d:\n", i+1, m);
+        spew(" > Test #%02d/%02d:\n", i+1, m);
 
         rc = quvi_parse(quvi, (char *)tests[i], &video);
         if (rc != QUVI_OK)
@@ -320,7 +335,7 @@ test_all(quvi_t quvi, opts_s opts) {
         }
         quvi_parse_close(&video);
     }
-    puts(":: Tests done.");
+    spew(":: Tests done.\n");
 }
 
 static quvi_t
@@ -329,7 +344,7 @@ init_quvi(opts_s opts) {
     quvi_t quvi;
     CURL *curl;
 
-    printf(":: Init ...");
+    spew(":: Init ...");
 
     if ( (rc = quvi_init(&quvi)) != QUVI_OK )
         dump_error(quvi, rc, opts);
@@ -362,7 +377,7 @@ init_quvi(opts_s opts) {
     curl_easy_setopt(curl,
         CURLOPT_CONNECTTIMEOUT, opts.connect_timeout_arg);
 
-    puts("done.");
+    spew("done.\n");
 
     return (quvi);
 }
@@ -437,6 +452,10 @@ main (int argc, char *argv[]) {
     if (opts.hosts_given)
         supports(opts);
 
+    /* Other */
+
+    verbose_flag = !opts.quiet_given;
+
     /* Init quvi. */
 
     quvi = init_quvi(opts);
@@ -472,14 +491,14 @@ main (int argc, char *argv[]) {
 
     /* Cleanup. */
 
-    puts(":: Cleanup.");
+    spew(":: Cleanup.\n");
 
     quvi_close(&quvi);
     assert(quvi == 0);
 
     cmdline_parser_free(&opts);
 
-    puts(":: Exit.");
+    spew(":: Exit.\n");
 
     return (QUVI_OK);
 }
