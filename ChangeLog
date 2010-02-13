@@ -17,7 +17,10 @@ Version 0.1.1
     # NEWS file
     # quvi.1
 
-  * quvi: add ~/.quvirc support
+  * quvi:
+    # Add ~/.quvirc support
+    # Implement --quiet
+    # Spew messages to stderr
 
   * Add: tests/pod-check.pl
 
