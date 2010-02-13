@@ -1,28 +1,17 @@
 
 Version 0.1.1
+-------------
 
-  * Fix: youtube: list the fmtNN ids
-
-  * Fix: dailymotion: format changes
-    # vp6-hd -> h264-hd
-    # vp6-hq -> h264-hq
-    # vp6    -> h264
-
-  * tests/
-    # support-vimeo.pl: fix expected file length
-    # support-dailymotion.pl: fix expected file length
-    # support-cctv.pl: skip unless utf8 locale code is set
+Changes:
 
   * Add:
     # NEWS file
-    # quvi.1
+    # quvi.1 (+pod)
 
   * quvi:
     # Add ~/.quvirc support
     # Implement --quiet
     # Spew messages to stderr
-
-  * Add: tests/pod-check.pl
 
   * w32/make-w32.sh:
     # Add manual (html)
@@ -33,27 +22,44 @@ Version 0.1.1
     # Add pod2man, pod2html and Pod::Checker checks
     # Add --without-man
 
-  * Fix: segfault: _getprop (quvi.c:352)
+  * tests/
+    # support-cctv.pl: skip unless utf8 locale code is set
+    # pod-check.pl: add
+
+  * Youtube: list the fmtNN IDs
+    # (lib)quvi previously reported the "common aliases" only (e.g. "hd")
+
+Bugfixes:
+
+  * Dailymotion: reflect the format ID changes:
+    # vp6-hd -> h264-hd
+    # vp6-hq -> h264-hq
+    # vp6    -> h264
+
+  * tests/
+    # support-vimeo.pl: expected file length
+    # support-dailymotion.pl: expected file length
+
+  * Segfault: _getprop (quvi.c:352)
     # Add missing va_end()s
     # Thanks to nix@esperi.org.uk for getting knee-deep and cooking up the fix
     # Reported on 64bit systems
     # Closes issue #1
 
-  * Fix: segfault: regexp_capture (util.c:114)
+  * Segfault: regexp_capture (util.c:114)
     # Terminate stdarg lists with a proper null pointer (0 -> (void*)0)
     # Thanks to nix@esperi.org.uk for the fix
     # Reported on 64bit systems
     # Closes issue #2
 
-  * Fix: vimeo support, symptoms:
+  * Vimeo support, symptoms:
     # length: 20
     # suffix: html; charset=UTF-8
     # content-type: text/html; charset=UTF-8
 
 
 Version 0.1.0
-
-2010-02-01 Toni Gundogdu
+-------------
 
   * Initial release
 
