@@ -45,19 +45,19 @@ option is used.
 
 =item B<--page-title>=I<string>
 
-Verify parsed video page title to I<string>.
+Match parsed video page title to I<string>.
 
 =item B<--video-id>=I<string>
 
-Verify parsed video ID to I<string>.
+Match parsed video ID to I<string>.
 
 =item B<--file-length>=I<length>
 
-Verify parsed video file length to I<length>.
+Match parsed video file length to I<length>.
 
 =item B<--file-suffix>=I<string>
 
-Verify parsed video file suffix to I<string>.
+Match parsed video file suffix to I<string>.
 
 =item B<-a, --test-all>
 
