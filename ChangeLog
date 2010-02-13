@@ -37,9 +37,10 @@ Bugfixes:
     # vp6-hq -> h264-hq
     # vp6    -> h264
 
-  * tests/
-    # support-vimeo.pl: expected file length
-    # support-dailymotion.pl: expected file length
+  * tests/ (expected file length)
+    # support-vimeo.pl
+    # support-dailymotion.pl
+    # support-youtube.pl
 
   * Segfault: _getprop (quvi.c:352)
     # Add missing va_end()s
