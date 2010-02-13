@@ -2,5 +2,10 @@
 Version 0.1.1
 -------------
 
-Fixes various issues that have been tormenting the users of 64bit
-systems. See ChangeLog for a more detailed list of these changes.
+Fixes the issues that have been plaguing the users on 64bit
+systems. See ChangeLog for the details.
+
+Dailymotion format IDs were renamed to reflect the website
+changes. See ChangeLog for the details.
+
+Fixes also Vimeo support.
