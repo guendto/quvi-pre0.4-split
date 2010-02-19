@@ -39,8 +39,8 @@ struct mem_s {
     char *p;
 };
 
-static size_t
-writemem_callback(void *p, size_t size, size_t nmemb, void *data) {
+size_t
+quvi_write_callback_default(void *p, size_t size, size_t nmemb, void *data) {
     struct mem_s *m = (struct mem_s*)data;
     const size_t rsize = size * nmemb;
     void *tmp = _realloc(m->p, m->size+rsize+1);
@@ -99,7 +99,11 @@ fetch_to_mem(
     memset(&mem, 0, sizeof(mem));
 
     csetopt(CURLOPT_WRITEDATA, &mem);
-    csetopt(CURLOPT_WRITEFUNCTION, writemem_callback);
+
+    if (quvi->write_func)
+        csetopt(CURLOPT_WRITEFUNCTION, (curl_write_callback)quvi->write_func);
+    else
+        csetopt(CURLOPT_WRITEFUNCTION, quvi_write_callback_default);
 
     curlcode = curl_easy_perform(quvi->curl);
     httpcode  = 0;
@@ -179,7 +183,11 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
     memset(&mem, 0, sizeof(mem));
 
     csetopt(CURLOPT_WRITEDATA, &mem);
-    csetopt(CURLOPT_WRITEFUNCTION, writemem_callback);
+
+    if (quvi->write_func)
+        csetopt(CURLOPT_WRITEFUNCTION, (curl_write_callback)quvi->write_func);
+    else
+        csetopt(CURLOPT_WRITEFUNCTION, quvi_write_callback_default);
 
     qvl->url = from_html_entities(qvl->url);
 

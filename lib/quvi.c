@@ -297,6 +297,10 @@ _setopt (_quvi_t quvi, QUVIoption opt, va_list arg) {
         quvi->status_func = 
             va_arg(arg, quvi_callback_status);
         break;
+    case QUVIOPT_WRITEFUNCTION:
+        quvi->write_func =
+            va_arg(arg, quvi_callback_write);
+        break;
     default: return (QUVI_INVARG);
     }
 #undef _sets

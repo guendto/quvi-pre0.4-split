@@ -81,6 +81,16 @@ status_callback(long param, void *data) {
     return (0);
 }
 
+static size_t
+write_callback (void *p, size_t size, size_t nmemb, void *data) {
+    size_t r = quvi_write_callback_default(p, size, nmemb, data);
+    /* Could do something useful here. */
+#ifdef _1_
+    puts(__func__);
+#endif
+    return r;
+}
+
 static const char notice[] =
 "Copyright (C) 2009,2010 Toni Gundogdu. License: GNU GPL version  3  or later\n"
 "This is free software; see the  source for  copying conditions.  There is NO\n"
@@ -359,6 +369,7 @@ init_quvi(opts_s opts) {
         quvi_setopt(quvi, QUVIOPT_NOVERIFY, 1L);
 
     quvi_setopt(quvi, QUVIOPT_STATUSFUNCTION, status_callback);
+    quvi_setopt(quvi, QUVIOPT_WRITEFUNCTION, write_callback);
 
     /* We can use the quvi created cURL handle for our means. */
 

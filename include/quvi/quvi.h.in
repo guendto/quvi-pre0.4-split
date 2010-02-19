@@ -90,6 +90,7 @@ typedef enum {
 QUVIOPT_FORMAT = 0x00,  /**< Requested video file format */
 QUVIOPT_NOVERIFY,       /**< Do not verify video link */
 QUVIOPT_STATUSFUNCTION, /**< Callback function for status updates */
+QUVIOPT_WRITEFUNCTION,   /**< Callback function for writing data */
 } QUVIoption;
 
 #define QUVIINFO_VOID       0x100000 /**< void type */
@@ -193,6 +194,21 @@ typedef void *quvi_video_t;
  * @endcode
  */
 typedef int (*quvi_callback_status) (long param, void *data);
+
+#define QUVI_WRITEFUNC_ABORT 0x10000000 /**< Abort writing */
+
+/**
+ * @brief Write callback function
+ *
+ * This function gets called by libquvi (or libcurl) as soon as
+ * there is data received that needs to be saved.
+ *
+ * @note Returning QUVI_WRITEFUNC_ABORT from the callback function will stop write
+ */
+typedef int (*quvi_callback_write) (char *buffer,
+                                    size_t size,
+                                    size_t nitems,
+                                    void *instream);
 
 /** @brief Word type */
 typedef uint32_t quvi_word;
@@ -307,6 +323,16 @@ void quvi_close(quvi_t *quvi);
 * @endcode
 */
 QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...);
+
+/**
+ * @brief Default write callback.
+ *
+ * This is the default write callback function that libquvi
+ * uses to write data received using libcurl.
+ *
+ * @return The number of bytes actually taken care of
+ */
+size_t quvi_write_callback_default(void *ptr, size_t size, size_t nmemb, void *stream);
 
 /** @} */ /* End of libquvi_setup group. */
 
