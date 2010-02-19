@@ -1,4 +1,16 @@
 
+Version 0.1.2
+-------------
+
+Changes:
+  * Interface bump
+  * Abort if status callback function returns a non-zero value
+  * Add quvi_callback_write
+
+Bugfixes:
+  * quvi: statusfunc: flush stderr
+
+
 Version 0.1.1
 -------------
 (February 13, 2010)
