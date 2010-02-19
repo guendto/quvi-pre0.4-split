@@ -83,8 +83,15 @@ fetch_to_mem(
 
     *dst = 0;
 
-    if (quvi->status_func)
-        quvi->status_func(makelong(QUVISTATUS_FETCH, type), (void *)url);
+    if (quvi->status_func) {
+        if (quvi->status_func(
+            makelong(QUVISTATUS_FETCH, type),
+            (void *)url
+        ) != QUVI_OK)
+        {
+            return (QUVI_ABORTEDBYCALLBACK);
+        }
+    }
 
     csetopt(CURLOPT_URL,       url);
     csetopt(CURLOPT_ENCODING,  "");
@@ -105,10 +112,13 @@ fetch_to_mem(
 
         if (httpcode == 200) {
             if (quvi->status_func) {
-                quvi->status_func(
+                if ( quvi->status_func(
                     makelong(QUVISTATUS_FETCH, QUVISTATUSTYPE_DONE),
                     0
-                );
+                ) != QUVI_OK)
+                {
+                    rc = QUVI_ABORTEDBYCALLBACK;
+                }
             }
         }
         else {
@@ -157,8 +167,14 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
     if (!qvl)
         return (QUVI_BADHANDLE);
 
-    if (quvi->status_func)
-        quvi->status_func(makelong(QUVISTATUS_VERIFY,0), 0);
+    if (quvi->status_func) {
+        if (quvi->status_func(
+            makelong(QUVISTATUS_VERIFY,0), 0
+        ) != QUVI_OK)
+        {
+            return (QUVI_ABORTEDBYCALLBACK);
+        }
+    }
 
     memset(&mem, 0, sizeof(mem));
 
@@ -195,13 +211,19 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
                 CURLINFO_CONTENT_LENGTH_DOWNLOAD, &qvl->length);
 
             if (quvi->status_func) {
-                quvi->status_func(
+                if (quvi->status_func(
                     makelong(QUVISTATUS_VERIFY, QUVISTATUSTYPE_DONE),
                     0
-                );
+                ) != QUVI_OK)
+                {
+                    rc = QUVI_ABORTEDBYCALLBACK;
+                }
             }
-            /* Content-Type -> suffix. */
-            rc = contenttype_to_suffix(quvi, qvl);
+
+            if (rc == QUVI_OK) {
+                /* Content-Type -> suffix. */
+                rc = contenttype_to_suffix(quvi, qvl);
+            }
         }
         else {
             seterr("server returned http/%ld", httpcode);

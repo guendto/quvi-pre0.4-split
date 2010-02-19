@@ -526,6 +526,7 @@ quvi_strerror (quvi_t handle, QUVIcode code) {
         "invalid argument to function",
         "curl initialization failed",
         "end of list iteration",
+        "aborted by callback",
         "invalid error code (internal _INTERNAL_QUVI_LAST)"
     };
 

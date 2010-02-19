@@ -48,13 +48,14 @@ QUVI_VERSION_LONG,      /**< Version string, build date and misc. features */
 /** @enum QUVIcode Return codes */
 typedef enum {
 /* Static errors */
-QUVI_OK  = 0x00,      /**< OK */
-QUVI_MEM,             /**< Memory allocation failed */
-QUVI_BADHANDLE,       /**< Bad session handle */
-QUVI_INVARG,          /**< Invalid function argument */
-QUVI_CURLINIT,        /**< libcurl initialization failed */
-QUVI_LAST,            /**< Indicates end of list iteration */
-_INTERNAL_QUVI_LAST,  /**< For library internal use only */
+QUVI_OK  = 0x00,        /**< OK */
+QUVI_MEM,               /**< Memory allocation failed */
+QUVI_BADHANDLE,         /**< Bad session handle */
+QUVI_INVARG,            /**< Invalid function argument */
+QUVI_CURLINIT,          /**< libcurl initialization failed */
+QUVI_LAST,              /**< Indicates end of list iteration */
+QUVI_ABORTEDBYCALLBACK, /**< Aborted by callback function */
+_INTERNAL_QUVI_LAST,    /**< For library internal use only */
 /* Dynamically generated errors */
 QUVI_PCRE = 0x40, /**< libpcre error occurred */
 QUVI_NOSUPPORT,   /**< libquvi does not support the video host */
@@ -154,6 +155,8 @@ typedef void *quvi_video_t;
  * @brief Status callback function
  *
  * Callback function for status changes.
+ *
+ * @note Returning a non-zero value from the callback function will stop libquvi
  *
  * Example:
  * @code
