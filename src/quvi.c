@@ -76,7 +76,7 @@ status_callback(long param, void *data) {
         break;
     }
 
-    fflush(stdout);
+    fflush(stderr);
 
     return (0);
 }
