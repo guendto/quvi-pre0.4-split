@@ -1,13 +1,6 @@
 
 0.1.2
 -----
-* quvi_read_callback
-* quvi_read_callback_default
-* #define QUVI_READFUNC_ABORT 0x10000000 (returned from quvi_read_callback)
-typedef size_t (*quvi_read_callback)(char *buffer,
-                                      size_t size,
-                                      size_t nitems,
-                                      void *instream);
 * we add new option
   - the functionality of this stays hidden to those using the current interface
   - bumping the interface to 1 seems like an overkill
