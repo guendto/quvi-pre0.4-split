@@ -4,6 +4,7 @@ Version 0.1.2
 
 Changes:
   * Bump interface
+  * Add QUVIPROP_VIDEOFORMAT (holds the value set by QUVIOPT_FORMAT)
   * Add quvi_callback_write
   * quvi_callback_status, if returns non-zero value then abort
 

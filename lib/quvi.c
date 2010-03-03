@@ -380,6 +380,7 @@ _getprop (_quvi_video_t video, QUVIproperty prop, ...) {
     case QUVIPROP_VIDEOFILECONTENTTYPE : _sets(qvl->content_type);
     case QUVIPROP_VIDEOFILESUFFIX      : _sets(qvl->suffix);
     case QUVIPROP_HTTPCODE      : _setn(lp, video->quvi->httpcode);
+    case QUVIPROP_VIDEOFORMAT   : _sets(video->quvi->format);
     default                     : rc = QUVI_INVARG;
     }
 

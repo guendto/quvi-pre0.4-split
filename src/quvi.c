@@ -137,7 +137,7 @@ dump_video_links(quvi_video_t video) {
 
 static void
 dump_video(quvi_video_t video, opts_s opts) {
-    char *page_link, *page_title, *video_id;
+    char *page_link, *page_title, *video_id, *format;
 #ifdef _1_
     long httpcode;
 #endif
@@ -145,6 +145,7 @@ dump_video(quvi_video_t video, opts_s opts) {
     quvi_getprop(video, QUVIPROP_PAGEURL, &page_link);
     quvi_getprop(video, QUVIPROP_PAGETITLE, &page_title);
     quvi_getprop(video, QUVIPROP_VIDEOID, &video_id);
+    quvi_getprop(video, QUVIPROP_VIDEOFORMAT, &format);
 #ifdef _1_
     quvi_getprop(video, QUVIPROP_HTTPCODE, &httpcode);
 #endif
@@ -152,8 +153,9 @@ dump_video(quvi_video_t video, opts_s opts) {
     spew(" > Dump video:\n"
         "url     : %s\n"
         "title   : %s\n"
-        "id      : %s\n",
-        page_link, page_title, video_id);
+        "id      : %s\n"
+        "format  : %s (requested)\n",
+        page_link, page_title, video_id, format);
 
     dump_video_links(video);
 #ifdef _1_

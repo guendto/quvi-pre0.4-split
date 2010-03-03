@@ -143,8 +143,9 @@ QUVIPROP_VIDEOFILELENGTH       = QUVIPROPERTY_DOUBLE + 6, /**< Video file length
 QUVIPROP_VIDEOFILECONTENTTYPE  = QUVIPROPERTY_STRING + 7, /**< Video file content-type */
 QUVIPROP_VIDEOFILESUFFIX       = QUVIPROPERTY_STRING + 8, /**< Video file suffix */
 QUVIPROP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP code */
+QUVIPROP_VIDEOFORMAT   = QUVIPROPERTY_STRING + 10, /**< Requested video format, set using QUVIOPT_FORMAT */
 /* Add new ones below. */
-_QUVIPROP_LAST          = 9 /**< Placeholder */
+_QUVIPROP_LAST          = 10 /**< Placeholder */
 } QUVIproperty;
 
 /** @brief libquvi session handle */
