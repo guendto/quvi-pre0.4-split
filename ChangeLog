@@ -13,6 +13,7 @@ Changes:
   * Add docs/howto/HowtoGetDevelopmentCode
 
 Bugfixes:
+  * Liveleak video id parsing
   * Youjizz support, thanks to anon2u for the fix
   * quvi: statusfunc: flush stderr
 
