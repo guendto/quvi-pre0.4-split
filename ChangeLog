@@ -9,6 +9,7 @@ Changes:
   * quvi_callback_status, if returns non-zero value then abort
 
 Bugfixes:
+  * Youjizz support, thanks to anon2u for the fix
   * quvi: statusfunc: flush stderr
 
 
