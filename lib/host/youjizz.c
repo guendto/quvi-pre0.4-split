@@ -23,7 +23,7 @@ _host_constants(youjizz, "youjizz.com", "flv");
 
 _host_re(re_id,     "(?i)\\?id=(\\d+)");
 _host_re(re_title,  "(?i)<title>(.*?)</");
-_host_re(re_lnk,    "(?i)['\"]content_video['\"],.*['\"](.*?)['\"]");
+_host_re(re_lnk,    "(?i)addVariable\\(\"file\",\"(.*?)\"");
 
 QUVIcode
 handle_youjizz(const char *url, _quvi_video_t video) {
