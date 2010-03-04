@@ -1,7 +1,25 @@
 
 0.1.2
 -----
-* tests/ multi-format tests should include "best"
+* fix: liveleak: video id parsing
+
+Requesting assistance
+---------------------
+
+Support for the following hosts are disabled by default.
+You can re-enable the (broken) support by compiling
+quvi with --enable-broken.
+
+* ehrensenf.de, broken since 0.1.2, see lib/host/ehrensenf.c
+  - the server returns http/404 for the compiled video links
+  - any info/data/patches appreciated
+    - e.g. flash generated tcp traffic logs that we could backtrace
+
+* spyfilms.com, broken since 0.1.2, see lib/host/spyfilms.c
+  - website changes, new design relies even more heavily on flash+js
+    - previously visible variable values in html have been hidden in flash
+  - any info/data/patches appreciated
+    - e.g. flash generated tcp traffic logs that we could backtrace
 
 When due
 --------
