@@ -236,7 +236,6 @@ dump_error(quvi_t quvi, QUVIcode rc, opts_s opts) {
 
 static const char *tests[] = {
 "http://www.dailymotion.com/hd/video/x9fkzj_battlefield-1943-coral-sea-trailer_videogames",
-"http://www.ehrensenf.de/shows/ehrensenf/getarnte-bienen-schaukelmotorrad-devitohorror",
 "http://www.spiegel.de/video/video-1012582.html",
 "http://vimeo.com/1485507",
 "http://en.sevenload.com/videos/IUL3gda-Funny-Football-Clips",
@@ -251,12 +250,18 @@ static const char *tests[] = {
 "http://www.youtube.com/watch?v=DeWsZ2b_pK4",
 "http://break.com/index/beach-tackle-whip-lash.html",
 "http://www.evisor.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",
+
+#ifdef ENABLE_BROKEN
+"http://www.ehrensenf.de/shows/ehrensenf/getarnte-bienen-schaukelmotorrad-devitohorror",
 "http://www.spyfilms.com/#neill_blomkamp/alive_in_joburg",
+#endif
+
 #ifdef ENABLE_SMUT
 "http://www.tube8.com/fetish/japanese-melon-gal-censored/186133/",
 "http://www.xvideos.com/video243887/devi_emmerson_body_painting",
 "http://www.youjizz.com/videos/glamour-girls---melissa-125602.html",
 #endif
+
 NULL
 };
 
@@ -321,7 +326,7 @@ match_test(quvi_t quvi, opts_s opts) {
         }
     }
 
-    fprintf(stderr, "error: nothing matched `%s'", opts.test_arg);
+    fprintf(stderr, "error: nothing matched `%s'\n", opts.test_arg);
     cmdline_parser_free(&opts);
     exit (QUVI_PCRE);
 }

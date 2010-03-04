@@ -11,7 +11,6 @@ support-break.pl\
 support-cctv.pl\
 support-clipfish.pl\
 support-dailymotion.pl\
-support-ehrensenf.pl\
 support-evisor.pl\
 support-funnyhub.pl\
 support-golem.pl\
@@ -19,9 +18,16 @@ support-liveleak.pl\
 support-myubo.pl\
 support-sevenload.pl\
 support-spiegel.pl\
-support-spyfilms.pl\
 support-vimeo.pl\
 support-youtube.pl
+
+TESTS_BROKEN =\
+support-ehrensenf.pl\
+support-spyfilms.pl
+
+if ENABLE_BROKEN
+TESTS += $(TESTS_BROKEN)
+endif
 
 TESTS_POD =\
 pod-check.pl

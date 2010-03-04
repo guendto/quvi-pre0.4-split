@@ -34,8 +34,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@HAVE_PERL_POD_CHECKER_TRUE@@HAVE_PERL_TRUE@am__append_1 = $(TESTS_POD)
-@ENABLE_SMUT_TRUE@@HAVE_PERL_TRUE@am__append_2 = $(TESTS_ADULT)
+@ENABLE_BROKEN_TRUE@@HAVE_PERL_TRUE@am__append_1 = $(TESTS_BROKEN)
+@HAVE_PERL_POD_CHECKER_TRUE@@HAVE_PERL_TRUE@am__append_2 = $(TESTS_POD)
+@ENABLE_SMUT_TRUE@@HAVE_PERL_TRUE@am__append_3 = $(TESTS_ADULT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/quviTest.pm.in
@@ -197,13 +198,17 @@ EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_ADULT)
 @HAVE_PERL_TRUE@TESTS_ENVIRONMENT = $(PERL) -w -mstrict -mquviTest -I $(top_builddir)/tests
 @HAVE_PERL_TRUE@TESTS = nosupport-eval.pl support-break.pl \
 @HAVE_PERL_TRUE@	support-cctv.pl support-clipfish.pl \
-@HAVE_PERL_TRUE@	support-dailymotion.pl support-ehrensenf.pl \
-@HAVE_PERL_TRUE@	support-evisor.pl support-funnyhub.pl \
-@HAVE_PERL_TRUE@	support-golem.pl support-liveleak.pl \
-@HAVE_PERL_TRUE@	support-myubo.pl support-sevenload.pl \
-@HAVE_PERL_TRUE@	support-spiegel.pl support-spyfilms.pl \
+@HAVE_PERL_TRUE@	support-dailymotion.pl support-evisor.pl \
+@HAVE_PERL_TRUE@	support-funnyhub.pl support-golem.pl \
+@HAVE_PERL_TRUE@	support-liveleak.pl support-myubo.pl \
+@HAVE_PERL_TRUE@	support-sevenload.pl support-spiegel.pl \
 @HAVE_PERL_TRUE@	support-vimeo.pl support-youtube.pl \
-@HAVE_PERL_TRUE@	$(am__append_1) $(am__append_2)
+@HAVE_PERL_TRUE@	$(am__append_1) $(am__append_2) \
+@HAVE_PERL_TRUE@	$(am__append_3)
+@HAVE_PERL_TRUE@TESTS_BROKEN = \
+@HAVE_PERL_TRUE@support-ehrensenf.pl\
+@HAVE_PERL_TRUE@support-spyfilms.pl
+
 @HAVE_PERL_TRUE@TESTS_POD = \
 @HAVE_PERL_TRUE@pod-check.pl
 

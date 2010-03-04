@@ -9,6 +9,9 @@
 /* ... */
 #undef CANONICAL_TARGET
 
+/* Define to enable broken support */
+#undef ENABLE_BROKEN
+
 /* Define to enable smut */
 #undef ENABLE_SMUT
 

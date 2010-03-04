@@ -150,6 +150,19 @@ if [ test x"$enable_smut" != "xno" ]; then
     AC_DEFINE([ENABLE_SMUT], [1], [Define to enable smut])
 fi
 
+# --enable-broken
+AC_ARG_ENABLE([broken],
+    [AS_HELP_STRING([--enable-broken],
+        [build with broken website support @<:@default=no@:>@])],
+    [],
+    [enable_broken=no])
+AM_CONDITIONAL([ENABLE_BROKEN], [test x"$enable_broken" != "xno"])
+
+if [ test x"$enable_broken" != "xno" ]; then
+    AC_DEFINE([ENABLE_BROKEN], [1], [Define to enable broken support])
+fi
+
+
 # --with-man
 AC_ARG_WITH([man],
     [AS_HELP_STRING([--with-man],
@@ -189,6 +202,7 @@ Options:
     build libquvi:  shared=${enable_shared} static=${enable_static}
     build quvi:     ${enable_quvi}
     adult support:  ${enable_smut}
+    broken support: ${enable_broken}
     install manual: ${with_man}
 
 Other:

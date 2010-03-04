@@ -119,9 +119,11 @@ _host(myubo)
 _host(sevenload)
 _host(vimeo)
 _host(spiegel)
-_host(ehrensenf)
 _host(dailymotion)
+#ifdef ENABLE_BROKEN
+_host(ehrensenf)
 _host(spyfilms)
+#endif
 #ifdef ENABLE_SMUT
 _host(tube8)
 _host(xvideos)
@@ -565,6 +567,9 @@ quvi_version (QUVIversion type) {
     ") "
 #ifdef HAVE_ICONV
     "*iconv "
+#endif
+#ifdef ENABLE_BROKEN
+    "*broken "
 #endif
 #ifdef ENABLE_SMUT
     "*smut "

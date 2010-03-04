@@ -750,6 +750,8 @@ HAVE_GNU_LD_FALSE
 HAVE_GNU_LD_TRUE
 WITH_MAN_FALSE
 WITH_MAN_TRUE
+ENABLE_BROKEN_FALSE
+ENABLE_BROKEN_TRUE
 ENABLE_SMUT_FALSE
 ENABLE_SMUT_TRUE
 ENABLE_QUVI_FALSE
@@ -921,6 +923,7 @@ enable_rpath
 with_libiconv_prefix
 enable_quvi
 enable_smut
+enable_broken
 with_man
 '
       ac_precious_vars='build_alias
@@ -1571,6 +1574,7 @@ Optional Features:
   --disable-rpath         do not hardcode runtime library paths
   --enable-quvi           build quvi(1) program [default=yes]
   --enable-smut           build with adult website support [default=no]
+  --enable-broken         build with broken website support [default=no]
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -5177,13 +5181,13 @@ if test "${lt_cv_nm_interface+set}" = set; then :
 else
   lt_cv_nm_interface="BSD nm"
   echo "int some_variable = 0;" > conftest.$ac_ext
-  (eval echo "\"\$as_me:5180: $ac_compile\"" >&5)
+  (eval echo "\"\$as_me:5184: $ac_compile\"" >&5)
   (eval "$ac_compile" 2>conftest.err)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5183: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+  (eval echo "\"\$as_me:5187: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
   cat conftest.err >&5
-  (eval echo "\"\$as_me:5186: output\"" >&5)
+  (eval echo "\"\$as_me:5190: output\"" >&5)
   cat conftest.out >&5
   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
     lt_cv_nm_interface="MS dumpbin"
@@ -6388,7 +6392,7 @@ ia64-*-hpux*)
   ;;
 *-*-irix6*)
   # Find out which ABI we are using.
-  echo '#line 6391 "configure"' > conftest.$ac_ext
+  echo '#line 6395 "configure"' > conftest.$ac_ext
   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
@@ -7650,11 +7654,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7653: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7657: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7657: \$? = $ac_status" >&5
+   echo "$as_me:7661: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -7989,11 +7993,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:7992: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:7996: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:7996: \$? = $ac_status" >&5
+   echo "$as_me:8000: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -8094,11 +8098,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8097: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8101: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8101: \$? = $ac_status" >&5
+   echo "$as_me:8105: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -8149,11 +8153,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:8152: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:8156: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:8156: \$? = $ac_status" >&5
+   echo "$as_me:8160: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -10516,7 +10520,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 10519 "configure"
+#line 10523 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -10612,7 +10616,7 @@ else
   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
   lt_status=$lt_dlunknown
   cat > conftest.$ac_ext <<_LT_EOF
-#line 10615 "configure"
+#line 10619 "configure"
 #include "confdefs.h"
 
 #if HAVE_DLFCN_H
@@ -14099,11 +14103,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14102: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14106: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>conftest.err)
    ac_status=$?
    cat conftest.err >&5
-   echo "$as_me:14106: \$? = $ac_status" >&5
+   echo "$as_me:14110: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s "$ac_outfile"; then
      # The compiler can only warn and ignore the option if not recognized
      # So say no if there are warnings other than the usual output.
@@ -14198,11 +14202,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14201: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14205: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14205: \$? = $ac_status" >&5
+   echo "$as_me:14209: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -14250,11 +14254,11 @@ else
    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
    -e 's:$: $lt_compiler_flag:'`
-   (eval echo "\"\$as_me:14253: $lt_compile\"" >&5)
+   (eval echo "\"\$as_me:14257: $lt_compile\"" >&5)
    (eval "$lt_compile" 2>out/conftest.err)
    ac_status=$?
    cat out/conftest.err >&5
-   echo "$as_me:14257: \$? = $ac_status" >&5
+   echo "$as_me:14261: \$? = $ac_status" >&5
    if (exit $ac_status) && test -s out/conftest2.$ac_objext
    then
      # The compiler can only warn and ignore the option if not recognized
@@ -17304,6 +17308,30 @@ $as_echo "#define ENABLE_SMUT 1" >>confdefs.h
 
 fi
 
+# --enable-broken
+# Check whether --enable-broken was given.
+if test "${enable_broken+set}" = set; then :
+  enableval=$enable_broken;
+else
+  enable_broken=no
+fi
+
+ if test x"$enable_broken" != "xno"; then
+  ENABLE_BROKEN_TRUE=
+  ENABLE_BROKEN_FALSE='#'
+else
+  ENABLE_BROKEN_TRUE='#'
+  ENABLE_BROKEN_FALSE=
+fi
+
+
+if  test x"$enable_broken" != "xno" ; then
+
+$as_echo "#define ENABLE_BROKEN 1" >>confdefs.h
+
+fi
+
+
 # --with-man
 
 # Check whether --with-man was given.
@@ -17498,6 +17526,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_SMUT_TRUE}" && test -z "${ENABLE_SMUT_FALSE}"; then
   as_fn_error "conditional \"ENABLE_SMUT\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_BROKEN_TRUE}" && test -z "${ENABLE_BROKEN_FALSE}"; then
+  as_fn_error "conditional \"ENABLE_BROKEN\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${WITH_MAN_TRUE}" && test -z "${WITH_MAN_FALSE}"; then
@@ -20002,6 +20034,7 @@ Options:
     build libquvi:  shared=${enable_shared} static=${enable_static}
     build quvi:     ${enable_quvi}
     adult support:  ${enable_smut}
+    broken support: ${enable_broken}
     install manual: ${with_man}
 
 Other:
@@ -20024,6 +20057,7 @@ Options:
     build libquvi:  shared=${enable_shared} static=${enable_static}
     build quvi:     ${enable_quvi}
     adult support:  ${enable_smut}
+    broken support: ${enable_broken}
     install manual: ${with_man}
 
 Other:
