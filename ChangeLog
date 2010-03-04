@@ -4,9 +4,13 @@ Version 0.1.2
 
 Changes:
   * Bump interface
-  * Add QUVIPROP_VIDEOFORMAT (holds the value set by QUVIOPT_FORMAT)
-  * Add quvi_callback_write
-  * quvi_callback_status, if returns non-zero value then abort
+  * Add QUVIPROP_VIDEOFORMAT (returns the value set with QUVIOPT_FORMAT)
+  * Add quvi_callback_write support
+  * quvi_callback_status, abort if callback returns != 0
+  * Tests now include "best" format id (where applicable)
+  * Add --enable-broken (configure)
+  * Mark as broken: spyfilms.com, ehrensenf.de, see TODO
+  * Add docs/howto/HowtoGetDevelopmentCode
 
 Bugfixes:
   * Youjizz support, thanks to anon2u for the fix
