@@ -19,7 +19,7 @@
 
 _host_constants(liveleak, "liveleak.com", "flv");
 
-_host_re(re_id,         "(?i)token=(.*?)'");
+_host_re(re_id,         "(?i)token=(.*?)['&]");
 _host_re(re_title,      "(?i)<title>(.*?)</title>");
 _host_re(re_config,     "(?i)'config','(.*?)'");
 _host_re(re_playlist,   "(?i)<file>(.*?)</file>");
