@@ -1,20 +1,17 @@
 
-0.1.2
------
+Pending - help appreciated
+--------------------------
 
-Requesting assistance
----------------------
+The support for the websites that have been marked as "broken"
+is disabled by default. Compile quvi with the --enable-broken
+to re-enable them.
 
-Support for the following hosts are disabled by default.
-You can re-enable the (broken) support by compiling
-quvi with --enable-broken.
-
-* ehrensenf.de, broken since 0.1.2, see lib/host/ehrensenf.c
+* ehrensenf.de, broken as of 0.1.2, see lib/host/ehrensenf.c
   - the server returns http/404 for the compiled video links
   - any info/data/patches appreciated
     - e.g. flash generated tcp traffic logs that we could backtrace
 
-* spyfilms.com, broken since 0.1.2, see lib/host/spyfilms.c
+* spyfilms.com, broken as of 0.1.2, see lib/host/spyfilms.c
   - website changes, new design relies even more heavily on flash+js
     - previously visible variable values in html have been hidden in flash
   - any info/data/patches appreciated
