@@ -9,7 +9,7 @@ Adds --enable-broken.
 
 Tests now include use of "-f best" where applicable.
 
-Minor tweaks (unlisted) bugfixes to quvi tool.
+Minor (unlisted) tweaks and bugfixes to quvi tool.
 
 Marks as broken: ehrensenf.de, spyfilms.com, see TODO.
 
