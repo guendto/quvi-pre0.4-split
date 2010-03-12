@@ -1,6 +1,7 @@
 
 Version 0.1.2
 -------------
+(March 12, 2010)
 
 Changes:
   * Bump interface
@@ -8,7 +9,7 @@ Changes:
   * Add quvi_callback_write support
   * quvi_callback_status, abort if callback returns != 0
   * Tests now include "best" format id (where applicable)
-  * Add --enable-broken (configure)
+  * Add --enable-broken (configure), see also INSTALL
   * Mark as broken: spyfilms.com, ehrensenf.de, see TODO
   * Add docs/howto/HowtoGetDevelopmentCode
 
