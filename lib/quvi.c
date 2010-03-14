@@ -27,16 +27,10 @@
 #include "host.h"
 
 #define is_invarg(p) \
-    do { \
-        assert(p != 0); \
-        if (!p) return (QUVI_INVARG); \
-    } while (0)
+    do { if (p == NULL) return (QUVI_INVARG); } while (0)
 
 #define is_badhandle(h) \
-    do { \
-        assert(h != 0); \
-        if (!h) return (QUVI_BADHANDLE); \
-    } while (0)
+    do { if (h == NULL) return (QUVI_BADHANDLE); } while (0)
 
 /* quvi_init */
 
@@ -501,9 +495,6 @@ static int curr_host = -1;
 
 QUVIcode
 quvi_next_host (char **domain, char **formats) {
-
-    assert(domain != 0);
-    assert(formats != 0);
 
     is_invarg(domain);
     is_invarg(formats);

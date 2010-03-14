@@ -66,14 +66,10 @@ fetch_to_mem(
     _quvi_t quvi;
     QUVIcode rc;
 
-    assert(video != 0);
-    assert(video->quvi != 0);
-    assert(dst != 0);
-
-    quvi = video->quvi;
-
     if (!video)
         return (QUVI_BADHANDLE);
+
+    quvi = video->quvi;
 
     if (!quvi)
         return (QUVI_BADHANDLE);
@@ -155,9 +151,6 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
     struct mem_s mem;
     long httpcode;
     QUVIcode rc;
-
-    assert(quvi != 0);
-    assert(lnk != 0);
 
     if (!quvi)
         return (QUVI_BADHANDLE);

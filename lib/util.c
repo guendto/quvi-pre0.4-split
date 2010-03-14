@@ -127,7 +127,6 @@ contenttype_to_suffix(_quvi_t quvi, _quvi_video_link_t qvl) {
     QUVIcode rc;
 
     assert(qvl != 0);
-    assert(qvl->content_type != 0);
 
     if (!qvl->content_type)
         return (QUVI_INVARG);
@@ -277,7 +276,7 @@ parse_page_common(
 
     assert(url != 0);
     assert(video != 0);
-    assert(content);
+    assert(content != 0);
     /* re_id, re_title may be null. */
 
     _free(video->id);
