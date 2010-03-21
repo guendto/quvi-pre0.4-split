@@ -23,10 +23,11 @@ _host_re(re_id,     "(?i)contentid='(.*?)'");
 _host_re(re_title,  "(?i)id=\"vid_title\" content=\"(.*?)\"");
 _host_re(re_fpath,  "(?i)contentfilepath='(.*?)'");
 _host_re(re_fname,  "(?i)filename='(.*?)'");
+_host_re(re_fhash,  "(?i)flashvars.icon = \"(.*?)\"");
 
 QUVIcode
 handle_break(const char *url, _quvi_video_t video) {
-    char *content, *fpath, *fname;
+    char *content, *fpath, *fname, *fhash;
     QUVIcode rc;
 
     /* host id */
@@ -65,19 +66,39 @@ handle_break(const char *url, _quvi_video_t video) {
         (void *) 0
     );
 
+    if (rc != QUVI_OK) {
+        _free(content);
+        _free(fpath);
+        return (rc);
+    }
+
+    /* fhash */
+    rc = regexp_capture(
+        video->quvi,
+        content,
+        re_fhash,
+        0,
+        0,
+        &fhash,
+        (void *) 0
+    );
+
     _free(content);
 
     if (rc != QUVI_OK) {
         _free(fpath);
+        _free(fname);
         return (rc);
     }
 
     /* video link */
     add_video_link(&video->link,
-        "http://video1.break.com/dnet/media/%s/%s.flv", fpath, fname);
+        "http://video1.break.com/dnet/media/%s/%s.flv?%s",
+            fpath, fname, fhash);
 
     _free(fpath);
     _free(fname);
+    _free(fhash);
 
     return (QUVI_OK);
 }
