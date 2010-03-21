@@ -1,4 +1,15 @@
 
+Version 0.1.3
+-------------
+
+Changes:
+  * Include stdlib.h in quvi.h
+
+Bugfixes:
+  * Break support, ported from clive, original fix by Werner Elsler
+
+
+(March 12, 2010)
 Version 0.1.2
 -------------
 (March 12, 2010)
