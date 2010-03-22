@@ -68,8 +68,6 @@ option "format"
     values="flv","best",
         # youtube:
         "fmt17","fmt18","fmt22", "fmt34","fmt35","hq","3gp",
-        # dmotion:
-        "spark-mini","h264-hq","h264-hd","h264",
         # vimeo:
         "hd",
         # google:

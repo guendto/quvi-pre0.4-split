@@ -17,13 +17,100 @@
 
 #include "host.h"
 
-_host_constants(dailymotion,
-    "dailymotion.", "flv|spark-mini|h264-hq|h264-hd|h264");
+_host_constants(dailymotion, "dailymotion.", "flv|hq|hd");
 
-_host_re(re_id,     "(?i)video\\/(.*?)_");
-_host_re(re_title,  "(?i)<title>dailymotion\\s+-\\s+(.*)\\s+-");
-_host_re(re_paths,  "(?i)\"video\", \"(.*?)\"");
+_host_re(re_id,    "(?i)video\\/(.*?)_");
+_host_re(re_title, "(?i)title=\"(.*?)\"");
+_host_re(re_path,  "(?i)%22(\\w\\w)URL%22%3A%22(.*?)%22");
 
+QUVIcode
+handle_dailymotion(const char *url, _quvi_video_t video) {
+    static const char default_format[] = "sd";
+    char *content, *best, *req_format;
+    int ovector[30];
+    QUVIcode rc;
+    int offset;
+
+    req_format =
+        strcmp(video->quvi->format, "flv") == 0
+        ? default_format
+        : !is_format_supported(video->quvi->format, formats_dailymotion)
+          ? default_format
+          : video->quvi->format;
+
+    /* host id */
+    _host_id("dailymotion");
+
+    /* common */
+    rc = parse_page_common(url, video, &content, re_id, re_title);
+
+    if (rc != QUVI_OK)
+        return (rc);
+
+    /*
+     * can we dl this video? if it looks like a partner video,
+     * walks like a partner video, then it's a partner video.
+     * we don't care for those.
+     */
+    if (strstr(content, "SWFObject(\"http:") != 0) {
+        _quvi_t quvi = video->quvi; /* seterr macro needs this. */
+        seterr("looks like dailymotion partner video. refusing to continue");
+        _free(content);
+        return (QUVI_NOSUPPORT);
+    }
+
+    /* paths */
+    offset = 0;
+    best = NULL;
+    do {
+        char *path, *format_id;
+
+        rc = regexp_capture(
+            video->quvi,
+            content+offset,
+            re_path,
+            ovector,
+            sizeof(ovector)/sizeof(int),
+            &format_id,
+            &path,
+            (void *) 0
+        );
+
+        if (rc == QUVI_OK) {
+
+            path = strepl(path, "%5C", "");
+            path = unescape(video->quvi, path);
+
+            if (best != NULL)
+                _free(best);
+
+            asprintf(&best, "%s", path);
+
+            if (strcmp(format_id, req_format) == 0)
+                rc = add_video_link(&video->link, path);
+
+            _free(path);
+            _free(format_id);
+
+            offset += ovector[1];
+        }
+    } while (rc == QUVI_OK);
+
+    _free(content);
+
+    if (best != NULL) {
+        if (strcmp(req_format, "best") == 0)
+            rc = add_video_link(&video->link, "%s", best);
+        _free(best);
+    }
+
+    if (rc != QUVI_OK && !video->link)
+        return (rc);
+
+    return (QUVI_OK);
+}
+
+#ifdef _1_
 static QUVIcode
 parse(const _quvi_video_t video, char *paths) {
     static const char default_format[] = "spark";
@@ -153,5 +240,6 @@ handle_dailymotion(const char *url, _quvi_video_t video) {
 
     return (rc);
 }
+#endif
 
 
