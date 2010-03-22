@@ -6,6 +6,16 @@ Changes:
   * Include stdlib.h in quvi.h
 
 Bugfixes:
+  * Dailymotion
+    # Change format IDs to reflect website changes (yet again):
+      * h264-hd -> hd
+      * h264-hq -> hq
+      * removed h264 and spark-mini (no longer even listed)
+      * quvi(1) -f option arg support reflects these changes
+    # Parse title from elsewhere
+      * Title was previously parsed from the title HTML tag
+      * Which usually contained more than we cared for
+    # Refuse to work with partner videos (return QUVI_NOSUPPORT)
   * Break support, ported from clive, original fix by Werner Elsler
 
 
