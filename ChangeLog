@@ -3,10 +3,11 @@ Version 0.1.3
 -------------
 
 Changes:
+  * Add buzzhumor.com support, port from clive
   * Include stdlib.h in quvi.h
 
 Bugfixes:
-  * Dailymotion
+  * dailymotion.com
     # Change format IDs to reflect website changes (yet again):
       * h264-hd -> hd
       * h264-hq -> hq
@@ -16,7 +17,7 @@ Bugfixes:
       * Title was previously parsed from the title HTML tag
       * Which usually contained more than we cared for
     # Refuse to work with partner videos (return QUVI_NOSUPPORT)
-  * Break support, ported from clive, original fix by Werner Elsler
+  * break.com support, ported from clive, original fix by Werner Elsler
 
 
 (March 12, 2010)

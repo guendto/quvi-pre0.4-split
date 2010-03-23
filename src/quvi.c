@@ -250,6 +250,7 @@ static const char *tests[] = {
 "http://www.youtube.com/watch?v=DeWsZ2b_pK4",
 "http://break.com/index/beach-tackle-whip-lash.html",
 "http://www.evisor.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",
+"http://www.buzzhumor.com/videos/32561/Girl_Feels_Shotgun_Power",
 
 #ifdef ENABLE_BROKEN
 "http://www.ehrensenf.de/shows/ehrensenf/getarnte-bienen-schaukelmotorrad-devitohorror",

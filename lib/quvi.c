@@ -114,6 +114,7 @@ _host(sevenload)
 _host(vimeo)
 _host(spiegel)
 _host(dailymotion)
+_host(buzzhumor)
 #ifdef ENABLE_BROKEN
 _host(ehrensenf)
 _host(spyfilms)

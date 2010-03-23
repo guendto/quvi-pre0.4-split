@@ -38,7 +38,8 @@ host/spiegel.c \
 host/ehrensenf.c \
 host/dailymotion.c \
 host/spyfilms.c \
-host/youtube.c
+host/youtube.c \
+host/buzzhumor.c
 
 if ENABLE_SMUT
 src_host += \
