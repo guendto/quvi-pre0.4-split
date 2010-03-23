@@ -64,8 +64,7 @@ Edit the following files in the source tree:
 * src/quvi.c
   - add a test link to the "tests" array
 
-TODO: tests/Makefile.am
-TODO: tests/$domain_name.c
+TODO: tests/...
 
 
 Checklist: Before you submit your patch
