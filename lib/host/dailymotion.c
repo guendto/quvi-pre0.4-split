@@ -33,9 +33,9 @@ handle_dailymotion(const char *url, _quvi_video_t video) {
 
     req_format =
         strcmp(video->quvi->format, "flv") == 0
-        ? default_format
+        ? (char *)default_format
         : !is_format_supported(video->quvi->format, formats_dailymotion)
-          ? default_format
+          ? (char *)default_format
           : video->quvi->format;
 
     /* host id */
