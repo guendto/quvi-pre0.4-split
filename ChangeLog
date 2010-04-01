@@ -2,6 +2,9 @@
 Version 0.1.4
 -------------
 
+Changes:
+  * Add fmt37 (Youtube) support
+
 Bugfixes:
   * Youtube, update patterns to reflect website changes
     # symptom, no match: (?i)"video_id": "(.*?)"
