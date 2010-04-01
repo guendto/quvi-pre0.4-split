@@ -20,10 +20,10 @@
 _host_constants(youtube,
     "youtube.com", "flv|3gp|mp4|hq|hd|fmt34|fmt17|fmt18|fmt35|fmt22");
 
-_host_re(re_id,     "(?i)\"video_id\": \"(.*?)\"");
+_host_re(re_id,     "(?i)&video_id=(.*?)&");
 _host_re(re_title,  "(?i)<meta name=\"title\" content=\"(.*?)\"");
-_host_re(re_t,      "(?i)\"t\": \"(.*?)\"");
-_host_re(re_fmap,   "(?i)\"fmt_map\": \"(\\d+)");
+_host_re(re_t,      "(?i)&t=(.*?)&");
+_host_re(re_fmap,   "(?i)&fmt_map=(\\d+)");
 
 QUVIcode
 handle_youtube(const char *url, _quvi_video_t video) {
