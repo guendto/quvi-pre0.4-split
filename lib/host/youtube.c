@@ -140,6 +140,7 @@ handle_youtube(const char *url, _quvi_video_t video) {
             : lnk);
     }
 
+    _free(fmt_lnk);
     _free(lnk);
 
     return (QUVI_OK);
