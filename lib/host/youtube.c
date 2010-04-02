@@ -61,6 +61,8 @@ handle_youtube(const char *url, _quvi_video_t video) {
         return (rc);
     }
 
+    t = unescape(video->quvi, t);
+
     /* fmt_map */
     rc = regexp_capture(
         video->quvi,
