@@ -26,7 +26,7 @@
 #include "quvi/quvi.h"
 #include "internal.h"
 #include "util.h"
-#include "curl.h"
+#include "curl_wrap.h"
 
 static void *
 _realloc(void *p, const size_t size) {

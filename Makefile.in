@@ -250,6 +250,8 @@ libcurl_CFLAGS = @libcurl_CFLAGS@
 libcurl_LIBS = @libcurl_LIBS@
 libdir = @libdir@
 libexecdir = @libexecdir@
+liblua_CFLAGS = @liblua_CFLAGS@
+liblua_LIBS = @liblua_LIBS@
 libpcre_CFLAGS = @libpcre_CFLAGS@
 libpcre_LIBS = @libpcre_LIBS@
 localedir = @localedir@
@@ -287,7 +289,7 @@ quvi.pod
 @WITH_MAN_TRUE@dist_man_MANS = quvi.1
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libquvi.pc
-SUBDIRS = include lib src examples tests
+SUBDIRS = include lib src examples tests share
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

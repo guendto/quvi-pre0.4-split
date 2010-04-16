@@ -25,6 +25,7 @@
 #include "quvi/quvi.h"
 #include "internal.h"
 #include "host.h"
+#include "lua_wrap.h"
 
 #define is_invarg(p) \
     do { if (p == NULL) return (QUVI_INVARG); } while (0)
@@ -60,13 +61,13 @@ quvi_init (quvi_t *dst) {
     }
 
     /* set defaults */
-    quvi_setopt(quvi, QUVIOPT_FORMAT, "flv");
+    quvi_setopt(quvi, QUVIOPT_FORMAT, "default");
 
     csetopt(CURLOPT_USERAGENT,      "Mozilla/5.0");
     csetopt(CURLOPT_FOLLOWLOCATION, 1L);
     csetopt(CURLOPT_NOBODY,         0L);
 
-    return (QUVI_OK);
+    return (init_lua(quvi));
 }
 
 /* quvi_close */
@@ -78,114 +79,13 @@ quvi_close (quvi_t *handle) {
     quvi = (_quvi_t *)handle;
 
     if (quvi && *quvi) {
+        free_lua(quvi);
         _free((*quvi)->format);
         _free((*quvi)->errmsg);
         curl_easy_cleanup((*quvi)->curl);
         _free(*quvi);
         curl_global_cleanup();
     }
-}
-
-typedef QUVIcode 
-    (*handle_host_func)(const char *url, _quvi_video_t video);
-
-struct handle_host_lookup_s {
-    const char *domain;
-    handle_host_func func;
-    const char *formats;
-};
-
-#define _host(n) \
-    {domain_##n, handle_##n, formats_##n},
-
-static const struct handle_host_lookup_s
-hosts[] = {
-_host(youtube)
-_host(break)
-_host(cctv)
-_host(evisor)
-_host(clipfish)
-_host(funnyhub)
-_host(golem)
-_host(google)
-_host(liveleak)
-_host(myubo)
-_host(sevenload)
-_host(vimeo)
-_host(spiegel)
-_host(dailymotion)
-_host(buzzhumor)
-#ifdef ENABLE_BROKEN
-_host(ehrensenf)
-_host(spyfilms)
-#endif
-#ifdef ENABLE_SMUT
-_host(tube8)
-_host(xvideos)
-_host(youjizz)
-#endif
-/* Add new ones below. */
-{NULL, NULL, NULL}
-};
-#undef _host
-
-static QUVIcode
-handle_url (const char *url, _quvi_video_t video) {
-    int error_offset, pcre_code;
-    register unsigned int i;
-    const char *pcre_errmsg;
-    _quvi_t quvi;
-    QUVIcode rc;
-
-    is_invarg(url);
-    is_badhandle(video->quvi);
-
-    quvi = video->quvi;
-    rc   = QUVI_OK;
-
-    for (i=0; hosts[i].func; ++i) {
-        pcre *re;
-
-        re = pcre_compile(
-            hosts[i].domain,
-            PCRE_CASELESS,
-            &pcre_errmsg,
-            &error_offset,
-            NULL
-        );
-
-        if (!re) {
-            seterr(pcre_errmsg);
-            return (QUVI_PCRE);
-        }
-
-        pcre_code = pcre_exec(
-            re,
-            0,
-            url,
-            strlen(url),
-            0,
-            0,
-            0,
-            0
-        );
-
-        pcre_free(re);
-
-        if (pcre_code >= 0) /* match */ {
-            return (hosts[i].func(url, video));
-        }
-        else if (pcre_code == PCRE_ERROR_NOMATCH)
-            continue; /* move to next */
-        else { /* error */
-            seterr("pcre_exec: pcre_code = %d", pcre_code);
-            return (QUVI_PCRE);
-        }
-    }
-
-    seterr("no support: %s", url);
-
-    return (QUVI_NOSUPPORT);
 }
 
 /* quvi_parse */
@@ -217,8 +117,7 @@ quvi_parse (quvi_t quvi, char *url, quvi_video_t *dst) {
     video->page_link = /* spyvideos: strip any '#' */
         strepl(video->page_link, "#", "");
 
-    rc = handle_url(video->page_link, video);
-
+    rc = find_host_script(video);
     if (rc != QUVI_OK)
         return (rc);
 
@@ -226,6 +125,8 @@ quvi_parse (quvi_t quvi, char *url, quvi_video_t *dst) {
     if (video->charset)
         to_utf8(video);
 #endif
+    assert(video->title != NULL); /* must be set in the lua script */
+
     video->title =
         from_html_entities(video->title);
 
@@ -490,25 +391,46 @@ quvi_next_videolink (quvi_video_t handle) {
     return (QUVI_OK);
 }
 
-static int curr_host = -1;
+static llst_node_t curr_host = NULL;
 
 /* quvi_next_host */
 
 QUVIcode
-quvi_next_host (char **domain, char **formats) {
+quvi_next_host (quvi_t handle, char **domain, char **formats) {
+    struct lua_ident_s ident;
+    _quvi_t quvi;
+    QUVIcode rc;
 
-    is_invarg(domain);
-    is_invarg(formats);
+    is_badhandle(handle);
+    quvi = (_quvi_t) handle;
 
-    if (!hosts[++curr_host].domain) {
-        curr_host = -1;
-        return (QUVI_LAST);
+    if (!quvi->scripts)
+        return (QUVI_NOLUAWEBSITE);
+
+    if (!curr_host)
+        curr_host = quvi->scripts;
+    else {
+        curr_host = curr_host->next;
+        if (!curr_host)
+            return (QUVI_LAST);
     }
 
-    *domain  = (char *)hosts[curr_host].domain;
-    *formats = (char *)hosts[curr_host].formats;
+    ident.quvi    = quvi;
+    ident.url     = NULL;
+    ident.domain  = NULL;
+    ident.formats = NULL;
 
-    return (QUVI_OK);
+    rc = run_ident_func (&ident, curr_host);
+
+    *domain  = ident.domain;
+    *formats = ident.formats;
+
+    /*
+     * Scripts will return QUVI_NOSUPPORT because
+     * of the "ident.url=0" above. This is OK since
+     * we ignore the "will_handle" value altogether.
+     */
+    return (rc == QUVI_NOSUPPORT ? QUVI_OK : rc);
 }
 
 #undef is_badhandle
@@ -526,6 +448,8 @@ quvi_strerror (quvi_t handle, QUVIcode code) {
         "curl initialization failed",
         "end of list iteration",
         "aborted by callback",
+        "lua initilization failed",
+        "lua website scripts not found",
         "invalid error code (internal _INTERNAL_QUVI_LAST)"
     };
 
@@ -541,7 +465,6 @@ quvi_strerror (quvi_t handle, QUVIcode code) {
     }
 
     return ((char *)errormsgs[code]);
-
 }
 
 /* quvi_version */

@@ -1,0 +1,119 @@
+
+1. Foreword
+===========
+
+This directory contains the website specific scripts that quvi
+uses to parse the video links. If video link parsing ever "breaks",
+these are the scripts that you will want to take a look at first.
+
+The scripts are written in Lua. If you are new to Lua,
+<http://www.lua.org/pil/> is a good place to start.
+
+
+2. Structure of an quvi website script
+======================================
+
+Each script must contain the following functions:
+  * ident
+  * parse
+
+These functions are described below.
+
+
+2.1. function ident (page_url)
+------------------------------
+
+This function is used by quvi to identify the script
+and match the user specified video page URL to a script
+capable of handling the URL.
+
+Parameters:
+  * page_url (string)
+
+Returns:
+  * A table containing the following keys
+
+    - domain (string)
+
+      - This string is used to match page URL to domain
+
+      - The string must cover any TLDs and additional domain names
+
+      - e.g. "youtube.com", "video.google."
+
+    - formats (string)
+
+      - An "array" of supported video format IDs that the website (and
+      the script supports, each format ID is expected to be separated
+      with a pipe character ('|')
+
+      - All scripts should at least define "default" in this string
+
+      - If the script supports more than one format, and the script
+      is capable of figuring out which of those are "best", the
+      string should also include "best" format ID (see dailymotion.lua
+      and youtube.lua for an example of this)
+
+      - e.g. "default|best|hd|hq"
+
+    - will_handle (boolean)
+
+      - If the script can handle the URL provided in the page_url
+      variable, it should set "will_handle" to true, otherwise set
+      it to false
+
+
+2.2. function parse (video)
+---------------------------
+
+quvi calls this function to handle the user specified video page URL.
+Unlike the ident function (described above), this function can vary
+greatly depending on the website. For a comparison, see buzzhumor.lua
+and youtube.lua scripts.
+
+Note that the function must update the following video details.
+  * host_id (string)
+  * title (string)
+  * id (string)
+  * url (array of strings)
+
+Parameters:
+  * video (table), contains the following keys
+    - page_url (string)
+    - requested_format (string)
+
+Returns:
+  * An updated table containing the video details
+
+
+3. Lua API
+==========
+
+All of the functions exposed to the lua scripts are in the "quvi" object.
+For example, "quvi.fetch(url)" would fetch and return the contents of
+the URL.
+
+
+3.1. Function: quvi.fetch
+-------------------------
+
+Parameters:
+  * url (string) - URL to fetch
+  * what (string) - "page", "config" or "playlist"
+
+`what' will be translated to a QUVIstatusType defined in the
+quvi.h header file. If what is undefined (nil), quvi will
+default to "page".
+
+Returns:
+  * Fetched contents of the URL
+
+
+3.2. Function: quvi.unescape
+----------------------------
+
+Parameters:
+  * string
+
+Returns:
+  * Unescaped string of the `string'

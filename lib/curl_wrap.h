@@ -15,8 +15,8 @@
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef curl_h
-#define curl_h
+#ifndef curl_wrap_h
+#define curl_wrap_h
 
 QUVIcode
 fetch_to_mem(_quvi_video_t video,

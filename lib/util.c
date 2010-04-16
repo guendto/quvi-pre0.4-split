@@ -32,7 +32,7 @@
 
 #include "quvi/quvi.h"
 #include "internal.h"
-#include "curl.h"
+#include "curl_wrap.h"
 #include "util.h"
 
 QUVIcode
@@ -335,7 +335,7 @@ unescape(_quvi_t quvi, char *s) {
     assert(quvi != 0);
     assert(quvi->curl != 0);
 
-    tmp = curl_easy_unescape(quvi->curl, s, 0, 0);
+    tmp = curl_easy_unescape(quvi->curl, s, 0, NULL);
     assert(tmp != 0);
     ret = strdup(tmp);
     curl_free(tmp);

@@ -92,6 +92,7 @@ AC_DEFINE_UNQUOTED([BUILD_DATE], "$build_date", [...])
 AM_ICONV
 PKG_CHECK_MODULES(libcurl, libcurl >= 7.18.0)
 PKG_CHECK_MODULES(libpcre, libpcre >= 7.8)
+PKG_CHECK_MODULES(liblua, lua >= 5.1)
 
 # Checks for header files.
 AC_HEADER_STDC # `stdlib.h', `stdarg.h', `string.h', ...
@@ -109,7 +110,7 @@ if [ test x"$host_w32" = "xno" ]; then
     AC_FUNC_MALLOC
     AC_FUNC_REALLOC
 fi
-AC_CHECK_FUNCS([memset strdup strstr strtol strerror strcspn])
+AC_CHECK_FUNCS([memset strdup strstr strtol strerror strcspn getcwd])
 AC_FUNC_STRTOD
 
 have_asprintf=no
@@ -180,6 +181,7 @@ AC_CONFIG_FILES([
     include/quvi/Makefile
     include/quvi/quvi.h
     lib/Makefile
+    share/Makefile
     src/Makefile
     examples/Makefile
     tests/Makefile

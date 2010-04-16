@@ -16,7 +16,7 @@ endif
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libquvi.pc
 
-SUBDIRS = include lib src examples tests
+SUBDIRS = include lib src examples tests share
 
 .PHONY: man dox cmdline
 man:

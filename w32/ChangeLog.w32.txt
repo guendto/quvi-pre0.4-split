@@ -1,0 +1,13 @@
+
+This file details the w32 binary package changes only.
+
+0.1.5
+-----
+
+Changes:
+  * Include license files
+  * Add liblua51.dll
+  * Bump libcurl to 7.20.1
+    - Add --disable-ldap
+    - Add --disable-rtsp
+  * Bump libpcre to 8.02

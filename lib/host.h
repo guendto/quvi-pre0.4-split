@@ -26,7 +26,7 @@
 
 #include "quvi/quvi.h"
 #include "internal.h"
-#include "curl.h"
+#include "curl_wrap.h"
 #include "util.h"
 
 /* Host specific handler functions. */
