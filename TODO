@@ -1,12 +1,9 @@
 
 * finish lua scripts
 * remove lib/host/
-* AM_SILENT_RULES
-* document quvi_next_host example (c api)
 * document lua script search paths
   - c api
   - quvi.1
-* src/quvi.c: remove init line from output
 * document QUVI_BASEDIR example
   - e.g. mkdir tmp; cd tmp; ../configure && make && QUVI_BASEDIR=../share ./src/quvi -t youtube
 * --enable-smut
