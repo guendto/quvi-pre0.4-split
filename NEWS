@@ -1,4 +1,68 @@
 
+Version 0.1.5
+=============
+
+Command line tool (quvi)
+
+* --format,-f no longer accepts only hard-coded values
+
+Library (libquvi)
+
+Plenty of changes. Developers should read these changes carefully,
+especially the "API changes".
+
+Introduce Lua <http://lua.org> scripts. The fetching and parsing are
+now done in scripts. This has a few advantages to the old design.
+
+  * Dynamic script loading
+    - Scripts can be dropped in (and removed from) the search path
+    - See more about the search paths in quvi(1) and C API
+
+  * No need to tweak C source code or recompile quvi
+    - Faster and easier prototyping for new websites
+      - Without having to dig into the C source code
+    - Contributors unfamiliar with C
+      - Lua is an easier language to understand
+      - May now contribute by writing Lua scripts
+      - There are plenty of examples (share/lua/ subdir) to learn from
+
+These changes meant removing and converting the host specific code to lua
+scripts. These scripts can be found in $top_srcdir/share/ directory.
+They are installed typically to $prefix/share/quvi/lua/hosts/ directory.
+
+Video format IDs were updated (see below). The previous releases
+used incorrectly file suffices (e.g. "mp4") as format IDs, but
+should not be treated as such if the website provides some more
+sensible way to identify different available formats.
+
+New project dependencies
+------------------------
+* Lua <http://lua.org/>
+
+Video format changes
+--------------------
+This is an attempt to stadardize the formats array, and remove some
+of the old (and usually missleading) format IDs.
+
+* "Default" format was previously (for historical reasons) called "flv"
+  - As of this release, "default" format stands for "default"
+  - "flv" was missleading and incorrect (for some websites)
+* Youtube
+  - Cleanup: remove old vague IDs (e.g. "mp4")
+  - May require further tweaking
+* Google
+  - Removed "mp4"
+  - May be restored later (with appropriate format ID, "mp4" isn't such)
+
+API changes
+-----------
+* Additional Lua related QUVIcodes
+* quvi_next_host
+  - Old: QUVIcode quvi_next_host (char **domain, char **formats)
+    New: QUVIcode quvi_next_host (quvi_t, char **domain, char **formats)
+  - Note that both "domain" and "formats" must now be freed after use
+
+
 Version 0.1.2
 -------------
 
