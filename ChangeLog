@@ -1,4 +1,16 @@
 
+Version 0.1.5
+-------------
+
+Changes:
+  * Introduce Lua scripting to website video link parsing
+    - See NEWS file for a more complete description
+    - New dependency, (lib)lua 5.1+, see INSTALL file
+  * API changes, quvi_next_host
+    - See NEWS file for a more complete description
+  * quvi, --format, -f no longer accepts only hard-coded values
+
+
 Version 0.1.4
 -------------
 April 3, 2010
