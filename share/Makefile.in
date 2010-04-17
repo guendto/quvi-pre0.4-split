@@ -234,6 +234,11 @@ lua/website/evisor.lua \
 lua/website/funnyhub.lua \
 lua/website/golem.lua \
 lua/website/google.lua \
+lua/website/liveleak.lua \
+lua/website/myubo.lua \
+lua/website/sevenload.lua \
+lua/website/spiegel.lua \
+lua/website/vimeo.lua \
 lua/website/youtube.lua
 
 EXTRA_DIST = $(DIST_lua)

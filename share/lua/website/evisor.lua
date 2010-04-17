@@ -62,8 +62,7 @@ function parse (video)
 
     -- This is my video URL.
     local _,_,s = page:find('file=(.-)"')
-    s           = s or error ("no match: file")
-    video.url   = {s}
+    video.url   = {s or error ("no match: file")}
 
     -- Return the updated video properties.
     return video

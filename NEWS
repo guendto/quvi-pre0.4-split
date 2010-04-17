@@ -57,6 +57,10 @@ Get on with the program, blatant objections will be directed to /dev/null.
 
   - Removed the "mp4" format, does someone still actually use this website?
 
+* Spiegel
+
+  - Default to vp6_388, previously vp6_64
+
 
 API changes
 -----------

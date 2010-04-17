@@ -29,10 +29,10 @@ function ident (page_url)
     local t = {}
 
     -- This is my domain.
-    t.domain = "buzzhumor.com"
+    t.domain = "vimeo.com"
 
     -- This is my formats-string.
-    t.formats = "default"
+    t.formats = "default|best|hd"
 
     -- This is my response to "Will you handle this URL?"
     -- Note that page_url may be nil.
@@ -47,22 +47,46 @@ end
 function parse (video)
 
     -- This is my "host ID".
-    video.host_id = "buzzhumor"
+    video.host_id = "vimeo"
 
     -- Fetch video page.
     local page = quvi.fetch(video.page_url)
 
-    -- This is my video title.
-    local _,_,s = page:find("<title>(.-)</title>")
-    video.title = s or error ("no match: video title")
-
     -- This is my video ID.
-    local _,_,s = page:find("/videos/(%d+)")
+    local _,_,s = page:find('clip_id=(.-)"')
     video.id    = s or error ("no match: video id")
 
+    -- Fetch config.
+    local config_url = "http://vimeo.com/moogaloop/load/clip:" .. video.id
+    local config = quvi.fetch(config_url, "config")
+
+    -- This is my video title.
+    local _,_,s = config:find("<caption>(.-)</")
+    video.title = s or error ("no match: video title")
+
+    -- Other details used to construct the video URL.
+    local _,_,s = config:find("<request_signature>(.-)</")
+    local sign  = s or error ("no match: request signature")
+
+    local _,_,s = config:find("<request_signature_expires>(.-)</")
+    local exp   = s or error ("no match: request signature expires")
+
+    local _,_,s     = config:find("<hd_button>(%d)</")
+    local hd_button = s or error ("no match: hd button")
+
+    -- Choose correct format.
+    local q = "sd" -- Same as "default".
+    if (video.requested_format == "hd" or video.requested_format == "best") then
+        if (hd_button == "1") then
+            q = "hd"
+        end
+    end
+
     -- This is my video URL.
-    local _,_,s = page:find('&file=(.-)"')
-    video.url   = {s or error ("no match: file")}
+    video.url = {
+        string.format("http://vimeo.com/moogaloop/play/clip:%s/%s/%s/?q=%s",
+            video.id, sign, exp, q)
+    }
 
     -- Return the updated video properties.
     return video

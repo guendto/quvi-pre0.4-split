@@ -1,5 +1,7 @@
 
 * finish lua scripts
+  - smut
+  - broken
 * remove lib/host/
 * document lua script search paths
   - c api

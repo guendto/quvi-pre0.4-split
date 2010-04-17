@@ -17,7 +17,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 ]]--
 
 -- If you make improvements to this script, drop a line. Thanks.
@@ -25,10 +24,11 @@
 
 -- These are my formats.
 local lookup = {
-    mobile_3gp = "17",
-    hq_480p    = "18",
-    hd_720p    = "22",
-    hd_1080p   = "37"
+    default   = "VP6_388",
+    best      = "H264_1400",
+    ["576k"]  = "VP6_576",
+    ["928k"]  = "VP6_928",
+    ["1400k"] = "H264_1400"
 }
 
 -- Returns script details.
@@ -38,14 +38,14 @@ function ident (page_url)
     local t = {}
 
     -- This is my domain.
-    t.domain = "youtube.com"
+    t.domain = "spiegel.de"
 
     -- This is my formats-string.
     t.formats = ""
     for k,_ in pairs (lookup) do
         t.formats = t.formats .."|".. k
     end
-    t.formats = "default|best" .. t.formats
+    t.formats = t.formats:gsub("^%|","")
 
     -- This is my response to "Will you handle this URL?"
     -- Note that page_url may be nil.
@@ -60,59 +60,48 @@ end
 function parse (video)
 
     -- This is my "host ID".
-    video.host_id = "youtube"
-
-    -- Fetch video page.
-    local page = quvi.fetch(video.page_url)
-
-    -- This is my video title.
-    local _,_,s = page:find('<meta name="title" content="(.-)"')
-    video.title = s or error ("no match: video title")
+    video.host_id = "spiegel"
 
     -- This is my video ID.
-    local _,_,s = page:find('&video_id=(.-)&')
+    local _,_,s = video.page_url:find("/video/video%-(.-)%.")
     video.id    = s or error ("no match: video id")
 
-    -- This is my t param used to construct the video URL.
-    local _,_,s = page:find('&t=(.-)&')
-    local t     = s or error ("no match: t param")
-    t = quvi.unescape(t)
+    -- Skip video page. Fetch playlist.
+    local playlist_url = string.format(
+        "http://www1.spiegel.de/active/playlist/fcgi/playlist.fcgi/"
+        .. "asset=flashvideo/mode=id/id=%s", video.id)
 
-    -- Construct the video URL.
-    local video_url = 
-        string.format(
-            "http://youtube.com/get_video?video_id=%s&t=%s",
-                video.id, t)
+    local playlist = quvi.fetch(playlist_url, "playlist")
 
-    -- Grab "best" available video format id.
-    -- Note that nil should not result in error.
-    local _,_,best_format = page:find('&fmt_map=(%d+)')
+    -- This is my video title.
+    local _,_,s = playlist:find("<headline>(.-)</")
+    video.title = s or error ("no match: video title")
 
-    if (best_format == nil) then
-        print ("quvi: warning: no match: best format, using default")
-    end
+    -- Fetch config.
+    local config_url = string.format(
+        "http://video.spiegel.de/flash/%s.xml", video.id)
 
-    -- Choose correct fmt ID. Default to nil.
-    local fmt_id = nil
+    local config = quvi.fetch(config_url, "config")
 
-    if (video.requested_format == "best") then
-        fmt_id = best_format or fmt_id
-    else
-        for k,v in pairs (lookup) do
-            if (k == video.requested_format) then
-                fmt_id = v
-                break
-            end
+    -- Choose correct format.
+    local format = lookup[default]
+
+    for k,v in pairs (lookup) do
+        if (k == video.requested_format) then
+            format = v
+            break
         end
     end
 
-    -- And append it.
-    if (fmt_id ~= nil) then
-        video_url = video_url .. "&fmt=" .. fmt_id
+    -- Match format string to link in config.
+    local pattern = "<filename>(%d+)_(%d+)x(%d+)_(%w+)_(%d+).(%w+)"
+    for id,w,h,c,b,s in config:gfind(pattern) do
+        fname = string.format("%s_%sx%s_%s_%s.%s",id,w,h,c,b,s)
+        if (format == string.format("%s_%s",c,b)) then
+            video.url = {"http://video.spiegel.de/flash/"..fname}
+            break
+        end
     end
-
-    -- Set my video URL.
-    video.url = {video_url}
 
     -- Return the updated video properties.
     return video

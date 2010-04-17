@@ -73,8 +73,7 @@ function parse (video)
 
     -- This is my video URL.
     local _,_,s = config:find("&url=(.-)&")
-    s           = s or error ("no match: url")
-    video.url   = {s}
+    video.url   = {s or error ("no match: url")}
 
     -- Return the updated video properties.
     return video
