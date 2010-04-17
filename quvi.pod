@@ -191,6 +191,6 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
 
 =head1 AUTHOR
 
-Toni Gundogdu <legatvs@gmail.com> et al.
+Toni Gundogdu <legatvs@gmail.com>.
 
 =cut
