@@ -35,9 +35,15 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
+@ENABLE_SMUT_TRUE@am__append_1 = \
+@ENABLE_SMUT_TRUE@lua/website/tube8.lua \
+@ENABLE_SMUT_TRUE@lua/website/xvideos.lua \
+@ENABLE_SMUT_TRUE@lua/website/youjizz.lua
+
+@ENABLE_BROKEN_TRUE@am__append_2 = 
 subdir = share
-DIST_COMMON = $(nobase_dist_pkgdata_DATA) $(srcdir)/Makefile.am \
-	$(srcdir)/Makefile.in
+DIST_COMMON = $(am__nobase_dist_pkgdata_DATA_DIST) \
+	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
@@ -57,6 +63,16 @@ am__v_at_ = $(am__v_at_$(AM_DEFAULT_VERBOSITY))
 am__v_at_0 = @
 SOURCES =
 DIST_SOURCES =
+am__nobase_dist_pkgdata_DATA_DIST = lua/README lua/website/README \
+	lua/website/break.lua lua/website/buzzhumor.lua \
+	lua/website/cctv.lua lua/website/clipfish.lua \
+	lua/website/dailymotion.lua lua/website/evisor.lua \
+	lua/website/funnyhub.lua lua/website/golem.lua \
+	lua/website/google.lua lua/website/liveleak.lua \
+	lua/website/myubo.lua lua/website/sevenload.lua \
+	lua/website/spiegel.lua lua/website/vimeo.lua \
+	lua/website/youtube.lua lua/website/tube8.lua \
+	lua/website/xvideos.lua lua/website/youjizz.lua
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -222,25 +238,15 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-DIST_lua = \
-lua/README \
-lua/website/README \
-lua/website/break.lua \
-lua/website/buzzhumor.lua \
-lua/website/cctv.lua \
-lua/website/clipfish.lua \
-lua/website/dailymotion.lua \
-lua/website/evisor.lua \
-lua/website/funnyhub.lua \
-lua/website/golem.lua \
-lua/website/google.lua \
-lua/website/liveleak.lua \
-lua/website/myubo.lua \
-lua/website/sevenload.lua \
-lua/website/spiegel.lua \
-lua/website/vimeo.lua \
-lua/website/youtube.lua
-
+DIST_lua = lua/README lua/website/README lua/website/break.lua \
+	lua/website/buzzhumor.lua lua/website/cctv.lua \
+	lua/website/clipfish.lua lua/website/dailymotion.lua \
+	lua/website/evisor.lua lua/website/funnyhub.lua \
+	lua/website/golem.lua lua/website/google.lua \
+	lua/website/liveleak.lua lua/website/myubo.lua \
+	lua/website/sevenload.lua lua/website/spiegel.lua \
+	lua/website/vimeo.lua lua/website/youtube.lua $(am__append_1) \
+	$(am__append_2)
 EXTRA_DIST = $(DIST_lua)
 nobase_dist_pkgdata_DATA = $(DIST_lua)
 all: all-am

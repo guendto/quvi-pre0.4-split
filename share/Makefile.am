@@ -19,6 +19,17 @@ lua/website/spiegel.lua \
 lua/website/vimeo.lua \
 lua/website/youtube.lua
 
+if ENABLE_SMUT
+DIST_lua += \
+lua/website/tube8.lua \
+lua/website/xvideos.lua \
+lua/website/youjizz.lua
+endif
+
+if ENABLE_BROKEN
+DIST_lua +=
+endif
+
 EXTRA_DIST = $(DIST_lua)
 
 nobase_dist_pkgdata_DATA = $(DIST_lua)
