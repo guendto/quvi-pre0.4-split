@@ -18,9 +18,13 @@
 #include "config.h"
 
 #include <string.h>
+#ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
+#endif
 #include <dirent.h>
+#ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
 #include <assert.h>
 
 #include <lualib.h>
@@ -402,8 +406,6 @@ run_ident_func (lua_ident_t ident, llst_node_t node) {
         luaL_error(l, "expected `ident' function to return a table");
 
     lua_pop(l, 1);
-
-    /* TODO: check that all mandatory values were set by the script. */
 
     return (rc);
 }
