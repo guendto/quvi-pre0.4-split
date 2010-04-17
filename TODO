@@ -1,11 +1,2 @@
-* document lua script search paths
-  - c api
-  - quvi.1
-* document QUVI_BASEDIR example
-  - e.g. mkdir tmp; cd tmp; ../configure && make && QUVI_BASEDIR=../share ./src/quvi -t youtube
-* update docs/howtos
 * bump interface
 * bump libquvi.ver
-* move howtos to share/
-* move url dewrangling into from lib/quvi.c into appropriate scripts
-* clear out any remaining TODOs in lib/ files
