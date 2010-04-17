@@ -74,9 +74,6 @@ sub run_t {
     my @args    = ("-t", @_);
     my @formats = parse_formats($_[0]);
 
-    push @formats, "best"
-        if scalar @formats > 1;
-
     my $rc;
     foreach (@formats) {
         $rc = run( ("-f", $_, @args) );
