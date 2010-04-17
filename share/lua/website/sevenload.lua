@@ -53,13 +53,14 @@ function parse (video)
     local page = quvi.fetch(video.page_url)
 
     -- This is my video title.
-    local _,_,s = page:find("<title>(.-)%s+-%s+sevenload")
+    local _,_,s = page:find('<div class="itemTitle">(.-)</')
     video.title = s or error ("no match: video title")
 
     -- Fetch config.
     local _,_,s      = page:find('configPath=(.-)"')
     local config_url = s or error ("no match: config")
-    local config     = quvi.fetch(quvi.unescape(config_url), "config")
+    config_url       = quvi.unescape(config_url) -- Done separately, see ID
+    local config     = quvi.fetch(config_url, "config")
 
     -- This is my video ID.
     local _,_,s = config_url:find("itemId=(%w+)")
