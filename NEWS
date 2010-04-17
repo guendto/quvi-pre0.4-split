@@ -2,16 +2,9 @@
 Version 0.1.5
 =============
 
-Command line tool (quvi)
+* Developers should read these changes carefully, especially the "API changes"
 
-* --format,-f no longer accepts only hard-coded values
-
-Library (libquvi)
-
-Plenty of changes. Developers should read these changes carefully,
-especially the "API changes".
-
-Introduce Lua <http://lua.org> scripts. The fetching and parsing are
+* Introduce Lua <http://lua.org> scripts. The fetching and parsing are
 now done in scripts. This has a few advantages to the old design.
 
   * Dynamic script loading
@@ -30,37 +23,54 @@ These changes meant removing and converting the host specific code to lua
 scripts. These scripts can be found in $top_srcdir/share/ directory.
 They are installed typically to $prefix/share/quvi/lua/hosts/ directory.
 
-Video format IDs were updated (see below). The previous releases
-used incorrectly file suffices (e.g. "mp4") as format IDs, but
-should not be treated as such if the website provides some more
-sensible way to identify different available formats.
+* There have been format ID changes, we're trying to weed out the
+vague format IDs from the library, e.g. "mp4" could have multiple
+meanings or double standards. More sensible IDs such as "hq" or
+"hd" are encouraged to be used instead where/if possible, see below
 
-New project dependencies
-------------------------
-* Lua <http://lua.org/>
 
-Video format changes
---------------------
-This is an attempt to stadardize the formats array, and remove some
-of the old (and usually missleading) format IDs.
+Video format (ID) changes
+-------------------------
 
-* "Default" format was previously (for historical reasons) called "flv"
-  - As of this release, "default" format stands for "default"
-  - "flv" was missleading and incorrect (for some websites)
+Get on with the program, blatant objections will be directed to /dev/null.
+
+* "Default" format was previously (for historical reasons) called only "flv"
+
+  - "flv" refers to Adobe flash format but in reality some of the websites
+  default to completely different formats
+
+  - The "default format" is as of this release referred to as "default",
+  see `quvi --hosts' to get the idea
+
 * Youtube
-  - Cleanup: remove old vague IDs (e.g. "mp4")
-  - May require further tweaking
+
+  - Both cclive and clive have used vague IDs for different Youtube format IDs,
+  a.k.a. "fmtID", we're trying to "standardize" these IDs by coming up with
+  suitable (and more understandable) IDs for them, e.g. "hq_480p" or "hd_1080p"
+
+  - Further ID tweaking may still be required as the intertubes is full of
+  hear say and inaccurate information about these formats, having said that,
+  one shouldn't hardcode these values in applications depending on libquvi,
+  instead use the iteration function and parse the library returned format IDs
+
 * Google
-  - Removed "mp4"
-  - May be restored later (with appropriate format ID, "mp4" isn't such)
+
+  - Removed the "mp4" format, does someone still actually use this website?
+
 
 API changes
 -----------
-* Additional Lua related QUVIcodes
-* quvi_next_host
-  - Old: QUVIcode quvi_next_host (char **domain, char **formats)
-    New: QUVIcode quvi_next_host (quvi_t, char **domain, char **formats)
-  - Note that both "domain" and "formats" must now be freed after use
+* New QUVIcodes (Lua related)
+
+* quvi_next_host is now deprecated
+
+  - quvi_next_host returns nothing and should no longer be used
+
+  - Use quvi_next_supported_website instead, prototypes are similar
+
+  - Conversion is simple, see API documentation or src/quvi.c for an example
+
+  - Note that both "domain" and "formats" must now be freed
 
 
 Version 0.1.2
