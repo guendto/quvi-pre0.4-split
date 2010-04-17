@@ -180,8 +180,6 @@ find_lua_scripts (_quvi_t quvi) {
             return (rc);
     }
 
-    /* TODO: $prefix/share */
-
     /* Current working directory. */
     asprintf(&path, "%s/%s", getcwd(buf,sizeof(buf)), luawebsite_dir);
     rc = scan_lua_scripts(quvi, path);
