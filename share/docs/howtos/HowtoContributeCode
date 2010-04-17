@@ -1,0 +1,122 @@
+Howto: Add support for another video website
+============================================
+
+1. About
+--------
+
+libquvi fetches and parses video page contents for various
+video details and constructs the video download link from
+these parsed details. The project also contains the "quvi"
+executable which can be used to develop support for another
+website.
+
+As of 0.1.5 quvi uses Lua for scripting support allowing
+easy development for new websites and maintainment of
+the current support.
+
+Most video websites do not announce details about the videos or
+publish direct download links to them. This is obviously a shame,
+primarily because Adobe Flash is a hog and poorly supported.
+For those of us on non-w32 systems, downloading the video is
+the only viable choice.
+
+It remains to be seen how HTML5 and its video tag will eventually
+pan out.
+
+
+2. Checklist: Before you look any further
+-----------------------------------------
+
+Before you read any further, please note that quvi isn't intended
+to cover video websites that already allow downloading the hosted
+videos. The project focuses on websites that require Adobe Flash
+unconditionally to view any of the videos.
+
+* Does the website allow video downloading?
+  - If yes, then there is no reason to add support for it
+    - libquvi is intended to work around the flash requirement
+    - Such patches will not be committed to the development tree
+
+
+3. The hacker within
+--------------------
+
+It's all about figuring out how we can access the videos without
+Adobe Flash. You can get a good idea of the differences of video
+websites by going over some of the current lua/website/ scripts.
+
+When things get hairy, extra steps may be required. For an
+example of this, see here:
+  http://code.google.com/p/clive/issues/detail?id=6#c7
+
+Once the data has been analyzed and the link construction
+figured out, leaving us with the task of whipping up the
+code. That is typically the easiest part of all.
+
+
+4. Writing the code
+-------------------
+
+This used to be a fairly tedious process in the past but with
+the release of 0.1.5 it got a lot easier. We previously had
+to tweak several C source code and GNU Autotools files just
+to get it all work together.
+
+With 0.1.5 you could do the following:
+
+  mkdir -p foo/lua/website/; cd foo
+  cp $prefix/share/quvi/lua/website/buzzhumor.lua lua/website/bar.lua
+  git init; git add .; git commit -am 'initial.'
+  (
+    * edit lua/website/bar.lua
+    * run "quvi" in the working directory, e.g. "quvi SOME_TEST_URL"
+    * repeat above two until happy
+  )
+  git commit -am 'add support for foo.'
+  git format-patch -M -1
+  (submit your patch, see below)
+
+You can read more about the script search paths from
+$prefix/share/quvi/lua/README file. Here's another example:
+
+  cd $quvi_top_srcdir
+  mkdir tmp; cd tmp
+  ../configure
+  make
+  QUVI_BASEDIR=../share ./src/quvi -t youtube
+
+You can define QUVI_BASEDIR to point quvi to a custom script
+directory. This definition has the highest priority, making
+it useful when whipping up your own patches -- allowing,
+for example, development take place on systems with only
+binaries installed.
+
+
+5. Checklist: Before you submit your patch
+------------------------------------------
+
+* Does the website support multiple formats?
+  - If yes, then consider adding support for them as well
+    - If there's limited or no data available on this, skip
+    - We can always look into this later when/if more data unfolds
+
+* Does your code parse everything correctly?
+  - Video ID
+  - Video title
+  - Video link
+
+* Does your code cleanup the video title?
+  - We want the video title only
+  - Anything else, e.g. domain name should be excluded from the title
+
+* Did you confirm that all of the above works?
+  - e.g. quvi URL
+
+* Add your name to the copyright notice
+  - We will default to "Copyright (C) 201x quvi team" by default
+
+
+6. Submitting patches
+---------------------
+
+See $prefix/share/quvi/docs/howtos/HowtoSubmitPatches for details.

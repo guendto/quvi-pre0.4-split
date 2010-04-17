@@ -31,7 +31,10 @@ DIST_lua +=
 endif
 
 DIST_howtos = \
-docs/howtos/ContributeCode
+docs/howtos/HowtoContributeCode \
+docs/howtos/HowtoGetDevelopmentCode \
+docs/howtos/HowtoHelp \
+docs/howtos/HowtoSubmitPatches
 
 EXTRA_DIST = $(DIST_lua) $(DIST_howtos)
 
