@@ -11,6 +11,7 @@ Changes:
     - use quvi_next_supported_website instead
     - See NEWS file for a more complete description
   * quvi, --format, -f no longer accepts only hard-coded values
+  * AM_SILENT_RULES([yes])
 
 
 Version 0.1.4
