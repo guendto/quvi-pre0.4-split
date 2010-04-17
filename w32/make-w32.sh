@@ -52,15 +52,17 @@ pack_it()
     && make install-strip \
     && make man \
     && cp $curl_dll dist/bin \
-    && cp $CURL_PREFIX/COPYING dist/libcurl-COPYING.TXT \
     && cp $pcre_dll dist/bin \
-    && cp $PCRE_PREFIX/LICENCE dist/libpcre-LICENSE.TXT \
     && cp $iconv_dll dist/bin \
-    && cp $ICONV_PREFIX/COPYING.LIB dist/libiconv-COPYING.TXT \
     && cp $lua_dll dist/bin \
-    && cp $LUA_PREFIX/COPYRIGHT dist/liblua-COPYRIGHT.TXT \
+    && mkdir -p dist/licenses \
+    && cp $CURL_PREFIX/COPYING dist/licenses/libcurl-COPYING.TXT \
+    && cp $PCRE_PREFIX/LICENCE dist/licenses/libpcre-LICENSE.TXT \
+    && cp $ICONV_PREFIX/COPYING.LIB dist/licenses/libiconv-COPYING.TXT \
+    && cp $LUA_PREFIX/COPYRIGHT dist/licenses/liblua-COPYRIGHT.TXT \
     && cp -r ../share/lua dist/bin \
-    && cp ../COPYING dist/quvi-COPYING.txt \
+    && cp -r ../share/docs dist/ \
+    && cp ../COPYING dist/licenses/quvi-COPYING.txt \
     && cp ../ChangeLog dist/ChangeLog.txt \
     && cp ChangeLog.w32.txt dist/ \
     && cp quvi.1.html dist/ \
