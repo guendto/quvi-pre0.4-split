@@ -288,9 +288,6 @@ EXTRA_DIST = \
 libquvi.pc.in \
 libquvi.ver \
 doxygen.conf.in \
-docs/howto/HowtoHelp \
-docs/howto/HowtoAddSupport \
-docs/howto/HowtoSubmitPatches \
 quvi.pod
 
 @WITH_MAN_TRUE@dist_man_MANS = quvi.1

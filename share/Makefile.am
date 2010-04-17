@@ -35,4 +35,4 @@ docs/howtos/ContributeCode
 
 EXTRA_DIST = $(DIST_lua) $(DIST_howtos)
 
-nobase_dist_pkgdata_DATA = $(DIST_lua)
+nobase_dist_pkgdata_DATA = $(DIST_lua) $(DIST_howtos)

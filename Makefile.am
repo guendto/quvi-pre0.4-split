@@ -4,9 +4,6 @@ EXTRA_DIST = \
 libquvi.pc.in \
 libquvi.ver \
 doxygen.conf.in \
-docs/howto/HowtoHelp \
-docs/howto/HowtoAddSupport \
-docs/howto/HowtoSubmitPatches \
 quvi.pod
 
 if WITH_MAN

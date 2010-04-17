@@ -72,7 +72,8 @@ am__nobase_dist_pkgdata_DATA_DIST = lua/README lua/website/README \
 	lua/website/myubo.lua lua/website/sevenload.lua \
 	lua/website/spiegel.lua lua/website/vimeo.lua \
 	lua/website/youtube.lua lua/website/tube8.lua \
-	lua/website/xvideos.lua lua/website/youjizz.lua
+	lua/website/xvideos.lua lua/website/youjizz.lua \
+	docs/howtos/ContributeCode
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -251,7 +252,7 @@ DIST_howtos = \
 docs/howtos/ContributeCode
 
 EXTRA_DIST = $(DIST_lua) $(DIST_howtos)
-nobase_dist_pkgdata_DATA = $(DIST_lua)
+nobase_dist_pkgdata_DATA = $(DIST_lua) $(DIST_howtos)
 all: all-am
 
 .SUFFIXES:
