@@ -1,6 +1,5 @@
 
 * finish lua scripts
-  - smut
   - broken
 * remove lib/host/
 * document lua script search paths
@@ -12,6 +11,8 @@
 * update docs/howtos
 * bump interface
 * bump libquvi.ver
+* move howtos to share/
+* move website specific url magic into scripts
 
 
 Pending - help appreciated
