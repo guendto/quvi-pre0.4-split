@@ -247,7 +247,10 @@ DIST_lua = lua/README lua/website/README lua/website/break.lua \
 	lua/website/sevenload.lua lua/website/spiegel.lua \
 	lua/website/vimeo.lua lua/website/youtube.lua $(am__append_1) \
 	$(am__append_2)
-EXTRA_DIST = $(DIST_lua)
+DIST_howtos = \
+docs/howtos/ContributeCode
+
+EXTRA_DIST = $(DIST_lua) $(DIST_howtos)
 nobase_dist_pkgdata_DATA = $(DIST_lua)
 all: all-am
 

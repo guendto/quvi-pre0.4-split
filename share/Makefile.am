@@ -30,6 +30,9 @@ if ENABLE_BROKEN
 DIST_lua +=
 endif
 
-EXTRA_DIST = $(DIST_lua)
+DIST_howtos = \
+docs/howtos/ContributeCode
+
+EXTRA_DIST = $(DIST_lua) $(DIST_howtos)
 
 nobase_dist_pkgdata_DATA = $(DIST_lua)
