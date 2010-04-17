@@ -282,7 +282,7 @@ set_key (lua_State *l, const char *key) {
 
 #define _istype(t) \
     if (!lua_is##t(l, -1)) \
-        luaL_error(l, "##t type `%s' key not found in table", key);
+        luaL_error(l, "##t type `%s' key not found (or is nil) in table", key);
 
 static char*
 get_field_s (lua_State *l, const char *key) {
