@@ -6,7 +6,9 @@ Changes:
   * Introduce Lua scripting to website video link parsing
     - See NEWS file for a more complete description
     - New dependency, (lib)lua 5.1+, see INSTALL file
-  * API changes, quvi_next_host
+  * API changes
+    - quvi_next_host is now deprecated
+    - use quvi_next_supported_website instead
     - See NEWS file for a more complete description
   * quvi, --format, -f no longer accepts only hard-coded values
 
