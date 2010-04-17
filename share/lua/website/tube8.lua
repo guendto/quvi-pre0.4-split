@@ -1,6 +1,6 @@
 --[[
 /* 
-* Copyright (C) 2010 Toni Gundogdu.
+* Copyright (C) 2010 quvi team.
 *
 * This file is part of quvi, see http://quvi.googlecode.com/
 *
