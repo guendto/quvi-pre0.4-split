@@ -135,7 +135,7 @@ fi
 # --enable-quvi
 AC_ARG_ENABLE([quvi],
     [AS_HELP_STRING([--enable-quvi],
-        [build quvi(1) program @<:@default=yes@:>@])],
+        [build quvi command line tool@<:@default=yes@:>@])],
     [],
     [enable_quvi=yes])
 AM_CONDITIONAL([ENABLE_QUVI], [test x"$enable_quvi" != "xno"])

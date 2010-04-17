@@ -1581,7 +1581,7 @@ Optional Features:
   --disable-rpath         do not hardcode runtime library paths
   --enable-silent-rules          less verbose build output (undo: `make V=1')
   --disable-silent-rules         verbose build output (undo: `make V=0')
-  --enable-quvi           build quvi(1) program [default=yes]
+  --enable-quvi           build quvi command line tool[default=yes]
   --enable-smut           build with adult website support [default=no]
   --enable-broken         build with broken website support [default=no]
 
