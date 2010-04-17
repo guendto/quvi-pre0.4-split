@@ -110,14 +110,6 @@ quvi_parse (quvi_t quvi, char *url, quvi_video_t *dst) {
 
     setvid(video->page_link, "%s", url);
 
-    video->page_link = /* youtube-nocookie(.com) -> youtube.com */
-        strepl(video->page_link, "-nocookie", "");
-
-    from_embed_link(video); /* embed url -> video page url */
-
-    video->page_link = /* spyvideos: strip any '#' */
-        strepl(video->page_link, "#", "");
-
     rc = find_host_script(video);
     if (rc != QUVI_OK)
         return (rc);

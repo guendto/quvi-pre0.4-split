@@ -453,26 +453,4 @@ add_video_link(llst_node_t *lst, const char *fmt, ...) {
     return (llst_add(lst, qvl));
 }
 
-void
-from_embed_link (_quvi_video_t video) {
-    struct embed_lookup_s {
-        char *from;
-        char *to;
-    };
-    static const struct embed_lookup_s lookup[] = {
-        {"/v/",                     "/watch?v="}, /* youtube */
-        {"googleplayer.swf",        "videoplay"}, /* google */
-        {"/pl/",                    "/videos/"},  /* sevenload */
-        {"/e/",                     "/view?i="},  /* liveleak */
-        {"/moogaloop.swf?clip_id=", "/"},         /* vimeo */
-        {NULL, NULL}
-    };
-    int i;
-
-    for (i=0; lookup[i].from; ++i) {
-        video->page_link =
-            strepl(video->page_link, lookup[i].from, lookup[i].to);
-    }
-}
-
 

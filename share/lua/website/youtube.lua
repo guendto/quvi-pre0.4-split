@@ -49,6 +49,9 @@ function ident (page_url)
 
     -- This is my response to "Will you handle this URL?"
     -- Note that page_url may be nil.
+    if (page_url ~= nil) then
+        page_url = youtubify(page_url)
+    end
     t.will_handle = (page_url ~= nil and page_url:find(t.domain) ~= nil)
 
     -- Here are my details.
@@ -63,7 +66,7 @@ function parse (video)
     video.host_id = "youtube"
 
     -- Fetch video page.
-    local page = quvi.fetch(video.page_url)
+    local page = quvi.fetch( youtubify(video.page_url) )
 
     -- This is my video title.
     local _,_,s = page:find('<meta name="title" content="(.-)"')
@@ -117,6 +120,13 @@ function parse (video)
     -- Return the updated video properties.
     return video
 
+end
+
+-- Converts various youtube-like links to "regular" video page links.
+function youtubify (url)
+    url = url:gsub("-nocookie", "")    -- youtube-nocookie.com
+    url = url:gsub("/v/", "/watch?v=") -- embedded
+    return url
 end
 
 
