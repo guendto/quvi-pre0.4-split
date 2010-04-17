@@ -257,6 +257,19 @@ extern "C" {
 /**
 * @brief Start a new libquvi session
 *
+* Initializes a new session handle and locates the website scripts
+* used to parse the video page links. The library searches the
+* following paths in the following order:
+*
+*   - $QUVI_BASEDIR defined path
+*   - Current working directory (./lua/website/)
+*   - $HOME./quvi/
+*   - $HOME/.config/quvi/
+*   - $HOME/.local/share/quvi/
+*   - Global directories:
+*     - /usr/local/share/quvi/ -- hardcoded
+*     - /usr/share/quvi/ -- hardcoded
+*
 * @param quvi Pointer to a new handle
 *
 * @note 
