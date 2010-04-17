@@ -110,25 +110,20 @@ supports(quvi_t quvi, opts_s opts) {
 
     while (!done) {
         char *domain, *formats;
-
-        QUVIcode rc = quvi_next_host (quvi, &domain, &formats);
+        QUVIcode rc = quvi_next_supported_website (quvi, &domain, &formats);
 
         switch (rc) {
         case QUVI_OK:
             printf("%s\t%s\n", domain, formats);
-            break;
-        case QUVI_LAST:
-            done = 1;
-            break;
-        default:
-            fprintf(stderr, "%s\n", quvi_strerror(quvi, rc));
-            break;
-        }
 #define _free(p) \
     do { if (p) { free(p); p=NULL; } } while (0)
-        _free(domain);
-        _free(formats);
+            _free(domain);
+            _free(formats);
 #undef _free
+            break;
+        case QUVI_LAST: done = 1; break;
+        default       : fprintf(stderr, "%s\n", quvi_strerror(quvi, rc)); break;
+        }
     }
 
     quvi_close(&quvi);

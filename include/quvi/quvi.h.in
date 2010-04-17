@@ -498,30 +498,45 @@ void quvi_parse_close(quvi_video_t *video);
  * @{
  */
 
-/** 
-* @brief Next supported video host
+/**
+* @brief Return next supported video website
 *
-* Iterate over the list of the supported video hosts.
-* 
+* This function can be used to iterate the supported websites.
+*
 * @param quvi Handle to a session
-* @param domain Pointer to a null-terminated string (e.g. youtube.com)
-* @param formats Pointer to a null-terminated string (e.g. flv, delim. '|')
+* @param domain Pointer to a null-terminated string (e.g. "youtube.com")
+* @param formats Pointer to a null-terminated string (e.g. "default|best|hq|hd")
 *
-* @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
+* @return QUVI_OK or a non-zero value if an error occurred
+*
+* @note
+*   - Return value QUVI_LAST is a non-zero value and indicates the end iteration
+*   - Consider handling errors
 *
 * Example:
 * @code
-* quvi_t quvi;
-* char *domain=0, *formats=0;
-* ... init quvi ...
-* while (quvi_next_host(quvi, &domain, &formats) == QUVI_OK) {
+* while (quvi_next_supported_website(quvi, &domain, &formats) == QUVI_OK) {
 *   printf("%s\t%s\n", domain, formats);
 *   free(domain);
 *   free(formats);
 * }
 * @endcode
 */
-QUVIcode quvi_next_host(quvi_t quvi, char **domain, char **formats);
+QUVIcode quvi_next_supported_website(quvi_t quvi, char **domain, char **formats);
+
+/** 
+* @brief Next supported video host
+*
+* Iterate the list of the supported video hosts.
+* 
+* @param domain Pointer to a null-terminated string
+* @param formats Pointer to a null-terminated string
+*
+* @return QUVI_LAST (always)
+*
+* @deprecated since 0.1.5, use quvi_next_supported_website() instead
+*/
+QUVIcode quvi_next_host(char **domain, char **formats);
 
 /** 
 * @brief Return a string describing the error code

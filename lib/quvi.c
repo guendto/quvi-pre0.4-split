@@ -393,16 +393,19 @@ quvi_next_videolink (quvi_video_t handle) {
 
 static llst_node_t curr_host = NULL;
 
-/* quvi_next_host */
+/* quvi_next_supported_website */
 
 QUVIcode
-quvi_next_host (quvi_t handle, char **domain, char **formats) {
+quvi_next_supported_website (quvi_t handle, char **domain, char **formats) {
     struct lua_ident_s ident;
     _quvi_t quvi;
     QUVIcode rc;
 
     is_badhandle(handle);
     quvi = (_quvi_t) handle;
+
+    is_invarg(domain);
+    is_invarg(formats);
 
     if (!quvi->scripts)
         return (QUVI_NOLUAWEBSITE);
@@ -431,6 +434,14 @@ quvi_next_host (quvi_t handle, char **domain, char **formats) {
      * we ignore the "will_handle" value altogether.
      */
     return (rc == QUVI_NOSUPPORT ? QUVI_OK : rc);
+}
+
+/* quvi_next_host, NOTE: deprecated. */
+
+QUVIcode
+quvi_next_host (char **domain, char **formats) {
+    *domain = *formats = NULL;
+    return (QUVI_LAST);
 }
 
 #undef is_badhandle
