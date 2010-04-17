@@ -135,6 +135,10 @@ Spew out libcurl verbose mode messages.
 
 =back
 
+Be sure to read $prefix/share/quvi/docs/howtos/ContributeCode and
+take a look at the Lua scripts used to parse video links. These
+scripts are usually installed to $prefix/share/quvi/lua/website/.
+
 =head1 FILES
 
 =over 4
