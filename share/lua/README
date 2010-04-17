@@ -12,8 +12,7 @@ When working with quvi lua scripts, you can set QUVI_BASEDIR
 environment variable to point the location of the lua directory,
 e.g. QUVI_BASEDIR=/home/user/debug
 
-quvi searches for the scripts from the following paths in the
-following order:
+quvi searches the following paths in the order:
 
   1) $QUVI_BASEDIR defined path
   2) Current working directory (./lua/website/)
