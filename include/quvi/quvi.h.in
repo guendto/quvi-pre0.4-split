@@ -521,8 +521,11 @@ void quvi_parse_close(quvi_video_t *video);
 * @param formats Pointer to a null-terminated string (e.g. "default|best|hq|hd")
 *
 * @return QUVI_OK or a non-zero value if an error occurred
+*   - QUVI_LAST indicates end of the list of the websites
+*   - Any other returned non-zero value indicates an actual error and should be handled accordingly (e.g. relaying the return code to \a quvi_strerror)
 *
 * @note
+*   - Both domain and formats string must be freed after use
 *   - Return value QUVI_LAST is a non-zero value and indicates the end iteration
 *   - Consider handling errors
 *
