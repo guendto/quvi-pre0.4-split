@@ -64,17 +64,20 @@ Get on with the program, blatant objections will be directed to /dev/null.
 
 API changes
 -----------
-* New QUVIcodes (Lua related)
+* Additional QUVIcodes (Lua related)
 
 * quvi_next_host is now deprecated
 
-  - quvi_next_host returns nothing and should no longer be used
+  - The binary compatibility remains, however:
 
-  - Use quvi_next_supported_website instead, prototypes are similar
+    - quvi_next_host no longer returns any string values
 
-  - Conversion is simple, see API documentation or src/quvi.c for an example
+    - Applications that rely on this function for anything essential,
+    must be modified to use quvi_next_supported_website
 
-  - Note that both "domain" and "formats" must now be freed
+* quvi_next_supported_website was added
+
+  - Replaces quvi_next_host
 
 
 Version 0.1.2
