@@ -10,7 +10,7 @@ these parsed details. The project also contains the "quvi"
 executable which can be used to develop support for another
 website.
 
-As of 0.1.5 quvi uses Lua for scripting support allowing
+As of 0.2.0 quvi uses Lua for scripting support allowing
 easy development for new websites and maintainment of
 the current support.
 
@@ -58,11 +58,11 @@ code. That is typically the easiest part of all.
 -------------------
 
 This used to be a fairly tedious process in the past but with
-the release of 0.1.5 it got a lot easier. We previously had
+the release of 0.2.0 it got a lot easier. We previously had
 to tweak several C source code and GNU Autotools files just
 to get it all work together.
 
-With 0.1.5 you could do the following:
+With 0.2.0 you could do the following:
 
   mkdir -p foo/lua/website/; cd foo
   cp $prefix/share/quvi/lua/website/buzzhumor.lua lua/website/bar.lua

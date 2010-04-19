@@ -550,7 +550,7 @@ QUVIcode quvi_next_supported_website(quvi_t quvi, char **domain, char **formats)
 *
 * @return QUVI_LAST (always)
 *
-* @deprecated since 0.1.5, use quvi_next_supported_website() instead
+* @deprecated since 0.2.0, use quvi_next_supported_website() instead
 */
 QUVIcode quvi_next_host(char **domain, char **formats);
 
