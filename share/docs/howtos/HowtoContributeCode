@@ -14,23 +14,9 @@ As of 0.2.0 quvi uses Lua for scripting support allowing
 easy development for new websites and maintainment of
 the current support.
 
-Most video websites do not announce details about the videos or
-publish direct download links to them. This is obviously a shame,
-primarily because Adobe Flash is a hog and poorly supported.
-For those of us on non-w32 systems, downloading the video is
-the only viable choice.
-
-It remains to be seen how HTML5 and its video tag will eventually
-pan out.
-
 
 2. Checklist: Before you look any further
 -----------------------------------------
-
-Before you read any further, please note that quvi isn't intended
-to cover video websites that already allow downloading the hosted
-videos. The project focuses on websites that require Adobe Flash
-unconditionally to view any of the videos.
 
 * Does the website allow video downloading?
   - If yes, then there is no reason to add support for it
@@ -41,35 +27,33 @@ unconditionally to view any of the videos.
 3. The hacker within
 --------------------
 
-It's all about figuring out how we can access the videos without
-Adobe Flash. You can get a good idea of the differences of video
-websites by going over some of the current lua/website/ scripts.
+It all boils down figuring out how we can access the videos
+without Adobe Flash. To get a good idea of just how this varies
+for each website, take a look at youtube.lua and buzzhumor.lua
+scripts.
 
-When things get hairy, extra steps may be required. For an
-example of this, see here:
+Sometimes digging deeper may be required:
   http://code.google.com/p/clive/issues/detail?id=6#c7
 
-Once the data has been analyzed and the link construction
-figured out, leaving us with the task of whipping up the
-code. That is typically the easiest part of all.
+Once the data has been analyzed and the link construction figured
+out, all that remains is writing the website rule (script).
 
 
-4. Writing the code
--------------------
+4. Writing the website rule
+---------------------------
 
-This used to be a fairly tedious process in the past but with
-the release of 0.2.0 it got a lot easier. We previously had
-to tweak several C source code and GNU Autotools files just
-to get it all work together.
+The process was greatly simplified with the introduction of
+Lua script support. This used to be a rather tedious task
+having to tweak various GNU Autotools and C source code files.
 
-With 0.2.0 you could do the following:
+Example:
 
   mkdir -p foo/lua/website/; cd foo
   cp $prefix/share/quvi/lua/website/buzzhumor.lua lua/website/bar.lua
   git init; git add .; git commit -am 'initial.'
   (
     * edit lua/website/bar.lua
-    * run "quvi" in the working directory, e.g. "quvi SOME_TEST_URL"
+    * run "quvi" in the working directory, e.g. "quvi TEST_URL"
     * repeat above two until happy
   )
   git commit -am 'add support for foo.'
@@ -85,11 +69,12 @@ $prefix/share/quvi/lua/README file. Here's another example:
   make
   QUVI_BASEDIR=../share ./src/quvi -t youtube
 
-You can define QUVI_BASEDIR to point quvi to a custom script
-directory. This definition has the highest priority, making
-it useful when whipping up your own patches -- allowing,
-for example, development take place on systems with only
-binaries installed.
+The above works very well with the development code grabbed
+from git://repo.or.cz/quvi.git.
+
+Make a note of QUVI_BASEDIR, you can define the base directory
+from which libquvi should start looking for lua/website/
+directory.
 
 
 5. Checklist: Before you submit your patch
