@@ -113,9 +113,9 @@ Run all built-in host tests.
 Match 'youtube' string to built-in video page links
 and test it.
 
-=item quvi URL -f mp4
+=item quvi URL -f best
 
-Query 'mp4' of the video from the URL.
+Query 'best' of the video from the URL.
 
 =back
 
@@ -125,7 +125,7 @@ Sure to be some. Please report them.
 
   <http://quvi.googlecode.com/>
 
-=head1 DEBUGGING TIPS
+=head1 DEBUGGING
 
 =over 4
 
@@ -133,25 +133,44 @@ Sure to be some. Please report them.
 
 Spew out libcurl verbose mode messages.
 
-=back
+=item $prefix/share/quvi/lua/README
 
-Be sure to read $prefix/share/quvi/docs/howtos/ContributeCode and
-take a look at the Lua scripts used to parse video links. These
-scripts are usually installed to $prefix/share/quvi/lua/website/.
+=item $prefix/share/quvi/lua/website/README
+
+Contain details about working with the quvi Lua scripts (e.g. website
+rules). If video link parsing breaks, have a look at these files.
+
+For example, you can copy a website script (rule) to  your working
+directory (./lua/website/) and tweak it without having to make
+any changes to the quvi source code.
+
+=item $prefix/share/quvi/docs/howtos
+
+The contribution and development guidelines etc. can be found in
+the above directory.
+
+=back
 
 =head1 FILES
 
 =over 4
 
-=item B<$QUVI_HOME|$HOME/.quvirc>
+=item B<$HOME/.quvirc>
+
+You can define most of the command line options in the
+config file. For example:
 
  agent = some_agent/1.0     # --agent
  proxy = http://foo:1234    # --proxy
  no-verify                  # --no-verify
  debug                      # --debug
 
-You can define most of the command line options in the
-config file.
+Note that you can use QUVI_HOME also.
+
+=item B<$prefix/share/quvi/lua/website>
+
+Contains the quvi website rule scripts used to parse the video links.
+See also L</DEBUGGING>.
 
 =back
 

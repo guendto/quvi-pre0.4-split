@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-04-18" "0.2.0" "quvi manual"
+.TH quvi 1 "2010-04-19" "0.2.0" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -212,9 +212,9 @@ Run all built-in host tests.
 .IX Item "quvi -t youtube"
 Match 'youtube' string to built-in video page links
 and test it.
-.IP "quvi \s-1URL\s0 \-f mp4" 4
-.IX Item "quvi URL -f mp4"
-Query 'mp4' of the video from the \s-1URL\s0.
+.IP "quvi \s-1URL\s0 \-f best" 4
+.IX Item "quvi URL -f best"
+Query 'best' of the video from the \s-1URL\s0.
 .SH "BUGS"
 .IX Header "BUGS"
 Sure to be some. Please report them.
@@ -222,20 +222,38 @@ Sure to be some. Please report them.
 .Vb 1
 \&  <http://quvi.googlecode.com/>
 .Ve
-.SH "DEBUGGING TIPS"
-.IX Header "DEBUGGING TIPS"
+.SH "DEBUGGING"
+.IX Header "DEBUGGING"
 .IP "quvi \-\-debug \s-1URL\s0" 4
 .IX Item "quvi --debug URL"
 Spew out libcurl verbose mode messages.
-.PP
-Be sure to read \f(CW$prefix\fR/share/quvi/docs/howtos/ContributeCode and
-take a look at the Lua scripts used to parse video links. These
-scripts are usually installed to \f(CW$prefix\fR/share/quvi/lua/website/.
+.ie n .IP "$prefix/share/quvi/lua/README" 4
+.el .IP "\f(CW$prefix\fR/share/quvi/lua/README" 4
+.IX Item "$prefix/share/quvi/lua/README"
+.PD 0
+.ie n .IP "$prefix/share/quvi/lua/website/README" 4
+.el .IP "\f(CW$prefix\fR/share/quvi/lua/website/README" 4
+.IX Item "$prefix/share/quvi/lua/website/README"
+.PD
+Contain details about working with the quvi Lua scripts (e.g. website
+rules). If video link parsing breaks, have a look at these files.
+.Sp
+For example, you can copy a website script (rule) to  your working
+directory (./lua/website/) and tweak it without having to make
+any changes to the quvi source code.
+.ie n .IP "$prefix/share/quvi/docs/howtos" 4
+.el .IP "\f(CW$prefix\fR/share/quvi/docs/howtos" 4
+.IX Item "$prefix/share/quvi/docs/howtos"
+The contribution and development guidelines etc. can be found in
+the above directory.
 .SH "FILES"
 .IX Header "FILES"
-.ie n .IP "\fB\fB$QUVI_HOME\fB|$HOME/.quvirc\fR" 4
-.el .IP "\fB\f(CB$QUVI_HOME\fB|$HOME/.quvirc\fR" 4
-.IX Item "$QUVI_HOME|$HOME/.quvirc"
+.ie n .IP "\fB\fB$HOME\fB/.quvirc\fR" 4
+.el .IP "\fB\f(CB$HOME\fB/.quvirc\fR" 4
+.IX Item "$HOME/.quvirc"
+You can define most of the command line options in the
+config file. For example:
+.Sp
 .Vb 4
 \& agent = some_agent/1.0     # \-\-agent
 \& proxy = http://foo:1234    # \-\-proxy
@@ -243,8 +261,12 @@ scripts are usually installed to \f(CW$prefix\fR/share/quvi/lua/website/.
 \& debug                      # \-\-debug
 .Ve
 .Sp
-You can define most of the command line options in the
-config file.
+Note that you can use \s-1QUVI_HOME\s0 also.
+.ie n .IP "\fB\fB$prefix\fB/share/quvi/lua/website\fR" 4
+.el .IP "\fB\f(CB$prefix\fB/share/quvi/lua/website\fR" 4
+.IX Item "$prefix/share/quvi/lua/website"
+Contains the quvi website rule scripts used to parse the video links.
+See also \*(L"\s-1DEBUGGING\s0\*(R".
 .SH "EXIT STATUS"
 .IX Header "EXIT STATUS"
 quvi exits with 0 on success and >0 if an error occurred.
