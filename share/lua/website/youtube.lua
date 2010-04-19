@@ -17,7 +17,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 ]]--
 
 -- If you make improvements to this script, drop a line. Thanks.
@@ -26,9 +25,11 @@
 -- These are my formats.
 local lookup = {
     mobile_3gp = "17",
-    hq_480p    = "18",
-    hd_720p    = "22",
-    hd_1080p   = "37"
+    sd_270p    = "18", --   480x270
+    sd_360p    = "34", --   640x360
+    hq_480p    = "35", --   854x480
+    hd_720p    = "22", --  1280x720
+    hd_1080p   = "37"  -- 1920x1080
 }
 
 -- Returns script details.
@@ -65,8 +66,107 @@ function parse (video)
     -- This is my "host ID".
     video.host_id = "youtube"
 
+    -- Page URL.
+    local page_url = youtubify(video.page_url)
+
+    -- This is my video ID.
+    local _,_,s = page_url:find("v=(.-)[?:&]?$")
+    video.id    = s or error ("no match: video id")
+
+    -- Fetch and pray.
+    video,t,best = get_video_info(video)
+    if (video.title == nil) then
+        video,t,best = old_faithful(page_url, video)
+    end
+
+    -- Construct the video URL.
+    local video_url = 
+        string.format(
+            "http://youtube.com/get_video?video_id=%s&t=%s",
+                video.id, quvi.unescape(t))
+
+    -- Choose correct format ID.
+    if (best == nil) then
+        print ("  > warning: unable to find `best' format.")
+        print ("  > warning: use default format instead.")
+    end
+
+    local fmt_id = nil
+
+    if (video.requested_format == "best") then
+        fmt_id = best or fmt_id
+    else
+        for k,v in pairs (lookup) do
+            if (k == video.requested_format) then
+                fmt_id = v
+                break
+            end
+        end
+    end
+
+    -- And append it.
+    if (fmt_id ~= nil) then
+        video_url = video_url .."&fmt=".. fmt_id
+    end
+
+    -- Set my video URL.
+    video.url = {video_url}
+
+    -- Return the updated video properties.
+    return video
+
+end
+
+-- Youtube link unwrangler.
+function youtubify (url)
+    url = url:gsub("-nocookie", "")    -- youtube-nocookie.com
+    url = url:gsub("/v/", "/watch?v=") -- embedded
+    return url
+end
+
+-- Requires much less bandwidth. Fails for some videos. See comment below.
+function get_video_info (video)
+
+    -- Fetch video info.
+    local config_url = string.format(
+        "http://www.youtube.com/get_video_info?&video_id=%s"
+         .. "&el=detailpage&ps=default&eurl=&gl=US&hl=en", video.id)
+
+    local config = quvi.unescape( quvi.fetch(config_url, "config") )
+
+    -- Check response. For still unknown reasons, the above
+    -- does not work for all videos that I've tried so far.
+    local _,_,s = config:find("&reason=(.-)[?:&]?$")
+    if (s ~= nil) then
+        s = s:gsub("+"," ")
+        print ("  > warning: get_video_info returned: " .. s)
+        return video -- This one's for the Old Faithful.
+    end
+
+    -- This is my video title.
+    local _,_,s = config:find("&title=(.-)&")
+    video.title = s or error ("no match: video title")
+    video.title = video.title:gsub("+"," ")
+
+    -- This is my t(oken) param used to construct the video URL.
+    local _,_,s = config:find("&token=(.-)&")
+    local t     = s or error ("no match: token parameter")
+
+    -- Best format.
+    local _,_,best = config:find("&fmt_map=(%d+)")
+
+    -- Return parsed details.
+    return video, t, best
+
+end
+
+-- Fetch video page from the specified URL and parse it. Unlike
+-- the above function, this cannot handle videos that require
+-- signing in.
+function old_faithful (page_url, video)
+
     -- Fetch video page.
-    local page = quvi.fetch( youtubify(video.page_url) )
+    local page = quvi.fetch(page_url)
 
     -- This is my video title.
     local _,_,s = page:find('<meta name="title" content="(.-)"')
@@ -79,54 +179,13 @@ function parse (video)
     -- This is my t param used to construct the video URL.
     local _,_,s = page:find('&t=(.-)&')
     local t     = s or error ("no match: t param")
-    t = quvi.unescape(t)
 
-    -- Construct the video URL.
-    local video_url = 
-        string.format(
-            "http://youtube.com/get_video?video_id=%s&t=%s",
-                video.id, t)
+    -- Best format
+    local _,_,best = page:find("&fmt_map=(%d+)")
 
-    -- Grab "best" available video format id.
-    -- Note that nil should not result in error.
-    local _,_,best_format = page:find('&fmt_map=(%d+)')
+    -- Return parsed details.
+    return video, t, best
 
-    if (best_format == nil) then
-        print ("quvi: warning: no match: best format, using default")
-    end
-
-    -- Choose correct fmt ID. Default to nil.
-    local fmt_id = nil
-
-    if (video.requested_format == "best") then
-        fmt_id = best_format or fmt_id
-    else
-        for k,v in pairs (lookup) do
-            if (k == video.requested_format) then
-                fmt_id = v
-                break
-            end
-        end
-    end
-
-    -- And append it.
-    if (fmt_id ~= nil) then
-        video_url = video_url .. "&fmt=" .. fmt_id
-    end
-
-    -- Set my video URL.
-    video.url = {video_url}
-
-    -- Return the updated video properties.
-    return video
-
-end
-
--- Converts various youtube-like links to "regular" video page links.
-function youtubify (url)
-    url = url:gsub("-nocookie", "")    -- youtube-nocookie.com
-    url = url:gsub("/v/", "/watch?v=") -- embedded
-    return url
 end
 
 
