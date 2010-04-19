@@ -23,6 +23,10 @@ This has the following advantages to the old design:
     - Easier prototyping for new websites and fixing/improving parsing
     - Lua is fairly easy to learn and use (see share/lua/website/ for examples)
 
+  * Cleaner source code
+
+  * Less prone to memory leaks
+
 Scripting replaces the old design entirely, e.g. lib/host/ or any related
 files are no longer required or distributed with the source code
 
