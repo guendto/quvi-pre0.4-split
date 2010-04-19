@@ -4,66 +4,64 @@ Version 0.1.5
 
 * Developers should read these changes carefully, especially the "API changes"
 
-* Introduce Lua <http://lua.org> scripts. The fetching and parsing are
-now done in scripts. This has a few advantages to the old design.
+* Downstream maintainers should read (at least) the "Distribution changes"
+
+* Introduce Lua <http://lua.org> scripts, quvi now uses website specific
+scripts (rules) to fetch and parse the video links
+
+* The above has advantages to the old design:
 
   * Dynamic script loading
     - Scripts can be dropped in (and removed from) the search path
-    - See more about the search paths in quvi(1) and C API
+    - The search paths are covered in C API reference and share/lua/README
 
   * No need to tweak C source code or recompile quvi
-    - Faster and easier prototyping for new websites
-      - Without having to dig into the C source code
-    - Contributors unfamiliar with C
-      - Lua is an easier language to understand
-      - May now contribute by writing Lua scripts
-      - There are plenty of examples (share/lua/ subdir) to learn from
+    - Faster and easier prototyping for new website rules
+    - Lua is fairly easy to learn even for those with little programming exp.
+      - Plenty of examples available, see share/lua/website/
 
-These changes meant removing and converting the host specific code to lua
-scripts. These scripts can be found in $top_srcdir/share/ directory.
-They are installed typically to $prefix/share/quvi/lua/hosts/ directory.
-
-* There have been format ID changes, we're trying to weed out the
-vague format IDs from the library, e.g. "mp4" could have multiple
-meanings or double standards. More sensible IDs such as "hq" or
-"hd" are encouraged to be used instead where/if possible, see below
+* Scripting replaces the old design entirely, e.g. lib/host/ or any related
+files are no longer required or distributed with the source code
 
 
-Video format (ID) changes
--------------------------
+1. Video format (ID) changes
+----------------------------
 
-Get on with the program, blatant objections will be directed to /dev/null.
+Some of the old and vague IDs have been replaced or removed.
 
-* "Default" format was previously (for historical reasons) called only "flv"
+* "flv" -> "default"
 
-  - "flv" refers to Adobe flash format but in reality some of the websites
-  default to completely different formats
+  - "flv" was previously treated as `default' format, this was done
+  primarily for historical reasons
+
+  - "flv" implies Adobe Flash format but in actuality, some of the current
+  websites default to completely different formats
+
+  - "flv" also implies file format rather than video format
 
   - The "default format" is as of this release referred to as "default",
   see `quvi --hosts' to get the idea
 
 * Youtube
 
-  - Both cclive and clive have used vague IDs for different Youtube format IDs,
-  a.k.a. "fmtID", we're trying to "standardize" these IDs by coming up with
-  suitable (and more understandable) IDs for them, e.g. "hq_480p" or "hd_1080p"
-
-  - Further ID tweaking may still be required as the intertubes is full of
-  hear say and inaccurate information about these formats, having said that,
-  one shouldn't hardcode these values in applications depending on libquvi,
-  instead use the iteration function and parse the library returned format IDs
+  - The format array was completely revamped, so for example instead of "mp4",
+  one is expected to use "sd_270p", like above with "flv", "mp4" too implied
+  file format rather than video format (or resolution)
 
 * Google
 
-  - Removed the "mp4" format, does someone still actually use this website?
+  - Removed the "mp4" format
 
 * Spiegel
 
-  - Default to vp6_388, previously vp6_64
+  - New format ID array, implying the bitrate/quality of the format
+
+  - New default is vp6_388, default was previously vp6_64
 
 
-API changes
------------
+2. API changes
+--------------
+
 * Additional QUVIcodes (Lua related)
 
 * quvi_next_host is now deprecated
@@ -78,6 +76,15 @@ API changes
 * quvi_next_supported_website was added
 
   - Replaces quvi_next_host
+
+
+3. Distribution changes
+-----------------------
+
+* New dependency: Lua 5.1+ (library), see also INSTALL file
+
+* Additional files are now installed to $prefix/share/quvi from share/,
+  take a look at the share/Makefile.am file for a complete list
 
 
 Version 0.1.2
