@@ -6,25 +6,28 @@ Version 0.2.0
 
 * Downstream maintainers should read (at least) the "Distribution changes"
 
-* Introduce Lua <http://lua.org> scripts, quvi now uses website specific
-scripts (rules) to fetch and parse the video links
 
-* The above has advantages to the old design:
+1. Lua scripting
+----------------
+
+Introduce Lua <http://lua.org> scripts to the project. quvi now uses website
+specific scripts (rules) to fetch and parse the video links.
+
+This has the following advantages to the old design:
 
   * Dynamic script loading
     - Scripts can be dropped in (and removed from) the search path
     - The search paths are covered in C API reference and share/lua/README
 
   * No need to tweak C source code or recompile quvi
-    - Faster and easier prototyping for new website rules
-    - Lua is fairly easy to learn even for those with little programming exp.
-      - Plenty of examples available, see share/lua/website/
+    - Easier prototyping for new websites and fixing/improving parsing
+    - Lua is fairly easy to learn and use (see share/lua/website/ for examples)
 
-* Scripting replaces the old design entirely, e.g. lib/host/ or any related
+Scripting replaces the old design entirely, e.g. lib/host/ or any related
 files are no longer required or distributed with the source code
 
 
-1. Video format (ID) changes
+2. Video format (ID) changes
 ----------------------------
 
 Some of the old and vague IDs have been replaced or removed.
@@ -59,7 +62,7 @@ Some of the old and vague IDs have been replaced or removed.
   - New default is vp6_388, default was previously vp6_64
 
 
-2. API changes
+3. API changes
 --------------
 
 * Additional QUVIcodes (Lua related)
@@ -78,7 +81,7 @@ Some of the old and vague IDs have been replaced or removed.
   - Replaces quvi_next_host
 
 
-3. Distribution changes
+4. Distribution changes
 -----------------------
 
 * New dependency: Lua 5.1+ (library), see also INSTALL file
