@@ -2,30 +2,28 @@
 1. Foreword
 ===========
 
-This directory contains the website specific scripts that quvi
-uses to parse the video links. If video link parsing ever "breaks",
-these are the scripts that you will want to take a look at first.
+This directory contains the website specific scripts (rules) that quvi
+uses to parse the video links. Should video link parsing ever break (and
+they shall eventually), these are the scripts that one should take a look
+at first.
 
-The scripts are written in Lua. If you are new to Lua,
+These scripts are written in Lua. If you are new to Lua,
 <http://www.lua.org/pil/> is a good place to start.
 
 
 2. Structure of an quvi website script
 ======================================
 
-Each script must contain the following functions:
+Each script (rule) must contain the following functions:
   * ident
   * parse
-
-These functions are described below.
 
 
 2.1. function ident (page_url)
 ------------------------------
 
-This function is used by quvi to identify the script
-and match the user specified video page URL to a script
-capable of handling the URL.
+quvi calls this function to check if the script can handle
+the user specified video page URL.
 
 Parameters:
   * page_url (string)
@@ -37,24 +35,21 @@ Returns:
 
       - This string is used to match page URL to domain
 
+      - Returned to an application with quvi_next_supported_website
+
       - The string must cover any TLDs and additional domain names
 
       - e.g. "youtube.com", "video.google."
 
     - formats (string)
 
-      - An "array" of supported video format IDs that the website (and
-      the script supports, each format ID is expected to be separated
-      with a pipe character ('|')
+      - An "array" of the supported video format IDs that the website,
+      each separated with '|', e.g. "default|best|hq|hd"
 
       - All scripts should at least define "default" in this string
 
-      - If the script supports more than one format, and the script
-      is capable of figuring out which of those are "best", the
-      string should also include "best" format ID (see dailymotion.lua
-      and youtube.lua for an example of this)
-
-      - e.g. "default|best|hd|hq"
+      - Include "best" when/if possible/expected, e.g. multiple
+      format IDs supported
 
     - will_handle (boolean)
 
@@ -66,16 +61,18 @@ Returns:
 2.2. function parse (video)
 ---------------------------
 
-quvi calls this function to handle the user specified video page URL.
-Unlike the ident function (described above), this function can vary
-greatly depending on the website. For a comparison, see buzzhumor.lua
-and youtube.lua scripts.
+quvi calls this function to fetch and parse the user specified URL.
+This function can vary greatly, see youtube.lua and buzzhumor.lua
+scripts for a comparison of this.
 
-Note that the function must update the following video details.
+The function is expected set the following video details.
   * host_id (string)
   * title (string)
   * id (string)
   * url (array of strings)
+
+Each of these belong to the `video' table passed to the function
+as a parameter. e.g. "video.host_id = 'youtube'"
 
 Parameters:
   * video (table), contains the following keys
@@ -83,23 +80,24 @@ Parameters:
     - requested_format (string)
 
 Returns:
-  * An updated table containing the video details
+  * `video' table containing the updated details
 
 
 3. Lua API
 ==========
 
-All of the functions exposed to the lua scripts are in the "quvi" object.
-For example, "quvi.fetch(url)" would fetch and return the contents of
-the URL.
+All of the functions exposed to the lua scripts are in the "quvi" object,
+e.g. "quvi.fetch(url)".
 
 
-3.1. Function: quvi.fetch
--------------------------
+3.1. Function: string quvi.fetch (url, what)
+--------------------------------------------
+
+Fetches URL.
 
 Parameters:
   * url (string) - URL to fetch
-  * what (string) - "page", "config" or "playlist"
+  * what (string) - "page", "config" or "playlist" (optional)
 
 `what' will be translated to a QUVIstatusType defined in the
 quvi.h header file. If what is undefined (nil), quvi will
@@ -109,11 +107,13 @@ Returns:
   * Fetched contents of the URL
 
 
-3.2. Function: quvi.unescape
-----------------------------
+3.2. Function: string quvi.unescape (string)
+--------------------------------------------
+
+Returns unescaped `string'.
 
 Parameters:
   * string
 
 Returns:
-  * Unescaped string of the `string'
+  * Unescaped string
