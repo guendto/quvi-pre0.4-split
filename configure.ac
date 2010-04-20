@@ -92,7 +92,13 @@ AC_DEFINE_UNQUOTED([BUILD_DATE], "$build_date", [...])
 AM_ICONV
 PKG_CHECK_MODULES(libcurl, libcurl >= 7.18.0)
 PKG_CHECK_MODULES(libpcre, libpcre >= 7.8)
-PKG_CHECK_MODULES(liblua, lua >= 5.1)
+PKG_CHECK_MODULES(liblua, lua >= 5.1, [], [
+    PKG_CHECK_MODULES(liblua, lua51 >= 5.1, [], [
+        PKG_CHECK_MODULES(liblua, lua5.1 >= 5.1, [], [
+            PKG_CHECK_MODULES(liblua, lua-5.1 >= 5.1)
+        ])
+    ])
+])
 AM_SILENT_RULES([yes])
 
 # Checks for header files.
