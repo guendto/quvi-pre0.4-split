@@ -60,13 +60,13 @@ pack_it()
     && cp $PCRE_PREFIX/LICENCE dist/licenses/libpcre-LICENSE.TXT \
     && cp $ICONV_PREFIX/COPYING.LIB dist/licenses/libiconv-COPYING.TXT \
     && cp $LUA_PREFIX/COPYRIGHT dist/licenses/liblua-COPYRIGHT.TXT \
-    && cp -r ../share/lua dist/bin \
-    && cp -r ../share/docs dist/ \
+    && mv dist/share/quvi/lua dist/bin \
+    && rm -r dist/share/man dist/share/quvi \
+    && rm -rf dist/lib/pkgconfig \
     && cp ../COPYING dist/licenses/quvi-COPYING.txt \
     && cp ../ChangeLog dist/ChangeLog.txt \
     && cp ChangeLog.w32.txt dist/ \
-    && cp quvi.1.html dist/ \
-    && rm -rf dist/share \
+    && cp quvi.1.html dist/share/doc/quvi \
     && mv dist $distdir \
     && 7za a $archive $distdir
     exit $?
@@ -74,7 +74,7 @@ pack_it()
 
 clean_up() {
     make distclean 2>/dev/null
-    rm -rf docs examples include lib src tests share quvi.1
+    rm -rf doc examples include lib src tests share quvi.1
     exit $?
 }
 
