@@ -144,7 +144,7 @@ For example, you can copy a website script (rule) to  your working
 directory (./lua/website/) and tweak it without having to make
 any changes to the quvi source code.
 
-=item $prefix/share/quvi/docs/howtos
+=item $prefix/share/doc/quvi
 
 The contribution and development guidelines etc. can be found in
 the above directory.

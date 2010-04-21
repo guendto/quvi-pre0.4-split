@@ -1,5 +1,4 @@
 
-
 DIST_lua = \
 lua/README \
 lua/website/README \
@@ -30,12 +29,6 @@ if ENABLE_BROKEN
 DIST_lua +=
 endif
 
-DIST_howtos = \
-docs/howtos/HowtoContributeCode \
-docs/howtos/HowtoGetDevelopmentCode \
-docs/howtos/HowtoHelp \
-docs/howtos/HowtoSubmitPatches
-
-EXTRA_DIST = $(DIST_lua) $(DIST_howtos)
+EXTRA_DIST = $(DIST_lua)
 
 nobase_dist_pkgdata_DATA = $(DIST_lua) $(DIST_howtos)

@@ -18555,7 +18555,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile include/Makefile include/quvi/Makefile include/quvi/quvi.h lib/Makefile share/Makefile src/Makefile examples/Makefile tests/Makefile tests/quviTest.pm libquvi.pc doxygen.conf"
+ac_config_files="$ac_config_files Makefile include/Makefile include/quvi/Makefile include/quvi/quvi.h lib/Makefile share/Makefile doc/Makefile src/Makefile examples/Makefile tests/Makefile tests/quviTest.pm libquvi.pc doxygen.conf"
 
 
 cat >confcache <<\_ACEOF
@@ -19692,6 +19692,7 @@ do
     "include/quvi/quvi.h") CONFIG_FILES="$CONFIG_FILES include/quvi/quvi.h" ;;
     "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "share/Makefile") CONFIG_FILES="$CONFIG_FILES share/Makefile" ;;
+    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;

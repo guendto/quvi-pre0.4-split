@@ -189,6 +189,7 @@ AC_CONFIG_FILES([
     include/quvi/quvi.h
     lib/Makefile
     share/Makefile
+    doc/Makefile
     src/Makefile
     examples/Makefile
     tests/Makefile

@@ -50,7 +50,7 @@ Examples:
 
     Contributing
 
-Please see the howto files in share/docs/howtos/ subdir. The most current TODO
+Please see the howto files in doc/quvi/ subdir. The most current TODO
 file can be viewed at:
   http://repo.or.cz/w/quvi.git?a=blob_plain;f=TODO;hb=HEAD
 
