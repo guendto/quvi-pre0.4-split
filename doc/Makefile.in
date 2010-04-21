@@ -227,6 +227,7 @@ HowtoGetDevelopmentCode \
 HowtoHelp \
 HowtoSubmitPatches
 
+EXTRA_DIST = $(doc_DATA)
 all: all-am
 
 .SUFFIXES:
