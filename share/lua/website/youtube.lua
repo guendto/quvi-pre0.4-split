@@ -172,10 +172,6 @@ function old_faithful (page_url, video)
     local _,_,s = page:find('<meta name="title" content="(.-)"')
     video.title = s or error ("no match: video title")
 
-    -- This is my video ID.
-    local _,_,s = page:find('&video_id=(.-)&')
-    video.id    = s or error ("no match: video id")
-
     -- This is my t param used to construct the video URL.
     local _,_,s = page:find('&t=(.-)&')
     local t     = s or error ("no match: t param")
