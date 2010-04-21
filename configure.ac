@@ -146,6 +146,14 @@ AC_ARG_ENABLE([quvi],
     [enable_quvi=yes])
 AM_CONDITIONAL([ENABLE_QUVI], [test x"$enable_quvi" != "xno"])
 
+# --enable-examples
+AC_ARG_ENABLE([examples],
+    [AS_HELP_STRING([--enable-examples],
+        [build examples @<:@default=no@:>@])],
+    [],
+    [enable_examples=no])
+AM_CONDITIONAL([ENABLE_EXAMPLES], [test x"$enable_examples" != "xno"])
+
 # --enable-smut
 AC_ARG_ENABLE([smut],
     [AS_HELP_STRING([--enable-smut],
@@ -219,6 +227,7 @@ AC_MSG_NOTICE([Configured to build quvi/libquvi:
 Options:
     build libquvi:  shared=${enable_shared} static=${enable_static}
     build quvi:     ${enable_quvi}
+    build examples: ${enable_examples}
     adult support:  ${enable_smut}
     broken support: ${enable_broken}
     install manual: ${with_man}
