@@ -90,8 +90,12 @@ Some of the old and vague IDs have been replaced or removed.
 
 * New dependency: Lua 5.1+ (library), see also INSTALL file
 
-* Additional files are now installed to $prefix/share/quvi from share/,
-  take a look at the share/Makefile.am file for a complete list
+* Additional files are now installed from doc/ and share/, see
+their appropriate Makefile.am files to get a full list of the files
+
+* New --with-doc option [configure] (default:yes)
+
+* New --enable-examples option [configure] (default:no)
 
 
 Version 0.1.2
