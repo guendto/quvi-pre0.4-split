@@ -179,6 +179,14 @@ AC_ARG_WITH([man],
     [with_man=yes])
 AM_CONDITIONAL([WITH_MAN], [test x"$with_man" != "xno"])
 
+# --with-doc
+AC_ARG_WITH([doc],
+    [AS_HELP_STRING([--with-doc],
+        [install documentation @<:@default=yes@:>@])],
+    [],
+    [with_doc=yes])
+AM_CONDITIONAL([WITH_DOC], [test x"$with_doc" != "xno"])
+
 # GNU ld?
 AM_CONDITIONAL([HAVE_GNU_LD], [test x"$with_gnu_ld" = "xyes"])
 
@@ -214,6 +222,7 @@ Options:
     adult support:  ${enable_smut}
     broken support: ${enable_broken}
     install manual: ${with_man}
+    install docs:   ${with_doc}
 
 Other:
     gengetopt:      ${GENGETOPT}
