@@ -87,8 +87,8 @@ function parse (video)
 
     -- Choose correct format ID.
     if (best == nil) then
-        print ("  > warning: unable to find `best' format.")
-        print ("  > warning: use default format instead.")
+        print ("  > Warning: unable to find `best' format.")
+        print ("  > Warning: use default format instead.")
     end
 
     local fmt_id = nil
@@ -139,7 +139,7 @@ function get_video_info (video)
     local _,_,s = config:find("&reason=(.-)[?:&]?$")
     if (s ~= nil) then
         s = s:gsub("+"," ")
-        print ("  > warning: get_video_info returned: " .. s)
+        print ("  > Warning: get_video_info returned: " .. s)
         return video -- This one's for the Old Faithful.
     end
 
