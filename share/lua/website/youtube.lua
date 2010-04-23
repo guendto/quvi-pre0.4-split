@@ -70,7 +70,7 @@ function parse (video)
     local page_url = youtubify(video.page_url)
 
     -- This is my video ID.
-    local _,_,s = page_url:find("v=(.-)[?:&]?$")
+    local _,_,s = page_url:find("v=([%w-_]+)")
     video.id    = s or error ("no match: video id")
 
     -- Fetch and pray.
