@@ -16,9 +16,8 @@ The paths are search in the following order:
   3) $HOME./quvi/
   4) $HOME/.config/quvi/
   5) $HOME/.local/share/quvi/
-  6) Global directories:
-      /usr/local/share/quvi/ -- hardcoded
-      /usr/share/quvi/ -- hardcoded
+  6) --datadir=DIR (and pkgdatadir) specified with configure (script)
+     - These directories are typically $prefix/share/ and $prefix/share/quvi/
 
 If you define QUVI_BASEDIR, make sure it points to a directory
 containing lua/website/.

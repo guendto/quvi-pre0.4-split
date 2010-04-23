@@ -217,20 +217,18 @@ find_lua_scripts (_quvi_t quvi) {
             return (rc);
     }
 
-    /* Global directories. */
-    asprintf(&path, "/usr/local/share/quvi/%s", luawebsite_dir);
+    /* --datadir. */
+    asprintf(&path, "%s/%s", DATADIR, luawebsite_dir);
     rc = scan_lua_scripts(quvi, path);
     _free(path);
 
     if (rc != QUVI_OK)
         return (rc);
 
-    asprintf(&path, "/usr/share/quvi/%s", luawebsite_dir);
+    /* pkgdatadir. */
+    asprintf(&path, "%s/%s", PKGDATADIR, luawebsite_dir);
     rc = scan_lua_scripts(quvi, path);
     _free(path);
-
-    if (rc != QUVI_OK)
-        return (rc);
 
     return (rc);
 }

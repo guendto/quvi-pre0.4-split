@@ -266,9 +266,8 @@ extern "C" {
 *   - $HOME./quvi/
 *   - $HOME/.config/quvi/
 *   - $HOME/.local/share/quvi/
-*   - Global directories:
-*     - /usr/local/share/quvi/ -- hardcoded
-*     - /usr/share/quvi/ -- hardcoded
+*   - --datadir=DIR (and pkgdatadir) specified with configure (script)
+*     - These directories are typically $prefix/share/ and $prefix/share/quvi/
 *
 * @param quvi Pointer to a new handle
 *

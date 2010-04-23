@@ -36,6 +36,8 @@ libquvi_la_SOURCES = $(src) $(hdr)
 
 libquvi_la_CFLAGS = \
 -I$(top_builddir)/include \
+-DDATADIR='"$(datadir)"' \
+-DPKGDATADIR='"$(pkgdatadir)"' \
 $(libcurl_CFLAGS) \
 $(libpcre_CFLAGS) \
 $(liblua_CFLAGS)
