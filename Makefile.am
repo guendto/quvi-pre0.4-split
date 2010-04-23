@@ -33,7 +33,7 @@ endif
 dox:
 if HAVE_DOXYGEN
 	@$(DOXYGEN) $(top_builddir)/doxygen.conf
-	@echo doxygen generated pages can be found in docs/ subdir
+	@echo doxygen generated pages can be found in doc/ subdir
 else
 	@echo configure did not find doxygen
 endif

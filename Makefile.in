@@ -882,7 +882,7 @@ man:
 @HAVE_POD2HTML_FALSE@	@echo "error: configure did not find pod2html command"
 dox:
 @HAVE_DOXYGEN_TRUE@	@$(DOXYGEN) $(top_builddir)/doxygen.conf
-@HAVE_DOXYGEN_TRUE@	@echo doxygen generated pages can be found in docs/ subdir
+@HAVE_DOXYGEN_TRUE@	@echo doxygen generated pages can be found in doc/ subdir
 @HAVE_DOXYGEN_FALSE@	@echo configure did not find doxygen
 cmdline:
 @HAVE_GENGETOPT_TRUE@	@GENGETOPT@ < $(top_srcdir)/src/cmdline.ggo -C --unamed-opts=URL \
