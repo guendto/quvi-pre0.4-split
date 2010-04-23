@@ -10,6 +10,7 @@ Changes:
   * API changes
     - quvi_next_host is now deprecated
     - use quvi_next_supported_website instead
+    - quvi_free added
     - See NEWS file for a more complete description
   * (quvi) --format no longer accepts only hard-coded values
   * AM_SILENT_RULES([yes])
