@@ -115,11 +115,8 @@ supports(quvi_t quvi, opts_s opts) {
         switch (rc) {
         case QUVI_OK:
             printf("%s\t%s\n", domain, formats);
-#define _free(p) \
-    do { if (p) { free(p); p=NULL; } } while (0)
-            _free(domain);
-            _free(formats);
-#undef _free
+            quvi_free(domain);
+            quvi_free(formats);
             break;
         case QUVI_LAST: done = 1; break;
         default       : fprintf(stderr, "%s\n", quvi_strerror(quvi, rc)); break;

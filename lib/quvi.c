@@ -499,4 +499,12 @@ quvi_version (QUVIversion type) {
     return ((char *)version);
 }
 
+/* quvi_free */
+
+void
+quvi_free (void *ptr) {
+    if (ptr != NULL)
+        free (ptr);
+}
+
 

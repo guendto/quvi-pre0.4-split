@@ -524,7 +524,7 @@ void quvi_parse_close(quvi_video_t *video);
 *   - Any other returned non-zero value indicates an actual error and should be handled accordingly (e.g. relaying the return code to \a quvi_strerror)
 *
 * @note
-*   - Both domain and formats string must be freed after use
+*   - Both domain and formats string must be quvi_free()d after use
 *   - Return value QUVI_LAST is a non-zero value and indicates the end iteration
 *   - Consider handling errors
 *
@@ -532,8 +532,8 @@ void quvi_parse_close(quvi_video_t *video);
 * @code
 * while (quvi_next_supported_website(quvi, &domain, &formats) == QUVI_OK) {
 *   printf("%s\t%s\n", domain, formats);
-*   free(domain);
-*   free(formats);
+*   quvi_free(domain);
+*   quvi_free(formats);
 * }
 * @endcode
 */
@@ -591,6 +591,13 @@ char *quvi_strerror(quvi_t quvi, QUVIcode code);
 * @endcode
 */
 char *quvi_version(QUVIversion type);
+
+/**
+* @brief Free allocated memory
+*
+* @param ptr Pointer to data
+*/
+void quvi_free(void *ptr);
 
 /** @} */ /* End of libquvi_misc group. */
 /** @} */ /* End of libquvi_api group. */

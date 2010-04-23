@@ -80,9 +80,13 @@ Some of the old and vague IDs have been replaced or removed.
     - Applications that rely on this function for anything essential,
     must be modified to use quvi_next_supported_website
 
+    - returned domain and formats strings must be quvi_free()d
+
 * quvi_next_supported_website was added
 
   - Replaces quvi_next_host
+
+* quvi_free added
 
 
 4. Distribution changes
