@@ -22,6 +22,20 @@
 -- If you make improvements to this script, drop a line. Thanks.
 --   <http://quvi.googlecode.com/>
 
+--[[
+NOTES
+* This script fetches "video info" first
+  - Advantages: requires less bandwidth, works around sign-in-to-view
+  - Disadvantages: fails frequently for still unknown reason
+* If the above fails
+  - Dump server returned error to stdout as a warning
+  - Fetch and parse video page instead
+  - Advantages: works for most (unrestricted) videos
+  - Disadvantages:
+    - Requires (a lot) more bandwidth
+    - Does not work with videos that require signing-in-to-view
+]]--
+
 -- These are my formats.
 local lookup = {
     mobile_3gp = "17",
@@ -104,7 +118,6 @@ function parse (video)
         end
     end
 
-    -- And append it.
     if (fmt_id ~= nil) then
         video_url = video_url .."&fmt=".. fmt_id
     end
@@ -117,14 +130,15 @@ function parse (video)
 
 end
 
--- Youtube link unwrangler.
+-- Youtube video page URL unwrangler.
 function youtubify (url)
     url = url:gsub("-nocookie", "")    -- youtube-nocookie.com
     url = url:gsub("/v/", "/watch?v=") -- embedded
     return url
 end
 
--- Requires much less bandwidth. Fails for some videos. See comment below.
+-- The preferred method, uses less bandwidth, fails for some videos.
+-- See also the NOTES above.
 function get_video_info (video)
 
     -- Fetch video info.
@@ -138,8 +152,7 @@ function get_video_info (video)
     -- does not work for all videos that I've tried so far.
     local _,_,s = config:find("&reason=(.-)[?:&]?$")
     if (s ~= nil) then
-        s = s:gsub("+"," ")
-        print ("  > Warning: get_video_info returned: " .. s)
+        print ("  > Warning: get_video_info returned: " .. s:gsub("+"," "))
         return video -- This one's for the Old Faithful.
     end
 
@@ -160,9 +173,8 @@ function get_video_info (video)
 
 end
 
--- Fetch video page from the specified URL and parse it. Unlike
--- the above function, this cannot handle videos that require
--- signing in.
+-- Fetch video page from the user specified URL and parse.
+-- See also the NOTES above.
 function old_faithful (page_url, video)
 
     -- Fetch video page.
