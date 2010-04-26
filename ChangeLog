@@ -3,22 +3,21 @@ Version 0.2.0
 -------------
 
 Changes:
-  * Youtube age verification workaround (issue #4)
-  * Introduce Lua to video link parsing
+  * [Youtube] work around age verification (issue #4)
+  * Introduce Lua scripts to the project
+    - Used to parse the video links
     - New dependency, (lib)lua 5.1+, covered in INSTALL file
-    - NEWS file covers these changes in detail
+    - See NEWS file for complete list of the changes
   * API changes
-    - quvi_next_host is now deprecated
-    - use quvi_next_supported_website instead
-    - quvi_free added
-    - See NEWS file for a more complete description
-  * (quvi) --format no longer accepts only hard-coded values
+    - Deprecated quvi_next_host, use quvi_next_supported_website instead
+    - Added quvi_free
+    - See NEWS file for complete list of the changes
+  * [quvi] --format no longer accepts only hard-coded values
   * AM_SILENT_RULES([yes])
   * New configure options --with-doc and --enable-examples
 
 Notes:
-  * Developers should read the NEWS file entry for this release carefully
-  * Downstream maintainers should read the "Distribution changes" [NEWS file]
+  * Developers, downstream maintainers, see NEWS file
 
 
 Version 0.1.4
