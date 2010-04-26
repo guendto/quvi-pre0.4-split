@@ -16,16 +16,15 @@ specific scripts (rules) to fetch and parse the video links.
 This has the following advantages to the old design:
 
   * Dynamic script loading
-    - Scripts can be dropped in (and removed from) the search path
-    - The search paths are covered in C API reference and share/lua/README
+    - Scripts can be edited, dropped in (and removed from) the search path
+    - See share/lua/README for the script search paths
 
-  * No need to tweak C source code or recompile quvi
-    - Easier prototyping for new websites and fixing/improving parsing
-    - Lua is fairly easy to learn and use (see share/lua/website/ for examples)
-
-  * Cleaner source code
-
-  * Less prone to memory leaks
+  * Scripts are easier to maintain
+    - Website support is the most frequently changing part of the project
+    - Easy prototyping for new websites
+    - No need to fiddle with the library C source code when parsing breaks
+    - Less prone to memory leaks
+    - Lua syntax is easy to learn and understand
 
 Scripting replaces the old design entirely, e.g. lib/host/ or any related
 files are no longer required or distributed with the source code
@@ -38,32 +37,24 @@ Some of the old and vague IDs have been replaced or removed.
 
 * "flv" -> "default"
 
-  - "flv" was previously treated as `default' format, this was done
-  primarily for historical reasons
+  This was previously used due to historical reasons as the "default"
+  format. In reality, many websites default to something else than
+  "flv" (or Adobe Flash video) format.
 
-  - "flv" implies Adobe Flash format but in actuality, some of the current
-  websites default to completely different formats
+* Youtube specific changes
 
-  - "flv" also implies file format rather than video format
+  The format ID array was completely revamped. Some of the previously used
+  format IDs implied incorrectly only extensions and not the video
+  format/resolution. Example: "mp4" -> "sd_270p".
 
-  - The "default format" is as of this release referred to as "default",
-  see `quvi --hosts' to get the idea
+* Google specific changes
 
-* Youtube
+  Removed the "mp4" format.
 
-  - The format array was completely revamped, so for example instead of "mp4",
-  one is expected to use "sd_270p", like above with "flv", "mp4" too implied
-  file format rather than video format (or resolution)
+* Spiegel specific changes
 
-* Google
-
-  - Removed the "mp4" format
-
-* Spiegel
-
-  - New format ID array, implying the bitrate/quality of the format
-
-  - New default is vp6_388, default was previously vp6_64
+  New format ID array, now implying the bitrate/quality. The
+  new default format is vp6_388, this was previously vp6_64.
 
 
 3. API changes
@@ -73,18 +64,19 @@ Some of the old and vague IDs have been replaced or removed.
 
 * quvi_next_host is now deprecated
 
-  - The binary compatibility remains, however:
+  The function remains (for now) in the library API, however:
 
-    - quvi_next_host no longer returns any string values
+  quvi_next_host no longer returns anything (other than QUVI_OK)
 
-    - Applications that rely on this function for anything essential,
-    must be modified to use quvi_next_supported_website
-
-    - returned domain and formats strings must be quvi_free()d
+  Any applications depending on this function to do anything
+  essential should update to use the quvi_next_supported_website
+  instead (see below).
 
 * quvi_next_supported_website was added
 
-  - Replaces quvi_next_host
+  Intended to replace quvi_next_host, very similar except takes
+  an additional parameter (quvi_t) and expects the caller to
+  quvi_free() the returned domain and formats strings.
 
 * quvi_free added
 
@@ -94,16 +86,18 @@ Some of the old and vague IDs have been replaced or removed.
 
 * New dependency: Lua 5.1+ (library), see also INSTALL file
 
-* Additional files are now installed from doc/ and share/, see
-their appropriate Makefile.am files to get a full list of the files
+* Additional files are now installed from doc/ and share/
 
-* New --with-doc option [configure] (default:yes)
+  See the appropriate Makefile.am files to get a complete list
+  of these files.
 
-* New --enable-examples option [configure] (default:no)
+* New configure option: --with-doc (default:yes)
+
+* New configure option: --enable-examples option (default:no)
 
 
 Version 0.1.2
--------------
+=============
 
 Adds quvi_callback_write support, tweaks quvi_callback_status
 support (abort if the callback returns a non-zero value).
