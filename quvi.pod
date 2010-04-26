@@ -140,14 +140,9 @@ Spew out libcurl verbose mode messages.
 Contain details about working with the quvi Lua scripts (e.g. website
 rules). If video link parsing breaks, have a look at these files.
 
-For example, you can copy a website script (rule) to  your working
-directory (./lua/website/) and tweak it without having to make
-any changes to the quvi source code.
-
 =item $prefix/share/doc/quvi
 
-The contribution and development guidelines etc. can be found in
-the above directory.
+Various HOWTOs can be found in this directory.
 
 =back
 
@@ -165,12 +160,7 @@ config file. For example:
  no-verify                  # --no-verify
  debug                      # --debug
 
-Note that you can use QUVI_HOME also.
-
-=item B<$prefix/share/quvi/lua/website>
-
-Contains the quvi website rule scripts used to parse the video links.
-See also L</DEBUGGING>.
+Note that you can also define QUVI_HOME and use it instead.
 
 =back
 
@@ -184,11 +174,15 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
   QUVI_INVARG           = 0x03, Invalid function argument
   QUVI_CURLINIT         = 0x04, libcurl initialization failed
   QUVI_LAST             = 0x05, Indicates end of list iteration
-  _INTERNAL_QUVI_LAST   = 0x06, For library internal use only
+  QUVI_ABORTEDBYCALLBACK= 0x06, Aborted by callback function
+  QUVI_LUAINIT          = 0x07, Lua initialization failure
+  QUVI_NOLUAWEBSITE     = 0x08, Failed to find lua website scripts
+  --
   QUVI_PCRE             = 0x40, libpcre error occurred
   QUVI_NOSUPPORT        = 0x41, libquvi does not support the video host
   QUVI_CURL             = 0x42, libcurl error occurred
   QUVI_ICONV            = 0x43, libiconv error occurred
+  QUVI_LUA              = 0x44, lua error occurred
 
 =head1 OTHER
 
@@ -210,6 +204,6 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
 
 =head1 AUTHOR
 
-Toni Gundogdu <legatvs@gmail.com>.
+Toni Gundogdu.
 
 =cut

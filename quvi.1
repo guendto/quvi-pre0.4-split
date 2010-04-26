@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-04-21" "0.2.0" "quvi manual"
+.TH quvi 1 "2010-04-26" "0.2.0" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -237,15 +237,10 @@ Spew out libcurl verbose mode messages.
 .PD
 Contain details about working with the quvi Lua scripts (e.g. website
 rules). If video link parsing breaks, have a look at these files.
-.Sp
-For example, you can copy a website script (rule) to  your working
-directory (./lua/website/) and tweak it without having to make
-any changes to the quvi source code.
 .ie n .IP "$prefix/share/doc/quvi" 4
 .el .IP "\f(CW$prefix\fR/share/doc/quvi" 4
 .IX Item "$prefix/share/doc/quvi"
-The contribution and development guidelines etc. can be found in
-the above directory.
+Various HOWTOs can be found in this directory.
 .SH "FILES"
 .IX Header "FILES"
 .ie n .IP "\fB\fB$HOME\fB/.quvirc\fR" 4
@@ -261,28 +256,27 @@ config file. For example:
 \& debug                      # \-\-debug
 .Ve
 .Sp
-Note that you can use \s-1QUVI_HOME\s0 also.
-.ie n .IP "\fB\fB$prefix\fB/share/quvi/lua/website\fR" 4
-.el .IP "\fB\f(CB$prefix\fB/share/quvi/lua/website\fR" 4
-.IX Item "$prefix/share/quvi/lua/website"
-Contains the quvi website rule scripts used to parse the video links.
-See also \*(L"\s-1DEBUGGING\s0\*(R".
+Note that you can also define \s-1QUVI_HOME\s0 and use it instead.
 .SH "EXIT STATUS"
 .IX Header "EXIT STATUS"
 quvi exits with 0 on success and >0 if an error occurred.
 .PP
-.Vb 11
+.Vb 10
 \&  QUVI_OK               = 0x00
 \&  QUVI_MEM              = 0x01, Memory allocation failed
 \&  QUVI_BADHANDLE        = 0x02, Bad session handle
 \&  QUVI_INVARG           = 0x03, Invalid function argument
 \&  QUVI_CURLINIT         = 0x04, libcurl initialization failed
 \&  QUVI_LAST             = 0x05, Indicates end of list iteration
-\&  _INTERNAL_QUVI_LAST   = 0x06, For library internal use only
+\&  QUVI_ABORTEDBYCALLBACK= 0x06, Aborted by callback function
+\&  QUVI_LUAINIT          = 0x07, Lua initialization failure
+\&  QUVI_NOLUAWEBSITE     = 0x08, Failed to find lua website scripts
+\&  \-\-
 \&  QUVI_PCRE             = 0x40, libpcre error occurred
 \&  QUVI_NOSUPPORT        = 0x41, libquvi does not support the video host
 \&  QUVI_CURL             = 0x42, libcurl error occurred
 \&  QUVI_ICONV            = 0x43, libiconv error occurred
+\&  QUVI_LUA              = 0x44, lua error occurred
 .Ve
 .SH "OTHER"
 .IX Header "OTHER"
@@ -297,4 +291,4 @@ quvi exits with 0 on success and >0 if an error occurred.
 % git clone git://repo.or.cz/quvi.git
 .SH "AUTHOR"
 .IX Header "AUTHOR"
-Toni Gundogdu <legatvs@gmail.com>.
+Toni Gundogdu.
