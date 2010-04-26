@@ -1,11 +1,13 @@
 
 
 Contents
+
   1. About
   2. Websites
   3. Platforms
   4. Threads
   5. Getting started
+  6. Contributing
 
 
 1. About
@@ -25,9 +27,7 @@ Repo: git://repo.or.cz/quvi.git
 2. Websites
 -----------
 
-Basically Youtube and friends. This list is, however, ever-evolving
-(and sometimes regressing). You can get a better idea by running
-"quvi --hosts", or by looking at the lib/host/ directory.
+You can get a complete list by running `quvi --hosts'.
 
 
 3. Platforms
@@ -52,15 +52,17 @@ libquvi is not thread-safe.
 5. Getting started
 ------------------
 
-The doxygen generated documentation covers the essentials.
+`quvi --help' and `man quvi' are your friends.
 
-You may also want to take a look at the examples/simple.c
-and src/quvi.c files.
+The doxygen generated documentation covers the use of C API (libquvi).
+See also examples/ subdir for a simple example. See the quvi tool
+(src/quvi.c) for a more advanced example.
 
-See INSTALL file for notes about generating the documentation.
 The most recent documentation is also available via the project
 website (http://quvi.googlecode.com/).
 
-If you are interested in adding support for a new video website,
-take a look at the share/lua/README and share/lua/website/README.
-Example scripts can be found in share/lua/website/ directory.
+
+6. Contributing
+---------------
+
+See doc/ for various HOWTOs.
