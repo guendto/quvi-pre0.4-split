@@ -38,12 +38,12 @@ NOTES
 
 -- These are my formats.
 local lookup = {
-    mobile_3gp = "17",
-    sd_270p    = "18", --   480x270
-    sd_360p    = "34", --   640x360
-    hq_480p    = "35", --   854x480
-    hd_720p    = "22", --  1280x720
-    hd_1080p   = "37"  -- 1920x1080
+    mobile   = "17", --   3gp
+    sd_270p  = "18", --   480x270
+    sd_360p  = "34", --   640x360
+    hq_480p  = "35", --   854x480
+    hd_720p  = "22", --  1280x720
+    hd_1080p = "37"  -- 1920x1080
 }
 
 -- Returns script details.
