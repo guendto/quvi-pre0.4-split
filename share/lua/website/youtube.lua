@@ -100,7 +100,7 @@ function parse (video)
                 video.id, quvi.unescape(t))
 
     -- Choose correct format ID.
-    if (best == nil) then
+    if (best == nil and video.requested_format == "best") then
         print ("  > Warning: Unable to find `best' format. Use `default'.")
     end
 
