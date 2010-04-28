@@ -152,6 +152,7 @@ function get_video_info (video)
     local _,_,s = config:find("&reason=(.-)[?:&]?$")
     if (s ~= nil) then
         print ("  > Warning: get_video_info: " .. s:gsub("+"," "))
+        print ("  > Warning: Revert to fetch video page instead.")
         return video -- This one's for the Old Faithful.
     end
 
