@@ -10,8 +10,9 @@ Version 0.2.0
 1. Lua scripting
 ----------------
 
-Introduce Lua <http://lua.org> scripts to the project. quvi now uses website
-specific scripts (rules) to fetch and parse the video links.
+Introduce Lua <http://lua.org> scripts to the project. Video link parsing
+was completely reworked for website specific lua scripts (or rules).
+These scripts are now used instead to parse the video links.
 
 This has the following advantages to the old design:
 
@@ -37,15 +38,14 @@ Some of the old and vague IDs have been replaced or removed.
 
 * "flv" -> "default"
 
-  This was previously used due to historical reasons as the "default"
-  format. In reality, many websites default to something else than
-  "flv" (or Adobe Flash video) format.
+  Many websites default to other than "flv" which implies flash video.
+  This ID was previously only used for historical reasons leading back
+  to the early days of clive(1).
 
 * Youtube specific changes
 
-  The format ID array was completely revamped. Some of the previously used
-  format IDs implied incorrectly only extensions and not the video
-  format/resolution. Example: "mp4" -> "sd_270p".
+  The format ID array was completely reworked. Most of the previously
+  used IDs implied only extensions rather than the format (or the quality).
 
 * Google specific changes
 
@@ -53,30 +53,31 @@ Some of the old and vague IDs have been replaced or removed.
 
 * Spiegel specific changes
 
-  New format ID array, now implying the bitrate/quality. The
-  new default format is vp6_388, this was previously vp6_64.
+  New format ID array, now implying the bitrate/quality. Other
+  changes include upgrading the default format from vp6_64 to
+  vp6_388.
 
 
 3. API changes
 --------------
 
-* Additional QUVIcodes (Lua related)
+* Additional (Lua related) QUVIcodes
 
 * quvi_next_host is now deprecated
 
-  The function remains (for now) in the library API, however:
+  The function will remain (for now) as part of the API, however:
 
-  quvi_next_host no longer returns anything (other than QUVI_OK)
+    - quvi_next_host no longer returns anything (other than QUVI_OK)
 
-  Any applications depending on this function to do anything
+    - Any applications depending on this function to do anything
   essential should update to use the quvi_next_supported_website
   instead (see below).
 
 * quvi_next_supported_website was added
 
-  Intended to replace quvi_next_host, very similar except takes
-  an additional parameter (quvi_t) and expects the caller to
-  quvi_free() the returned domain and formats strings.
+  Similar to the deprecated quvi_next_host but an additional
+  parameter (quvi_t) and expects the caller to quvi_free()
+  the returned domain and formats strings.
 
 * quvi_free added
 
