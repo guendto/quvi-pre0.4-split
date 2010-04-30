@@ -100,7 +100,7 @@ function parse (video)
                 video.id, quvi.unescape(t))
 
     -- Choose correct format ID.
-    if (best == nil) then
+    if (best == nil and video.requested_format == "best") then
         print ("  > Warning: Unable to find `best' format. Use `default'.")
     end
 
@@ -152,6 +152,7 @@ function get_video_info (video)
     local _,_,s = config:find("&reason=(.-)[?:&]?$")
     if (s ~= nil) then
         print ("  > Warning: get_video_info: " .. s:gsub("+"," "))
+        print ("  > Warning: Revert to fetch video page instead.")
         return video -- This one's for the Old Faithful.
     end
 
