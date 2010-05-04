@@ -1,50 +1,59 @@
-Howto: Add support for another video website
-============================================
+Howto: Contribute code
+======================
 
-1. About
---------
+1. Checklist
+------------
 
-libquvi fetches and parses video page contents for various
-video details and constructs the video download link from
-these parsed details. The project also contains the "quvi"
-executable which can be used to develop support for another
-website.
-
-As of 0.2.0 quvi uses Lua for scripting support allowing
-easy development for new websites and maintainment of
-the current support.
+  1) We do not include websites to quvi that
+     - Already allow downloading
+     - Use the RTMP protocol
+  2) If you are proposing a change to the library API
+     - Consider carefully the change, and how it will change
+     - We try not to make too many changes to the API unless really, *really* required
 
 
-2. Checklist: Before you look any further
------------------------------------------
-
-* Does the website allow video downloading?
-  - If yes, then there is no reason to add support for it
-    - libquvi is intended to work around the flash requirement
-    - Such patches will not be committed to the development tree
-
-
-3. The hacker within
+2. Getting knee-deep
 --------------------
 
-It all boils down figuring out how we can access the videos
-without Adobe Flash. To get a good idea of just how this varies
-for each website, take a look at youtube.lua and buzzhumor.lua
-scripts.
+Writing the website scripts (rules) is typically the easy part.
+Figuring out how those video links have to be put together is
+usually the part you will spend most of your time on.
 
-Sometimes digging deeper may be required:
-  http://code.google.com/p/clive/issues/detail?id=6#c7
+Some websites do little to hide the URL to the video in video page
+HTML, others may go great lengths hiding it. For example of simple
+see the buzzhumor.lua script. For a comparison see youtube.lua
+script.
 
-Once the data has been analyzed and the link construction figured
-out, all that remains is writing the website rule (script).
+Those that hide the video details, require 
+
+  * Running the Adobe Flash object code and logging TCP traffic for analysis
+
+    For an example of this, see:
+      http://code.google.com/p/clive/issues/detail?id=6#c7
+
+    Note that even though at the above link the thread discusses
+    clive, much of the same applies to quvi development.
+
+  * As noted above (see the checklist), we do not deal with those
+  websites that rely on RTMP, while some argue for it, there's a
+  reason why some websites use it -- and we do not
+
+    We are strictly HTTP. You can find other projects that support RTMP.
 
 
-4. Writing the website rule
----------------------------
+3. The creative process of writing
+----------------------------------
 
-The process was greatly simplified with the introduction of
-Lua script support. This used to be a rather tedious task
-having to tweak various GNU Autotools and C source code files.
+Historical ramblings: This used to be much more complicated. The use
+of the embedded Lua scripts greatly improved this aspect of the development
+
+The example below demonstrates how you can reuse a script and drop it in
+the quvi's search path without having to fiddle with the library C source
+code (or the existing scripts).
+
+We use git in the example below, but you could just as well use any other SCM.
+The primary reason we use it is just to create the patch which you can then
+submit to the project.
 
 Example:
 
@@ -61,29 +70,30 @@ Example:
   (submit your patch, see below)
 
 You can read more about the script search paths from
-$prefix/share/quvi/lua/README file. Here's another example:
+$prefix/share/quvi/lua/README file.
 
-  cd $quvi_top_srcdir
+If you prefer to work with the development code (recommended):
+
+  git clone git://repo.or.cz/quvi.git
+  cd quvi
   mkdir tmp; cd tmp
   ../configure
   make
-  QUVI_BASEDIR=../share ./src/quvi -t youtube
-
-The above works very well with the development code grabbed
-from git://repo.or.cz/quvi.git.
+  (edit ../share/lua/website/your-script.lua)
+  QUVI_BASEDIR=../share ./src/quvi "$TEST_URL_FOR_YOUR_SCRIPT"
 
 Make a note of QUVI_BASEDIR, you can define the base directory
 from which libquvi should start looking for lua/website/
 directory.
 
 
-5. Checklist: Before you submit your patch
-------------------------------------------
+4. Checklist #2
+---------------
 
 * Does the website support multiple formats?
   - If yes, then consider adding support for them as well
-    - If there's limited or no data available on this, skip
-    - We can always look into this later when/if more data unfolds
+    - If there's limited or no data available as regards to this, skip
+    - You can look into this later when/if more data unfolds
 
 * Does your code parse everything correctly?
   - Video ID
@@ -91,17 +101,18 @@ directory.
   - Video link
 
 * Does your code cleanup the video title?
-  - We want the video title only
+  - We want the video title *only*
   - Anything else, e.g. domain name should be excluded from the title
 
 * Did you confirm that all of the above works?
-  - e.g. quvi URL
+  - e.g. cd tmp; QUVI_BASEDIR=../share ./src/quvi URL
 
 * Add your name to the copyright notice
-  - We will default to "Copyright (C) 201x quvi team" by default
+  - We will otherwise add the following line to the source code:
+    "Copyright (C) (year) quvi team"
 
 
-6. Submitting patches
----------------------
+5. Submit your patch
+--------------------
 
 See $prefix/share/doc/quvi/HowtoSubmitPatches for details.
