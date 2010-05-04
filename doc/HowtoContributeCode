@@ -44,9 +44,6 @@ Those that hide the video details, require
 3. The creative process of writing
 ----------------------------------
 
-Historical ramblings: This used to be much more complicated. The use
-of the embedded Lua scripts greatly improved this aspect of the development
-
 The example below demonstrates how you can reuse a script and drop it in
 the quvi's search path without having to fiddle with the library C source
 code (or the existing scripts).
