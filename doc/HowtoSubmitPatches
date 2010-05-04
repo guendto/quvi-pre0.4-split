@@ -9,7 +9,8 @@ If you are using git:
 If you are working with diff use "diff -u" at very least when you generate
 your patches.
 
-Submit to either <http://code.google.com/p/quvi/issues/> issue
-tracker, or <legatvs@gmail.com>.
+Submit to either <http://code.google.com/p/quvi/issues/> issue tracker,
+or <legatvs@gmail.com>. If you need to discuss the changes,
+email (above) the patch instead.
 
 Thanks!
