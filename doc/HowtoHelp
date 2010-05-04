@@ -2,30 +2,38 @@
 Howto: Help with the project
 ============================
 
-About
------
+1. Notes
+--------
 
-libquvi is developed under Linux (x86) and occasionally tested under
-FreeBSD (x86). It is impossible for us to detect and fix errors on
-all different system configurations without help. Therefore feedback
-and help is greatly appreciated.
+quvi is developed on Linux (i686) and sometimes tested under
+FreeBSD (i386). It is impossible for us to detect and fix errors on
+all different system configurations without help.
 
-If you are a downstream maintainer, and you think the upstream and
-others could benefit from your patches, please consider submitting
-them to the upstream.
+If you are a downstream maintainer, and you think the upstream could
+benefit from your patches, please consider submitting them to the
+upstream. See $prefix/share/doc/quvi/HowtoSubmitPatches for contact
+details.
+
+
+2. What you can do
+------------------
 
 * Report bugs (http://quvi.googlecode.com/)
   - Check for duplicates before you submit
+  - We may have addressed/closed the issue already
 
 * Write fixes
   - Check the issue tracker for open issues
   - Write fixes for yet unreported issues
+  - See also $prefix/share/doc/quvi/HowtoSubmitPatches
 
-* Write support for additional websites
-  - See HowtoAddSupport
+* Write support for an additional website
+  - See $prefix/share/doc/quvi/HowtoContributeCode
 
 * Gather and report website specific data
-  - You make a good candidate if you can run Adobe flash player
+  - You make a good candidate if you can execute Adobe Flash object code (e.g. player)
   - TCP traffic, etc. (there are a number of tools to do this these days)
-  - This data could be used to figure out how the videos can be extracted
-  - See http://code.google.com/p/clive/issues/detail?id=6#c7 (for an example)
+  - See $prefix/share/doc/quvi/HowtoContributeCode, which discusses this briefly
+
+* Read the Developers page in the wiki for the latest notes
+  - http://code.google.com/p/quvi/wiki/Developers
