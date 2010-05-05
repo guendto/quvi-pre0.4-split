@@ -28,6 +28,7 @@ Repo: git://repo.or.cz/quvi.git
 -----------
 
 You can get a complete list by running `quvi --hosts'.
+Alternatively, take a look at the scripts in share/lua/website/.
 
 
 3. Platforms
@@ -65,4 +66,4 @@ website (http://quvi.googlecode.com/).
 6. Contributing
 ---------------
 
-See doc/ for various HOWTOs.
+See doc/ for HOWTOs.
