@@ -2,99 +2,78 @@
 Version 0.2.0
 =============
 
-* Developers should read these changes carefully, especially the "API changes"
+Contents
 
-* Downstream maintainers should read (at least) the "Distribution changes"
+  1. Notes
+  2. Introducing Lua
+  3. Format ID changes
+  4. API changes
+  5. Distribution changes
 
 
-1. Lua scripting
-----------------
+1. Notes
+--------
+
+Developers:
+* Read these changes carefully, especially "4. API changes"
+
+Packagers/downstream maintainers/whatnot:
+* Read (at least) the "5. Distribution changes"
+
+
+2. Introducing Lua
+------------------
 
 Introduce Lua <http://lua.org> scripts to the project. Video link parsing
-was completely reworked for website specific lua scripts (or rules).
-These scripts are now used instead to parse the video links.
+was completely reworked. All of the parsing is now done in website specific
+Lua scripts. This has some advantages to the old design:
 
-This has the following advantages to the old design:
-
-  * Dynamic script loading
-    - Scripts can be edited, dropped in (and removed from) the search path
-    - See share/lua/README for the script search paths
-
-  * Scripts are easier to maintain
-    - Website support is the most frequently changing part of the project
-    - Easy prototyping for new websites
-    - No need to fiddle with the library C source code when parsing breaks
-    - Less prone to memory leaks
-    - Lua syntax is easy to learn and understand
-
-Scripting replaces the old design entirely, e.g. lib/host/ or any related
-files are no longer required or distributed with the source code
+  * No need to tweak the library GNU Autotools files or C source code
+  * Scripts can be edited, dropped in, removed and reloaded
+  * Less likely to introduce memory leaks
+  * Lua language and syntax
 
 
-2. Video format (ID) changes
-----------------------------
+3. Format ID changes
+--------------------
 
-Some of the old and vague IDs have been replaced or removed.
+Common:
+* "flv" -> "default", not all websites default to "flv" (Adobe flash video)
 
-* "flv" -> "default"
+Youtube:
+* Reworked the format ID array
 
-  Many websites default to other than "flv" which implies flash video.
-  This ID was previously only used for historical reasons leading back
-  to the early days of clive(1).
+Google (Video):
+* Removed "mp4" format ID
 
-* Youtube specific changes
-
-  The format ID array was completely reworked. Most of the previously
-  used IDs implied only extensions rather than the format (or the quality).
-
-* Google specific changes
-
-  Removed the "mp4" format.
-
-* Spiegel specific changes
-
-  New format ID array, now implying the bitrate/quality. Other
-  changes include upgrading the default format from vp6_64 to
-  vp6_388.
+Spiegel:
+* Reworked the format ID array
+* New default (vp6_64 -> vp_388)
 
 
-3. API changes
+4. API changes
 --------------
 
-* Additional (Lua related) QUVIcodes
+Changes:
+* Added additional QUVIcodes for Lua
+* Added quvi_free
+* Added quvi_next_supported_website
+  - Deprecates quvi_next_host (see below)
 
-* quvi_next_host is now deprecated
-
-  The function will remain (for now) as part of the API, however:
-
-    - quvi_next_host no longer returns anything (other than QUVI_OK)
-
-    - Any applications depending on this function to do anything
-  essential should update to use the quvi_next_supported_website
-  instead (see below).
-
-* quvi_next_supported_website was added
-
-  Similar to the deprecated quvi_next_host but an additional
-  parameter (quvi_t) and expects the caller to quvi_free()
-  the returned domain and formats strings.
-
-* quvi_free added
+Deprecated:
+* quvi_next_host
 
 
-4. Distribution changes
+5. Distribution changes
 -----------------------
 
-* New dependency: Lua 5.1+ (library), see also INSTALL file
-
-* Additional files are now installed from doc/ and share/
-
-  See the appropriate Makefile.am files to get a complete list
-  of these files.
-
-* New configure option: --with-doc (default:yes)
-
-* New configure option: --enable-examples option (default:no)
+Changes:
+* Additional dependency for Lua 5.1 (library)
+* Additional files installed from doc/ and share/
+  - See doc/Makefile.am and share/Makefile.am for a complete list
+* Options for configure:
+  - --with-doc (default:yes)
+  - --enable-examples (default:no)
 
 
 Version 0.1.2
