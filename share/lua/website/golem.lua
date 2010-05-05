@@ -78,7 +78,6 @@ function parse (video)
         format = "high"
     else
         for _,v in pairs({"ipod","high"}) do
-            print (v)
             if (v == video.requested_format) then
                 format = v
                 break
