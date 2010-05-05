@@ -5,7 +5,7 @@ Version 0.2.0
 -------------
 
 Changes:
-  * Restructure package tree
+  * Restruct package tree
   * Include license files
   * Add liblua51.dll
   * Bump libcurl to 7.20.1
