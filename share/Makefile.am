@@ -1,6 +1,8 @@
 
 DIST_lua = \
 lua/README \
+lua/util/content_type.lua \
+lua/util/charset.lua \
 lua/website/README \
 lua/website/break.lua \
 lua/website/buzzhumor.lua \
