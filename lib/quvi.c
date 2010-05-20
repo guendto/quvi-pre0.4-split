@@ -400,11 +400,11 @@ quvi_next_supported_website (quvi_t handle, char **domain, char **formats) {
     is_invarg(domain);
     is_invarg(formats);
 
-    if (!quvi->scripts)
+    if (!quvi->website_scripts)
         return (QUVI_NOLUAWEBSITE);
 
     if (!curr_host)
-        curr_host = quvi->scripts;
+        curr_host = quvi->website_scripts;
     else {
         curr_host = curr_host->next;
         if (!curr_host)

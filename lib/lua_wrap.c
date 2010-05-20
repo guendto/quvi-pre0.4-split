@@ -102,6 +102,8 @@ l_quvi_unescape (lua_State *l) {
     return (1);
 }
 
+/* wrapper. */
+
 static QUVIcode
 new_lua_script (_quvi_lua_script_t *dst) {
     struct _quvi_lua_script_s *qls;
@@ -153,7 +155,7 @@ scan_lua_scripts (_quvi_t quvi, const char *path) {
             asprintf((char**)&qls->basename, "%s", de->d_name);
             asprintf((char**)&qls->path, "%s/%s", path, de->d_name);
 
-            llst_add(&quvi->scripts, qls);
+            llst_add(&quvi->website_scripts, qls);
         }
 
         _free(suffix);
@@ -165,7 +167,7 @@ scan_lua_scripts (_quvi_t quvi, const char *path) {
 }
 
 static QUVIcode
-find_lua_scripts (_quvi_t quvi) {
+find_lua_website_scripts (_quvi_t quvi) {
     static const char luawebsite_dir[] = "lua/website";
     char *homedir, *path, *basedir;
     char buf[PATH_MAX];
@@ -252,23 +254,25 @@ init_lua (_quvi_t quvi) {
     luaL_openlibs(quvi->lua);
     luaL_openlib(quvi->lua, "quvi", reg_meth, 1);
 
-    rc = find_lua_scripts(quvi);
+    rc = find_lua_website_scripts(quvi);
     if (rc != QUVI_OK)
         return (rc);
 
-    return (llst_size(quvi->scripts) ? QUVI_OK:QUVI_NOLUAWEBSITE);
+    return (llst_size(quvi->website_scripts) ? QUVI_OK:QUVI_NOLUAWEBSITE);
 }
 
 void
 free_lua (_quvi_t *quvi) {
-    llst_node_t curr = (*quvi)->scripts;
+
+    llst_node_t curr = (*quvi)->website_scripts;
     while (curr) {
         _quvi_lua_script_t s = (_quvi_lua_script_t) curr->data;
         _free(s->basename);
         _free(s->path);
         curr = curr->next;
     }
-    llst_free(&(*quvi)->scripts);
+
+    llst_free(&(*quvi)->website_scripts);
 
     lua_close((*quvi)->lua);
     (*quvi)->lua = NULL;
@@ -458,7 +462,7 @@ run_parse_func (lua_State *l, llst_node_t node, _quvi_video_t video) {
     return (rc);
 }
 
-/* find handler host script for the url. */
+/* Match host script to the url. */
 
 QUVIcode
 find_host_script (_quvi_video_t video) {
@@ -469,7 +473,7 @@ find_host_script (_quvi_video_t video) {
 
     qv   = video;
     quvi = video->quvi; /* seterr macro uses this. */
-    curr = quvi->scripts;
+    curr = quvi->website_scripts;
     l    = quvi->lua;
 
     while (curr) {
