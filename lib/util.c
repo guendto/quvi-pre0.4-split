@@ -35,6 +35,7 @@
 #include "curl_wrap.h"
 #include "util.h"
 
+#ifdef COMPILE_UNUSED
 QUVIcode
 regexp_capture(
     _quvi_t quvi,
@@ -120,48 +121,7 @@ regexp_capture(
 
     return (QUVI_OK);
 }
-
-QUVIcode
-contenttype_to_suffix(_quvi_t quvi, _quvi_video_link_t qvl) {
-    char *suffix;
-    QUVIcode rc;
-
-    assert(qvl != 0);
-
-    if (!qvl->content_type)
-        return (QUVI_INVARG);
-
-    rc = regexp_capture(
-        quvi,
-        qvl->content_type,
-        ".*/(.*)",
-        0,
-        0,
-        &suffix,
-        (void *) 0
-    );
-
-    if (rc != QUVI_OK)
-        return (rc);
-
-    suffix = strepl(suffix, "x-", "");
-
-    if (strstr(suffix, "octet")
-        || strstr(suffix, "swf")
-        || strstr(suffix, "flash")
-        || strstr(suffix, "plain"))
-    {
-        _free(suffix);
-        asprintf(&suffix, "%s", "flv");
-    }
-
-    _free(qvl->suffix);
-    asprintf(&qvl->suffix, "%s", suffix);
-
-    _free(suffix);
-    
-    return (QUVI_OK);
-}
+#endif /* COMPILE_UNUSED */
 
 #ifdef HAVE_ICONV
 QUVIcode
@@ -237,32 +197,6 @@ to_utf8(_quvi_video_t video) {
     return (QUVI_OK);
 }
 #endif
-
-QUVIcode
-parse_charset(_quvi_video_t video, const char *content) {
-    char *charset;
-    QUVIcode rc;
-
-    assert(video != 0);
-    assert(content != 0);
-
-    rc = regexp_capture(
-        video->quvi,
-        content,
-        "(?i)charset=\"?(.*?)([\"\\/>\\s]|$)",
-        0,
-        0,
-        &charset,
-        (void *) 0
-    );
-
-    if (rc == QUVI_OK) {
-        setvid(video->charset, "%s", charset);
-        _free(charset);
-    }
-
-    return (rc);
-}
 
 char *
 unescape(_quvi_t quvi, char *s) {

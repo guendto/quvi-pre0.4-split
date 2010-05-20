@@ -26,6 +26,7 @@
 #include "quvi/quvi.h"
 #include "internal.h"
 #include "util.h"
+#include "lua_wrap.h"
 #include "curl_wrap.h"
 
 static void *
@@ -134,8 +135,8 @@ fetch_to_mem(
 
     if (mem.p) {
         *dst = mem.p;
-        if (rc == QUVI_OK) /* charset */
-            parse_charset(video, mem.p);
+        if (rc == QUVI_OK && !video->charset) /* charset */
+            run_lua_charset_func(video, mem.p);
     }
 
     video->quvi->httpcode = httpcode;
@@ -223,7 +224,7 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
 
             if (rc == QUVI_OK) {
                 /* Content-Type -> suffix. */
-                rc = contenttype_to_suffix(quvi, qvl);
+                rc = run_lua_suffix_func(quvi, qvl);
             }
         }
         else {

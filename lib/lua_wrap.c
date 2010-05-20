@@ -37,7 +37,6 @@
 #include "lua_wrap.h"
 
 static _quvi_video_t qv = NULL;
-static char *script_path = NULL;
 
 /* c functions for lua. */
 
@@ -117,10 +116,10 @@ new_lua_script (_quvi_lua_script_t *dst) {
     return (QUVI_OK);
 }
 
-/* find lua scripts. */
+typedef int (*filter_func)(const struct dirent*);
 
 static QUVIcode
-scan_lua_scripts (_quvi_t quvi, const char *path) {
+scan_dir (llst_node_t *dst, const char *path, filter_func filter) {
     struct dirent *de;
     DIR *dir;
 
@@ -129,36 +128,19 @@ scan_lua_scripts (_quvi_t quvi, const char *path) {
         return (QUVI_OK);
 
     while ( (de = readdir(dir)) ) {
-        char *suffix;
-        QUVIcode rc;
-
-        rc = regexp_capture(
-            quvi,
-            de->d_name,
-            "\\.(.*)$",
-            0,
-            0,
-            &suffix,
-            (void *) 0
-        );
-
-        if (rc != QUVI_OK)
-            continue;
-
-        if (strcmp(suffix, "lua") == 0) {
+        if (filter(de)) {
             _quvi_lua_script_t qls;
 
-            rc = new_lua_script(&qls);
+            QUVIcode rc = new_lua_script(&qls);
+
             if (rc != QUVI_OK)
                 return (rc);
 
             asprintf((char**)&qls->basename, "%s", de->d_name);
             asprintf((char**)&qls->path, "%s/%s", path, de->d_name);
 
-            llst_add(&quvi->website_scripts, qls);
+            llst_add(dst, qls);
         }
-
-        _free(suffix);
     }
 
     closedir(dir);
@@ -167,72 +149,51 @@ scan_lua_scripts (_quvi_t quvi, const char *path) {
 }
 
 static QUVIcode
-find_lua_website_scripts (_quvi_t quvi) {
-    static const char luawebsite_dir[] = "lua/website";
+scan_known_dirs (llst_node_t *dst, const char *spath, filter_func filter) {
     char *homedir, *path, *basedir;
     char buf[PATH_MAX];
-    QUVIcode rc;
 
-    path = NULL;
+#define _scan \
+    do { \
+        QUVIcode rc = scan_dir (dst, path, filter); \
+        _free(path); \
+        if (rc != QUVI_OK) \
+            return (rc); \
+    } while (0)
 
     /* QUVI_BASEDIR. */
     basedir = getenv("QUVI_BASEDIR");
     if (basedir) {
-        asprintf(&path, "%s/%s", basedir, luawebsite_dir);
-        rc = scan_lua_scripts(quvi, path);
-        _free(path);
-
-        if (rc != QUVI_OK)
-            return (rc);
+        asprintf(&path, "%s/%s", basedir, spath);
+        _scan;
     }
 
     /* Current working directory. */
-    asprintf(&path, "%s/%s", getcwd(buf,sizeof(buf)), luawebsite_dir);
-    rc = scan_lua_scripts(quvi, path);
-    _free(path);
-
-    if (rc != QUVI_OK)
-        return (rc);
+    asprintf(&path, "%s/%s", getcwd(buf,sizeof(buf)), spath);
+    _scan;
 
     /* Home directory. */
     homedir = getenv("HOME");
     if (homedir) {
-        asprintf(&path, "%s/.quvi/%s", homedir, luawebsite_dir);
-        rc = scan_lua_scripts(quvi, path);
-        _free(path);
-
-        if (rc != QUVI_OK)
-            return (rc);
-
-        asprintf(&path, "%s/.config/quvi/%s", homedir, luawebsite_dir);
-        rc = scan_lua_scripts(quvi, path);
-        _free(path);
-
-        if (rc != QUVI_OK)
-            return (rc);
-
-        asprintf(&path, "%s/.local/share/quvi/%s", homedir, luawebsite_dir);
-        rc = scan_lua_scripts(quvi, path);
-        _free(path);
-
-        if (rc != QUVI_OK)
-            return (rc);
+        asprintf(&path, "%s/.quvi/%s", homedir, spath);
+        _scan;
+        asprintf(&path, "%s/.config/quvi/%s", homedir, spath);
+        _scan;
+        asprintf(&path, "%s/.local/share/quvi/%s", homedir, spath);
+        _scan;
     }
 
     /* --datadir. */
-    asprintf(&path, "%s/%s", DATADIR, luawebsite_dir);
-    rc = scan_lua_scripts(quvi, path);
-    _free(path);
-
-    if (rc != QUVI_OK)
-        return (rc);
+    asprintf(&path, "%s/%s", DATADIR, spath);
+    _scan;
 
     /* pkgdatadir. */
-    asprintf(&path, "%s/%s", PKGDATADIR, luawebsite_dir);
-    rc = scan_lua_scripts(quvi, path);
-    _free(path);
+    asprintf(&path, "%s/%s", PKGDATADIR, spath);
+    _scan;
 
-    return (rc);
+#undef _scan
+
+    return (QUVI_OK);
 }
 
 static const luaL_Reg reg_meth[] = {
@@ -240,6 +201,10 @@ static const luaL_Reg reg_meth[] = {
     {"unescape",    l_quvi_unescape},
     {NULL,NULL}
 };
+
+static int
+lua_files_only (const struct dirent *de)
+    { return (strstr(de->d_name, ".lua") != 0); }
 
 /* init. */
 
@@ -254,7 +219,24 @@ init_lua (_quvi_t quvi) {
     luaL_openlibs(quvi->lua);
     luaL_openlib(quvi->lua, "quvi", reg_meth, 1);
 
-    rc = find_lua_website_scripts(quvi);
+    rc = scan_known_dirs (
+        &quvi->util_scripts,
+        "lua/util",
+        lua_files_only
+    );
+
+    if (rc != QUVI_OK)
+        return (rc);
+
+    if (llst_size(quvi->util_scripts) == 0)
+        return (QUVI_NOLUAUTIL);
+
+    rc = scan_known_dirs (
+        &quvi->website_scripts,
+        "lua/website",
+        lua_files_only
+    );
+
     if (rc != QUVI_OK)
         return (rc);
 
@@ -264,14 +246,22 @@ init_lua (_quvi_t quvi) {
 void
 free_lua (_quvi_t *quvi) {
 
-    llst_node_t curr = (*quvi)->website_scripts;
-    while (curr) {
-        _quvi_lua_script_t s = (_quvi_lua_script_t) curr->data;
-        _free(s->basename);
-        _free(s->path);
-        curr = curr->next;
-    }
+#define _rel(w) \
+    do { \
+        llst_node_t curr = w; \
+        while (curr) { \
+            _quvi_lua_script_t s = (_quvi_lua_script_t) curr->data; \
+            _free(s->basename); \
+            _free(s->path); \
+            curr = curr->next; \
+        } \
+    } while(0)
 
+    _rel((*quvi)->util_scripts);
+    _rel((*quvi)->website_scripts);
+#undef _rel
+
+    llst_free(&(*quvi)->util_scripts);
     llst_free(&(*quvi)->website_scripts);
 
     lua_close((*quvi)->lua);
@@ -349,6 +339,132 @@ set_field (lua_State *l, const char *key, const char *value) {
     lua_settable(l, -3);
 }
 
+
+
+/* Util scripts. */
+
+
+
+/* Finds the specified util script from the list. */
+
+static _quvi_lua_script_t
+find_util_script (_quvi_t quvi, const char *basename) {
+    llst_node_t curr = quvi->util_scripts;
+    while (curr) {
+        _quvi_lua_script_t s = (_quvi_lua_script_t) curr->data;
+        if (strcmp(s->basename, basename) == 0)
+            return (s);
+        curr = curr->next;
+    }
+    return (NULL);
+}
+
+/* Executes the `suffix_from_contenttype' lua function. */
+
+QUVIcode
+run_lua_suffix_func (_quvi_t quvi, _quvi_video_link_t qvl) {
+    const static char func_name[] = "suffix_from_contenttype";
+    _quvi_lua_script_t qls;
+    lua_State *l;
+
+    assert (quvi != NULL);
+    assert (qvl != NULL);
+
+    qls = find_util_script(quvi, "content_type.lua");
+    if (!qls)
+        return (QUVI_NOLUAUTIL);
+
+    l = quvi->lua;
+    assert (l != NULL);
+
+    lua_pushnil(l);
+    lua_getglobal(l, func_name);
+
+    if (luaL_dofile(l, qls->path))
+        luaL_error(l, "%s", lua_tostring(l,-1));
+
+    lua_getglobal(l, func_name);
+
+    if (!lua_isfunction(l, -1))
+        luaL_error(l, "%s: `%s' function not found", qls->path, func_name);
+
+    lua_pushstring(l, qvl->content_type);
+
+    if (lua_pcall(l, 1, 1, 0))
+        luaL_error(l, "%s", lua_tostring(l,-1));
+
+    if (lua_isstring(l, -1)) {
+        setvid(qvl->suffix, "%s", lua_tostring(l, -1));
+    }
+    else {
+        luaL_error(l,
+            "expected `%s' function to return a string", func_name);
+    }
+
+    lua_pop(l, 1);
+
+    return (QUVI_OK);
+}
+
+
+/* Executes the `charset_from_data' lua function. */
+
+QUVIcode
+run_lua_charset_func (_quvi_video_t video, const char *data) {
+    const static char func_name[] = "charset_from_data";
+    _quvi_lua_script_t qls;
+    _quvi_t quvi;
+    lua_State *l;
+
+    assert (video != NULL);
+    quvi = video->quvi;
+    assert (quvi != NULL);
+
+    qls = find_util_script(quvi, "charset.lua");
+    if (!qls)
+        return (QUVI_NOLUAUTIL);
+
+    l = quvi->lua;
+    assert (l != NULL);
+
+    lua_pushnil(l);
+    lua_getglobal(l, func_name);
+
+    if (luaL_dofile(l, qls->path))
+        luaL_error(l, "%s", lua_tostring(l,-1));
+
+    lua_getglobal(l, func_name);
+
+    if (!lua_isfunction(l, -1))
+        luaL_error(l, "%s: `%s' function not found", qls->path, func_name);
+
+    lua_pushstring(l, data);
+
+    if (lua_pcall(l, 1, 1, 0))
+        luaL_error(l, "%s", lua_tostring(l,-1));
+
+    if (lua_isstring(l, -1)) {
+        setvid(video->charset, "%s", lua_tostring(l,-1));
+    }
+    else if (lua_isnil(l, -1)) {
+        /* Charset was not found. We can live with that. */
+    }
+    else {
+        luaL_error(l,
+            "expected `%s' function to return a string", func_name);
+    }
+
+    lua_pop(l, 1);
+
+    return (QUVI_OK);
+}
+
+
+
+/* Website scripts. */
+
+
+
 /* Executes the host script's "ident" function. */
 
 QUVIcode
@@ -369,7 +485,6 @@ run_ident_func (lua_ident_t ident, llst_node_t node) {
 
     rc   = QUVI_NOSUPPORT;
     qls  = (_quvi_lua_script_t) node->data;
-    script_path = qls->path;
 
     lua_pushnil(l);
     lua_pushnil(l);

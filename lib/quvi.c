@@ -454,6 +454,7 @@ quvi_strerror (quvi_t handle, QUVIcode code) {
         "aborted by callback",
         "lua initilization failed",
         "lua website scripts not found",
+        "lua util scripts not found",
         "invalid error code (internal _INTERNAL_QUVI_LAST)"
     };
 

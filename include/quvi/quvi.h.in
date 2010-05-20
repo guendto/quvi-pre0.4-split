@@ -58,6 +58,7 @@ QUVI_LAST,              /**< Indicates end of list iteration */
 QUVI_ABORTEDBYCALLBACK, /**< Aborted by callback function */
 QUVI_LUAINIT,           /**< Lua initialization failure */
 QUVI_NOLUAWEBSITE,      /**< Failed to find lua website scripts */
+QUVI_NOLUAUTIL,         /**< Failed to find lua util scripts */
 _INTERNAL_QUVI_LAST,    /**< For library internal use only */
 /* Dynamically generated errors */
 QUVI_PCRE = 0x40, /**< libpcre error occurred */
