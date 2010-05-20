@@ -486,16 +486,19 @@ find_host_script (_quvi_video_t video) {
 
         /* check if script ident this url. */
         rc = run_ident_func(&ident, curr);
+
+        _free(ident.domain);
+        _free(ident.formats);
+
         if (rc == QUVI_OK) {
             /* found script. */
-            _free(ident.domain);
-            _free(ident.formats);
             return (run_parse_func(l, curr, video));
         }
         else if (rc != QUVI_NOSUPPORT) {
             /* script error. terminate. */
             return (rc);
         }
+
         curr = curr->next;
     }
 
