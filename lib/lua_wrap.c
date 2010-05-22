@@ -204,7 +204,7 @@ static const luaL_Reg reg_meth[] = {
 
 static int
 lua_files_only (const struct dirent *de)
-    { return (strstr(de->d_name, ".lua") != 0); }
+    { return (de->d_name[0] != '.' && strstr(de->d_name, ".lua") != 0); }
 
 /* init. */
 
