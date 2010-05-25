@@ -2,6 +2,7 @@
 Version 0.2.1
 
 Changes:
+  * [youtube] do not revert to fetch page if error==150
   * Add QUVI_NOLUAUTIL error code
   * Additional Lua scripts (content_type.lua, charset.lua)
 
