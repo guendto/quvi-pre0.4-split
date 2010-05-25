@@ -87,10 +87,10 @@ function parse (video)
     local _,_,s = page_url:find("v=([%w-_]+)")
     video.id    = s or error ("no match: video id")
 
-    -- Fetch and pray.
-    video,t,best = get_video_info(video)
-    if (video.title == nil) then
-        video,t,best = old_faithful(page_url, video)
+    -- Fetch.
+    local t,best = get_video_info (video)
+    if (t == nil) then
+        t,best = old_faithful (page_url, video)
     end
 
     -- Construct the video URL.
@@ -138,7 +138,7 @@ end
 
 -- The preferred method, uses less bandwidth, fails for some videos.
 -- See also the NOTES above.
-function get_video_info (video)
+function get_video_info (video, result)
 
     -- Fetch video info.
     local config_url = string.format(
@@ -151,9 +151,12 @@ function get_video_info (video)
     -- does not work for all videos that I've tried so far.
     local _,_,s = config:find("&reason=(.-)[?:&]?$")
     if (s ~= nil) then
-        print ("  > Warning: get_video_info: " .. s:gsub("+"," "))
-        print ("  > Warning: Revert to fetch video page instead.")
-        return video -- This one's for the Old Faithful.
+        local reason   = s:gsub("+"," ")
+        local _,_,code = config:find("&errorcode=(.-)[?:&?$]")
+        if (code == "150") then error (reason) end
+        print ("  > Warning: get_video_info: " .. reason)
+        print ("  > Warning: Fetch video page instead.")
+        return nil -- This one's for the Old Faithful.
     end
 
     -- This is my video title.
@@ -169,7 +172,7 @@ function get_video_info (video)
     local _,_,best = config:find("&fmt_map=(%d+)")
 
     -- Return parsed details.
-    return video, t, best
+    return t, best
 
 end
 
@@ -192,7 +195,7 @@ function old_faithful (page_url, video)
     local _,_,best = page:find("&fmt_map=(%d+)")
 
     -- Return parsed details.
-    return video, t, best
+    return t, best
 
 end
 
