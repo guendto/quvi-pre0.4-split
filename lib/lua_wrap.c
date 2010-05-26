@@ -515,7 +515,7 @@ run_ident_func (lua_ident_t ident, llst_node_t node) {
     if (lua_istable(l, -1)) {
         ident->domain  = strdup(get_field_s(l,"domain"));
         ident->formats = strdup(get_field_s(l,"formats"));
-        rc = get_field_b(l,"will_handle")
+        rc = get_field_b(l,"handles")
             ? QUVI_OK
             : QUVI_NOSUPPORT;
     }
