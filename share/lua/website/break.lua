@@ -36,9 +36,6 @@ function parse (video)
     local _,_,s = page:find("ContentID='(.-)'")
     video.id    = s or error ("no match: video id")
 
-    local _,_,s = page:find("ContentFilePath='(.-)'")
-    local fpath = s or error ("no match: content file path")
-
     local _,_,s = page:find("FileName='(.-)'")
     local fname = s or error ("no match: content file name")
 
@@ -46,9 +43,7 @@ function parse (video)
     local fhash = s or error ("no match: file hash")
 
     video.url = {
-        string.format(
-            "http://video1.break.com/dnet/media/%s/%s.flv?%s",
-                fpath, fname, fhash)
+        string.format("%s.flv?%s", fname,fhash)
     }
 
     return video
