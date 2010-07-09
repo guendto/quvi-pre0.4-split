@@ -80,11 +80,23 @@ quvi_close (quvi_t *handle) {
     quvi = (_quvi_t *)handle;
 
     if (quvi && *quvi) {
+
         free_lua(quvi);
+        assert((*quvi)->util_scripts == NULL);
+        assert((*quvi)->website_scripts == NULL);
+
         _free((*quvi)->format);
+        assert((*quvi)->format == NULL);
+
         _free((*quvi)->errmsg);
+        assert((*quvi)->errmsg == NULL);
+
         curl_easy_cleanup((*quvi)->curl);
+        (*quvi)->curl = NULL;
+
         _free(*quvi);
+        assert((*quvi) == NULL);
+
         curl_global_cleanup();
     }
 }

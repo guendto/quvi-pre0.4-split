@@ -262,7 +262,10 @@ free_lua (_quvi_t *quvi) {
 #undef _rel
 
     llst_free(&(*quvi)->util_scripts);
+    assert ((*quvi)->util_scripts == NULL);
+
     llst_free(&(*quvi)->website_scripts);
+    assert ((*quvi)->website_scripts == NULL);
 
     lua_close((*quvi)->lua);
     (*quvi)->lua = NULL;
