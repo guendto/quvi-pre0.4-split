@@ -329,6 +329,7 @@ match_test(quvi_t quvi, opts_s opts) {
             quvi_parse_close(&v);
 
             cmdline_parser_free(&opts);
+            quvi_close(&quvi);
             exit (rc);
         }
         else if (rc == PCRE_ERROR_NOMATCH) {
@@ -343,6 +344,7 @@ match_test(quvi_t quvi, opts_s opts) {
 
     fprintf(stderr, "error: nothing matched `%s'\n", opts.test_arg);
     cmdline_parser_free(&opts);
+    quvi_close(&quvi);
     exit (QUVI_PCRE);
 }
 
