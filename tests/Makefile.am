@@ -8,7 +8,6 @@ TESTS_ENVIRONMENT = $(PERL) -w -mstrict -mquviTest -I $(top_builddir)/tests
 TESTS =\
 nosupport-eval.pl\
 support-break.pl\
-support-cctv.pl\
 support-clipfish.pl\
 support-dailymotion.pl\
 support-evisor.pl\
@@ -23,6 +22,7 @@ support-vimeo.pl\
 support-youtube.pl
 
 TESTS_BROKEN =\
+support-cctv.pl\
 support-ehrensenf.pl\
 support-spyfilms.pl
 
