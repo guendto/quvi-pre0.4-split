@@ -303,9 +303,6 @@ get_field_b (lua_State *l, const char *key) {
 
     _istype(boolean)
 
-    if (!lua_isboolean(l, -1))
-        luaL_error(l, "boolean type `%s' key not found in table", key);
-
     b = lua_toboolean(l, -1);
     lua_pop(l, 1);
 
