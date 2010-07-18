@@ -6,7 +6,6 @@ lua/util/charset.lua \
 lua/website/README \
 lua/website/break.lua \
 lua/website/buzzhumor.lua \
-lua/website/cctv.lua \
 lua/website/clipfish.lua \
 lua/website/dailymotion.lua \
 lua/website/evisor.lua \
@@ -28,7 +27,8 @@ lua/website/youjizz.lua
 endif
 
 if ENABLE_BROKEN
-DIST_lua +=
+DIST_lua += \
+lua/website/cctv.lua
 endif
 
 EXTRA_DIST = $(DIST_lua)

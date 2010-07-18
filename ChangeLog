@@ -7,6 +7,7 @@ Changes:
   * Add QUVI_NOLUAUTIL error code
   * Additional Lua scripts (content_type.lua, charset.lua)
   * _istype (lua_wrap.c) print script path in errors
+  * Mark cctv support as broken
 
 Bugfixes:
   * _istype (lua_wrap.c) stringifying

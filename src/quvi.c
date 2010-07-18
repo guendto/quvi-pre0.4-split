@@ -259,8 +259,6 @@ static const char *tests[] = {
 "http://video.golem.de/internet/2174/firefox-3.5-test.html",
 "http://www.funnyhub.com/videos/pages/crazy-hole-in-one.html",
 "http://www.clipfish.de/video/3100131/matratzendomino/",
-"http://space.tv.cctv.com/video/VIDE1212909276513233", /* single-segment */
-"http://space.tv.cctv.com/video/VIDE1247468077860061", /* multi-segment */
 "http://www.youtube.com/watch?v=DeWsZ2b_pK4",
 "http://break.com/index/beach-tackle-whip-lash.html",
 "http://www.evisor.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",
@@ -268,8 +266,8 @@ static const char *tests[] = {
 "http://www.funnyordie.com/videos/776d200b1c/etiquette-ninjas-episode-5-dicks-on-elevators",
 
 #ifdef ENABLE_BROKEN
-"http://www.ehrensenf.de/shows/ehrensenf/getarnte-bienen-schaukelmotorrad-devitohorror",
-"http://www.spyfilms.com/#neill_blomkamp/alive_in_joburg",
+"http://space.tv.cctv.com/video/VIDE1212909276513233", /* single-segment */
+"http://space.tv.cctv.com/video/VIDE1247468077860061", /* multi-segment */
 #endif
 
 #ifdef ENABLE_SMUT
