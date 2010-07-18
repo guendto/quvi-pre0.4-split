@@ -278,16 +278,22 @@ set_key (lua_State *l, const char *key) {
 }
 
 #define _istype(t) \
-    if (!lua_is##t(l, -1)) \
-        luaL_error(l, "##t type `%s' key not found (or is nil) in table", key);
+    do { \
+        if (!lua_is##t(l, -1)) { \
+            luaL_error(l, \
+                "%s: undefined value for key `%s' in the returned table, " \
+                "expected `%s' type value", \
+                    qls->path, key, #t); \
+        } \
+    } while (0)
 
 static char*
-get_field_s (lua_State *l, const char *key) {
+get_field_s (lua_State *l, _quvi_lua_script_t qls, const char *key) {
     const char *s;
 
     set_key(l, key);
 
-    _istype(string)
+    _istype(string);
 
     s = lua_tostring(l, -1);
     lua_pop(l, 1);
@@ -296,12 +302,12 @@ get_field_s (lua_State *l, const char *key) {
 }
 
 static int
-get_field_b (lua_State *l, const char *key) {
+get_field_b (lua_State *l, _quvi_lua_script_t qls, const char *key) {
     int b;
 
     set_key(l, key);
 
-    _istype(boolean)
+    _istype(boolean);
 
     b = lua_toboolean(l, -1);
     lua_pop(l, 1);
@@ -310,12 +316,17 @@ get_field_b (lua_State *l, const char *key) {
 }
 
 static QUVIcode
-iter_video_url (lua_State *l, const char *key, _quvi_video_t qv) {
+iter_video_url (
+    lua_State *l,
+    _quvi_lua_script_t qls,
+    const char *key,
+    _quvi_video_t qv)
+{
     QUVIcode rc = QUVI_OK;
 
     set_key(l, key);
 
-    _istype(table)
+    _istype(table);
 
     lua_pushnil(l);
 
@@ -513,9 +524,9 @@ run_ident_func (lua_ident_t ident, llst_node_t node) {
     }
 
     if (lua_istable(l, -1)) {
-        ident->domain  = strdup(get_field_s(l,"domain"));
-        ident->formats = strdup(get_field_s(l,"formats"));
-        rc = get_field_b(l,"handles")
+        ident->domain  = strdup(get_field_s(l,qls,"domain"));
+        ident->formats = strdup(get_field_s(l,qls,"formats"));
+        rc = get_field_b(l,qls,"handles")
             ? QUVI_OK
             : QUVI_NOSUPPORT;
     }
@@ -564,10 +575,10 @@ run_parse_func (lua_State *l, llst_node_t node, _quvi_video_t video) {
     }
 
     if (lua_istable(l, -1)) {
-        setvid(video->host_id, "%s", get_field_s(l, "host_id"));
-        setvid(video->title,   "%s", get_field_s(l, "title"));
-        setvid(video->id,      "%s", get_field_s(l, "id"));
-        rc = iter_video_url(l, "url", video);
+        setvid(video->host_id, "%s", get_field_s(l, qls, "host_id"));
+        setvid(video->title,   "%s", get_field_s(l, qls, "title"));
+        setvid(video->id,      "%s", get_field_s(l, qls, "id"));
+        rc = iter_video_url(l, qls, "url", video);
     }
     else
         luaL_error(l, "expected `ident' function to return a table");
