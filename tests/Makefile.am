@@ -13,6 +13,7 @@ support-clipfish.pl\
 support-dailymotion.pl\
 support-evisor.pl\
 support-funnyhub.pl\
+support-funnyordie.pl\
 support-golem.pl\
 support-liveleak.pl\
 support-myubo.pl\
