@@ -56,7 +56,7 @@ function parse (video)
 
     local video_url = 
         string.format(
-            "http://youtube.com/get_video?video_id=%s&t=%s",
+            "http://youtube.com/get_video?video_id=%s&t=%s&asv=2",
                 video.id, quvi.unescape(t))
 
     if (best == nil and video.requested_format == "best") then

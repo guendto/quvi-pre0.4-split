@@ -10,6 +10,7 @@ Changes:
   * Mark cctv support as broken
 
 Bugfixes:
+  * [youtube] http/404, fix by Daniel Schaal
   * [dailymotion] make (dist)check reported unexpected file length
   * _istype (lua_wrap.c) stringifying
   * Break.com support, ported from clive, fix by Werner Elsler (clive #57)
