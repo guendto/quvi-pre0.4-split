@@ -12,7 +12,6 @@ Changes:
 
 Bugfixes:
   * [youtube] http/404, fix by Daniel Schaal
-  * [dailymotion] make (dist)check reported unexpected file length
   * _istype (lua_wrap.c) stringifying
   * Break.com support, ported from clive, fix by Werner Elsler (clive #57)
   * Memory leak in find_host_script (6d3016e)
