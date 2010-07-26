@@ -4,6 +4,9 @@ version ""
 option "version"
     v "Print version and exit"
     optional
+option "license"
+    - "Print license and exit"
+    optional
 option "hosts"
     - "Show supported hosts"
     optional

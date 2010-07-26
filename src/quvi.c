@@ -97,9 +97,15 @@ static const char notice[] =
 "warranty;  not even for MERCHANTABILITY or FITNESS FOR A  PARTICULAR PURPOSE.";
 
 static void
-version(opts_s opts) {
-    printf("quvi, version %s\n%s\n",
-        quvi_version(QUVI_VERSION_LONG), notice);
+license (opts_s opts) {
+    printf("%s\n",notice);
+    cmdline_parser_free(&opts);
+    exit (0);
+}
+
+static void
+version (opts_s opts) {
+    printf("quvi, version %s\n", quvi_version(QUVI_VERSION_LONG));
     cmdline_parser_free(&opts);
     exit (0);
 }
@@ -478,6 +484,9 @@ main (int argc, char *argv[]) {
 
     if (opts.version_given)
         version(opts);
+
+    if (opts.license_given)
+        license(opts);
 
     /* Other */
 
