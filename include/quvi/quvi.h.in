@@ -262,7 +262,7 @@ extern "C" {
 * used to parse the video page links. The library searches the
 * following paths in the following order:
 *
-*   - $QUVI_BASEDIR defined path
+*   - $QUVI_BASEDIR defined path (exclusive, overrides default search paths)
 *   - Current working directory (./lua/website/)
 *   - $HOME./quvi/
 *   - $HOME/.config/quvi/
