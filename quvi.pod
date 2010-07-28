@@ -164,6 +164,28 @@ Note that you can also define QUVI_HOME and use it instead.
 
 =back
 
+=head1 ENVIRONMENT
+
+=over 4
+
+=item B<QUVI_HOME>
+
+Defines path to a directory containing the configuration file.
+Similar to $HOME found on Unix-like systems, but can be used
+to override the $HOME setting (if any).
+
+=item B<QUVI_BASEDIR>
+
+Defines an exlusive path to the directory from which quvi searches
+for the essential quvi files, e.g. the lua scripts. Exclusive here
+means that by setting B<QUVI_BASEDIR> the user can override all of
+the default search paths.
+
+Not to be confused with B<QUVI_HOME> which is strictly a C<quvi(1)>
+variable whereas B<QUVI_BASEDIR> is a libquvi variable.
+
+=back
+
 =head1 EXIT STATUS
 
 quvi exits with 0 on success and E<gt>0 if an error occurred.
