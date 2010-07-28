@@ -34,9 +34,9 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@ENABLE_BROKEN_TRUE@@HAVE_PERL_TRUE@am__append_1 = $(TESTS_BROKEN)
-@HAVE_PERL_POD_CHECKER_TRUE@@HAVE_PERL_TRUE@am__append_2 = $(TESTS_POD)
-@ENABLE_SMUT_TRUE@@HAVE_PERL_TRUE@am__append_3 = $(TESTS_ADULT)
+@ENABLE_BROKEN_TRUE@@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@am__append_1 = $(TESTS_BROKEN)
+@ENABLE_TESTS_TRUE@@HAVE_PERL_POD_CHECKER_TRUE@@HAVE_PERL_TRUE@am__append_2 = $(TESTS_POD)
+@ENABLE_SMUT_TRUE@@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@am__append_3 = $(TESTS_ADULT)
 subdir = tests
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/quviTest.pm.in
@@ -205,28 +205,36 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_ADULT)
-@HAVE_PERL_TRUE@TESTS_ENVIRONMENT = $(PERL) -w -mstrict -mquviTest -I $(top_builddir)/tests
-@HAVE_PERL_TRUE@TESTS = nosupport-eval.pl support-break.pl \
-@HAVE_PERL_TRUE@	support-clipfish.pl support-dailymotion.pl \
-@HAVE_PERL_TRUE@	support-evisor.pl support-funnyhub.pl \
-@HAVE_PERL_TRUE@	support-funnyordie.pl support-golem.pl \
-@HAVE_PERL_TRUE@	support-liveleak.pl support-myubo.pl \
-@HAVE_PERL_TRUE@	support-sevenload.pl support-spiegel.pl \
-@HAVE_PERL_TRUE@	support-vimeo.pl support-youtube.pl \
-@HAVE_PERL_TRUE@	$(am__append_1) $(am__append_2) \
-@HAVE_PERL_TRUE@	$(am__append_3)
-@HAVE_PERL_TRUE@TESTS_BROKEN = \
-@HAVE_PERL_TRUE@support-cctv.pl\
-@HAVE_PERL_TRUE@support-ehrensenf.pl\
-@HAVE_PERL_TRUE@support-spyfilms.pl
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@TESTS_ENVIRONMENT = $(PERL) -w -mstrict -mquviTest -I $(top_builddir)/tests
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@TESTS = nosupport-eval.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-break.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-clipfish.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-dailymotion.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-evisor.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-funnyhub.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-funnyordie.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-golem.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-liveleak.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-myubo.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-sevenload.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-spiegel.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-vimeo.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	support-youtube.pl \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	$(am__append_1) \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	$(am__append_2) \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@	$(am__append_3)
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@TESTS_BROKEN = \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@support-cctv.pl\
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@support-ehrensenf.pl\
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@support-spyfilms.pl
 
-@HAVE_PERL_TRUE@TESTS_POD = \
-@HAVE_PERL_TRUE@pod-check.pl
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@TESTS_POD = \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@pod-check.pl
 
-@HAVE_PERL_TRUE@TESTS_ADULT = \
-@HAVE_PERL_TRUE@support-tube8.pl\
-@HAVE_PERL_TRUE@support-xvideos.pl\
-@HAVE_PERL_TRUE@support-youjizz.pl
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@TESTS_ADULT = \
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@support-tube8.pl\
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@support-xvideos.pl\
+@ENABLE_TESTS_TRUE@@HAVE_PERL_TRUE@support-youjizz.pl
 
 all: all-am
 
@@ -509,7 +517,7 @@ uninstall-am:
 	uninstall uninstall-am
 
 
-@HAVE_PERL_FALSE@	@echo SKIP: perl not found.
+@ENABLE_TESTS_TRUE@@HAVE_PERL_FALSE@	@echo SKIP: perl not found.
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

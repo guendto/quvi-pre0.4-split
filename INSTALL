@@ -22,6 +22,7 @@
     --enable-broken     Enable broken website support
     --disable-quvi      Do not build (and install) quvi tool
     --disable-examples  Do not build example(s)
+    --disable-tests     Do not run tests (e.g. "make check")
     --without-man       Do not install the manual page(s)
     --without-doc       Do not install doc/ contents
 

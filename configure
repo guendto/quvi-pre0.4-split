@@ -615,6 +615,8 @@ WITH_MAN_FALSE
 WITH_MAN_TRUE
 ENABLE_BROKEN_FALSE
 ENABLE_BROKEN_TRUE
+ENABLE_TESTS_FALSE
+ENABLE_TESTS_TRUE
 ENABLE_SMUT_FALSE
 ENABLE_SMUT_TRUE
 ENABLE_EXAMPLES_FALSE
@@ -795,6 +797,7 @@ enable_silent_rules
 enable_quvi
 enable_examples
 enable_smut
+enable_tests
 enable_broken
 with_man
 with_doc
@@ -1454,6 +1457,7 @@ Optional Features:
   --enable-quvi           build quvi command line tool[default=yes]
   --enable-examples       build examples [default=no]
   --enable-smut           build with adult website support [default=no]
+  --enable-tests          enable tests [default=yes]
   --enable-broken         build with broken website support [default=no]
 
 Optional Packages:
@@ -18465,6 +18469,23 @@ $as_echo "#define ENABLE_SMUT 1" >>confdefs.h
 
 fi
 
+# --enable-tests
+# Check whether --enable-tests was given.
+if test "${enable_tests+set}" = set; then :
+  enableval=$enable_tests;
+else
+  enable_tests=yes
+fi
+
+ if test x"$enable_tests" != "xno"; then
+  ENABLE_TESTS_TRUE=
+  ENABLE_TESTS_FALSE='#'
+else
+  ENABLE_TESTS_TRUE='#'
+  ENABLE_TESTS_FALSE=
+fi
+
+
 # --enable-broken
 # Check whether --enable-broken was given.
 if test "${enable_broken+set}" = set; then :
@@ -18487,7 +18508,6 @@ if  test x"$enable_broken" != "xno" ; then
 $as_echo "#define ENABLE_BROKEN 1" >>confdefs.h
 
 fi
-
 
 # --with-man
 
@@ -18702,6 +18722,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_SMUT_TRUE}" && test -z "${ENABLE_SMUT_FALSE}"; then
   as_fn_error $? "conditional \"ENABLE_SMUT\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_TESTS_TRUE}" && test -z "${ENABLE_TESTS_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_TESTS\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_BROKEN_TRUE}" && test -z "${ENABLE_BROKEN_FALSE}"; then
@@ -21243,6 +21267,7 @@ Options:
     build quvi:     ${enable_quvi}
     build examples: ${enable_examples}
     adult support:  ${enable_smut}
+    enable tests:   ${enable_tests}
     broken support: ${enable_broken}
     install manual: ${with_man}
     install docs:   ${with_doc}
@@ -21268,6 +21293,7 @@ Options:
     build quvi:     ${enable_quvi}
     build examples: ${enable_examples}
     adult support:  ${enable_smut}
+    enable tests:   ${enable_tests}
     broken support: ${enable_broken}
     install manual: ${with_man}
     install docs:   ${with_doc}

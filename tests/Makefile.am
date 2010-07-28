@@ -1,6 +1,8 @@
 
 EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_ADULT)
 
+if ENABLE_TESTS
+
 if HAVE_PERL
 
 TESTS_ENVIRONMENT = $(PERL) -w -mstrict -mquviTest -I $(top_builddir)/tests
@@ -49,5 +51,7 @@ endif
 else # HAVE_PERL
 	@echo SKIP: perl not found.
 endif # HAVE_PERL
+
+endif # ENABLE_TESTS
 
 
