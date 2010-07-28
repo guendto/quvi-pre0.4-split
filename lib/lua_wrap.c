@@ -166,6 +166,7 @@ scan_known_dirs (llst_node_t *dst, const char *spath, filter_func filter) {
     if (basedir) {
         asprintf(&path, "%s/%s", basedir, spath);
         _scan;
+        return (QUVI_OK);
     }
 
     /* Current working directory. */
