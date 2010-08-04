@@ -60,7 +60,7 @@ function parse (video)
                 video.id, quvi.unescape(t))
 
     if (best == nil and video.requested_format == "best") then
-        print ("  > Warning: Unable to find `best' format. Use `default'.")
+        print ("libquvi: Warning: Unable to find `best' format. Use `default'.")
     end
 
     local fmt_id = nil
@@ -108,8 +108,8 @@ function get_video_info (video, result)
         local reason   = s:gsub("+"," ")
         local _,_,code = config:find("&errorcode=(.-)[?:&?$]")
         if (code == "150") then error (reason) end
-        print ("  > Warning: get_video_info: " .. reason)
-        print ("  > Warning: Fetch video page instead.")
+        print ("libquvi: Warning: get_video_info: " .. reason)
+        print ("libquvi: Warning: Fetch video page instead.")
         return nil -- This one's for the Old Faithful.
     end
 
