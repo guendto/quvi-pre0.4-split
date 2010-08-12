@@ -290,7 +290,8 @@ EXTRA_DIST = \
 libquvi.pc.in \
 libquvi.ver \
 doxygen.conf.in \
-quvi.pod
+quvi.pod \
+KNOWN_ISSUES
 
 @WITH_MAN_TRUE@dist_man_MANS = quvi.1
 pkgconfigdir = $(libdir)/pkgconfig

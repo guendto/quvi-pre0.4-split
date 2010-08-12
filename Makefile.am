@@ -4,7 +4,8 @@ EXTRA_DIST = \
 libquvi.pc.in \
 libquvi.ver \
 doxygen.conf.in \
-quvi.pod
+quvi.pod \
+KNOWN_ISSUES
 
 if WITH_MAN
 dist_man_MANS = quvi.1
