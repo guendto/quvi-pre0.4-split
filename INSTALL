@@ -18,11 +18,11 @@
 
 "./configure && make install", typically. See also "./configure --help".
 
+    --enable-tests      Enable tests (e.g. "make check")
     --enable-smut       Enable adult website support
     --enable-broken     Enable broken website support
     --disable-quvi      Do not build (and install) quvi tool
     --disable-examples  Do not build example(s)
-    --disable-tests     Do not run tests (e.g. "make check")
     --without-man       Do not install the manual page(s)
     --without-doc       Do not install doc/ contents
 
@@ -43,5 +43,4 @@ e.g. "make check", the following environment variables can be used:
   QUVI_TEST_OPTIONS   Additional options to pass to quvi when the tests are run
 
 Examples:
-    QUVI_TEST_OPTIONS="--debug -n" ./make check
-    NO_INTERNET=1 ./make distcheck
+    QUVI_TEST_OPTIONS="--debug -n" make check     # See --enable-tests

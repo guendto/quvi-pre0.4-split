@@ -1457,7 +1457,7 @@ Optional Features:
   --enable-quvi           build quvi command line tool[default=yes]
   --enable-examples       build examples [default=no]
   --enable-smut           build with adult website support [default=no]
-  --enable-tests          enable tests [default=yes]
+  --enable-tests          enable tests [default=no]
   --enable-broken         build with broken website support [default=no]
 
 Optional Packages:
@@ -18474,7 +18474,7 @@ fi
 if test "${enable_tests+set}" = set; then :
   enableval=$enable_tests;
 else
-  enable_tests=yes
+  enable_tests=no
 fi
 
  if test x"$enable_tests" != "xno"; then
