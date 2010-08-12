@@ -5,7 +5,7 @@ Changes:
   * add --license option
   * QUVI_BASEDIR is now exclusive
   * Document QUVI_BASEDIR, QUVI_HOME in quvi(1) manual page
-  * Add --enable-tests (configure, disabled by default)
+  * Add --enable-tests (configure, disabled by default, related to #10)
 
 
 Version 0.2.1
