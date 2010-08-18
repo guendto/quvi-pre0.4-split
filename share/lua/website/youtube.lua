@@ -51,13 +51,13 @@ function parse (video)
 
     local t,best = get_video_info (video)
     if (t == nil) then
-        t,best = old_faithful (page_url, video)
+        t,best = fallback_fetch (page_url, video)
     end
 
     local video_url = 
         string.format(
             "http://youtube.com/get_video?video_id=%s&t=%s&asv=2",
-                video.id, quvi.unescape(t))
+                video.id, t)
 
     if (best == nil and video.requested_format == "best") then
         print ("libquvi: Warning: Unable to find `best' format. Use `default'.")
@@ -101,26 +101,29 @@ function get_video_info (video, result)
         "http://www.youtube.com/get_video_info?&video_id=%s"
          .. "&el=detailpage&ps=default&eurl=&gl=US&hl=en", video.id)
 
-    local config = quvi.unescape( quvi.fetch(config_url, "config") )
+    local config = decode ( quvi.fetch(config_url, "config") )
 
-    local _,_,s = config:find("&reason=(.-)[?:&]?$")
-    if (s ~= nil) then
-        local reason   = s:gsub("+"," ")
-        local _,_,code = config:find("&errorcode=(.-)[?:&?$]")
-        if (code == "150") then error (reason) end
+    if (config['reason']) then
+        local reason = unescape (config['reason'])
+        local code = config['errorcode']
+        -- 100, 150 are currently treated as "unrecoverable errors.",
+        -- e.g. we skip the fallback fetch step. This list is obviously
+        -- not complete, so any feedback helps.
+        if (code == '150' or code == '100') then error (reason) end
         print ("libquvi: Warning: get_video_info: " .. reason)
         print ("libquvi: Warning: Fetch video page instead.")
-        return nil -- This one's for the Old Faithful.
+        return nil -- Try fallback fetch.
     end
 
-    local _,_,s = config:find("&title=(.-)&")
-    video.title = s or error ("no match: video title")
-    video.title = video.title:gsub("+"," ")
+    video.title = config['title'] or error ('no match: video title')
+    video.title = unescape (video.title)
 
-    local _,_,s = config:find("&token=(.-)&")
-    local t     = s or error ("no match: token parameter")
+    local t = config['token'] or error ('no match: token parameter')
+    t = unescape (t)
 
-    local _,_,best = config:find("&fmt_map=(%d+)")
+    local fmt_map = config['fmt_map'] or error ('no match: format map')
+    fmt_map = unescape (fmt_map)
+    local _,_,best = fmt_map:find('(%d+)')
 
     return t, best
 end
@@ -128,18 +131,38 @@ end
 -- As long as video is not otherwise retricted (e.g. age check), this function
 -- should work with most videos. Page fetches, however, typically require
 -- a lot more bandwidth compared to the config fetch (above).
-function old_faithful (page_url, video)
+function fallback_fetch (page_url, video)
     local page = quvi.fetch(page_url)
 
     local _,_,s = page:find('<meta name="title" content="(.-)"')
     video.title = s or error ("no match: video title")
 
     local _,_,s = page:find('&t=(.-)&')
-    local t     = s or error ("no match: t param")
+    local t     = unescape (s) or error ("no match: t param")
 
     local _,_,best = page:find("&fmt_map=(%d+)")
 
     return t, best
+end
+
+-- http://www.lua.org/pil/20.3.html
+function decode (s)
+    r = {}
+    for n,v in s:gfind ("([^&=]+)=([^&=]+)") do
+        n = unescape (n)
+        r[n] = v
+--        print (n,v)
+    end
+    return r
+end
+
+-- http://www.lua.org/pil/20.3.html
+function unescape (s)
+    s = s:gsub ('+', ' ')
+    s = s:gsub ('%%(%x%x)', function (h)
+            return string.char (tonumber (h, 16))
+        end)
+    return s
 end
 
 

@@ -4,6 +4,9 @@ Version 0.2.3
 Changes:
   * Bump autoconf prereq. to 2.67
 
+Bugfixes:
+  * Unexpected Youtube video titles, if ampersands used
+
 
 Version 0.2.2
 August 12, 2010
