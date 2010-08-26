@@ -36,6 +36,7 @@ const char *gengetopt_args_info_help[] = {
   "  -v, --version               Print version and exit",
   "      --license               Print license and exit",
   "      --hosts                 Show supported hosts",
+  "      --xml                   Print details in XML",
   "  -q, --quiet                 Turn off all output",
   "      --debug                 Turn on libcurl verbose mode",
   "  -n, --no-verify             Do not verify video link",
@@ -106,6 +107,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->version_given = 0 ;
   args_info->license_given = 0 ;
   args_info->hosts_given = 0 ;
+  args_info->xml_given = 0 ;
   args_info->quiet_given = 0 ;
   args_info->debug_given = 0 ;
   args_info->no_verify_given = 0 ;
@@ -155,20 +157,21 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->version_help = gengetopt_args_info_help[1] ;
   args_info->license_help = gengetopt_args_info_help[2] ;
   args_info->hosts_help = gengetopt_args_info_help[3] ;
-  args_info->quiet_help = gengetopt_args_info_help[4] ;
-  args_info->debug_help = gengetopt_args_info_help[5] ;
-  args_info->no_verify_help = gengetopt_args_info_help[6] ;
-  args_info->page_title_help = gengetopt_args_info_help[7] ;
-  args_info->video_id_help = gengetopt_args_info_help[8] ;
-  args_info->file_length_help = gengetopt_args_info_help[9] ;
-  args_info->file_suffix_help = gengetopt_args_info_help[10] ;
-  args_info->test_all_help = gengetopt_args_info_help[11] ;
-  args_info->test_help = gengetopt_args_info_help[12] ;
-  args_info->dump_help = gengetopt_args_info_help[13] ;
-  args_info->agent_help = gengetopt_args_info_help[14] ;
-  args_info->proxy_help = gengetopt_args_info_help[15] ;
-  args_info->connect_timeout_help = gengetopt_args_info_help[16] ;
-  args_info->format_help = gengetopt_args_info_help[17] ;
+  args_info->xml_help = gengetopt_args_info_help[4] ;
+  args_info->quiet_help = gengetopt_args_info_help[5] ;
+  args_info->debug_help = gengetopt_args_info_help[6] ;
+  args_info->no_verify_help = gengetopt_args_info_help[7] ;
+  args_info->page_title_help = gengetopt_args_info_help[8] ;
+  args_info->video_id_help = gengetopt_args_info_help[9] ;
+  args_info->file_length_help = gengetopt_args_info_help[10] ;
+  args_info->file_suffix_help = gengetopt_args_info_help[11] ;
+  args_info->test_all_help = gengetopt_args_info_help[12] ;
+  args_info->test_help = gengetopt_args_info_help[13] ;
+  args_info->dump_help = gengetopt_args_info_help[14] ;
+  args_info->agent_help = gengetopt_args_info_help[15] ;
+  args_info->proxy_help = gengetopt_args_info_help[16] ;
+  args_info->connect_timeout_help = gengetopt_args_info_help[17] ;
+  args_info->format_help = gengetopt_args_info_help[18] ;
   
 }
 
@@ -311,6 +314,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "license", 0, 0 );
   if (args_info->hosts_given)
     write_into_file(outfile, "hosts", 0, 0 );
+  if (args_info->xml_given)
+    write_into_file(outfile, "xml", 0, 0 );
   if (args_info->quiet_given)
     write_into_file(outfile, "quiet", 0, 0 );
   if (args_info->debug_given)
@@ -624,6 +629,7 @@ cmdline_parser_internal (
         { "version",	0, NULL, 'v' },
         { "license",	0, NULL, 0 },
         { "hosts",	0, NULL, 0 },
+        { "xml",	0, NULL, 0 },
         { "quiet",	0, NULL, 'q' },
         { "debug",	0, NULL, 0 },
         { "no-verify",	0, NULL, 'n' },
@@ -762,6 +768,20 @@ cmdline_parser_internal (
                 &(local_args_info.hosts_given), optarg, 0, 0, ARG_NO,
                 check_ambiguity, override, 0, 0,
                 "hosts", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* Print details in XML.  */
+          else if (strcmp (long_options[option_index].name, "xml") == 0)
+          {
+          
+          
+            if (update_arg( 0 , 
+                 0 , &(args_info->xml_given),
+                &(local_args_info.xml_given), optarg, 0, 0, ARG_NO,
+                check_ambiguity, override, 0, 0,
+                "xml", '-',
                 additional_error))
               goto failure;
           

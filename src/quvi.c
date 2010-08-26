@@ -44,9 +44,17 @@ spew (const char *fmt, ...) {
     if (!verbose_flag)
         return;
 
-    va_start(ap, fmt);
-    vfprintf(stderr, fmt, ap);
-    va_end(ap);
+    va_start (ap, fmt);
+    vfprintf (stderr, fmt, ap);
+    va_end (ap);
+}
+
+static void
+spew_e (const char *fmt, ...) {
+    va_list ap;
+    va_start (ap, fmt);
+    vfprintf (stdout, fmt, ap);
+    va_end (ap);
 }
 
 typedef struct gengetopt_args_info opts_s;
@@ -76,7 +84,7 @@ status_callback(long param, void *data) {
         break;
     }
 
-    fflush(stderr);
+    fflush (stderr);
 
     return (0);
 }
@@ -136,7 +144,8 @@ supports(quvi_t quvi, opts_s opts) {
 }
 
 static void
-dump_video_links(quvi_video_t video) {
+dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
+    const int xml = opts.xml_given;
     int i = 0;
     do {
         char *video_url, *file_suffix, *file_ct;
@@ -147,16 +156,35 @@ dump_video_links(quvi_video_t video) {
         quvi_getprop(video, QUVIPROP_VIDEOFILESUFFIX, &file_suffix);
         quvi_getprop(video, QUVIPROP_VIDEOFILELENGTH, &file_length);
 
-        spew(
-            "link %02d  : %s\n"
-            ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
-            ++i, video_url, file_length, file_suffix, file_ct
-        );
+        if (!xml) {
+            spew_e (
+                "link %02d  : %s\n"
+                ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
+                ++i, video_url, file_length, file_suffix, file_ct
+            );
+        }
+        else {
+            char *ct  = curl_easy_escape (curl, file_ct, 0);
+            char *url = curl_easy_escape (curl, video_url, 0);
+            spew_e (
+                "   <link id=\"%d\">\n"
+                "       <length_bytes>%.0f</length_bytes>\n"
+                "       <content_type>%s</content_type>\n"
+                "       <file_suffix>%s</file_suffix>\n"
+                "       <url>%s</url>\n"
+                "   </link>\n",
+                ++i, file_length, ct, file_suffix, url
+            );
+            curl_free (url);
+            url = NULL;
+            curl_free (ct);
+            ct = NULL;
+        }
     } while (quvi_next_videolink(video) == QUVI_OK);
 }
 
 static void
-dump_video(quvi_video_t video, opts_s opts) {
+dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
     char *page_link, *page_title, *video_id, *format;
 #ifdef _1_
     long httpcode;
@@ -170,15 +198,42 @@ dump_video(quvi_video_t video, opts_s opts) {
     quvi_getprop(video, QUVIPROP_HTTPCODE, &httpcode);
 #endif
 
-    spew(" > Dump video:\n"
-        "url     : %s\n"
-        "title   : %s\n"
-        "id      : %s\n"
-        "format  : %s (requested)\n",
-        page_link, page_title, video_id, format);
+    if (!opts.xml_given) {
+        spew_e (
+            " > Dump video:\n"
+            "url     : %s\n"
+            "title   : %s\n"
+            "id      : %s\n"
+            "format  : %s (requested)\n",
+            page_link, page_title, video_id, format
+        );
+    }
+    else {
+        char *id    = curl_easy_escape (curl, video_id, 0);
+        char *title = curl_easy_escape (curl, page_title, 0);
+        char *url   = curl_easy_escape (curl, page_link, 0);
+        spew_e (
+        "<?xml version='1.0' encoding='utf-8'?>\n"
+        "<video id=\"%s\">\n"
+        "   <format_requested>%s</format_requested>\n"
+        "   <page_title>%s</page_title>\n"
+        "   <page_url>%s</page_url>\n",
+        id, format, title, url
+        );
+        curl_free (url);
+        url = NULL;
+        curl_free (title);
+        title = NULL;
+        curl_free (id);
+        id = NULL;
+    }
 
-    dump_video_links(video);
-#ifdef _1_
+    dump_video_links (video, opts, curl);
+
+    if (opts.xml_given)
+        spew_e ("</video>\n");
+
+#ifdef _0
     spew("httpcode: %ld (last)\n", httpcode);
 #endif
 }
@@ -286,7 +341,7 @@ NULL
 };
 
 static void
-match_test(quvi_t quvi, opts_s opts) {
+match_test (quvi_t quvi, opts_s opts, CURL *curl) {
     unsigned register int i;
     const char *errmsg;
     int err_offset, rc;
@@ -329,7 +384,7 @@ match_test(quvi_t quvi, opts_s opts) {
             if (_rc != QUVI_OK)
                 dump_error(quvi, _rc, opts);
 
-            dump_video(v, opts);
+            dump_video (v, opts, curl);
             rc = check_values(v, opts);
             quvi_parse_close(&v);
 
@@ -354,7 +409,7 @@ match_test(quvi_t quvi, opts_s opts) {
 }
 
 static void
-test_all(quvi_t quvi, opts_s opts) {
+test_all (quvi_t quvi, opts_s opts, CURL *curl) {
     register unsigned int i,m;
     quvi_video_t video;
     QUVIcode rc;
@@ -370,7 +425,7 @@ test_all(quvi_t quvi, opts_s opts) {
             dump_error(quvi, rc, opts);
         else {
             if (opts.dump_given)
-                dump_video(video, opts);
+                dump_video (video, opts, curl);
         }
         quvi_parse_close(&video);
     }
@@ -378,10 +433,9 @@ test_all(quvi_t quvi, opts_s opts) {
 }
 
 static quvi_t
-init_quvi(opts_s opts) {
+init_quvi(opts_s opts, CURL **curl) {
     QUVIcode rc;
     quvi_t quvi;
-    CURL *curl;
 
     if ( (rc = quvi_init(&quvi)) != QUVI_OK )
         dump_error(quvi, rc, opts);
@@ -400,19 +454,19 @@ init_quvi(opts_s opts) {
 
     /* We can use the quvi created cURL handle for our means. */
 
-    quvi_getinfo(quvi, QUVIINFO_CURL, &curl);
-    assert(curl != 0);
+    quvi_getinfo(quvi, QUVIINFO_CURL, curl);
+    assert(*curl != 0);
 
     if (opts.agent_given)
-        curl_easy_setopt(curl, CURLOPT_USERAGENT, opts.agent_arg);
+        curl_easy_setopt (*curl, CURLOPT_USERAGENT, opts.agent_arg);
 
     if (opts.proxy_given)
-        curl_easy_setopt(curl, CURLOPT_PROXY, opts.proxy_arg);
+        curl_easy_setopt (*curl, CURLOPT_PROXY, opts.proxy_arg);
 
     if (opts.debug_given)
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+        curl_easy_setopt (*curl, CURLOPT_VERBOSE, 1L);
 
-    curl_easy_setopt(curl,
+    curl_easy_setopt (*curl,
         CURLOPT_CONNECTTIMEOUT, opts.connect_timeout_arg);
 
     return (quvi);
@@ -427,8 +481,10 @@ main (int argc, char *argv[]) {
     opts_s opts;
     QUVIcode rc;
     quvi_t quvi;
+    CURL *curl;
 
-    url       = 0;
+    curl      = NULL;
+    url       = NULL;
     no_config = getenv("QUVI_NO_CONFIG");
     home      = getenv("QUVI_HOME");
     if (!home)
@@ -494,7 +550,7 @@ main (int argc, char *argv[]) {
 
     /* Init quvi. */
 
-    quvi = init_quvi(opts);
+    quvi = init_quvi (opts, &curl);
 
     /* --hosts */
     if (opts.hosts_given)
@@ -502,9 +558,9 @@ main (int argc, char *argv[]) {
 
     /* Handle input. */
     if (opts.test_all_given)
-        test_all(quvi, opts);
+        test_all (quvi, opts, curl);
     else if (opts.test_given)
-        match_test(quvi, opts);
+        match_test(quvi, opts, curl);
     else
     {
         if (opts.inputs_num == 0)
@@ -522,7 +578,7 @@ main (int argc, char *argv[]) {
             }
 
             assert(video != 0);
-            dump_video(video, opts);
+            dump_video(video, opts, curl);
 
             quvi_parse_close(&video);
             assert(video == 0);

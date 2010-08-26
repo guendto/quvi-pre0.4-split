@@ -11,6 +11,9 @@ option "hosts"
     - "Show supported hosts"
     optional
 
+option "xml"
+    - "Print details in XML"
+    optional
 option "quiet"
     q "Turn off all output"
     optional
