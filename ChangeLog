@@ -2,6 +2,8 @@
 Version 0.2.3
 
 Changes:
+  * Print video details to stdout, everything else to stderr
+  * Add --xml
   * Bump autoconf prereq. to 2.67
 
 Bugfixes:
