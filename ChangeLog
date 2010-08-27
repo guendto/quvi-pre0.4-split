@@ -2,6 +2,7 @@
 Version 0.2.3
 
 Changes:
+  * Add charlierose support, thanks to mkolve for the script
   * Print video details to stdout, everything else to stderr
   * Add --xml
   * Bump autoconf prereq. to 2.67
