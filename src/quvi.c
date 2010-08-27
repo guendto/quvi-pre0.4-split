@@ -325,6 +325,7 @@ static const char *tests[] = {
 "http://www.evisor.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",
 "http://www.buzzhumor.com/videos/32561/Girl_Feels_Shotgun_Power",
 "http://www.funnyordie.com/videos/776d200b1c/etiquette-ninjas-episode-5-dicks-on-elevators",
+"http://www.charlierose.com/view/interview/11125",
 
 #ifdef ENABLE_BROKEN
 "http://space.tv.cctv.com/video/VIDE1212909276513233", /* single-segment */
