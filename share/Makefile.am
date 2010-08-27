@@ -11,6 +11,7 @@ lua/website/clipfish.lua \
 lua/website/dailymotion.lua \
 lua/website/evisor.lua \
 lua/website/funnyhub.lua \
+lua/website/funnyordie.lua \
 lua/website/golem.lua \
 lua/website/google.lua \
 lua/website/liveleak.lua \
