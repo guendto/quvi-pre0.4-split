@@ -19,6 +19,7 @@ support-liveleak.pl\
 support-myubo.pl\
 support-sevenload.pl\
 support-spiegel.pl\
+support-theonion.pl\
 support-vimeo.pl\
 support-youtube.pl
 
