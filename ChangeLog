@@ -9,6 +9,7 @@ Changes:
   * Bump autoconf prereq. to 2.67
 
 Bugfixes:
+  * Add missing funnyordie.lua to DIST_lua (share/Makefile.am)
   * Unexpected Youtube video titles, if ampersands used
 
 
