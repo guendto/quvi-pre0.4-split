@@ -6,6 +6,7 @@ lua/util/charset.lua \
 lua/website/README \
 lua/website/break.lua \
 lua/website/buzzhumor.lua \
+lua/website/charlierose.lua \
 lua/website/clipfish.lua \
 lua/website/dailymotion.lua \
 lua/website/evisor.lua \
@@ -16,6 +17,7 @@ lua/website/liveleak.lua \
 lua/website/myubo.lua \
 lua/website/sevenload.lua \
 lua/website/spiegel.lua \
+lua/website/theonion.lua \
 lua/website/vimeo.lua \
 lua/website/youtube.lua
 
