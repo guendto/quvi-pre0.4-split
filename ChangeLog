@@ -2,6 +2,8 @@
 Version 0.2.3
 
 Changes:
+  * Curl errors now contain response, connection codes
+    - response code was previously printed as http code
   * Add theonion support, thanks to mkolve for the script (#12)
   * Add charlierose support, thanks to mkolve for the script (#11)
   * Print video details to stdout, everything else to stderr
