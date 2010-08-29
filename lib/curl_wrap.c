@@ -113,30 +113,34 @@ fetch_to_mem(
     curl_easy_getinfo (quvi->curl,
         CURLINFO_HTTP_CONNECTCODE, &conncode);
 
-    if (curlcode == CURLE_OK) {
+    if (curlcode == CURLE_OK && respcode == 200) {
 
-        if (respcode == 200) {
+        if (quvi->status_func) {
 
-            if (quvi->status_func) {
-
-                if ( quvi->status_func(
-                    makelong(QUVISTATUS_FETCH, QUVISTATUSTYPE_DONE),
-                    0
-                ) != QUVI_OK)
-                {
-                    rc = QUVI_ABORTEDBYCALLBACK;
-                }
+            if ( quvi->status_func(
+                makelong(QUVISTATUS_FETCH, QUVISTATUSTYPE_DONE),
+                0
+            ) != QUVI_OK)
+            {
+                rc = QUVI_ABORTEDBYCALLBACK;
             }
+
         }
-        else {
+
+    }
+
+    else {
+
+        if (curlcode == CURLE_OK) {
             seterr ("server response code %ld (conncode=%ld)",
                 respcode, conncode);
-            rc = QUVI_CURL;
         }
-    }
-    else {
-        seterr ("%s (curlcode=%d, conncode=%ld)",
-            curl_easy_strerror(curlcode), curlcode, conncode);
+
+        else {
+            seterr ("%s (curlcode=%d, conncode=%ld)",
+                curl_easy_strerror(curlcode), curlcode, conncode);
+        }
+
         rc = QUVI_CURL;
     }
 
