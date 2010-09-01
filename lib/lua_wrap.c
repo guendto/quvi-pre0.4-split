@@ -120,12 +120,18 @@ typedef int (*filter_func)(const struct dirent*);
 
 static QUVIcode
 scan_dir (llst_node_t *dst, const char *path, filter_func filter) {
+    char *show_scandir;
     struct dirent *de;
     DIR *dir;
 
     dir = opendir(path);
     if (!dir)
         return (QUVI_OK);
+
+    show_scandir = getenv ("QUVI_SHOW_SCANDIR");
+
+    if (show_scandir)
+        fprintf (stderr, "%s: %s\n", __PRETTY_FUNCTION__, path);
 
     while ( (de = readdir(dir)) ) {
         if (filter(de)) {
