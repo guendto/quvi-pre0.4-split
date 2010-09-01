@@ -270,6 +270,9 @@ extern "C" {
 *   - --datadir=DIR (and pkgdatadir) specified with configure (script)
 *     - These directories are typically $prefix/share/ and $prefix/share/quvi/
 *
+* Note that you can have libquvi dump (to stderr) the scanned directory paths
+* by setting the QUVI_SHOW_SCANDIR environment variable.
+*
 * @param quvi Pointer to a new handle
 *
 * @note 
