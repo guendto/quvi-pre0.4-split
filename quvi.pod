@@ -195,6 +195,11 @@ the default search paths.
 Not to be confused with B<QUVI_HOME> which is strictly a C<quvi(1)>
 variable whereas B<QUVI_BASEDIR> is a libquvi variable.
 
+=item B<QUVI_SHOW_SCANDIR>
+
+You can have libquvi dump (to stderr) the scanned directory
+paths by setting this environment variable.
+
 =back
 
 =head1 EXIT STATUS

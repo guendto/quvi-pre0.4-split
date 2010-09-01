@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-08-26" "0.2.3" "quvi manual"
+.TH quvi 1 "2010-09-01" "0.2.3" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -282,6 +282,10 @@ the default search paths.
 .Sp
 Not to be confused with \fB\s-1QUVI_HOME\s0\fR which is strictly a \f(CWquvi(1)\fR
 variable whereas \fB\s-1QUVI_BASEDIR\s0\fR is a libquvi variable.
+.IP "\fB\s-1QUVI_SHOW_SCANDIR\s0\fR" 4
+.IX Item "QUVI_SHOW_SCANDIR"
+You can have libquvi dump (to stderr) the scanned directory
+paths by setting this environment variable.
 .SH "EXIT STATUS"
 .IX Header "EXIT STATUS"
 quvi exits with 0 on success and >0 if an error occurred.
