@@ -1,49 +1,21 @@
 #!/bin/sh
 
-# Configure
-HOST=i486-mingw32 # ./configure --host=$HOST
-PREFIX=`pwd`/dist # ./configure --prefix=$PREFIX
-CFLAGS="-Wall -Werror -Os -pipe -march=i686"
+PREFIX=`pwd`/dist
+MINGW=/opt/mingw32
 
-# --
+export CFLAGS="-Wall -Werror -Os -pipe -march=i686"
 
-CURL_PREFIX=\
-"/home/legatvs/src/non-installed/curl-7.20.1"
+export libcurl_CFLAGS="`$MINGW/bin/curl-config --cflags`"
+export libcurl_LIBS="`$MINGW/bin/curl-config --libs`"
 
-PCRE_PREFIX=\
-"/home/legatvs/src/non-installed/pcre-8.02"
+export libpcre_CFLAGS="`$MINGW/bin/pcre-config --cflags`"
+export libpcre_LIBS="`$MINGW/bin/pcre-config --libs`"
 
-ICONV_PREFIX=\
-"/home/legatvs/src/non-installed/libiconv-1.13.1"
-
-LUA_PREFIX=\
-"/home/legatvs/src/non-installed/lua-5.1.4"
-
-# --
-
-CURL_CONFIG=\
-"$CURL_PREFIX/release/dist/bin/curl-config"
-
-PCRE_CONFIG=\
-"$PCRE_PREFIX/release/dist/bin/pcre-config"
-
-ICONV_DIST=\
-"$ICONV_PREFIX/release/dist"
-
-LUA_DIST=\
-"$LUA_PREFIX/release/dist"
+export liblua_CFLAGS="-I$MINGW/include"
+export liblua_LIBS="-L$MINGW/lib -llua51"
 
 pack_it()
 {
-    curl_prefix="`$CURL_CONFIG --prefix`"
-    curl_dll="$curl_prefix/bin/libcurl-4.dll"
-
-    pcre_prefix="`$PCRE_CONFIG --prefix`"
-    pcre_dll="$pcre_prefix/bin/libpcre-0.dll"
-
-    iconv_dll="$ICONV_DIST/bin/libiconv-2.dll"
-    lua_dll="$LUA_DIST/bin/lua51.dll"
-
     version=`awk '/PACKAGE_VERSION = / {print $3}' Makefile`
     archive="quvi-$version-win32-i686-bin.7z"
     distdir="quvi-$version"
@@ -51,22 +23,18 @@ pack_it()
     rm -rf dist quvi-$version $archive \
     && make install-strip \
     && make man \
-    && cp $curl_dll dist/bin \
-    && cp $pcre_dll dist/bin \
-    && cp $iconv_dll dist/bin \
-    && cp $lua_dll dist/bin \
+    && cp -v $MINGW/bin/libcurl-4.dll dist/bin \
+    && cp -v $MINGW/bin/libpcre-0.dll dist/bin \
+    && cp -v $MINGW/bin/libiconv-2.dll dist/bin \
+    && cp -v $MINGW/bin/lua51.dll dist/bin \
     && mkdir -p dist/licenses \
-    && cp $CURL_PREFIX/COPYING dist/licenses/libcurl-COPYING.TXT \
-    && cp $PCRE_PREFIX/LICENCE dist/licenses/libpcre-LICENSE.TXT \
-    && cp $ICONV_PREFIX/COPYING.LIB dist/licenses/libiconv-COPYING.TXT \
-    && cp $LUA_PREFIX/COPYRIGHT dist/licenses/liblua-COPYRIGHT.TXT \
+    && cp -v -r licenses dist/licenses \
     && mv dist/share/quvi/lua dist/bin \
     && rm -r dist/share/man dist/share/quvi \
     && rm -rf dist/lib/pkgconfig \
-    && cp ../COPYING dist/licenses/quvi-COPYING.txt \
-    && cp ../ChangeLog dist/ChangeLog.txt \
-    && cp ChangeLog.w32.txt dist/ \
-    && cp quvi.1.html dist/share/doc/quvi \
+    && cp -v ../ChangeLog dist/ChangeLog.txt \
+    && cp -v ChangeLog.w32.txt dist/ \
+    && cp -v quvi.1.html dist/share/doc/quvi \
     && mv dist $distdir \
     && 7za a $archive $distdir
     exit $?
@@ -98,20 +66,10 @@ if [ x"$clean_flag" = "xon" ]; then
     clean_up
 fi
 
-# No tweaking usually required.
-
-export libcurl_CFLAGS="`$CURL_CONFIG --cflags`"
-export libcurl_LIBS="`$CURL_CONFIG --libs`"
-
-export libpcre_CFLAGS="`$PCRE_CONFIG --cflags`"
-export libpcre_LIBS="`$PCRE_CONFIG --libs`"
-
-export liblua_CFLAGS="-I$LUA_DIST/include"
-export liblua_LIBS="-L$LUA_DIST/lib -llua51"
-
-CFLAGS=$CFLAGS ../configure \
-    --prefix="$PREFIX" \
-    --host="$HOST" \
-    --with-libiconv-prefix="$ICONV_PREFIX" \
-    --enable-smut \
+../configure \
+    --host=i486-mingw32 \
+    --prefix=$PREFIX \
+    --with-libiconv-prefix=$MINGW \
     --without-man
+
+
