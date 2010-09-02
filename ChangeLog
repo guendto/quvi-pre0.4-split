@@ -1,5 +1,6 @@
 
 Version 0.2.3
+September 2, 2010
 
 Changes:
   * Curl errors now contain response, connection codes
