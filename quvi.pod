@@ -13,8 +13,8 @@ quvi [options] [url...]
 quvi is a command line tool for parsing video download links.
 It supports Youtube and other similar video websites.
 
-The video details are printed to standard output, everything
-else is printed to standard error.
+The video details are printed to standard output (in JSON),
+everything else is printed to standard error.
 
 =head1 OPTIONS
 
