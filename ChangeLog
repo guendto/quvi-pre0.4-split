@@ -1,4 +1,12 @@
 
+Version 0.2.4
+
+Changes:
+  * --xml
+    * Escape (URL encode) URLs only 
+    * Tweak XML prolog
+
+
 Version 0.2.3
 September 2, 2010
 
