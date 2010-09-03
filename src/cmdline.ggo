@@ -15,7 +15,7 @@ option "xml"
     - "Print details in XML"
     optional
 option "quiet"
-    q "Turn off all output"
+    q "Turn off output to stderr"
     optional
 option "debug"
     - "Turn on libcurl verbose mode"

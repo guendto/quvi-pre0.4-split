@@ -37,7 +37,7 @@ const char *gengetopt_args_info_help[] = {
   "      --license               Print license and exit",
   "      --hosts                 Show supported hosts",
   "      --xml                   Print details in XML",
-  "  -q, --quiet                 Turn off all output",
+  "  -q, --quiet                 Turn off output to stderr",
   "      --debug                 Turn on libcurl verbose mode",
   "  -n, --no-verify             Do not verify video link",
   "      --page-title=<string>   Expected video page title",
@@ -670,7 +670,7 @@ cmdline_parser_internal (
             goto failure;
         
           break;
-        case 'q':	/* Turn off all output.  */
+        case 'q':	/* Turn off output to stderr.  */
         
         
           if (update_arg( 0 , 

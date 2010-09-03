@@ -42,7 +42,7 @@ struct gengetopt_args_info
   const char *license_help; /**< @brief Print license and exit help description.  */
   const char *hosts_help; /**< @brief Show supported hosts help description.  */
   const char *xml_help; /**< @brief Print details in XML help description.  */
-  const char *quiet_help; /**< @brief Turn off all output help description.  */
+  const char *quiet_help; /**< @brief Turn off output to stderr help description.  */
   const char *debug_help; /**< @brief Turn on libcurl verbose mode help description.  */
   const char *no_verify_help; /**< @brief Do not verify video link help description.  */
   char * page_title_arg;	/**< @brief Expected video page title.  */
