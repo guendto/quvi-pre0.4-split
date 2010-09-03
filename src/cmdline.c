@@ -51,7 +51,7 @@ const char *gengetopt_args_info_help[] = {
   "      --proxy=<host[:port]>   Use specified proxy",
   "      --connect-timeout=<s>   Max seconds allowed connection to server take  \n                                (default=`30')",
   "  -f, --format=<format_id>    Query video format  (default=`default')",
-  "\nExamples:\n\n  quvi -a         # run all built-in tests\n  quvi URL        # test URL\n  quvi -t youtube # match 'youtube' to built-in links and test it\n  quvi URL -f mp4 # query 'mp4' format of the video\n  quvi --hosts    # dump a list of supported websites and format ids",
+  "\nExample: quvi YOUTUBE_URL -f sd_270p",
     0
 };
 
