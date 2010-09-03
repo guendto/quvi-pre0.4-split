@@ -164,7 +164,6 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
             );
         }
         else {
-            char *ct  = curl_easy_escape (curl, file_ct, 0);
             char *url = curl_easy_escape (curl, video_url, 0);
             spew_e (
                 "   <link id=\"%d\">\n"
@@ -173,12 +172,12 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
                 "       <file_suffix>%s</file_suffix>\n"
                 "       <url>%s</url>\n"
                 "   </link>\n",
-                ++i, file_length, ct, file_suffix, url
+                ++i, file_length, file_ct, file_suffix, url ? url:video_url
             );
-            curl_free (url);
-            url = NULL;
-            curl_free (ct);
-            ct = NULL;
+            if (url) {
+                curl_free (url);
+                url = NULL;
+            }
         }
     } while (quvi_next_videolink(video) == QUVI_OK);
 }
@@ -209,23 +208,24 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
         );
     }
     else {
-        char *id    = curl_easy_escape (curl, video_id, 0);
-        char *title = curl_easy_escape (curl, page_title, 0);
-        char *url   = curl_easy_escape (curl, page_link, 0);
+        char *url = curl_easy_escape (curl, page_link, 0);
         spew_e (
-        "<?xml version='1.0' encoding='utf-8'?>\n"
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         "<video id=\"%s\">\n"
         "   <format_requested>%s</format_requested>\n"
         "   <page_title>%s</page_title>\n"
         "   <page_url>%s</page_url>\n",
-        id, format, title, url
+            video_id,
+            format,
+            page_title,
+            url
+                ? url
+                : page_link
         );
-        curl_free (url);
-        url = NULL;
-        curl_free (title);
-        title = NULL;
-        curl_free (id);
-        id = NULL;
+        if (url) {
+            curl_free (url);
+            url = NULL;
+        }
     }
 
     dump_video_links (video, opts, curl);
