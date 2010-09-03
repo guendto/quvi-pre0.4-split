@@ -158,9 +158,17 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
 
         if (!xml) {
             spew_e (
-                "link %02d  : %s\n"
-                ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
-                ++i, video_url, file_length, file_suffix, file_ct
+                "    {\n"
+                "      \"id\": \"%d\",\n"
+                "      \"length_bytes\": \"%.0f\",\n"
+                "      \"content_type\": \"%s\",\n"
+                "      \"file_suffix\": \"%s\",\n"
+                "      \"url\": \"%s\"\n"
+                "    }%s\n",
+                ++i, file_length, file_suffix, file_ct, video_url,
+                i > 1
+                    ? ","
+                    : ""
             );
         }
         else {
@@ -172,7 +180,10 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
                 "       <file_suffix>%s</file_suffix>\n"
                 "       <url>%s</url>\n"
                 "   </link>\n",
-                ++i, file_length, file_ct, file_suffix, url ? url:video_url
+                ++i, file_length, file_ct, file_suffix,
+                url
+                    ? url
+                    : video_url
             );
             if (url) {
                 curl_free (url);
@@ -199,12 +210,13 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
 
     if (!opts.xml_given) {
         spew_e (
-            " > Dump video:\n"
-            "url     : %s\n"
-            "title   : %s\n"
-            "id      : %s\n"
-            "format  : %s (requested)\n",
-            page_link, page_title, video_id, format
+            "{\n"
+             "  \"page_title\": \"%s\",\n"
+             "  \"page_url\": \"%s\",\n"
+             "  \"id\": \"%s\",\n"
+             "  \"format_requested\": \"%s\",\n"
+             "  \"link\": [\n",
+            page_title, page_link, video_id, format
         );
     }
     else {
@@ -230,7 +242,9 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
 
     dump_video_links (video, opts, curl);
 
-    if (opts.xml_given)
+    if (!opts.xml_given)
+        spew_e ("  ]\n}\n");
+    else
         spew_e ("</video>\n");
 
 #ifdef _0
