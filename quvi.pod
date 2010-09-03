@@ -39,7 +39,8 @@ unlike in JSON). Encoding is always UTF-8 (like in JSON).
 
 =item B<-q, --quiet>
 
-Turn off all output.
+Turn off output to stderr (excl. errors, libcurl). Video details will
+be printed to stdout as they would be normally.
 
 =item B<--debug>
 

@@ -158,7 +158,8 @@ Print details in \s-1XML\s0 (instead of \s-1JSON\s0). URLs are escaped (\s-1URL\
 unlike in \s-1JSON\s0). Encoding is always \s-1UTF\-8\s0 (like in \s-1JSON\s0).
 .IP "\fB\-q, \-\-quiet\fR" 4
 .IX Item "-q, --quiet"
-Turn off all output.
+Turn off output to stderr (excl. errors, libcurl). Video details will
+be printed to stdout as they would be normally.
 .IP "\fB\-\-debug\fR" 4
 .IX Item "--debug"
 Turn on libcurl verbose mode.
