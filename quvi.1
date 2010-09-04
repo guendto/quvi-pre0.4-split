@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-09-03" "0.2.4" "quvi manual"
+.TH quvi 1 "2010-09-04" "0.2.4" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -200,6 +200,9 @@ is \*(L"Mozilla/5.0\*(R".
 .IX Item "--proxy=host[:port]"
 Use the specified \s-1HTTP\s0 proxy. Note that quvi will
 use http_proxy environment setting if it is set.
+.IP "\fB\-\-no\-proxy\fR" 4
+.IX Item "--no-proxy"
+Do not use \s-1HTTP\s0 proxy. Not even if http_proxy is set.
 .IP "\fB\-\-connect\-timeout\fR=\fIseconds\fR" 4
 .IX Item "--connect-timeout=seconds"
 Maximum seconds allowed connection to server take.
