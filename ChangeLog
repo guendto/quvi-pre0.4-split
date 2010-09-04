@@ -9,6 +9,10 @@ Changes:
     * Escape (URL encode) URLs only 
     * Tweak XML prolog
 
+Bugfixes:
+  * Vimeo support (http/404), port changes from clive
+    * Original fix by Jonas Smedegaard, <http://bugs.debian.org/595486>
+
 
 Version 0.2.3
 September 2, 2010
