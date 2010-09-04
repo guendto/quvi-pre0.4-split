@@ -63,6 +63,9 @@ option "proxy"
     - "Use specified proxy"
     string typestr="<host[:port]>"
     optional
+option "no-proxy"
+    - "Do not use proxy"
+    optional
 option "connect-timeout"
     - "Max seconds allowed connection to server take"
     int typestr="<s>"

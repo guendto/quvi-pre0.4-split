@@ -49,6 +49,7 @@ const char *gengetopt_args_info_help[] = {
   "  -d, --dump                  Dump video details when running tests",
   "      --agent=<string>        Identify cclive as string to servers  \n                                (default=`Mozilla/5.0')",
   "      --proxy=<host[:port]>   Use specified proxy",
+  "      --no-proxy              Do not use proxy",
   "      --connect-timeout=<s>   Max seconds allowed connection to server take  \n                                (default=`30')",
   "  -f, --format=<format_id>    Query video format  (default=`default')",
   "\nExample: quvi YOUTUBE_URL -f sd_270p",
@@ -120,6 +121,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->dump_given = 0 ;
   args_info->agent_given = 0 ;
   args_info->proxy_given = 0 ;
+  args_info->no_proxy_given = 0 ;
   args_info->connect_timeout_given = 0 ;
   args_info->format_given = 0 ;
 }
@@ -170,8 +172,9 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->dump_help = gengetopt_args_info_help[14] ;
   args_info->agent_help = gengetopt_args_info_help[15] ;
   args_info->proxy_help = gengetopt_args_info_help[16] ;
-  args_info->connect_timeout_help = gengetopt_args_info_help[17] ;
-  args_info->format_help = gengetopt_args_info_help[18] ;
+  args_info->no_proxy_help = gengetopt_args_info_help[17] ;
+  args_info->connect_timeout_help = gengetopt_args_info_help[18] ;
+  args_info->format_help = gengetopt_args_info_help[19] ;
   
 }
 
@@ -340,6 +343,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "agent", args_info->agent_orig, 0);
   if (args_info->proxy_given)
     write_into_file(outfile, "proxy", args_info->proxy_orig, 0);
+  if (args_info->no_proxy_given)
+    write_into_file(outfile, "no-proxy", 0, 0 );
   if (args_info->connect_timeout_given)
     write_into_file(outfile, "connect-timeout", args_info->connect_timeout_orig, 0);
   if (args_info->format_given)
@@ -642,6 +647,7 @@ cmdline_parser_internal (
         { "dump",	0, NULL, 'd' },
         { "agent",	1, NULL, 0 },
         { "proxy",	1, NULL, 0 },
+        { "no-proxy",	0, NULL, 0 },
         { "connect-timeout",	1, NULL, 0 },
         { "format",	1, NULL, 'f' },
         { 0,  0, 0, 0 }
@@ -880,6 +886,20 @@ cmdline_parser_internal (
                 &(local_args_info.proxy_given), optarg, 0, 0, ARG_STRING,
                 check_ambiguity, override, 0, 0,
                 "proxy", '-',
+                additional_error))
+              goto failure;
+          
+          }
+          /* Do not use proxy.  */
+          else if (strcmp (long_options[option_index].name, "no-proxy") == 0)
+          {
+          
+          
+            if (update_arg( 0 , 
+                 0 , &(args_info->no_proxy_given),
+                &(local_args_info.no_proxy_given), optarg, 0, 0, ARG_NO,
+                check_ambiguity, override, 0, 0,
+                "no-proxy", '-',
                 additional_error))
               goto failure;
           

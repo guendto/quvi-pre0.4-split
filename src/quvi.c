@@ -479,6 +479,9 @@ init_quvi(opts_s opts, CURL **curl) {
     if (opts.proxy_given)
         curl_easy_setopt (*curl, CURLOPT_PROXY, opts.proxy_arg);
 
+    if (opts.no_proxy_given)
+        curl_easy_setopt (*curl, CURLOPT_PROXY, "");
+
     if (opts.debug_given)
         curl_easy_setopt (*curl, CURLOPT_VERBOSE, 1L);
 

@@ -68,6 +68,7 @@ struct gengetopt_args_info
   char * proxy_arg;	/**< @brief Use specified proxy.  */
   char * proxy_orig;	/**< @brief Use specified proxy original value given at command line.  */
   const char *proxy_help; /**< @brief Use specified proxy help description.  */
+  const char *no_proxy_help; /**< @brief Do not use proxy help description.  */
   int connect_timeout_arg;	/**< @brief Max seconds allowed connection to server take (default='30').  */
   char * connect_timeout_orig;	/**< @brief Max seconds allowed connection to server take original value given at command line.  */
   const char *connect_timeout_help; /**< @brief Max seconds allowed connection to server take help description.  */
@@ -92,6 +93,7 @@ struct gengetopt_args_info
   unsigned int dump_given ;	/**< @brief Whether dump was given.  */
   unsigned int agent_given ;	/**< @brief Whether agent was given.  */
   unsigned int proxy_given ;	/**< @brief Whether proxy was given.  */
+  unsigned int no_proxy_given ;	/**< @brief Whether no-proxy was given.  */
   unsigned int connect_timeout_given ;	/**< @brief Whether connect-timeout was given.  */
   unsigned int format_given ;	/**< @brief Whether format was given.  */
 
