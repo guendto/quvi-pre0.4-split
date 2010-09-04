@@ -2,6 +2,7 @@
 Version 0.2.4
 
 Changes:
+  * Add --no-proxy
   * Update --quiet help string and manual entry
   * Cleanup examples in --help output
   * Change default details output to JSON
