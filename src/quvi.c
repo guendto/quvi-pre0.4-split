@@ -196,17 +196,11 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
 static void
 dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
     char *page_link, *page_title, *video_id, *format;
-#ifdef _1_
-    long httpcode;
-#endif
 
     quvi_getprop(video, QUVIPROP_PAGEURL, &page_link);
     quvi_getprop(video, QUVIPROP_PAGETITLE, &page_title);
     quvi_getprop(video, QUVIPROP_VIDEOID, &video_id);
     quvi_getprop(video, QUVIPROP_VIDEOFORMAT, &format);
-#ifdef _1_
-    quvi_getprop(video, QUVIPROP_HTTPCODE, &httpcode);
-#endif
 
     if (!opts.xml_given) {
         spew_e (
@@ -246,10 +240,6 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
         spew_e ("  ]\n}\n");
     else
         spew_e ("</video>\n");
-
-#ifdef _0
-    spew("httpcode: %ld (last)\n", httpcode);
-#endif
 }
 
 static void
@@ -307,14 +297,8 @@ check_values(quvi_video_t video, opts_s opts) {
 
 static void
 dump_error(quvi_t quvi, QUVIcode rc, opts_s opts) {
-    long httpcode, curlcode;
 
-    quvi_getinfo(quvi, QUVIINFO_HTTPCODE, &httpcode);
-    quvi_getinfo(quvi, QUVIINFO_CURLCODE, &curlcode);
-
-    fprintf(stderr, "\nerror: %s (http/%ld, curl/%ld)\n",
-        quvi_strerror(quvi,rc),
-        httpcode, curlcode);
+    fprintf(stderr, "\nerror: %s\n", quvi_strerror(quvi,rc));
 
     if (!opts.test_all_given) {
         quvi_close(&quvi);
