@@ -34,7 +34,7 @@ Print supported hosts and exit.
 
 =item B<--xml>
 
-Print details in XML (instead of JSON). URLs are escaped (URL encoded,
+Print the details in XML (instead of JSON). URLs are escaped (URL encoded,
 unlike in JSON). Encoding is always UTF-8 (like in JSON).
 
 =item B<--old>
