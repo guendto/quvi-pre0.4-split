@@ -37,6 +37,11 @@ Print supported hosts and exit.
 Print details in XML (instead of JSON). URLs are escaped (URL encoded,
 unlike in JSON). Encoding is always UTF-8 (like in JSON).
 
+=item B<--old>
+
+Print the details in the previously used default output format
+(0.2.3 and earlier).
+
 =item B<-q, --quiet>
 
 Turn off output to stderr (excl. errors, libcurl). Video details will
