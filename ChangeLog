@@ -2,6 +2,7 @@
 Version 0.2.4
 
 Changes:
+  * New Youtube test URL
   * Add --old
   * Add --no-proxy
   * Update --quiet help string and manual entry
