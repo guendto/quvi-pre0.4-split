@@ -145,7 +145,6 @@ supports(quvi_t quvi, opts_s opts) {
 
 static void
 dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
-    const int xml = opts.xml_given;
     int i = 0;
     do {
         char *video_url, *file_suffix, *file_ct;
@@ -156,22 +155,7 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
         quvi_getprop(video, QUVIPROP_VIDEOFILESUFFIX, &file_suffix);
         quvi_getprop(video, QUVIPROP_VIDEOFILELENGTH, &file_length);
 
-        if (!xml) {
-            spew_e (
-                "    {\n"
-                "      \"id\": \"%d\",\n"
-                "      \"length_bytes\": \"%.0f\",\n"
-                "      \"content_type\": \"%s\",\n"
-                "      \"file_suffix\": \"%s\",\n"
-                "      \"url\": \"%s\"\n"
-                "    }%s\n",
-                ++i, file_length, file_ct, file_suffix, video_url,
-                i > 1
-                    ? ","
-                    : ""
-            );
-        }
-        else {
+        if (opts.xml_given) {
             char *url = curl_easy_escape (curl, video_url, 0);
             spew_e (
                 "   <link id=\"%d\">\n"
@@ -190,6 +174,28 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
                 url = NULL;
             }
         }
+        else if (opts.old_given) {
+            spew_e (
+                "link %02d  : %s\n"
+                ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
+                ++i, video_url, file_length, file_suffix, file_ct
+            );
+        }
+        else { /* JSON, default. */
+            spew_e (
+                "    {\n"
+                "      \"id\": \"%d\",\n"
+                "      \"length_bytes\": \"%.0f\",\n"
+                "      \"content_type\": \"%s\",\n"
+                "      \"file_suffix\": \"%s\",\n"
+                "      \"url\": \"%s\"\n"
+                "    }%s\n",
+                ++i, file_length, file_ct, file_suffix, video_url,
+                i > 1
+                    ? ","
+                    : ""
+            );
+        }
     } while (quvi_next_videolink(video) == QUVI_OK);
 }
 
@@ -202,18 +208,7 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
     quvi_getprop(video, QUVIPROP_VIDEOID, &video_id);
     quvi_getprop(video, QUVIPROP_VIDEOFORMAT, &format);
 
-    if (!opts.xml_given) {
-        spew_e (
-            "{\n"
-             "  \"page_title\": \"%s\",\n"
-             "  \"page_url\": \"%s\",\n"
-             "  \"id\": \"%s\",\n"
-             "  \"format_requested\": \"%s\",\n"
-             "  \"link\": [\n",
-            page_title, page_link, video_id, format
-        );
-    }
-    else {
+    if (opts.xml_given) {
         char *url = curl_easy_escape (curl, page_link, 0);
         spew_e (
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
@@ -233,13 +228,35 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
             url = NULL;
         }
     }
+    else if (opts.old_given) {
+        spew_e (
+            " > Dump video:\n"
+            "url     : %s\n"
+            "title   : %s\n"
+            "id      : %s\n"
+            "format  : %s (requested)\n",
+            page_link, page_title, video_id, format
+        );
+    }
+    else { /* JSON, default. */
+        spew_e (
+            "{\n"
+             "  \"page_title\": \"%s\",\n"
+             "  \"page_url\": \"%s\",\n"
+             "  \"id\": \"%s\",\n"
+             "  \"format_requested\": \"%s\",\n"
+             "  \"link\": [\n",
+            page_title, page_link, video_id, format
+        );
+    }
 
     dump_video_links (video, opts, curl);
 
-    if (!opts.xml_given)
-        spew_e ("  ]\n}\n");
-    else
+    if (opts.xml_given)
         spew_e ("</video>\n");
+    else if (opts.old_given);
+    else /* JSON, default. */
+        spew_e ("  ]\n}\n");
 }
 
 static void

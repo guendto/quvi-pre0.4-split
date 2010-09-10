@@ -14,6 +14,9 @@ option "hosts"
 option "xml"
     - "Print details in XML"
     optional
+option "old"
+    - "Print details in original format"
+    optional
 option "quiet"
     q "Turn off output to stderr"
     optional

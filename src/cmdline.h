@@ -42,6 +42,7 @@ struct gengetopt_args_info
   const char *license_help; /**< @brief Print license and exit help description.  */
   const char *hosts_help; /**< @brief Show supported hosts help description.  */
   const char *xml_help; /**< @brief Print details in XML help description.  */
+  const char *old_help; /**< @brief Print details in original format help description.  */
   const char *quiet_help; /**< @brief Turn off output to stderr help description.  */
   const char *debug_help; /**< @brief Turn on libcurl verbose mode help description.  */
   const char *no_verify_help; /**< @brief Do not verify video link help description.  */
@@ -81,6 +82,7 @@ struct gengetopt_args_info
   unsigned int license_given ;	/**< @brief Whether license was given.  */
   unsigned int hosts_given ;	/**< @brief Whether hosts was given.  */
   unsigned int xml_given ;	/**< @brief Whether xml was given.  */
+  unsigned int old_given ;	/**< @brief Whether old was given.  */
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */
   unsigned int debug_given ;	/**< @brief Whether debug was given.  */
   unsigned int no_verify_given ;	/**< @brief Whether no-verify was given.  */
