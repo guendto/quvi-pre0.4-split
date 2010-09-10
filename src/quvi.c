@@ -165,7 +165,7 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
                 "      \"file_suffix\": \"%s\",\n"
                 "      \"url\": \"%s\"\n"
                 "    }%s\n",
-                ++i, file_length, file_suffix, file_ct, video_url,
+                ++i, file_length, file_ct, file_suffix, video_url,
                 i > 1
                     ? ","
                     : ""
