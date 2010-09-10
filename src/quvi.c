@@ -155,6 +155,8 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
         quvi_getprop(video, QUVIPROP_VIDEOFILESUFFIX, &file_suffix);
         quvi_getprop(video, QUVIPROP_VIDEOFILELENGTH, &file_length);
 
+        ++i;
+
         if (opts.xml_given) {
             char *url = curl_easy_escape (curl, video_url, 0);
             spew_e (
@@ -164,7 +166,7 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
                 "       <file_suffix>%s</file_suffix>\n"
                 "       <url>%s</url>\n"
                 "   </link>\n",
-                ++i, file_length, file_ct, file_suffix,
+                i, file_length, file_ct, file_suffix,
                 url
                     ? url
                     : video_url
@@ -178,7 +180,7 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
             spew_e (
                 "link %02d  : %s\n"
                 ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
-                ++i, video_url, file_length, file_suffix, file_ct
+                i, video_url, file_length, file_suffix, file_ct
             );
         }
         else { /* JSON, default. */
@@ -190,7 +192,7 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
                 "      \"file_suffix\": \"%s\",\n"
                 "      \"url\": \"%s\"\n"
                 "    }%s\n",
-                ++i, file_length, file_ct, file_suffix, video_url,
+                i, file_length, file_ct, file_suffix, video_url,
                 i > 1
                     ? ","
                     : ""
