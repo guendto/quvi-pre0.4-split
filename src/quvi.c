@@ -335,7 +335,7 @@ static const char *tests[] = {
 "http://video.golem.de/internet/2174/firefox-3.5-test.html",
 "http://www.funnyhub.com/videos/pages/crazy-hole-in-one.html",
 "http://www.clipfish.de/video/3100131/matratzendomino/",
-"http://www.youtube.com/watch?v=DeWsZ2b_pK4",
+"http://www.youtube.com/watch?v=DUM1284TqFc",
 "http://break.com/index/beach-tackle-whip-lash.html",
 "http://www.evisor.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",
 "http://www.buzzhumor.com/videos/32561/Girl_Feels_Shotgun_Power",
