@@ -2,6 +2,7 @@
 Version 0.2.5
 
 Changes:
+  * Migrated issue tracker to sf.net (read more: <http://is.gd/fmNnQ>)
   * Add support for webm_480p, webm_720p [youtube]
     * Ported from clive patch submitted by Mark Weaver, <http://is.gd/fmwv5>
 
