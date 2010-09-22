@@ -141,12 +141,6 @@ Query 'best' of the video from the URL.
 
 =back
 
-=head1 BUGS
-
-Sure to be some. Please report them.
-
-  <http://quvi.googlecode.com/>
-
 =head1 DEBUGGING
 
 =over 4
@@ -235,24 +229,21 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
 
 =head1 OTHER
 
-=over 4
+Project page:
+  <http://quvi.googlecode.com/>
 
-=item Project page:
+Bugs, support, etc. trackers can be found at:
+  <http://sourceforge.net/tracker/?group_id=354489>
 
-<http://quvi.googlecode.com/>
-
-=item FAQ:
-
-<http://code.google.com/p/quvi/wiki/FAQ>
-
-=item Development code:
-
-% git clone git://repo.or.cz/quvi.git
-
-=back
+Development code:
+  % git clone git://repo.or.cz/quvi.git
 
 =head1 AUTHOR
 
-Toni Gundogdu.
+Toni Gundogdu <legatvs at sign gmail com>
+
+Thanks to all those who have contributed to the project
+by sending patches, reporting bugs and writing feedback.
+You know who you are.
 
 =cut
