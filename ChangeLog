@@ -1,4 +1,11 @@
 
+Version 0.2.5
+
+Changes:
+  * Add support for webm_480p, webm_720p [youtube]
+    * Ported from clive patch submitted by Mark Weaver, <http://is.gd/fmwv5>
+
+
 Version 0.2.4
 September 10, 2010
 
