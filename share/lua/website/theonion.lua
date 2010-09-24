@@ -36,7 +36,7 @@ function parse (video)
     video.host_id = "theonion"
     local page    = quvi.fetch(video.page_url)
 
-    local _,_,s = page:find("<title>(.-) |")
+    local _,_,s = page:find('video_title = "(.-)"')
     video.title = s or error ("no match: video title")
 
     local _,_,s = page:find("afns_video_id = (.-);")
