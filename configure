@@ -2516,7 +2516,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 # Interface:
 QUVI_CURRENT=2
-QUVI_REVISION=4
+QUVI_REVISION=5
 QUVI_AGE=2
 
 
