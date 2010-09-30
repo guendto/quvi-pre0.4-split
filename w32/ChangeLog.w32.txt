@@ -1,10 +1,17 @@
 
 This file details the w32 binary package changes only.
 
+Version 0.2.5
+
+Changes:
+  * Bump
+
+
 Version 0.2.4
 
 Changes:
   * Bump
+
 
 Version 0.2.3
 
