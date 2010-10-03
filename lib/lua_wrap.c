@@ -76,8 +76,10 @@ l_quvi_fetch (lua_State *l) {
         luaL_pushresult(&b);
         _free(data);
     }
-    else
+    else {
+        _free(data);
         luaL_error(l, qv->quvi->errmsg);
+    }
 
     return (1);
 }
