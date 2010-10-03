@@ -21,7 +21,11 @@ support-sevenload.pl\
 support-spiegel.pl\
 support-theonion.pl\
 support-vimeo.pl\
-support-youtube.pl
+support-youtube.pl\
+support-academicearth.pl
+
+# NOTE: academicearth.pl has to come after youtube.
+# The former uses youtube for hosting some of its videos.
 
 TESTS_BROKEN =\
 support-cctv.pl\

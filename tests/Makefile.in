@@ -217,8 +217,11 @@ EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_ADULT)
 @HAVE_PERL_TRUE@	support-myubo.pl support-sevenload.pl \
 @HAVE_PERL_TRUE@	support-spiegel.pl support-theonion.pl \
 @HAVE_PERL_TRUE@	support-vimeo.pl support-youtube.pl \
-@HAVE_PERL_TRUE@	$(am__append_1) $(am__append_2) \
-@HAVE_PERL_TRUE@	$(am__append_3)
+@HAVE_PERL_TRUE@	support-academicearth.pl $(am__append_1) \
+@HAVE_PERL_TRUE@	$(am__append_2) $(am__append_3)
+
+# NOTE: academicearth.pl has to come after youtube.
+# The former uses youtube for hosting some of its videos.
 @HAVE_PERL_TRUE@TESTS_BROKEN = \
 @HAVE_PERL_TRUE@support-cctv.pl\
 @HAVE_PERL_TRUE@support-ehrensenf.pl\
