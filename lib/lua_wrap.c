@@ -569,6 +569,7 @@ run_parse_func (lua_State *l, llst_node_t node, _quvi_video_t video) {
     lua_newtable(l);
     set_field(l, "page_url",         video->page_link);
     set_field(l, "requested_format", video->quvi->format);
+    set_field(l, "redirect",         "");
 #ifdef _1_
     set_field(l, "host_id",  "");
     set_field(l, "title",    "");
@@ -582,10 +583,16 @@ run_parse_func (lua_State *l, llst_node_t node, _quvi_video_t video) {
     }
 
     if (lua_istable(l, -1)) {
-        setvid(video->host_id, "%s", get_field_s(l, qls, "host_id"));
-        setvid(video->title,   "%s", get_field_s(l, qls, "title"));
-        setvid(video->id,      "%s", get_field_s(l, qls, "id"));
-        rc = iter_video_url(l, qls, "url", video);
+
+        setvid(video->redirect, "%s", get_field_s(l, qls, "redirect"));
+
+        if (strlen(video->redirect) == 0) {
+            setvid(video->host_id, "%s", get_field_s(l, qls, "host_id"));
+            setvid(video->title,   "%s", get_field_s(l, qls, "title"));
+            setvid(video->id,      "%s", get_field_s(l, qls, "id"));
+            rc = iter_video_url(l, qls, "url", video);
+        }
+
     }
     else
         luaL_error(l, "expected `ident' function to return a table");

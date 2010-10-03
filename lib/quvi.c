@@ -18,6 +18,7 @@
 #include "config.h"
 
 #include <assert.h>
+#include <string.h>
 
 #include <pcre.h>
 #include <curl/curl.h>
@@ -122,9 +123,19 @@ quvi_parse (quvi_t quvi, char *url, quvi_video_t *dst) {
 
     setvid(video->page_link, "%s", url);
 
-    rc = find_host_script(video);
-    if (rc != QUVI_OK)
-        return (rc);
+    while (1) {
+        rc = find_host_script (video);
+        if (rc != QUVI_OK)
+            return (rc);
+        else {
+            if (strlen (video->redirect)) { /* Found a redirect. */
+                setvid (video->page_link, "%s", video->redirect);
+                continue;
+            }
+            else
+                break;
+        }
+    }
 
 #ifdef HAVE_ICONV /* Convert character set encoding to utf8. */
     if (video->charset)
@@ -176,6 +187,7 @@ quvi_parse_close (quvi_video_t *handle) {
         _free((*video)->charset);
         _free((*video)->page_link);
         _free((*video)->host_id);
+        _free((*video)->redirect);
 
         _free(*video);
     }
