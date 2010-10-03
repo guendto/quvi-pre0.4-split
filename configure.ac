@@ -4,7 +4,9 @@
 AC_PREREQ([2.68])
 
 m4_include([m4/version.m4])
-AC_INIT([quvi], [_QUVI_VERSION], [legatvs@gmail.com])
+
+AC_INIT([quvi], [_QUVI_VERSION],
+    [http://is.gd/fIt4T], [], [http://quvi.googlecode.com/])
 
 # Interface:
 QUVI_CURRENT=_QUVI_CURRENT
