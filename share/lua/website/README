@@ -70,6 +70,7 @@ The function is expected set the following video details.
   * title (string)
   * id (string)
   * url (array of strings)
+  * redirect (string) [see notes below]
 
 Each of these belong to the `video' table passed to the function
 as a parameter. e.g. "video.host_id = 'youtube'"
@@ -81,6 +82,11 @@ Parameters:
 
 Returns:
   * `video' table containing the updated details
+
+Notes:
+  * "redirect", special field, if set (default:empty):
+    - quvi skips link checking, and parses the specified (redirect) URL instead
+    - for an example of this, see the academicearth.lua script
 
 
 3. Lua API
