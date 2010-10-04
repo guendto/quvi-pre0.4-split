@@ -86,6 +86,7 @@ Returns:
 Notes:
   * "redirect", special field, if set (default:empty):
     - quvi skips link checking, and parses the specified (redirect) URL instead
+    - note that this replaces the original page URL (set by quvi_parse)
     - for an example of this, see the academicearth.lua script
 
 
