@@ -2,6 +2,9 @@
 Version 0.2.6
 
 Changes:
+  * Thanks to Lionel Elie Mamane for:
+    * dailymotion: disable family filter (3084289)
+    * allow lua scripts to set arbitrary cookie (3084289)
   * Accept youtu.be URLs (3084014)
   * Add academicearth support
   * Lua website scripts can now use "redirect" field
