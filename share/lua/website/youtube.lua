@@ -40,7 +40,9 @@ function ident (page_url)
     if (page_url ~= nil) then
         page_url = youtubify(page_url)
     end
-    t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
+    t.handles = (page_url ~= nil
+        and (page_url:find(t.domain) ~= nil
+            or page_url:find("youtu.be") ~= nil))
     return t
 end
 
@@ -91,6 +93,7 @@ end
 function youtubify (url)
     url = url:gsub("-nocookie", "")    -- youtube-nocookie.com
     url = url:gsub("/v/", "/watch?v=") -- embedded
+    url = url:gsub("youtu.be/", "youtube.com/watch?v=") -- shortened
     return url
 end
 
