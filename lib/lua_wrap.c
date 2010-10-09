@@ -64,11 +64,11 @@ l_quvi_fetch (lua_State *l) {
         else if (strcmp(type, "playlist") == 0)
             st = QUVISTATUSTYPE_PLAYLIST;
 
-        lua_pop(l, 2);
+        lua_remove(l, 2);
     }
-    lua_pop(l, 1);
+    lua_remove(l, 1);
 
-    rc = fetch_to_mem(qv, url, st, &data);
+    rc = fetch_to_mem(qv, url, lua_tostring(l, 1), st, &data);
 
     if (rc == QUVI_OK) {
         luaL_buffinit(l, &b);
