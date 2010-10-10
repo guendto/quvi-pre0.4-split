@@ -2,6 +2,8 @@
 Version 0.2.6
 
 Changes:
+  * --version displays "quvi $version built on $date for $host ($features)"
+  * QUVI_VERSION_LONG displays "git describe" value if detected at configure
   * Thanks to Lionel Elie Mamane for:
     * dailymotion: disable family filter (3084289)
     * allow lua scripts to set arbitrary cookie (3084289)
