@@ -86,9 +86,19 @@ AC_SUBST(POD2HTML)
 build_date=
 AC_PATH_PROG(DATE, date, no)
 if [ test x"$DATE" != "xno" ]; then
-    build_date=`"$DATE" +%Y%m%d`
+    build_date=`"$DATE" +%Y-%m-%d`
 fi
 AC_DEFINE_UNQUOTED([BUILD_DATE], "$build_date", [...])
+
+AC_PATH_PROG(GIT, git, no)
+if [ test x"$GIT" != "xno" ]; then
+    QUVI_BRANCH=_QUVI_BRANCH
+    git_describe=`"$GIT" describe "$QUVI_BRANCH" 2>/dev/null`
+    if [ test x"$git_describe" != "x" ]; then
+        AC_DEFINE_UNQUOTED([GIT_DESCRIBE],
+            "$git_describe", [We have 'git describe'])
+    fi
+fi
 
 # Checks for libraries.
 AM_ICONV
@@ -227,7 +237,7 @@ AC_OUTPUT
 
 AC_MSG_NOTICE([Configured to build quvi/libquvi:
 
-    quvi version:   ${VERSION}
+    quvi version:   ${VERSION}  g:$git_describe  b:$build_date
     host setup:     ${host}
     install prefix: ${prefix}
     compiler:       ${CC}

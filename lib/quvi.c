@@ -502,23 +502,36 @@ char *
 quvi_version (QUVIversion type) {
     static const char version[] = PACKAGE_VERSION;
     static const char version_long[] =
+
+#ifdef GIT_DESCRIBE
+    GIT_DESCRIBE
+#else
     PACKAGE_VERSION
-    " ("
+#endif
+
 #ifdef BUILD_DATE
-    BUILD_DATE"-"
+    " built on "
+    BUILD_DATE
 #endif
+
+    " for "
     CANONICAL_TARGET
-    ") "
+
+    " ("
 #ifdef HAVE_ICONV
-    "*iconv "
+    "i"
 #endif
+
 #ifdef ENABLE_BROKEN
-    "*broken "
+    "b"
 #endif
+
 #ifdef ENABLE_SMUT
-    "*smut "
+    "s"
 #endif
-    ;
+
+    ")";
+
     if (type == QUVI_VERSION_LONG)
         return ((char *)version_long);
     return ((char *)version);

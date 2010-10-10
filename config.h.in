@@ -15,6 +15,9 @@
 /* Define to enable smut */
 #undef ENABLE_SMUT
 
+/* We have 'git describe' */
+#undef GIT_DESCRIBE
+
 /* Define to 1 if you have the `asprintf' function. */
 #undef HAVE_ASPRINTF
 

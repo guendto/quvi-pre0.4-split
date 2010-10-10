@@ -113,7 +113,7 @@ license (opts_s opts) {
 
 static void
 version (opts_s opts) {
-    printf("quvi, version %s\n", quvi_version(QUVI_VERSION_LONG));
+    printf("quvi version %s\n", quvi_version(QUVI_VERSION_LONG));
     cmdline_parser_free(&opts);
     exit (0);
 }
