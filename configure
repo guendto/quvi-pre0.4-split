@@ -16175,7 +16175,6 @@ fi
 
 
 
-build_date=
 # Extract the first word of "date", so it can be a program name with args.
 set dummy date; ac_word=$2
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -16218,13 +16217,15 @@ fi
 
 
 if  test x"$DATE" != "xno" ; then
-    build_date=`"$DATE" +%Y-%m-%d`
-fi
+    build_date=`"$DATE" +%Y-%m-%d 2>/dev/null`
+    if  test x"$build_date" != "x" ; then
 
 cat >>confdefs.h <<_ACEOF
 #define BUILD_DATE "$build_date"
 _ACEOF
 
+    fi
+fi
 
 # Extract the first word of "git", so it can be a program name with args.
 set dummy git; ac_word=$2

@@ -83,12 +83,13 @@ AC_PATH_PROG(POD2HTML, pod2html, no)
 AM_CONDITIONAL([HAVE_POD2HTML], [test x"$POD2HTML" != "xno"])
 AC_SUBST(POD2HTML)
 
-build_date=
 AC_PATH_PROG(DATE, date, no)
 if [ test x"$DATE" != "xno" ]; then
-    build_date=`"$DATE" +%Y-%m-%d`
+    build_date=`"$DATE" +%Y-%m-%d 2>/dev/null`
+    if [ test x"$build_date" != "x" ]; then
+        AC_DEFINE_UNQUOTED([BUILD_DATE], "$build_date", [We have 'date'])
+    fi
 fi
-AC_DEFINE_UNQUOTED([BUILD_DATE], "$build_date", [...])
 
 AC_PATH_PROG(GIT, git, no)
 if [ test x"$GIT" != "xno" ]; then
