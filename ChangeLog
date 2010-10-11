@@ -1,5 +1,6 @@
 
 Version 0.2.6
+October 11, 2010
 
 Changes:
   * --version displays "quvi $version built on $date for $host ($features)"
