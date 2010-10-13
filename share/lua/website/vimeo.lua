@@ -28,6 +28,12 @@ end
 -- Parse video URL.
 function parse (video)
     video.host_id = "vimeo"
+    
+    is_player, _, vid = video.page_url:find("^http://player.vimeo.com/video/(%d+)$")
+    if ( is_player ~= nil ) then
+        video.page_url = "http://vimeo.com/" .. vid
+    end
+
     local page    = quvi.fetch(video.page_url)
 
     local _,_,s = page:find('clip_id=(.-)[&"]')
