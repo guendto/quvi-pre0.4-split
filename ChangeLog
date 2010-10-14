@@ -1,4 +1,12 @@
 
+Version 0.2.7
+
+Changes:
+  * Thanks to Lionel Elie Mamane for the following patches:
+    * vimeo: more lax parsing for player.vimeo.com URLs (#3086884)
+    * vimeo: handle player.vimeo.com URLs, too (#3086884)
+
+
 Version 0.2.6
 October 11, 2010
 
