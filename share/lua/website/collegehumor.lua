@@ -39,7 +39,7 @@ function parse (video)
     video.id = vid
 
     local page = quvi.fetch(video.page_url)
-    local _,_,s = page:find("<title>(.+) - CollegeHumor video</title>")
+    local _,_,s = page:find('<meta name="title" content="(.-)"')
     video.title = s or error("no match: video title")
 
     local page =
