@@ -29,7 +29,9 @@ end
 function parse (video)
     video.host_id = "collegehumor"
    
-    local success, _, vid = video.page_url:find("^http://www%.collegehumor%.com/video:(%d+)")
+    local success, _, vid =
+        video.page_url:find("^http://www%.collegehumor%.com/video:(%d+)")
+
     if ( success == nil ) then
         error("expected URL beginning with 'http://collegehumor.com/video:'")
     end
@@ -40,8 +42,8 @@ function parse (video)
     local _,_,s = page:find("<title>(.+) - CollegeHumor video</title>")
     video.title = s or error("no match: video title")
 
-
-    local page = quvi.fetch("http://www.collegehumor.com/moogaloop/video:" .. vid)
+    local page =
+        quvi.fetch("http://www.collegehumor.com/moogaloop/video:" .. vid)
 
     local _,_,s = page:find('<file>([%w%p]+)</file>')
     local default = s or error("no match: default quality URL")
@@ -50,7 +52,9 @@ function parse (video)
     local hq = s
 
     video.url = { default }
-    if ( video.requested_format == "hd" or video.requested_format == "best") then
+    if ( video.requested_format == "hd"
+        or video.requested_format == "best")
+    then
         if ( hq ~= nil ) then
 	    video.url = { hq }
 	end
