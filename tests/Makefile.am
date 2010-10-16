@@ -10,6 +10,7 @@ nosupport-eval.pl\
 support-break.pl\
 support-charlierose.pl\
 support-clipfish.pl\
+support-collegehumor.pl\
 support-dailymotion.pl\
 support-evisor.pl\
 support-funnyhub.pl\
