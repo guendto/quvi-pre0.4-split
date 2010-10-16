@@ -7,6 +7,7 @@ lua/website/README \
 lua/website/academicearth.lua \
 lua/website/break.lua \
 lua/website/buzzhumor.lua \
+lua/website/collegehumor.lua \
 lua/website/charlierose.lua \
 lua/website/clipfish.lua \
 lua/website/dailymotion.lua \
