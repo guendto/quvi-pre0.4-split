@@ -3,6 +3,7 @@ Version 0.2.7
 
 Changes:
   * Thanks to Lionel Elie Mamane for the following patches:
+    * add support for colleghumor.com (#3088339)
     * vimeo: more lax parsing for player.vimeo.com URLs (#3086884)
     * vimeo: handle player.vimeo.com URLs, too (#3086884)
 
