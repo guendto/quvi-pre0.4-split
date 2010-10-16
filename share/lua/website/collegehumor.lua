@@ -43,7 +43,8 @@ function parse (video)
     video.title = s or error("no match: video title")
 
     local page =
-        quvi.fetch("http://www.collegehumor.com/moogaloop/video:" .. vid)
+        quvi.fetch("http://www.collegehumor.com/moogaloop/video:" .. vid,
+            'config')
 
     local _,_,s = page:find('<file>([%w%p]+)</file>')
     local default = s or error("no match: default quality URL")
