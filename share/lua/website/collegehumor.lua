@@ -53,12 +53,10 @@ function parse (video)
     local hq = s
 
     video.url = { default }
-    if ( video.requested_format == "hd"
-        or video.requested_format == "best")
-    then
+    if (video.requested_format == "hd" or video.requested_format == "best") then
         if ( hq ~= nil ) then
-	    video.url = { hq }
-	end
+	        video.url = { hq }
+	    end
     end
 
     return video
