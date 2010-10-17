@@ -2,6 +2,7 @@
 Version 0.2.7
 
 Changes:
+  * Add support for bloomberg.com, thanks to mkolve for the patch (#3089307)
   * Thanks to Lionel Elie Mamane for the following patches:
     * add support for colleghumor.com (#3088339)
     * vimeo: more lax parsing for player.vimeo.com URLs (#3086884)
