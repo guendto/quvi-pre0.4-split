@@ -2,6 +2,10 @@
 Version 0.2.7
 
 Changes:
+  * Overhaul manual page for quvi(1)
+  * Rename --debug to --verbose-libcurl
+  * Rename --hosts to --support
+  * Add --exec
   * Add support for bloomberg.com, thanks to mkolve for the patch (#3089307)
   * Thanks to Lionel Elie Mamane for the following patches:
     * add support for colleghumor.com (#3088339)
