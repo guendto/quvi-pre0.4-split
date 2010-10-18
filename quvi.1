@@ -274,65 +274,6 @@ Query \s-1YOUTUBE_URL\s0 for \*(L"best\*(R" format of the video.
 .Sp
 Run quvi with \f(CW\*(C`\-\-support\*(C'\fR to get a list of the websites
 and which formats they support.
-.SH "DEBUGGING TIPS"
-.IX Header "DEBUGGING TIPS"
-.IP "\fB\-\-verbose\-libcurl\fR" 4
-.IX Item "--verbose-libcurl"
-You can use this switch to amp up libcurl verbosity.
-.IP "\fBDebug symbols\fR" 4
-.IX Item "Debug symbols"
-Compile quvi with \f(CW\*(C`\-g\*(C'\fR (see \f(CW\*(C`g++(1)\*(C'\fR) for debug symbols.
-.IP "\fBOther tools\fR" 4
-.IX Item "Other tools"
-Make use of such tools as \f(CWstrace(1)\fR, \f(CWgdb(1)\fR and \f(CWvalgrind(1)\fR.
-They may prove invaluable.
-.SH "OTHER"
-.IX Header "OTHER"
-.IP "\fBProject\fR" 4
-.IX Item "Project"
-<http://quvi.googlecode.com/>
-.Sp
-<http://quvi.sourceforge.net/> \*(-- redirects to the above
-.IP "\fBFiles\fR" 4
-.IX Item "Files"
-The downloadable files (e.g. source tarballs) can be found at:
-.Sp
-<http://quvi.googlecode.com/>
-.Sp
-<http://sourceforge.net/projects/quvi/files/> \*(-- mirror
-.IP "\fBDevelopment repository\fR" 4
-.IX Item "Development repository"
-git clone git://repo.or.cz/quvi.git
-.SH "CONTRIBUTING"
-.IX Header "CONTRIBUTING"
-.IP "\fBAdd support for another website\fR" 4
-.IX Item "Add support for another website"
-On most systems you can find the READMEs and HOWTOs from \f(CW$prefix\fR/share/quvi
-and \f(CW$prefix\fR/share/doc/quvi directories. You can find the same files in
-release source tarballs, and at:
-.Sp
-.Vb 3
-\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
-\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua>
-\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua/website>
-.Ve
-.IP "\fBSubmitting patches\fR" 4
-.IX Item "Submitting patches"
-If you have cooked up a patch, please submit it to the tracker (see \*(L"\s-1BUGS\s0\*(R").
-.Sp
-If you are working with git and you have established a repo from which
-we can pull the changes from, you can use the same tracker for leaving
-pull requests.
-.SH "BUGS"
-.IX Header "BUGS"
-.IP "\fBInstructions\fR" 4
-.IX Item "Instructions"
-Please read them carefully:
-  <http://code.google.com/p/quvi/wiki/ReportingIssues>
-.IP "\fBTrackers\fR" 4
-.IX Item "Trackers"
-Bugs, support, patches, etc. trackers for these can be found at:
-  <http://sourceforge.net/projects/quvi/support>
 .SH "FILES"
 .IX Header "FILES"
 .IP "\fB~/.quvirc\fR" 4
@@ -390,6 +331,65 @@ quvi exits with 0 on success and >0 if an error occurred.
 \&  QUVI_ICONV            = 0x43, libiconv error occurred
 \&  QUVI_LUA              = 0x44, lua error occurred
 .Ve
+.SH "CONTRIBUTING"
+.IX Header "CONTRIBUTING"
+.IP "\fBAdd support for another website\fR" 4
+.IX Item "Add support for another website"
+On most systems you can find the READMEs and HOWTOs from \f(CW$prefix\fR/share/quvi
+and \f(CW$prefix\fR/share/doc/quvi directories. You can find the same files in
+release source tarballs, and at:
+.Sp
+.Vb 3
+\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
+\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua>
+\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua/website>
+.Ve
+.IP "\fBSubmitting patches\fR" 4
+.IX Item "Submitting patches"
+If you have cooked up a patch, please submit it to the tracker (see \*(L"\s-1BUGS\s0\*(R").
+.Sp
+If you are working with git and you have established a repo from which
+we can pull the changes from, you can use the same tracker for leaving
+pull requests.
+.SH "BUGS"
+.IX Header "BUGS"
+.IP "\fBInstructions\fR" 4
+.IX Item "Instructions"
+Please read them carefully:
+  <http://code.google.com/p/quvi/wiki/ReportingIssues>
+.IP "\fBTrackers\fR" 4
+.IX Item "Trackers"
+Bugs, support, patches, etc. trackers for these can be found at:
+  <http://sourceforge.net/projects/quvi/support>
+.SH "DEBUGGING TIPS"
+.IX Header "DEBUGGING TIPS"
+.IP "\fB\-\-verbose\-libcurl\fR" 4
+.IX Item "--verbose-libcurl"
+You can use this switch to amp up libcurl verbosity.
+.IP "\fBDebug symbols\fR" 4
+.IX Item "Debug symbols"
+Compile quvi with \f(CW\*(C`\-g\*(C'\fR (see \f(CW\*(C`g++(1)\*(C'\fR) for debug symbols.
+.IP "\fBOther tools\fR" 4
+.IX Item "Other tools"
+Make use of such tools as \f(CWstrace(1)\fR, \f(CWgdb(1)\fR and \f(CWvalgrind(1)\fR.
+They may prove invaluable.
+.SH "OTHER"
+.IX Header "OTHER"
+.IP "\fBProject\fR" 4
+.IX Item "Project"
+<http://quvi.googlecode.com/>
+.Sp
+<http://quvi.sourceforge.net/> \*(-- redirects to the above
+.IP "\fBFiles\fR" 4
+.IX Item "Files"
+The downloadable files (e.g. source tarballs) can be found at:
+.Sp
+<http://quvi.googlecode.com/>
+.Sp
+<http://sourceforge.net/projects/quvi/files/> \*(-- mirror
+.IP "\fBDevelopment repository\fR" 4
+.IX Item "Development repository"
+git clone git://repo.or.cz/quvi.git
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 Toni Gundogdu <legatvs at sign gmail com>.

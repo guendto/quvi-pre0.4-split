@@ -180,89 +180,6 @@ and which formats they support.
 
 =back
 
-=head1 DEBUGGING TIPS
-
-=over 4
-
-=item B<--verbose-libcurl>
-
-You can use this switch to amp up libcurl verbosity.
-
-=item B<Debug symbols>
-
-Compile quvi with C<-g> (see C<g++(1)>) for debug symbols.
-
-=item B<Other tools>
-
-Make use of such tools as C<strace(1)>, C<gdb(1)> and C<valgrind(1)>.
-They may prove invaluable.
-
-=back
-
-=head1 OTHER
-
-=over 4
-
-=item B<Project>
-
-<http://quvi.googlecode.com/>
-
-<http://quvi.sourceforge.net/> -- redirects to the above
-
-=item B<Files>
-
-The downloadable files (e.g. source tarballs) can be found at:
-
-<http://quvi.googlecode.com/>
-
-<http://sourceforge.net/projects/quvi/files/> -- mirror
-
-=item B<Development repository>
-
-git clone git://repo.or.cz/quvi.git
-
-=back
-
-=head1 CONTRIBUTING
-
-=over 4
-
-=item B<Add support for another website>
-
-On most systems you can find the READMEs and HOWTOs from $prefix/share/quvi
-and $prefix/share/doc/quvi directories. You can find the same files in
-release source tarballs, and at:
-
-    <http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
-    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua>
-    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua/website>
-
-=item B<Submitting patches>
-
-If you have cooked up a patch, please submit it to the tracker (see L</BUGS>).
-
-If you are working with git and you have established a repo from which
-we can pull the changes from, you can use the same tracker for leaving
-pull requests.
-
-=back
-
-=head1 BUGS
-
-=over 4
-
-=item B<Instructions>
-
-Please read them carefully:
-  <http://code.google.com/p/quvi/wiki/ReportingIssues>
-
-=item B<Trackers>
-
-Bugs, support, patches, etc. trackers for these can be found at:
-  <http://sourceforge.net/projects/quvi/support>
-
-=back
-
 =head1 FILES
 
 =over 4
@@ -328,6 +245,89 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
   QUVI_CURL             = 0x42, libcurl error occurred
   QUVI_ICONV            = 0x43, libiconv error occurred
   QUVI_LUA              = 0x44, lua error occurred
+
+=head1 CONTRIBUTING
+
+=over 4
+
+=item B<Add support for another website>
+
+On most systems you can find the READMEs and HOWTOs from $prefix/share/quvi
+and $prefix/share/doc/quvi directories. You can find the same files in
+release source tarballs, and at:
+
+    <http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
+    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua>
+    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua/website>
+
+=item B<Submitting patches>
+
+If you have cooked up a patch, please submit it to the tracker (see L</BUGS>).
+
+If you are working with git and you have established a repo from which
+we can pull the changes from, you can use the same tracker for leaving
+pull requests.
+
+=back
+
+=head1 BUGS
+
+=over 4
+
+=item B<Instructions>
+
+Please read them carefully:
+  <http://code.google.com/p/quvi/wiki/ReportingIssues>
+
+=item B<Trackers>
+
+Bugs, support, patches, etc. trackers for these can be found at:
+  <http://sourceforge.net/projects/quvi/support>
+
+=back
+
+=head1 DEBUGGING TIPS
+
+=over 4
+
+=item B<--verbose-libcurl>
+
+You can use this switch to amp up libcurl verbosity.
+
+=item B<Debug symbols>
+
+Compile quvi with C<-g> (see C<g++(1)>) for debug symbols.
+
+=item B<Other tools>
+
+Make use of such tools as C<strace(1)>, C<gdb(1)> and C<valgrind(1)>.
+They may prove invaluable.
+
+=back
+
+=head1 OTHER
+
+=over 4
+
+=item B<Project>
+
+<http://quvi.googlecode.com/>
+
+<http://quvi.sourceforge.net/> -- redirects to the above
+
+=item B<Files>
+
+The downloadable files (e.g. source tarballs) can be found at:
+
+<http://quvi.googlecode.com/>
+
+<http://sourceforge.net/projects/quvi/files/> -- mirror
+
+=item B<Development repository>
+
+git clone git://repo.or.cz/quvi.git
+
+=back
 
 =head1 AUTHOR
 
