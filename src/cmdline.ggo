@@ -2,7 +2,7 @@ package "quvi"
 version ""
 
 option "version"
-    v "Print version and exit"
+    - "Print version and exit"
     optional
 option "license"
     - "Print license and exit"

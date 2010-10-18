@@ -33,7 +33,7 @@ const char *gengetopt_args_info_description = "";
 
 const char *gengetopt_args_info_help[] = {
   "  -h, --help                 Print help and exit",
-  "  -v, --version              Print version and exit",
+  "      --version              Print version and exit",
   "      --license              Print license and exit",
   "      --hosts                Show supported hosts",
   "      --xml                  Print details in XML",
@@ -645,7 +645,7 @@ cmdline_parser_internal (
 
       static struct option long_options[] = {
         { "help",	0, NULL, 'h' },
-        { "version",	0, NULL, 'v' },
+        { "version",	0, NULL, 0 },
         { "license",	0, NULL, 0 },
         { "hosts",	0, NULL, 0 },
         { "xml",	0, NULL, 0 },
@@ -669,7 +669,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hvqnadt:f:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hqnadt:f:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -680,18 +680,6 @@ cmdline_parser_internal (
           cmdline_parser_free (&local_args_info);
           exit (EXIT_SUCCESS);
 
-        case 'v':	/* Print version and exit.  */
-        
-        
-          if (update_arg( 0 , 
-               0 , &(args_info->version_given),
-              &(local_args_info.version_given), optarg, 0, 0, ARG_NO,
-              check_ambiguity, override, 0, 0,
-              "version", 'v',
-              additional_error))
-            goto failure;
-        
-          break;
         case 'q':	/* Turn off output to stderr.  */
         
         
@@ -766,8 +754,22 @@ cmdline_parser_internal (
           break;
 
         case 0:	/* Long option with no short option */
+          /* Print version and exit.  */
+          if (strcmp (long_options[option_index].name, "version") == 0)
+          {
+          
+          
+            if (update_arg( 0 , 
+                 0 , &(args_info->version_given),
+                &(local_args_info.version_given), optarg, 0, 0, ARG_NO,
+                check_ambiguity, override, 0, 0,
+                "version", '-',
+                additional_error))
+              goto failure;
+          
+          }
           /* Print license and exit.  */
-          if (strcmp (long_options[option_index].name, "license") == 0)
+          else if (strcmp (long_options[option_index].name, "license") == 0)
           {
           
           
