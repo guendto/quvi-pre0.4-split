@@ -24,6 +24,11 @@ option "debug"
     - "Turn on libcurl verbose mode"
     optional
 
+option "exec"
+    - "Invoke arg after parsing"
+    string typestr="<string>"
+    optional
+
 option "no-verify"
     n "Do not verify video link"
     optional
@@ -93,5 +98,6 @@ option "format"
     optional
 
 text "\nExample: quvi YOUTUBE_URL -f sd_270p"
+text "\n         quvi URL --exec \"/usr/bin/vlc %u\""
 
 

@@ -35,6 +35,9 @@
 #include "quvi/quvi.h"
 #include "cmdline.h"
 
+extern char *
+strepl(const char *s, const char *what, const char *with); /* strepl.c */
+
 static int verbose_flag = 1;
 
 static void
@@ -141,6 +144,29 @@ supports(quvi_t quvi, opts_s opts) {
     cmdline_parser_free(&opts);
 
     exit (0);
+}
+
+static void
+invoke_exec (quvi_video_t video, const char *video_url, opts_s opts) {
+    char *quoted_url=NULL, *arg=NULL;
+    int rc;
+
+    asprintf (&quoted_url, "\"%s\"", video_url);
+
+    arg = strdup (opts.exec_arg);
+    arg = strepl (arg, "%u", quoted_url);
+
+    free (quoted_url);
+
+    rc = system (arg);
+
+    switch (rc) {
+    case  0: break;
+    case -1: fprintf (stderr, "error: failed to execute `%s'\n", arg); break;
+    default: fprintf (stderr, "error: child exited with: %d\n", rc>>8); break;
+    }
+
+    free (arg);
 }
 
 static void
@@ -407,6 +433,15 @@ match_test (quvi_t quvi, opts_s opts, CURL *curl) {
 
             dump_video (v, opts, curl);
             rc = check_values(v, opts);
+
+            if (opts.exec_given) {
+                char *video_url = NULL;
+                do {
+                    quvi_getprop(v, QUVIPROP_VIDEOURL, &video_url);
+                    invoke_exec (v, video_url, opts);
+                } while (quvi_next_videolink (v) == QUVI_OK);
+            }
+
             quvi_parse_close(&v);
 
             cmdline_parser_free(&opts);

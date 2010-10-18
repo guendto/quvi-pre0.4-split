@@ -45,6 +45,9 @@ struct gengetopt_args_info
   const char *old_help; /**< @brief Print details in original format help description.  */
   const char *quiet_help; /**< @brief Turn off output to stderr help description.  */
   const char *debug_help; /**< @brief Turn on libcurl verbose mode help description.  */
+  char * exec_arg;	/**< @brief Invoke arg after parsing.  */
+  char * exec_orig;	/**< @brief Invoke arg after parsing original value given at command line.  */
+  const char *exec_help; /**< @brief Invoke arg after parsing help description.  */
   const char *no_verify_help; /**< @brief Do not verify video link help description.  */
   char * page_title_arg;	/**< @brief Expected video page title.  */
   char * page_title_orig;	/**< @brief Expected video page title original value given at command line.  */
@@ -85,6 +88,7 @@ struct gengetopt_args_info
   unsigned int old_given ;	/**< @brief Whether old was given.  */
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */
   unsigned int debug_given ;	/**< @brief Whether debug was given.  */
+  unsigned int exec_given ;	/**< @brief Whether exec was given.  */
   unsigned int no_verify_given ;	/**< @brief Whether no-verify was given.  */
   unsigned int page_title_given ;	/**< @brief Whether page-title was given.  */
   unsigned int video_id_given ;	/**< @brief Whether video-id was given.  */
