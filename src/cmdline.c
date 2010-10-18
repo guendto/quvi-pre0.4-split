@@ -32,28 +32,28 @@ const char *gengetopt_args_info_usage = "Usage: quvi [OPTIONS]... [URL]...";
 const char *gengetopt_args_info_description = "";
 
 const char *gengetopt_args_info_help[] = {
-  "  -h, --help                  Print help and exit",
-  "  -v, --version               Print version and exit",
-  "      --license               Print license and exit",
-  "      --hosts                 Show supported hosts",
-  "      --xml                   Print details in XML",
-  "      --old                   Print details in original format",
-  "  -q, --quiet                 Turn off output to stderr",
-  "      --debug                 Turn on libcurl verbose mode",
-  "      --exec=<string>         Invoke arg after parsing",
-  "  -n, --no-verify             Do not verify video link",
-  "      --page-title=<string>   Expected video page title",
-  "      --video-id=<string>     Expected video id",
-  "      --file-length=<length>  Expected video file length",
-  "      --file-suffix=<string>  Expected video file suffix",
-  "  -a, --test-all              Run built-in tests",
-  "  -t, --test=<regexp>         Match regexp to a built-in test link",
-  "  -d, --dump                  Dump video details when running tests",
-  "      --agent=<string>        Identify cclive as string to servers  \n                                (default=`Mozilla/5.0')",
-  "      --proxy=<host[:port]>   Use specified proxy",
-  "      --no-proxy              Do not use proxy",
-  "      --connect-timeout=<s>   Max seconds allowed connection to server take  \n                                (default=`30')",
-  "  -f, --format=<format_id>    Query video format  (default=`default')",
+  "  -h, --help                 Print help and exit",
+  "  -v, --version              Print version and exit",
+  "      --license              Print license and exit",
+  "      --hosts                Show supported hosts",
+  "      --xml                  Print details in XML",
+  "      --old                  Print details in original format",
+  "  -q, --quiet                Turn off output to stderr",
+  "      --debug                Turn on libcurl verbose mode",
+  "      --exec=arg             Invoke arg after parsing",
+  "  -n, --no-verify            Do not verify video link",
+  "      --page-title=arg       Check for video title",
+  "      --video-id=arg         Check for video ID",
+  "      --file-length=arg      Check for video file length",
+  "      --file-suffix=arg      Check for video file suffix",
+  "  -a, --test-all             Run built-in tests",
+  "  -d, --dump                 Dump video details with --test-all",
+  "  -t, --test=arg             Pattern to match to built-in test URLs",
+  "  -f, --format=arg           Video format to query  (default=`default')",
+  "      --agent=arg            Identify as arg  (default=`Mozilla/5.0')",
+  "      --proxy=arg            Use proxy for HTTP connections",
+  "      --no-proxy             Disable use of HTTP proxy",
+  "      --connect-timeout=arg  Seconds connecting allowed to take  (default=`30')",
   "\nExample: quvi YOUTUBE_URL -f sd_270p\n         quvi URL --exec \"/usr/bin/vlc %u\"",
     0
 };
@@ -121,13 +121,13 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->file_length_given = 0 ;
   args_info->file_suffix_given = 0 ;
   args_info->test_all_given = 0 ;
-  args_info->test_given = 0 ;
   args_info->dump_given = 0 ;
+  args_info->test_given = 0 ;
+  args_info->format_given = 0 ;
   args_info->agent_given = 0 ;
   args_info->proxy_given = 0 ;
   args_info->no_proxy_given = 0 ;
   args_info->connect_timeout_given = 0 ;
-  args_info->format_given = 0 ;
 }
 
 static
@@ -145,14 +145,14 @@ void clear_args (struct gengetopt_args_info *args_info)
   args_info->file_suffix_orig = NULL;
   args_info->test_arg = NULL;
   args_info->test_orig = NULL;
+  args_info->format_arg = gengetopt_strdup ("default");
+  args_info->format_orig = NULL;
   args_info->agent_arg = gengetopt_strdup ("Mozilla/5.0");
   args_info->agent_orig = NULL;
   args_info->proxy_arg = NULL;
   args_info->proxy_orig = NULL;
   args_info->connect_timeout_arg = 30;
   args_info->connect_timeout_orig = NULL;
-  args_info->format_arg = gengetopt_strdup ("default");
-  args_info->format_orig = NULL;
   
 }
 
@@ -176,13 +176,13 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->file_length_help = gengetopt_args_info_help[12] ;
   args_info->file_suffix_help = gengetopt_args_info_help[13] ;
   args_info->test_all_help = gengetopt_args_info_help[14] ;
-  args_info->test_help = gengetopt_args_info_help[15] ;
-  args_info->dump_help = gengetopt_args_info_help[16] ;
-  args_info->agent_help = gengetopt_args_info_help[17] ;
-  args_info->proxy_help = gengetopt_args_info_help[18] ;
-  args_info->no_proxy_help = gengetopt_args_info_help[19] ;
-  args_info->connect_timeout_help = gengetopt_args_info_help[20] ;
-  args_info->format_help = gengetopt_args_info_help[21] ;
+  args_info->dump_help = gengetopt_args_info_help[15] ;
+  args_info->test_help = gengetopt_args_info_help[16] ;
+  args_info->format_help = gengetopt_args_info_help[17] ;
+  args_info->agent_help = gengetopt_args_info_help[18] ;
+  args_info->proxy_help = gengetopt_args_info_help[19] ;
+  args_info->no_proxy_help = gengetopt_args_info_help[20] ;
+  args_info->connect_timeout_help = gengetopt_args_info_help[21] ;
   
 }
 
@@ -277,13 +277,13 @@ cmdline_parser_release (struct gengetopt_args_info *args_info)
   free_string_field (&(args_info->file_suffix_orig));
   free_string_field (&(args_info->test_arg));
   free_string_field (&(args_info->test_orig));
+  free_string_field (&(args_info->format_arg));
+  free_string_field (&(args_info->format_orig));
   free_string_field (&(args_info->agent_arg));
   free_string_field (&(args_info->agent_orig));
   free_string_field (&(args_info->proxy_arg));
   free_string_field (&(args_info->proxy_orig));
   free_string_field (&(args_info->connect_timeout_orig));
-  free_string_field (&(args_info->format_arg));
-  free_string_field (&(args_info->format_orig));
   
   
   for (i = 0; i < args_info->inputs_num; ++i)
@@ -349,10 +349,12 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "file-suffix", args_info->file_suffix_orig, 0);
   if (args_info->test_all_given)
     write_into_file(outfile, "test-all", 0, 0 );
-  if (args_info->test_given)
-    write_into_file(outfile, "test", args_info->test_orig, 0);
   if (args_info->dump_given)
     write_into_file(outfile, "dump", 0, 0 );
+  if (args_info->test_given)
+    write_into_file(outfile, "test", args_info->test_orig, 0);
+  if (args_info->format_given)
+    write_into_file(outfile, "format", args_info->format_orig, 0);
   if (args_info->agent_given)
     write_into_file(outfile, "agent", args_info->agent_orig, 0);
   if (args_info->proxy_given)
@@ -361,8 +363,6 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "no-proxy", 0, 0 );
   if (args_info->connect_timeout_given)
     write_into_file(outfile, "connect-timeout", args_info->connect_timeout_orig, 0);
-  if (args_info->format_given)
-    write_into_file(outfile, "format", args_info->format_orig, 0);
   
 
   i = EXIT_SUCCESS;
@@ -659,17 +659,17 @@ cmdline_parser_internal (
         { "file-length",	1, NULL, 0 },
         { "file-suffix",	1, NULL, 0 },
         { "test-all",	0, NULL, 'a' },
-        { "test",	1, NULL, 't' },
         { "dump",	0, NULL, 'd' },
+        { "test",	1, NULL, 't' },
+        { "format",	1, NULL, 'f' },
         { "agent",	1, NULL, 0 },
         { "proxy",	1, NULL, 0 },
         { "no-proxy",	0, NULL, 0 },
         { "connect-timeout",	1, NULL, 0 },
-        { "format",	1, NULL, 'f' },
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hvqnat:df:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hvqnadt:f:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -728,19 +728,7 @@ cmdline_parser_internal (
             goto failure;
         
           break;
-        case 't':	/* Match regexp to a built-in test link.  */
-        
-        
-          if (update_arg( (void *)&(args_info->test_arg), 
-               &(args_info->test_orig), &(args_info->test_given),
-              &(local_args_info.test_given), optarg, 0, 0, ARG_STRING,
-              check_ambiguity, override, 0, 0,
-              "test", 't',
-              additional_error))
-            goto failure;
-        
-          break;
-        case 'd':	/* Dump video details when running tests.  */
+        case 'd':	/* Dump video details with --test-all.  */
         
         
           if (update_arg( 0 , 
@@ -752,7 +740,19 @@ cmdline_parser_internal (
             goto failure;
         
           break;
-        case 'f':	/* Query video format.  */
+        case 't':	/* Pattern to match to built-in test URLs.  */
+        
+        
+          if (update_arg( (void *)&(args_info->test_arg), 
+               &(args_info->test_orig), &(args_info->test_given),
+              &(local_args_info.test_given), optarg, 0, 0, ARG_STRING,
+              check_ambiguity, override, 0, 0,
+              "test", 't',
+              additional_error))
+            goto failure;
+        
+          break;
+        case 'f':	/* Video format to query.  */
         
         
           if (update_arg( (void *)&(args_info->format_arg), 
@@ -850,7 +850,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Expected video page title.  */
+          /* Check for video title.  */
           else if (strcmp (long_options[option_index].name, "page-title") == 0)
           {
           
@@ -864,7 +864,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Expected video id.  */
+          /* Check for video ID.  */
           else if (strcmp (long_options[option_index].name, "video-id") == 0)
           {
           
@@ -878,7 +878,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Expected video file length.  */
+          /* Check for video file length.  */
           else if (strcmp (long_options[option_index].name, "file-length") == 0)
           {
           
@@ -892,7 +892,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Expected video file suffix.  */
+          /* Check for video file suffix.  */
           else if (strcmp (long_options[option_index].name, "file-suffix") == 0)
           {
           
@@ -906,7 +906,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Identify cclive as string to servers.  */
+          /* Identify as arg.  */
           else if (strcmp (long_options[option_index].name, "agent") == 0)
           {
           
@@ -920,7 +920,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Use specified proxy.  */
+          /* Use proxy for HTTP connections.  */
           else if (strcmp (long_options[option_index].name, "proxy") == 0)
           {
           
@@ -934,7 +934,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Do not use proxy.  */
+          /* Disable use of HTTP proxy.  */
           else if (strcmp (long_options[option_index].name, "no-proxy") == 0)
           {
           
@@ -948,7 +948,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Max seconds allowed connection to server take.  */
+          /* Seconds connecting allowed to take.  */
           else if (strcmp (long_options[option_index].name, "connect-timeout") == 0)
           {
           
