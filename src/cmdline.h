@@ -40,7 +40,7 @@ struct gengetopt_args_info
   const char *help_help; /**< @brief Print help and exit help description.  */
   const char *version_help; /**< @brief Print version and exit help description.  */
   const char *license_help; /**< @brief Print license and exit help description.  */
-  const char *hosts_help; /**< @brief Show supported hosts help description.  */
+  const char *support_help; /**< @brief Print supported websites and exit help description.  */
   const char *xml_help; /**< @brief Print details in XML help description.  */
   const char *old_help; /**< @brief Print details in original format help description.  */
   const char *quiet_help; /**< @brief Turn off output to stderr help description.  */
@@ -83,7 +83,7 @@ struct gengetopt_args_info
   unsigned int help_given ;	/**< @brief Whether help was given.  */
   unsigned int version_given ;	/**< @brief Whether version was given.  */
   unsigned int license_given ;	/**< @brief Whether license was given.  */
-  unsigned int hosts_given ;	/**< @brief Whether hosts was given.  */
+  unsigned int support_given ;	/**< @brief Whether support was given.  */
   unsigned int xml_given ;	/**< @brief Whether xml was given.  */
   unsigned int old_given ;	/**< @brief Whether old was given.  */
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */

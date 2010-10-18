@@ -620,8 +620,8 @@ main (int argc, char *argv[]) {
 
     quvi = init_quvi (opts, &curl);
 
-    /* --hosts */
-    if (opts.hosts_given)
+    /* --support */
+    if (opts.support_given)
         supports(quvi, opts);
 
     /* Handle input. */

@@ -7,8 +7,8 @@ option "version"
 option "license"
     - "Print license and exit"
     optional
-option "hosts"
-    - "Show supported hosts"
+option "support"
+    - "Print supported websites and exit"
     optional
 
 option "xml"

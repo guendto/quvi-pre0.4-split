@@ -35,7 +35,7 @@ const char *gengetopt_args_info_help[] = {
   "  -h, --help                 Print help and exit",
   "      --version              Print version and exit",
   "      --license              Print license and exit",
-  "      --hosts                Show supported hosts",
+  "      --support              Print supported websites and exit",
   "      --xml                  Print details in XML",
   "      --old                  Print details in original format",
   "  -q, --quiet                Turn off output to stderr",
@@ -109,7 +109,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->help_given = 0 ;
   args_info->version_given = 0 ;
   args_info->license_given = 0 ;
-  args_info->hosts_given = 0 ;
+  args_info->support_given = 0 ;
   args_info->xml_given = 0 ;
   args_info->old_given = 0 ;
   args_info->quiet_given = 0 ;
@@ -164,7 +164,7 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->help_help = gengetopt_args_info_help[0] ;
   args_info->version_help = gengetopt_args_info_help[1] ;
   args_info->license_help = gengetopt_args_info_help[2] ;
-  args_info->hosts_help = gengetopt_args_info_help[3] ;
+  args_info->support_help = gengetopt_args_info_help[3] ;
   args_info->xml_help = gengetopt_args_info_help[4] ;
   args_info->old_help = gengetopt_args_info_help[5] ;
   args_info->quiet_help = gengetopt_args_info_help[6] ;
@@ -325,8 +325,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "version", 0, 0 );
   if (args_info->license_given)
     write_into_file(outfile, "license", 0, 0 );
-  if (args_info->hosts_given)
-    write_into_file(outfile, "hosts", 0, 0 );
+  if (args_info->support_given)
+    write_into_file(outfile, "support", 0, 0 );
   if (args_info->xml_given)
     write_into_file(outfile, "xml", 0, 0 );
   if (args_info->old_given)
@@ -647,7 +647,7 @@ cmdline_parser_internal (
         { "help",	0, NULL, 'h' },
         { "version",	0, NULL, 0 },
         { "license",	0, NULL, 0 },
-        { "hosts",	0, NULL, 0 },
+        { "support",	0, NULL, 0 },
         { "xml",	0, NULL, 0 },
         { "old",	0, NULL, 0 },
         { "quiet",	0, NULL, 'q' },
@@ -782,16 +782,16 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Show supported hosts.  */
-          else if (strcmp (long_options[option_index].name, "hosts") == 0)
+          /* Print supported websites and exit.  */
+          else if (strcmp (long_options[option_index].name, "support") == 0)
           {
           
           
             if (update_arg( 0 , 
-                 0 , &(args_info->hosts_given),
-                &(local_args_info.hosts_given), optarg, 0, 0, ARG_NO,
+                 0 , &(args_info->support_given),
+                &(local_args_info.support_given), optarg, 0, 0, ARG_NO,
                 check_ambiguity, override, 0, 0,
-                "hosts", '-',
+                "support", '-',
                 additional_error))
               goto failure;
           
