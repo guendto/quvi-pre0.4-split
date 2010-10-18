@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-09-22" "0.2.5" "quvi manual"
+.TH quvi 1 "2010-10-18" "0.2.7" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -146,11 +146,14 @@ everything else is printed to standard error.
 .IP "\fB\-h, \-\-help\fR" 4
 .IX Item "-h, --help"
 Print help and exit.
-.IP "\fB\-v, \-\-version\fR" 4
-.IX Item "-v, --version"
+.IP "\fB\-\-version\fR" 4
+.IX Item "--version"
 Print program version and exit.
-.IP "\fB\-\-hosts\fR" 4
-.IX Item "--hosts"
+.IP "\fB\-\-license\fR" 4
+.IX Item "--license"
+Print license and exit.
+.IP "\fB\-\-support\fR" 4
+.IX Item "--support"
 Print supported hosts and exit.
 .IP "\fB\-\-xml\fR" 4
 .IX Item "--xml"
@@ -164,57 +167,93 @@ Print the details in the previously used default output format
 .IX Item "-q, --quiet"
 Turn off output to stderr (excl. errors, libcurl). Video details will
 be printed to stdout as they would be normally.
-.IP "\fB\-\-debug\fR" 4
-.IX Item "--debug"
+.IP "\fB\-\-verbose\-libcurl\fR" 4
+.IX Item "--verbose-libcurl"
 Turn on libcurl verbose mode.
+.IP "\fB\-\-exec\fR \fIarg\fR" 4
+.IX Item "--exec arg"
+Invoke \fIarg\fR for each parsed video. You can use the following
+specifiers in \fIarg\fR:
+.Sp
+.Vb 1
+\&    %u  Video download URL
+.Ve
+.Sp
+Note that \fIall\fR occurences of the specifier will be replaced,
+and each new value will be quoted ("").
 .IP "\fB\-n, \-\-no\-verify\fR" 4
 .IX Item "-n, --no-verify"
-Do not verify video link. Note that quvi will not report
-video file length, content-type or file suffix if this
-option is used.
-.IP "\fB\-\-page\-title\fR=\fIstring\fR" 4
-.IX Item "--page-title=string"
-Match parsed video page title to \fIstring\fR.
-.IP "\fB\-\-video\-id\fR=\fIstring\fR" 4
-.IX Item "--video-id=string"
-Match parsed video \s-1ID\s0 to \fIstring\fR.
-.IP "\fB\-\-file\-length\fR=\fIlength\fR" 4
-.IX Item "--file-length=length"
-Match parsed video file length to \fIlength\fR.
-.IP "\fB\-\-file\-suffix\fR=\fIstring\fR" 4
-.IX Item "--file-suffix=string"
-Match parsed video file suffix to \fIstring\fR.
+Do not verify video link after parsing it. Normally this serves two
+purposes: check that the link actually works, and get content-length
+as well as content-type for the video.
+.Sp
+If this switch used, the program will report invalid values for those
+video details (e.g. 0 file length, empty string for content-type, etc.)
+but saves some bandwidth if those details are not obligatory.
+.IP "\fB\-\-page\-title\fR \fIarg\fR" 4
+.IX Item "--page-title arg"
+Check that the parsed video title matches the \fIarg\fR.
+The libquvi tests typically make use of this option.
+.IP "\fB\-\-video\-id\fR \fIarg\fR" 4
+.IX Item "--video-id arg"
+Check that the parsed video \s-1ID\s0 matches the \fIarg\fR.
+The libquvi tests typically make use of this option.
+.IP "\fB\-\-file\-length\fR \fIlength\fR" 4
+.IX Item "--file-length length"
+Check that the parsed video file length matches the \fIarg\fR.
+The libquvi tests typically make use of this option.
+.IP "\fB\-\-file\-suffix\fR \fIarg\fR" 4
+.IX Item "--file-suffix arg"
+Check that the parsed video file suffix matches the \fIarg\fR.
+The libquvi tests typically make use of this option.
 .IP "\fB\-a, \-\-test\-all\fR" 4
 .IX Item "-a, --test-all"
-Run all built-in tests. quvi will test all
-built-in video page links.
-.IP "\fB\-t, \-\-test\fR=\fIpattern\fR" 4
-.IX Item "-t, --test=pattern"
-Match \fIpattern\fR to a built-in test page link
-and test it.
+quvi holds a number of built-in video URLs that can be tested
+with this switch.
 .IP "\fB\-d, \-\-dump\fR" 4
 .IX Item "-d, --dump"
-Dump video details when running tests. To be used
-with \fB\-\-test\-all\fR.
-.IP "\fB\-\-agent\fR=\fIstring\fR" 4
-.IX Item "--agent=string"
-Identify quvi as \fIstring\fR to servers. Default
-is \*(L"Mozilla/5.0\*(R".
-.IP "\fB\-\-proxy\fR=\fIhost[:port]\fR" 4
-.IX Item "--proxy=host[:port]"
-Use the specified \s-1HTTP\s0 proxy. Note that quvi will
-use http_proxy environment setting if it is set.
+Dump video details while when running the program with \f(CW\*(C`\-\-test\-all\*(C'\fR.
+.IP "\fB\-t, \-\-test\fR \fIarg\fR" 4
+.IX Item "-t, --test arg"
+quvi holds a number of built-in video URLs that can be matched
+with this option. Some examples:
+.Sp
+.Vb 2
+\&    % quvi \-t youtube
+\&    % quvi \-t yout
+.Ve
+.Sp
+Both would match the same built-in test \s-1URL\s0 for Youtube. Some
+more examples:
+    % quvi \-t livel
+    % quvi \-t liveleak
+    % quvi \-t col
+    % quvi \-t collegehumor
+.Sp
+As long as the built-in \s-1URL\s0 contains the pattern, it can be
+matched. Like \f(CW\*(C`\-\-page\-title\*(C'\fR and friends, this feature is
+intended to be used by libquvi tests.
+.IP "\fB\-f, \-\-format\fR \fIarg\fR" 4
+.IX Item "-f, --format arg"
+Query for video format \fIarg\fR. You can get a list of the formats
+that each website (should) support by running the program with
+\&\f(CW\*(C`\-\-support\*(C'\fR.
+.IP "\fB\-\-agent\fR \fIarg\fR" 4
+.IX Item "--agent arg"
+Identify quvi as \fIarg\fR to servers. Default is \*(L"Mozilla/5.0\*(R".
+.IP "\fB\-\-proxy\fR \fIarg\fR" 4
+.IX Item "--proxy arg"
+Use proxy for \s-1HTTP\s0 connections, e.g. \*(L"http://foo:1234\*(R".
+You can also define http_proxy environment setting to
+achieve the same.
 .IP "\fB\-\-no\-proxy\fR" 4
 .IX Item "--no-proxy"
-Do not use \s-1HTTP\s0 proxy. Not even if http_proxy is set.
-.IP "\fB\-\-connect\-timeout\fR=\fIseconds\fR" 4
-.IX Item "--connect-timeout=seconds"
+Disable use of \s-1HTTP\s0 proxy completely. Proxy will not
+be used even if defined in http_proxy.
+.IP "\fB\-\-connect\-timeout\fR \fIseconds\fR" 4
+.IX Item "--connect-timeout seconds"
 Maximum seconds allowed connection to server take.
 Default is 30.
-.IP "\fB\-f, \-\-format\fR[=]\fIformat_id\fR" 4
-.IX Item "-f, --format[=]format_id"
-Query video format, \fIformat_id\fR depends on the host,
-see \fB\-\-hosts\fR output.
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .IP "quvi \s-1URL\s0" 4
@@ -228,35 +267,76 @@ Run all built-in host tests.
 Same but run in quiet mode. Print video details in \s-1XML\s0 (to stdout).
 .IP "quvi \-t youtube" 4
 .IX Item "quvi -t youtube"
-Match 'youtube' string to built-in video page links
-and test it.
-.IP "quvi \s-1URL\s0 \-f best" 4
-.IX Item "quvi URL -f best"
-Query 'best' of the video from the \s-1URL\s0.
-.SH "DEBUGGING"
-.IX Header "DEBUGGING"
-.IP "quvi \-\-debug \s-1URL\s0" 4
-.IX Item "quvi --debug URL"
-Spew out libcurl verbose mode messages.
-.ie n .IP "$prefix/share/quvi/lua/README" 4
-.el .IP "\f(CW$prefix\fR/share/quvi/lua/README" 4
-.IX Item "$prefix/share/quvi/lua/README"
-.PD 0
-.ie n .IP "$prefix/share/quvi/lua/website/README" 4
-.el .IP "\f(CW$prefix\fR/share/quvi/lua/website/README" 4
-.IX Item "$prefix/share/quvi/lua/website/README"
-.PD
-Contain details about working with the quvi Lua scripts (e.g. website
-rules). If video link parsing breaks, have a look at these files.
-.ie n .IP "$prefix/share/doc/quvi" 4
-.el .IP "\f(CW$prefix\fR/share/doc/quvi" 4
-.IX Item "$prefix/share/doc/quvi"
-Various HOWTOs can be found in this directory.
+Match pattern \*(L"youtube\*(R" to a built-in video \s-1URL\s0 and test it.
+.IP "quvi \s-1YOUTUBE_URL\s0 \-f best" 4
+.IX Item "quvi YOUTUBE_URL -f best"
+Query \s-1YOUTUBE_URL\s0 for \*(L"best\*(R" format of the video.
+.Sp
+Run quvi with \f(CW\*(C`\-\-support\*(C'\fR to get a list of the websites
+and which formats they support.
+.SH "DEBUGGING TIPS"
+.IX Header "DEBUGGING TIPS"
+.IP "\fB\-\-verbose\-libcurl\fR" 4
+.IX Item "--verbose-libcurl"
+You can use this switch to amp up libcurl verbosity.
+.IP "\fBDebug symbols\fR" 4
+.IX Item "Debug symbols"
+Compile quvi with \f(CW\*(C`\-g\*(C'\fR (see \f(CW\*(C`g++(1)\*(C'\fR) for debug symbols.
+.IP "\fBOther tools\fR" 4
+.IX Item "Other tools"
+Make use of such tools as \f(CWstrace(1)\fR, \f(CWgdb(1)\fR and \f(CWvalgrind(1)\fR.
+They may prove invaluable.
+.SH "OTHER"
+.IX Header "OTHER"
+.IP "\fBProject\fR" 4
+.IX Item "Project"
+<http://quvi.googlecode.com/>
+.Sp
+<http://quvi.sourceforge.net/> \*(-- redirects to the above
+.IP "\fBFiles\fR" 4
+.IX Item "Files"
+The downloadable files (e.g. source tarballs) can be found at:
+.Sp
+<http://quvi.googlecode.com/>
+.Sp
+<http://sourceforge.net/projects/quvi/files/> \*(-- mirror
+.IP "\fBDevelopment repository\fR" 4
+.IX Item "Development repository"
+git clone git://repo.or.cz/quvi.git
+.SH "CONTRIBUTING"
+.IX Header "CONTRIBUTING"
+.IP "\fBAdd support for another website\fR" 4
+.IX Item "Add support for another website"
+On most systems you can find the READMEs and HOWTOs from \f(CW$prefix\fR/share/quvi
+and \f(CW$prefix\fR/share/doc/quvi directories. You can find the same files in
+release source tarballs, and at:
+.Sp
+.Vb 3
+\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
+\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua>
+\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua/website>
+.Ve
+.IP "\fBSubmitting patches\fR" 4
+.IX Item "Submitting patches"
+If you have cooked up a patch, please submit it to the tracker (see \*(L"\s-1BUGS\s0\*(R").
+.Sp
+If you are working with git and you have established a repo from which
+we can pull the changes from, you can use the same tracker for leaving
+pull requests.
+.SH "BUGS"
+.IX Header "BUGS"
+.IP "\fBInstructions\fR" 4
+.IX Item "Instructions"
+Please read them carefully:
+  <http://code.google.com/p/quvi/wiki/ReportingIssues>
+.IP "\fBTrackers\fR" 4
+.IX Item "Trackers"
+Bugs, support, patches, etc. trackers for these can be found at:
+  <http://sourceforge.net/projects/quvi/support>
 .SH "FILES"
 .IX Header "FILES"
-.ie n .IP "\fB\fB$HOME\fB/.quvirc\fR" 4
-.el .IP "\fB\f(CB$HOME\fB/.quvirc\fR" 4
-.IX Item "$HOME/.quvirc"
+.IP "\fB~/.quvirc\fR" 4
+.IX Item "~/.quvirc"
 You can define most of the command line options in the
 config file. For example:
 .Sp
@@ -264,30 +344,31 @@ config file. For example:
 \& agent = some_agent/1.0     # \-\-agent
 \& proxy = http://foo:1234    # \-\-proxy
 \& no\-verify                  # \-\-no\-verify
-\& debug                      # \-\-debug
+\& verbose\-libcurl            # \-\-verbose\-libcurl
 .Ve
 .Sp
-Note that you can also define \s-1QUVI_HOME\s0 and use it instead.
+Note that you can also define \f(CW$QUVI_HOME\fR and use it instead of \f(CW$HOME\fR (~).
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 .IP "\fB\s-1QUVI_HOME\s0\fR" 4
 .IX Item "QUVI_HOME"
-Defines path to a directory containing the configuration file.
-Similar to \f(CW$HOME\fR found on Unix-like systems, but can be used
-to override the \f(CW$HOME\fR setting (if any).
+Path to the directory containing the configuration file (.quvirc).
+Mimics \f(CW$HOME\fR found on Unix-like systems. Note that using this
+overrides the use of \f(CW$HOME\fR.
 .IP "\fB\s-1QUVI_BASEDIR\s0\fR" 4
 .IX Item "QUVI_BASEDIR"
-Defines an exlusive path to the directory from which quvi searches
-for the essential quvi files, e.g. the lua scripts. Exclusive here
-means that by setting \fB\s-1QUVI_BASEDIR\s0\fR the user can override all of
-the default search paths.
+Exclusive path to the directory holding the essential libquvi files,
+or the Lua scripts.
 .Sp
-Not to be confused with \fB\s-1QUVI_HOME\s0\fR which is strictly a \f(CWquvi(1)\fR
-variable whereas \fB\s-1QUVI_BASEDIR\s0\fR is a libquvi variable.
+Exlusivity here means that by setting this variable, the user
+can override all other built-in and default search paths.
+.Sp
+Not to be confused with \fB\s-1QUVI_HOME\s0\fR which is strictly for
+\&\f(CWquvi(1)\fR, whereas \fB\s-1QUVI_BASEDIR\s0\fR is for libquvi.
 .IP "\fB\s-1QUVI_SHOW_SCANDIR\s0\fR" 4
 .IX Item "QUVI_SHOW_SCANDIR"
-You can have libquvi dump (to stderr) the scanned directory
-paths by setting this environment variable.
+Set this variable if you need libquvi to report the scanned
+directory paths. Each scanned path is printed to stderr.
 .SH "EXIT STATUS"
 .IX Header "EXIT STATUS"
 quvi exits with 0 on success and >0 if an error occurred.
@@ -309,20 +390,12 @@ quvi exits with 0 on success and >0 if an error occurred.
 \&  QUVI_ICONV            = 0x43, libiconv error occurred
 \&  QUVI_LUA              = 0x44, lua error occurred
 .Ve
-.SH "OTHER"
-.IX Header "OTHER"
-Project page:
-  <http://quvi.googlecode.com/>
-.PP
-Bugs, support, etc. trackers can be found at:
-  <http://sourceforge.net/tracker/?group_id=354489>
-.PP
-Development code:
-  % git clone git://repo.or.cz/quvi.git
 .SH "AUTHOR"
 .IX Header "AUTHOR"
-Toni Gundogdu <legatvs at sign gmail com>
+Toni Gundogdu <legatvs at sign gmail com>.
 .PP
 Thanks to all those who have contributed to the project
 by sending patches, reporting bugs and writing feedback.
 You know who you are.
+.PP
+See also \*(L"\s-1BUGS\s0\*(R", \*(L"\s-1DEBUGGING\s0 \s-1TIPS\s0\*(R" and \*(L"\s-1CONTRIBUTING\s0\*(R".
