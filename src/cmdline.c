@@ -42,10 +42,10 @@ const char *gengetopt_args_info_help[] = {
   "      --verbose-libcurl      Turn on libcurl verbose mode",
   "      --exec=arg             Invoke arg after parsing",
   "  -n, --no-verify            Do not verify video link",
-  "      --page-title=arg       Check for video title",
-  "      --video-id=arg         Check for video ID",
-  "      --file-length=arg      Check for video file length",
-  "      --file-suffix=arg      Check for video file suffix",
+  "      --page-title=arg       Check that parsed page title matches arg",
+  "      --video-id=arg         Check that parsed video ID matches arg",
+  "      --file-length=arg      Check that parsed video length matches arg",
+  "      --file-suffix=arg      Check that parsed video suffix matches arg",
   "  -a, --test-all             Run built-in tests",
   "  -d, --dump                 Dump video details with --test-all",
   "  -t, --test=arg             Pattern to match to built-in test URLs",
@@ -852,7 +852,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Check for video title.  */
+          /* Check that parsed page title matches arg.  */
           else if (strcmp (long_options[option_index].name, "page-title") == 0)
           {
           
@@ -866,7 +866,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Check for video ID.  */
+          /* Check that parsed video ID matches arg.  */
           else if (strcmp (long_options[option_index].name, "video-id") == 0)
           {
           
@@ -880,7 +880,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Check for video file length.  */
+          /* Check that parsed video length matches arg.  */
           else if (strcmp (long_options[option_index].name, "file-length") == 0)
           {
           
@@ -894,7 +894,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Check for video file suffix.  */
+          /* Check that parsed video suffix matches arg.  */
           else if (strcmp (long_options[option_index].name, "file-suffix") == 0)
           {
           

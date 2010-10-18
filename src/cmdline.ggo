@@ -34,19 +34,19 @@ option "no-verify"
     optional
 
 option "page-title"
-    - "Check for video title"
+    - "Check that parsed page title matches arg"
     string typestr="arg"
     optional
 option "video-id"
-    - "Check for video ID"
+    - "Check that parsed video ID matches arg"
     string typestr="arg"
     optional
 option "file-length"
-    - "Check for video file length"
+    - "Check that parsed video length matches arg"
     double typestr="arg"
     optional
 option "file-suffix"
-    - "Check for video file suffix"
+    - "Check that parsed video suffix matches arg"
     string typestr="arg"
     optional
 
