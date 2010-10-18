@@ -444,7 +444,7 @@ match_test (quvi_t quvi, opts_s opts, CURL *curl) {
             dump_video (v, opts, curl);
             rc = check_values(v, opts);
 
-            if (opts.exec_given) {
+            if (opts.exec_given && rc == QUVI_OK) {
                 char *video_url = NULL;
                 do {
                     quvi_getprop(v, QUVIPROP_VIDEOURL, &video_url);
