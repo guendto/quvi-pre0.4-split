@@ -44,7 +44,7 @@ struct gengetopt_args_info
   const char *xml_help; /**< @brief Print details in XML help description.  */
   const char *old_help; /**< @brief Print details in original format help description.  */
   const char *quiet_help; /**< @brief Turn off output to stderr help description.  */
-  const char *debug_help; /**< @brief Turn on libcurl verbose mode help description.  */
+  const char *verbose_libcurl_help; /**< @brief Turn on libcurl verbose mode help description.  */
   char * exec_arg;	/**< @brief Invoke arg after parsing.  */
   char * exec_orig;	/**< @brief Invoke arg after parsing original value given at command line.  */
   const char *exec_help; /**< @brief Invoke arg after parsing help description.  */
@@ -87,7 +87,7 @@ struct gengetopt_args_info
   unsigned int xml_given ;	/**< @brief Whether xml was given.  */
   unsigned int old_given ;	/**< @brief Whether old was given.  */
   unsigned int quiet_given ;	/**< @brief Whether quiet was given.  */
-  unsigned int debug_given ;	/**< @brief Whether debug was given.  */
+  unsigned int verbose_libcurl_given ;	/**< @brief Whether verbose-libcurl was given.  */
   unsigned int exec_given ;	/**< @brief Whether exec was given.  */
   unsigned int no_verify_given ;	/**< @brief Whether no-verify was given.  */
   unsigned int page_title_given ;	/**< @brief Whether page-title was given.  */

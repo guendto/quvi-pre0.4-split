@@ -39,7 +39,7 @@ const char *gengetopt_args_info_help[] = {
   "      --xml                  Print details in XML",
   "      --old                  Print details in original format",
   "  -q, --quiet                Turn off output to stderr",
-  "      --debug                Turn on libcurl verbose mode",
+  "      --verbose-libcurl      Turn on libcurl verbose mode",
   "      --exec=arg             Invoke arg after parsing",
   "  -n, --no-verify            Do not verify video link",
   "      --page-title=arg       Check for video title",
@@ -113,7 +113,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->xml_given = 0 ;
   args_info->old_given = 0 ;
   args_info->quiet_given = 0 ;
-  args_info->debug_given = 0 ;
+  args_info->verbose_libcurl_given = 0 ;
   args_info->exec_given = 0 ;
   args_info->no_verify_given = 0 ;
   args_info->page_title_given = 0 ;
@@ -168,7 +168,7 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->xml_help = gengetopt_args_info_help[4] ;
   args_info->old_help = gengetopt_args_info_help[5] ;
   args_info->quiet_help = gengetopt_args_info_help[6] ;
-  args_info->debug_help = gengetopt_args_info_help[7] ;
+  args_info->verbose_libcurl_help = gengetopt_args_info_help[7] ;
   args_info->exec_help = gengetopt_args_info_help[8] ;
   args_info->no_verify_help = gengetopt_args_info_help[9] ;
   args_info->page_title_help = gengetopt_args_info_help[10] ;
@@ -333,8 +333,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "old", 0, 0 );
   if (args_info->quiet_given)
     write_into_file(outfile, "quiet", 0, 0 );
-  if (args_info->debug_given)
-    write_into_file(outfile, "debug", 0, 0 );
+  if (args_info->verbose_libcurl_given)
+    write_into_file(outfile, "verbose-libcurl", 0, 0 );
   if (args_info->exec_given)
     write_into_file(outfile, "exec", args_info->exec_orig, 0);
   if (args_info->no_verify_given)
@@ -651,7 +651,7 @@ cmdline_parser_internal (
         { "xml",	0, NULL, 0 },
         { "old",	0, NULL, 0 },
         { "quiet",	0, NULL, 'q' },
-        { "debug",	0, NULL, 0 },
+        { "verbose-libcurl",	0, NULL, 0 },
         { "exec",	1, NULL, 0 },
         { "no-verify",	0, NULL, 'n' },
         { "page-title",	1, NULL, 0 },
@@ -825,15 +825,15 @@ cmdline_parser_internal (
           
           }
           /* Turn on libcurl verbose mode.  */
-          else if (strcmp (long_options[option_index].name, "debug") == 0)
+          else if (strcmp (long_options[option_index].name, "verbose-libcurl") == 0)
           {
           
           
             if (update_arg( 0 , 
-                 0 , &(args_info->debug_given),
-                &(local_args_info.debug_given), optarg, 0, 0, ARG_NO,
+                 0 , &(args_info->verbose_libcurl_given),
+                &(local_args_info.verbose_libcurl_given), optarg, 0, 0, ARG_NO,
                 check_ambiguity, override, 0, 0,
-                "debug", '-',
+                "verbose-libcurl", '-',
                 additional_error))
               goto failure;
           

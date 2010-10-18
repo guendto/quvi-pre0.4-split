@@ -20,7 +20,7 @@ option "old"
 option "quiet"
     q "Turn off output to stderr"
     optional
-option "debug"
+option "verbose-libcurl"
     - "Turn on libcurl verbose mode"
     optional
 

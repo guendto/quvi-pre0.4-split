@@ -532,8 +532,7 @@ init_quvi(opts_s opts, CURL **curl) {
     if (opts.no_proxy_given)
         curl_easy_setopt (*curl, CURLOPT_PROXY, "");
 
-    if (opts.debug_given)
-        curl_easy_setopt (*curl, CURLOPT_VERBOSE, 1L);
+    curl_easy_setopt (*curl, CURLOPT_VERBOSE, opts.verbose_libcurl_given);
 
     curl_easy_setopt (*curl,
         CURLOPT_CONNECTTIMEOUT, opts.connect_timeout_arg);
