@@ -15,14 +15,15 @@ if ENABLE_TESTS
 SUBDIRS += tests
 endif
 
-.PHONY: man dox cmdline
-man:
+.PHONY: pod2man pod2html dox cmdline
+pod2man:
 if HAVE_POD2MAN
 	@POD2MAN@ -c "quvi manual" -n quvi \
 		 -s 1 -r @VERSION@ $(top_srcdir)/man1/quvi.1.pod $(top_builddir)/man1/quvi.1
 else
 	@echo "error: configure did not find pod2man command"
 endif
+pod2html:
 if HAVE_POD2HTML
 	@POD2HTML@ --title="quvi manual" \
 		--infile=$(top_srcdir)/man1/quvi.1.pod \
