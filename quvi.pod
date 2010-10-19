@@ -57,7 +57,7 @@ Turn on libcurl verbose mode.
 
 =item B<--exec> I<arg>
 
-Invoke I<arg> for each parsed video. You can use the following
+Invoke I<arg> for each (successfully) parsed video. You can use the following
 specifiers in I<arg>:
 
     %u  Video download URL
