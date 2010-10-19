@@ -22,7 +22,7 @@ pack_it()
 
     rm -rf dist quvi-$version $archive \
     && make install-strip \
-    && make man \
+    && make pod2html \
     && cp -v $MINGW/bin/libcurl-4.dll dist/bin \
     && cp -v $MINGW/bin/libpcre-0.dll dist/bin \
     && cp -v $MINGW/bin/libiconv-2.dll dist/bin \
@@ -34,7 +34,7 @@ pack_it()
     && rm -rf dist/lib/pkgconfig \
     && cp -v ../ChangeLog dist/ChangeLog.txt \
     && cp -v ChangeLog.w32.txt dist/ \
-    && cp -v quvi.1.html dist/share/doc/quvi \
+    && cp -v man1/quvi.1.html dist/share/doc/quvi \
     && mv dist $distdir \
     && 7za a $archive $distdir
     exit $?
@@ -42,7 +42,7 @@ pack_it()
 
 clean_up() {
     make distclean 2>/dev/null
-    rm -rf doc examples include lib src tests share quvi.1
+    rm -rf doc examples include lib src tests share man1
     exit $?
 }
 
