@@ -4,7 +4,6 @@ EXTRA_DIST = \
 libquvi.pc.in \
 libquvi.ver \
 doxygen.conf.in \
-quvi.pod \
 KNOWN_ISSUES
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -20,13 +19,13 @@ endif
 man:
 if HAVE_POD2MAN
 	@POD2MAN@ -c "quvi manual" -n quvi \
-		 -s 1 -r @VERSION@ $(top_srcdir)/man1/quvi.pod $(top_builddir)/man1/quvi.1
+		 -s 1 -r @VERSION@ $(top_srcdir)/man1/quvi.1.pod $(top_builddir)/man1/quvi.1
 else
 	@echo "error: configure did not find pod2man command"
 endif
 if HAVE_POD2HTML
 	@POD2HTML@ --title="quvi manual" \
-		--infile=$(top_srcdir)/man1/quvi.pod \
+		--infile=$(top_srcdir)/man1/quvi.1.pod \
         --outfile=$(top_builddir)/man1/quvi.1.html
 else
 	@echo "error: configure did not find pod2html command"
