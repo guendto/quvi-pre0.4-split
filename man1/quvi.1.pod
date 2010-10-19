@@ -274,11 +274,6 @@ pull requests.
 
 =over 4
 
-=item B<Instructions>
-
-Please read them carefully:
-  <http://code.google.com/p/quvi/wiki/ReportingIssues>
-
 =item B<Trackers>
 
 Bugs, support, patches, etc. trackers for these can be found at:
