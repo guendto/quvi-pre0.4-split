@@ -224,6 +224,7 @@ AC_CONFIG_FILES([
     include/quvi/Makefile
     include/quvi/quvi.h
     lib/Makefile
+    man1/Makefile
     share/Makefile
     doc/Makefile
     src/Makefile
