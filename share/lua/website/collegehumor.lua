@@ -20,7 +20,9 @@
 function ident (page_url)
     local t   = {}
     t.domain  = "collegehumor.com"
-    t.formats = "default|best|hd"
+    t.formats = "default"
+-- Uncomment to re-enable. See also: http://is.gd/g9b4K
+--    t.formats = "default|best|hd"
     t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
     return t
 end
