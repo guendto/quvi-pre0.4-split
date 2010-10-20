@@ -1,43 +1,33 @@
+Revision history for quvi (w32) binaries.
 
-This file details the w32 binary package changes only.
+0.2.7  Wed Oct 20 2010
+         - Bump, read ChangeLog.txt for details
+         - Upgrade libcurl to 7.21.1
+                - --disable-ldap, --disable-rtsp
+         - Upgrade libpcre to 8.10
 
-Version 0.2.5
+0.2.6
+         - Bump, read ChangeLog.txt for details
 
-Changes:
-  * Bump
+0.2.5
+         - Bump, read ChangeLog.txt for details
 
+0.2.4
+         - Bump, read ChangeLog.txt for details
 
-Version 0.2.4
+0.2.3
+         - Bump, read ChangeLog.txt for details
 
-Changes:
-  * Bump
+0.2.2
+         - Bump, read ChangeLog.txt for details
 
+0.2.1
+         - Bump, read ChangeLog.txt for details
 
-Version 0.2.3
-
-Changes:
-  * Bump
-
-
-Version 0.2.2
-
-Changes:
-  * Bump
-
-
-Version 0.2.1
-
-Changes:
-  * Bump
-
-
-Version 0.2.0
-
-Changes:
-  * Restruct package tree
-  * Include license files
-  * Add liblua51.dll
-  * Bump libcurl to 7.20.1
-    - Add --disable-ldap
-    - Add --disable-rtsp
-  * Bump libpcre to 8.02
+0.2.0
+         - Reorganize tree
+         - Add license files
+         - Add liblua51.dll
+         - Upgrade libcurl to 7.20.1
+                - --disable-ldap, --disable-rtsp
+         - Upgrade libpcre to 8.02
