@@ -168,7 +168,7 @@ sub parse_formats {
 # Check the pod markup.
 sub pod_checks {
     require Pod::Checker;
-    my $rc = Pod::Checker::podchecker("@top_srcdir@/quvi.pod");
+    my $rc = Pod::Checker::podchecker("@top_srcdir@/man1/quvi.1.pod");
     return $rc;
 }
 
