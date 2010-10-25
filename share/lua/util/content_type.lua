@@ -20,7 +20,14 @@
 function suffix_from_contenttype (ctype)
 
     -- Ideally, we'd parse these from /etc/mime-types.
-    -- In reality we need a more cross-platform solution.
+    -- In reality, we need a more cross-platform solution.
+
+    if (ctype:find ("text/html")) then
+        error (
+            'content-type cannot be "' ..ctype.. '" for a video. '
+            .. 'The rule script for this website is either buggy or incomplete.'
+        )
+    end
 
     local _,_,s = ctype:find("/(.-)$")
     s = s or error ("no match: content type")
