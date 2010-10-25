@@ -32,7 +32,7 @@ function parse (video)
     local _,_,s = page:find('BLOOMBERG._title = "(.-) ";')
     video.title = s or error ("no match: video title")
 
-    local _,_,s = page:find("videos.bloomberg.com%/(.-).flv")
+    local _,_,s = page:find("videos.bloomberg.com/(.-).flv")
      video.id    = s or error ("no match: video id")
 
     local _,_,s = page:find('BLOOMBERG._video_url = "(.-)";')
