@@ -22,7 +22,6 @@ lua/website/myubo.lua \
 lua/website/sevenload.lua \
 lua/website/spiegel.lua \
 lua/website/theonion.lua \
-lua/website/viddler.lua \
 lua/website/vimeo.lua \
 lua/website/youtube.lua
 
