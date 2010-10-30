@@ -1,5 +1,12 @@
 Revision history for quvi.
 
+0.2.8
+
+Changes:
+        - content_type.lua: check for content-type "text/html", assume error
+        - Handle errors generated in util/*.lua scripts more discreetly
+
+
 Version 0.2.7  Wed Oct 20 2010
 
 Changes:
