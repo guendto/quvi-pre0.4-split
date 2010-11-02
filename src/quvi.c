@@ -239,22 +239,24 @@ dump_video_links (quvi_video_t video, opts_s opts, CURL *curl) {
 
 static void
 dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
-    char *page_link, *page_title, *video_id, *format;
+    char *page_link, *page_title, *video_id, *format, *host;
 
-    quvi_getprop(video, QUVIPROP_PAGEURL, &page_link);
-    quvi_getprop(video, QUVIPROP_PAGETITLE, &page_title);
-    quvi_getprop(video, QUVIPROP_VIDEOID, &video_id);
-    quvi_getprop(video, QUVIPROP_VIDEOFORMAT, &format);
+    quvi_getprop (video, QUVIPROP_HOSTID,       &host);
+    quvi_getprop (video, QUVIPROP_PAGEURL,      &page_link);
+    quvi_getprop (video, QUVIPROP_PAGETITLE,    &page_title);
+    quvi_getprop (video, QUVIPROP_VIDEOID,      &video_id);
+    quvi_getprop (video, QUVIPROP_VIDEOFORMAT,  &format);
 
     if (opts.xml_given) {
         char *url = curl_easy_escape (curl, page_link, 0);
         spew (
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-        "<video id=\"%s\">\n"
+        "<video id=\"%s\" host=\"%s\">\n"
         "   <format_requested>%s</format_requested>\n"
         "   <page_title>%s</page_title>\n"
         "   <page_url>%s</page_url>\n",
             video_id,
+            host,
             format,
             page_title,
             url
@@ -269,22 +271,24 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
     else if (opts.old_given) {
         spew (
             " > Dump video:\n"
+            "host    : %s\n"
             "url     : %s\n"
             "title   : %s\n"
             "id      : %s\n"
             "format  : %s (requested)\n",
-            page_link, page_title, video_id, format
+            host, page_link, page_title, video_id, format
         );
     }
     else { /* JSON, default. */
         spew (
             "{\n"
+             "  \"host\": \"%s\",\n"
              "  \"page_title\": \"%s\",\n"
              "  \"page_url\": \"%s\",\n"
              "  \"id\": \"%s\",\n"
              "  \"format_requested\": \"%s\",\n"
              "  \"link\": [\n",
-            page_title, page_link, video_id, format
+            host, page_title, page_link, video_id, format
         );
     }
 
