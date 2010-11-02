@@ -3,6 +3,7 @@ Revision history for quvi.
 0.2.8
 
 Changes:
+        - Rename --enable-smut -> --enable-nsfw (configure)
         - content_type.lua: check for content-type "text/html", assume error
         - Handle errors generated in util/*.lua scripts more discreetly
 

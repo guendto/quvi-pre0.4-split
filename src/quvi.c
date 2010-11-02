@@ -388,7 +388,7 @@ static const char *tests[] = {
 "http://space.tv.cctv.com/video/VIDE1212909276513233", /* single-segment */
 "http://space.tv.cctv.com/video/VIDE1247468077860061", /* multi-segment */
 #endif
-#ifdef ENABLE_SMUT
+#ifdef ENABLE_NSFW
 "http://www.tube8.com/fetish/japanese-melon-gal-censored/186133/",
 "http://www.xvideos.com/video243887/devi_emmerson_body_painting",
 "http://www.youjizz.com/videos/glamour-girls---melissa-125602.html",

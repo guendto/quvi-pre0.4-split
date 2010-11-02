@@ -526,8 +526,8 @@ quvi_version (QUVIversion type) {
     "b"
 #endif
 
-#ifdef ENABLE_SMUT
-    "s"
+#ifdef ENABLE_NSFW
+    "n"
 #endif
 
     ")";

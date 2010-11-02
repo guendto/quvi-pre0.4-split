@@ -1,5 +1,5 @@
 
-EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_ADULT)
+EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_NSFW)
 
 if HAVE_PERL
 
@@ -45,13 +45,13 @@ if HAVE_PERL_POD_CHECKER
 TESTS += $(TESTS_POD)
 endif
 
-TESTS_ADULT =\
+TESTS_NSFW =\
 support-tube8.pl\
 support-xvideos.pl\
 support-youjizz.pl
 
-if ENABLE_SMUT
-TESTS += $(TESTS_ADULT)
+if ENABLE_NSFW
+TESTS += $(TESTS_NSFW)
 endif
 
 else # HAVE_PERL

@@ -25,7 +25,7 @@ lua/website/theonion.lua \
 lua/website/vimeo.lua \
 lua/website/youtube.lua
 
-if ENABLE_SMUT
+if ENABLE_NSFW
 DIST_lua += \
 lua/website/tube8.lua \
 lua/website/xvideos.lua \
