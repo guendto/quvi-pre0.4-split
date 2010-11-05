@@ -2,6 +2,7 @@ Revision history for quvi.
 
 0.2.8
 Changes:
+        - Add share/lua/util/trim.lua
         - youtube.lua: rename IDs based on <http://is.gd/gIIYL>
         - youtube.lua: add support for mp4_3072p (4096x3072, fmt38)
         - Print QUVIPROP_HOSTID
@@ -9,6 +10,7 @@ Changes:
         - content_type.lua: check for content-type "text/html", assume error
         - Handle errors generated in util/*.lua scripts more discreetly
 Bugfixes:
+        - sevenload.lua: title parsing
         - JSON: escape double quotation marks in title
 
 
