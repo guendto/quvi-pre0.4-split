@@ -280,6 +280,8 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
         );
     }
     else { /* JSON, default. */
+        char *t = strdup (page_title);
+        t = strepl (t, "\"", "\\\"");
         spew (
             "{\n"
              "  \"host\": \"%s\",\n"
@@ -288,8 +290,10 @@ dump_video(quvi_video_t video, opts_s opts, CURL *curl) {
              "  \"id\": \"%s\",\n"
              "  \"format_requested\": \"%s\",\n"
              "  \"link\": [\n",
-            host, page_title, page_link, video_id, format
+            host, t, page_link, video_id, format
         );
+        free (t);
+        t = NULL;
     }
 
     dump_video_links (video, opts, curl);
