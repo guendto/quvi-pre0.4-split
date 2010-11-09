@@ -87,23 +87,22 @@ QUVISTATUSTYPE_DONE,          /**< General purpose "done" status type */
 
 /** @enum QUVIoption Option codes to be used with quvi_setopt()
 *
-* If QUVIOPT_NOSHORTENED is set to >= 1, the library skips checking if
-* the URL is a shortened ("compressed"). By default, the library check
-* for shortened URLs and uses the "decompressed" URLs instead of the
-* shortened one. Unless shortened URLs are "decompressed", the library
-* will report such URLs as unsupported.
+* If QUVIOPT_NOSHORTENED is set to >= 1, the library will not "decompress"
+* the shortened URLs before using them.  Unless shortened URLs are
+* "decompressed", the library will report them as "unsupported".
 *
-* If QUVIOPT_NOVERIFY is set to >= 1, the library skips verifying that
-* the parsed video URL works. Note that unless the URL is verified,
-* some of the video details (e.g. length in bytes, content type, suffix,
-* etc.) will have incorrect values.
+* If QUVIOPT_NOVERIFY is set to >= 1, the library will not verify the video
+* download URL, and query the video file details (e.g. length in bytes,
+* content type, file suffix). Unless the download URLs are verified, the
+* library will report invalid values (0 or empty strings) for these video
+* details.
 */
 typedef enum {
 QUVIOPT_FORMAT = 0x00,  /**< Requested video file format */
 QUVIOPT_NOVERIFY,       /**< Do not verify video link */
 QUVIOPT_STATUSFUNCTION, /**< Callback function for status updates */
 QUVIOPT_WRITEFUNCTION,  /**< Callback function for writing data */
-QUVIOPT_NOSHORTENED,    /**< Do not check for shortened URLs */
+QUVIOPT_NOSHORTENED,    /**< Do not "decompress" shortened URLs */
 } QUVIoption;
 
 #define QUVIINFO_VOID       0x100000 /**< void type */
