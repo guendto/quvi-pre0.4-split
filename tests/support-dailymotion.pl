@@ -1,11 +1,11 @@
 exit quviTest::run_t(
 "dailymotion",
 "--page-title",
-    "Battlefield 1943- Coral Sea - Trailer",
+    "CITY OF SCARS",
 "--video-id",
-    "x9fkzj",
+    "xdpig1",
 "--file-length",
-    "3538963",
+    "111422543",
 "--file-suffix",
     "flv"
 );
