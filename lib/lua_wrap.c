@@ -518,8 +518,10 @@ run_lua_charset_func (_quvi_video_t video, const char *data) {
 
     lua_pushstring(l, data);
 
-    if (lua_pcall(l, 1, 1, 0))
-        luaL_error(l, "%s", lua_tostring(l,-1));
+    if (lua_pcall(l, 1, 1, 0)) {
+        seterr ("%s", lua_tostring(l,-1));
+        return (QUVI_LUA);
+    }
 
     if (lua_isstring(l, -1))
         setvid(video->charset, "%s", lua_tostring(l,-1));
