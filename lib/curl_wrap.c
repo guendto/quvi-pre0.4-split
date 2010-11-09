@@ -295,12 +295,12 @@ is_shortened_url (_quvi_video_t video) {
 
     csetopt (CURLOPT_URL, video->page_link);
     csetopt (CURLOPT_FOLLOWLOCATION, 0L);
-    csetopt(CURLOPT_NOBODY, 1L); /* get -> head */
+    csetopt (CURLOPT_NOBODY, 1L); /* get -> head */
 
     curlcode = curl_easy_perform (quvi->curl);
 
     csetopt (CURLOPT_FOLLOWLOCATION, 1L); /* reset */
-    csetopt(CURLOPT_HTTPGET, 1L); /* reset: head -> get */
+    csetopt (CURLOPT_HTTPGET, 1L); /* reset: head -> get */
 
     respcode = 0;
     conncode = 0;
@@ -320,19 +320,10 @@ is_shortened_url (_quvi_video_t video) {
 
             char *url = NULL;
 
-            curl_easy_getinfo (quvi->curl,
-                CURLINFO_REDIRECT_URL, &url);
-
+            curl_easy_getinfo (quvi->curl, CURLINFO_REDIRECT_URL, &url);
             setvid (video->page_link, "%s", url);
 
             rc = QUVI_OK;
-
-            if (quvi->status_func) {
-
-                rc = quvi->status_func (
-                    makelong (QUVISTATUS_SHORTENED, QUVISTATUSTYPE_DONE), 0);
-
-            }
 
         } /* respcode >= 301 && respcode <= 303 */
 
@@ -341,10 +332,19 @@ is_shortened_url (_quvi_video_t video) {
             rc = QUVI_OK;
         }
 
+        if (quvi->status_func) {
+
+            rc = quvi->status_func (
+                makelong (QUVISTATUS_SHORTENED, QUVISTATUSTYPE_DONE), 0);
+
+        }
+
     }
     else {
+
         seterr ("%s (curlcode=%d, conncode=%ld)",
             curl_easy_strerror (curlcode), curlcode, conncode);
+
         rc = QUVI_CURL;
     }
 
