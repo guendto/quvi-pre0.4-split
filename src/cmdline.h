@@ -48,7 +48,7 @@ struct gengetopt_args_info
   char * exec_arg;	/**< @brief Invoke arg after parsing.  */
   char * exec_orig;	/**< @brief Invoke arg after parsing original value given at command line.  */
   const char *exec_help; /**< @brief Invoke arg after parsing help description.  */
-  const char *no_shortened_help; /**< @brief Do not check for shortened URLs help description.  */
+  const char *no_shortened_help; /**< @brief Do not decompress shortened URLs help description.  */
   const char *no_verify_help; /**< @brief Do not verify video link help description.  */
   char * page_title_arg;	/**< @brief Check that parsed page title matches arg.  */
   char * page_title_orig;	/**< @brief Check that parsed page title matches arg original value given at command line.  */

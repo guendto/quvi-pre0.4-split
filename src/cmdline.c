@@ -41,7 +41,7 @@ const char *gengetopt_args_info_help[] = {
   "  -q, --quiet                Turn off output to stderr",
   "      --verbose-libcurl      Turn on libcurl verbose mode",
   "      --exec=arg             Invoke arg after parsing",
-  "      --no-shortened         Do not check for shortened URLs",
+  "      --no-shortened         Do not decompress shortened URLs",
   "  -n, --no-verify            Do not verify video link",
   "      --page-title=arg       Check that parsed page title matches arg",
   "      --video-id=arg         Check that parsed video ID matches arg",
@@ -858,7 +858,7 @@ cmdline_parser_internal (
               goto failure;
           
           }
-          /* Do not check for shortened URLs.  */
+          /* Do not decompress shortened URLs.  */
           else if (strcmp (long_options[option_index].name, "no-shortened") == 0)
           {
           
