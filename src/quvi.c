@@ -71,13 +71,21 @@ spew (const char *fmt, ...) {
 typedef struct gengetopt_args_info opts_s;
 
 static int
-status_callback(long param, void *data) {
-    quvi_word status,type;
+status_callback (long param, void *data) {
+    quvi_word status, type;
 
     status = quvi_loword(param);
-    type  = quvi_hiword(param);
+    type   = quvi_hiword(param);
 
     switch (status) {
+
+    case QUVISTATUS_SHORTENED: /* check for shortened URL */
+        switch (type) {
+        default: spew_qe (":: Check for shortened URL ..."); break;
+        case QUVISTATUSTYPE_DONE    : spew_qe ("done.\n"); break;
+        }
+        break;
+
     case QUVISTATUS_FETCH: /* handle fetch */
         switch (type) {
         default: spew_qe (":: Fetch %s ...", (char *)data); break;
@@ -518,13 +526,13 @@ init_quvi(opts_s opts, CURL **curl) {
     /* Set quvi options. */
 
     if (opts.format_given)
-        quvi_setopt(quvi, QUVIOPT_FORMAT, opts.format_arg);
+        quvi_setopt (quvi, QUVIOPT_FORMAT, opts.format_arg);
 
-    if (opts.no_verify_given)
-        quvi_setopt(quvi, QUVIOPT_NOVERIFY, 1L);
+    quvi_setopt (quvi, QUVIOPT_NOSHORTENED, opts.no_shortened_given);
+    quvi_setopt (quvi, QUVIOPT_NOVERIFY,    opts.no_verify_given);
 
-    quvi_setopt(quvi, QUVIOPT_STATUSFUNCTION, status_callback);
-    quvi_setopt(quvi, QUVIOPT_WRITEFUNCTION, write_callback);
+    quvi_setopt (quvi, QUVIOPT_STATUSFUNCTION, status_callback);
+    quvi_setopt (quvi, QUVIOPT_WRITEFUNCTION, write_callback);
 
     /* We can use the quvi created cURL handle for our means. */
 
