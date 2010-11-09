@@ -123,8 +123,11 @@ quvi_parse (quvi_t quvi, char *url, quvi_video_t *dst) {
 
     setvid(video->page_link, "%s", url);
 
-    if (!video->quvi->no_shortened)
-        is_shortened_url (video);
+    if (!video->quvi->no_shortened) {
+        rc = is_shortened_url (video);
+        if (rc != QUVI_OK)
+            return (rc);
+    }
 
     while (1) {
         rc = find_host_script (video);
