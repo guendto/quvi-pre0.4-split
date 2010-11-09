@@ -123,6 +123,9 @@ quvi_parse (quvi_t quvi, char *url, quvi_video_t *dst) {
 
     setvid(video->page_link, "%s", url);
 
+    if (!video->quvi->no_shortened)
+        is_shortened_url (video);
+
     while (1) {
         rc = find_host_script (video);
         if (rc != QUVI_OK)
@@ -206,8 +209,8 @@ _setopt (_quvi_t quvi, QUVIoption opt, va_list arg) {
     do { opt = va_arg(arg,int); } while(0); break
 
     switch (opt) {
-    case QUVIOPT_FORMAT        : _sets(quvi->format);
-    case QUVIOPT_NOVERIFY      : _seti(quvi->no_verify);
+    case QUVIOPT_FORMAT        : _sets (quvi->format);
+    case QUVIOPT_NOVERIFY      : _seti (quvi->no_verify);
     case QUVIOPT_STATUSFUNCTION:
         quvi->status_func = 
             va_arg(arg, quvi_callback_status);
@@ -216,6 +219,7 @@ _setopt (_quvi_t quvi, QUVIoption opt, va_list arg) {
         quvi->write_func =
             va_arg(arg, quvi_callback_write);
         break;
+    case QUVIOPT_NOSHORTENED   : _seti (quvi->no_shortened);
     default: return (QUVI_INVARG);
     }
 #undef _sets
