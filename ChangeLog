@@ -2,6 +2,7 @@ Revision history for quvi.
 
 0.2.8
 Changes:
+        - Mark as broken: bloomberg.lua, theonion.lua
         - Bump lib interface c+1:0:a+1, backwards compatible with previous release
         - Add --no-shortened
         - Add support for shortened URLs (e.g. dai.ly, goo.gl, etc.)

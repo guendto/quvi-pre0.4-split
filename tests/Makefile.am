@@ -8,7 +8,6 @@ TESTS_ENVIRONMENT = $(PERL) -w -mstrict -mquviTest -I $(top_builddir)/tests
 TESTS =\
 nosupport-eval.pl\
 support-shortened.pl\
-support-bloomberg.pl\
 support-break.pl\
 support-charlierose.pl\
 support-clipfish.pl\
@@ -22,7 +21,6 @@ support-liveleak.pl\
 support-myubo.pl\
 support-sevenload.pl\
 support-spiegel.pl\
-support-theonion.pl\
 support-vimeo.pl\
 support-youtube.pl\
 support-academicearth.pl
@@ -31,9 +29,9 @@ support-academicearth.pl
 # The former uses youtube for hosting some of its videos.
 
 TESTS_BROKEN =\
-support-cctv.pl\
-support-ehrensenf.pl\
-support-spyfilms.pl
+support-bloomberg.pl\
+support-theonion.pl\
+support-cctv.pl
 
 if ENABLE_BROKEN
 TESTS += $(TESTS_BROKEN)
