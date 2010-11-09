@@ -14,6 +14,6 @@ my $rc = quviTest::run_t(
     "flv"
 ); # single-segment
 
-$rc = quviTest::run("-t", "12474")  if !$rc; # multi-segment
+$rc = quviTest::run("-t", "12474", "--no-shortened")  if !$rc; # multi-segment
 
 exit $rc;
