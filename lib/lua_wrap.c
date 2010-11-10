@@ -36,6 +36,36 @@
 #include "curl_wrap.h"
 #include "lua_wrap.h"
 
+#ifdef _0
+static void
+dump_lua_stack (lua_State *L) { /* http://www.lua.org/pil/24.2.3.html */
+    int i;
+    int top = lua_gettop(L);
+    for (i = 1; i <= top; i++) {  /* repeat for each level */
+        int t = lua_type(L, i);
+        switch (t) {
+        case LUA_TSTRING:  /* strings */
+            printf("`%s'", lua_tostring(L, i));
+            break;
+
+        case LUA_TBOOLEAN:  /* booleans */
+            printf(lua_toboolean(L, i) ? "true" : "false");
+            break;
+
+        case LUA_TNUMBER:  /* numbers */
+            printf("%g", lua_tonumber(L, i));
+            break;
+
+        default:  /* other values */
+            printf("%s", lua_typename(L, t));
+            break;
+        }
+        printf("  ");  /* put a separator */
+    }
+    printf("\n");  /* end the listing */
+}
+#endif
+
 static _quvi_video_t qv = NULL;
 
 /* c functions for lua. */
@@ -282,8 +312,8 @@ free_lua (_quvi_t *quvi) {
 
 static void
 set_key (lua_State *l, const char *key) {
-    lua_pushstring(l, key);
-    lua_gettable(l, -2);
+    lua_pushstring (l,key);
+    lua_gettable (l,-2);
 }
 
 #define _istype(t) \
@@ -298,29 +328,21 @@ set_key (lua_State *l, const char *key) {
 
 static char*
 get_field_s (lua_State *l, _quvi_lua_script_t qls, const char *key) {
-    const char *s;
-
-    set_key(l, key);
-
-    _istype(string);
-
-    s = lua_tostring(l, -1);
-    lua_pop(l, 1);
-
-    return ((char*)s);
+    char *s;
+    set_key (l,key);
+    _istype (string);
+    s = (char *) lua_tostring (l,-1);
+    lua_pop (l,1);
+    return (s);
 }
 
 static int
 get_field_b (lua_State *l, _quvi_lua_script_t qls, const char *key) {
     int b;
-
-    set_key(l, key);
-
-    _istype(boolean);
-
-    b = lua_toboolean(l, -1);
-    lua_pop(l, 1);
-
+    set_key (l, key);
+    _istype (boolean);
+    b = lua_toboolean (l,-1);
+    lua_pop (l,1);
     return (b);
 }
 
@@ -428,7 +450,7 @@ run_lua_suffix_func (_quvi_t quvi, _quvi_video_link_t qvl) {
 /* Executes the `trim_fields' lua function. */
 
 static QUVIcode
-run_lua_trim_fields_func (_quvi_video_t video) {
+run_lua_trim_fields_func (_quvi_video_t video, int ref) {
     const static char func_name[] = "trim_fields";
     _quvi_lua_script_t qls;
     _quvi_t quvi;
@@ -436,15 +458,16 @@ run_lua_trim_fields_func (_quvi_video_t video) {
     QUVIcode rc;
 
     assert (video != NULL);
+
     quvi = video->quvi;
     assert (quvi != NULL);
+
+    l = quvi->lua;
+    assert (l != NULL);
 
     qls = find_util_script (quvi, "trim.lua");
     if (!qls)
         return (QUVI_NOLUAUTIL);
-
-    l = quvi->lua;
-    assert (l != NULL);
 
     lua_pushnil   (l);
     lua_getglobal (l, func_name);
@@ -457,32 +480,17 @@ run_lua_trim_fields_func (_quvi_video_t video) {
     if (!lua_isfunction (l, -1))
         luaL_error (l, "%s: `%s' function not found", qls->path, func_name);
 
-    lua_newtable (l);
-    set_field (l, "requested_format", video->quvi->format);
-    set_field (l, "page_url",         video->page_link);
-    set_field (l, "host_id",          video->host_id);
-    set_field (l, "title",            video->title);
-    set_field (l, "id",               video->id);
+    lua_rawgeti (l, LUA_REGISTRYINDEX, ref);
 
     if (lua_pcall (l, 1, 1, 0)) {
         seterr ("%s", lua_tostring (l, -1));
         return (QUVI_LUA);
     }
 
-    if (lua_istable (l, -1)) {
-        setvid (video->quvi->format,"%s",
-            get_field_s (l, qls, "requested_format"));
-        setvid (video->page_link,   "%s", get_field_s (l, qls, "page_url"));
-        setvid (video->host_id,     "%s", get_field_s (l, qls, "host_id"));
-        setvid (video->title,       "%s", get_field_s (l, qls, "title"));
-        setvid (video->id,          "%s", get_field_s (l, qls, "id"));
-    }
-    else
+    if (!lua_istable (l, -1))
         luaL_error (l, "expected `%s' function to return a table", func_name);
 
-    lua_pop (l, 1);
-
-    return (rc);
+    return (QUVI_OK);
 }
 
 /* Executes the `charset_from_data' lua function. */
@@ -607,6 +615,7 @@ run_ident_func (lua_ident_t ident, llst_node_t node) {
 
 static QUVIcode
 run_parse_func (lua_State *l, llst_node_t node, _quvi_video_t video) {
+    const char *func_name = "parse";
     _quvi_lua_script_t qls;
     _quvi_t quvi;
     QUVIcode rc;
@@ -617,10 +626,10 @@ run_parse_func (lua_State *l, llst_node_t node, _quvi_video_t video) {
     quvi = video->quvi; /* seterr macro needs this. */
     qls  = (_quvi_lua_script_t) node->data;
 
-    lua_getglobal(l, "parse");
+    lua_getglobal(l, func_name);
 
     if (!lua_isfunction(l, -1)) {
-        seterr("%s: `parse' function not found", qls->path);
+        seterr("%s: `%s' function not found", qls->path, func_name);
         return (QUVI_LUA);
     }
 
@@ -628,37 +637,38 @@ run_parse_func (lua_State *l, llst_node_t node, _quvi_video_t video) {
     set_field(l, "page_url",         video->page_link);
     set_field(l, "requested_format", video->quvi->format);
     set_field(l, "redirect",         "");
-#ifdef _1_
-    set_field(l, "host_id",  "");
-    set_field(l, "title",    "");
-    set_field(l, "id",       "");
-    set_field(l, "url",      "");
-#endif
 
-    if (lua_pcall(l, 1, 1, 0)) {
-        seterr("%s", lua_tostring(l,-1));
+    if (lua_pcall (l,1,1,0)) {
+        seterr ("%s", lua_tostring (l,-1));
         return (QUVI_LUA);
     }
 
-    if (lua_istable(l, -1)) {
+    if (!lua_istable (l,-1)) {
+        seterr ("expected `%s' function return a table", func_name);
+        lua_pop (l, 1);
+        return (QUVI_LUA);
+    }
 
-        setvid(video->redirect, "%s", get_field_s(l, qls, "redirect"));
+    setvid (video->redirect, "%s", get_field_s (l, qls, "redirect"));
 
-        if (strlen(video->redirect) == 0) {
+    if (strlen (video->redirect) == 0) {
 
-            setvid(video->host_id, "%s", get_field_s(l, qls, "host_id"));
-            setvid(video->title,   "%s", get_field_s(l, qls, "title"));
-            setvid(video->id,      "%s", get_field_s(l, qls, "id"));
+        const int r = luaL_ref (l, LUA_REGISTRYINDEX);
 
-            rc = iter_video_url(l, qls, "url", video);
+        rc = run_lua_trim_fields_func (video, r);
 
-            if (rc == QUVI_OK)
-                rc = run_lua_trim_fields_func (video);
+        luaL_unref (l, LUA_REGISTRYINDEX, r);
+
+        if (rc == QUVI_OK) {
+
+            setvid (video->host_id, "%s", get_field_s (l,qls,"host_id"));
+            setvid (video->title,   "%s", get_field_s (l,qls,"title"));
+            setvid (video->id,      "%s", get_field_s (l,qls,"id"));
+
+            rc = iter_video_url (l,qls,"url",video);
         }
 
     }
-    else
-        luaL_error(l, "expected `ident' function to return a table");
 
     lua_pop(l, 1);
 
