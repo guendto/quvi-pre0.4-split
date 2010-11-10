@@ -276,6 +276,7 @@ QUVIcode
 is_shortened_url (_quvi_video_t video) {
     long respcode, conncode;
     CURLcode curlcode;
+    struct mem_s mem;
     _quvi_t quvi;
     QUVIcode rc;
 
@@ -292,6 +293,15 @@ is_shortened_url (_quvi_video_t video) {
             return (QUVI_ABORTEDBYCALLBACK);
 
     }
+
+    memset (&mem, 0, sizeof (mem));
+
+    csetopt (CURLOPT_WRITEDATA, &mem);
+
+    if (quvi->write_func)
+        csetopt(CURLOPT_WRITEFUNCTION, (curl_write_callback)quvi->write_func);
+    else
+        csetopt(CURLOPT_WRITEFUNCTION, quvi_write_callback_default);
 
     csetopt (CURLOPT_URL, video->page_link);
     csetopt (CURLOPT_FOLLOWLOCATION, 0L);
@@ -347,6 +357,9 @@ is_shortened_url (_quvi_video_t video) {
 
         rc = QUVI_CURL;
     }
+
+    if (mem.p)
+        _free (mem.p);
 
     quvi->httpcode = respcode;
     quvi->curlcode = curlcode;
