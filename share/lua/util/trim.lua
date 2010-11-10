@@ -18,7 +18,9 @@
 
 function trim_fields (video)
     for k,v in pairs (video) do
-        video[k] = trim (v)
+        if (k ~= 'url') then
+            video[k] = trim (v)
+        end
     end
     return video
 end
