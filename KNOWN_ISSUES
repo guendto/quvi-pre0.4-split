@@ -1,0 +1,25 @@
+
+Undeclared errors when upgrading
+
+Example: upgrading to 0.2.8
+
+% make
+...
+lib/quvi.c:225:10: error: 'QUVIOPT_NOSHORTENED' undeclared (first use in this function)
+...
+
+Cause: AM_ICONV sets CPPFLAGS which contains -I$dir that points to the location
+of an old quvi.h from a previous installation without the enum. This -I$dir
+is then prepended to the list of other -I when "make" is called, which causes
+the compiler to pick the first quvi.h (from the old installation) and croak
+with the above error.
+
+Workarounds:
+  * Uninstall the old version, or:
+  * Edit manually the CPPFLAGS in
+    Makefile
+    lib/Makefile
+    src/Makefile
+    removing the -I$dir
+
+If you've found an elegant fix to this, please let us know.
