@@ -21,6 +21,7 @@ lua/website/liveleak.lua \
 lua/website/myubo.lua \
 lua/website/sevenload.lua \
 lua/website/spiegel.lua \
+lua/website/theonion.lua \
 lua/website/vimeo.lua \
 lua/website/youtube.lua
 
@@ -34,7 +35,6 @@ endif
 if ENABLE_BROKEN
 DIST_lua += \
 lua/website/bloomberg.lua \
-lua/website/theonion.lua \
 lua/website/cctv.lua
 endif
 

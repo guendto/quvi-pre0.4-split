@@ -36,20 +36,24 @@ function parse (video)
     video.host_id = "theonion"
     local page    = quvi.fetch(video.page_url)
 
-    local _,_,s = page:find('video_title = "(.-)"')
+    local _,_,s = page:find("<title>(.-) |")
     video.title = s or error ("no match: video title")
 
-    local _,_,s = page:find("afns_video_id = (.-);")
+    local _,_,s = page:find('afns_video_id = "(.-)";')
     video.id    = s or error ("no match: video id")
 
-    local _,_,s = page:find('video_url = "(.-)"')
+    local _,_,s = page:find('http://www.theonion.com/video/(.-),')
     s           = s or error ("no match: flv url")
+
+--     http://www.theonion.com/video/oprah-invites-hundreds-of-lucky-fans-to-be-buried,18443/
+--     http://videos.theonion.com/onion_video/auto/18443/oprah-invites-hundreds-of-lucky-fans-to-be-buried-iphone.m4v
 
     if (video.requested_format == "ipad") then
         _,_,s = page:find('autoplay src="(.-)"')
         s     = s or error ("no match: ipad url")
     end
 
+    s         = "http://videos.theonion.com/onion_video/auto/"..(video.id).."/"..(s).."-iphone.m4v"
     video.url   = {quvi.unescape(s)}
 
     return video

@@ -21,6 +21,7 @@ support-liveleak.pl\
 support-myubo.pl\
 support-sevenload.pl\
 support-spiegel.pl\
+support-theonion.pl\
 support-vimeo.pl\
 support-youtube.pl\
 support-academicearth.pl
@@ -30,7 +31,6 @@ support-academicearth.pl
 
 TESTS_BROKEN =\
 support-bloomberg.pl\
-support-theonion.pl\
 support-cctv.pl
 
 if ENABLE_BROKEN
