@@ -252,19 +252,18 @@ Options:
     build libquvi:  shared=${enable_shared} static=${enable_static}
     build quvi:     ${enable_quvi}
     build examples: ${enable_examples}
-    nsfw support:   ${enable_nsfw}
+    enable nsfw:    ${enable_nsfw}
+    enable broken:  ${enable_broken}
     enable tests:   ${enable_tests}
-    broken support: ${enable_broken}
     install manual: ${with_man}
     install docs:   ${with_doc}
-
-Other:
-    gengetopt:      ${GENGETOPT}
-    doxygen:        ${DOXYGEN}
-    perl:           ${PERL}
-    Pod::Checker:   ${have_pod_checker}
-    pod2man:        ${POD2MAN}
-    pod2html:       ${POD2HTML}
 ])
 
+#Other:
+#    gengetopt:      ${GENGETOPT}
+#    doxygen:        ${DOXYGEN}
+#    perl:           ${PERL}
+#    Pod::Checker:   ${have_pod_checker}
+#    pod2man:        ${POD2MAN}
+#    pod2html:       ${POD2HTML}
 
