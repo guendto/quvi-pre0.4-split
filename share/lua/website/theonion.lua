@@ -16,17 +16,11 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
--- "The onion provides two version, one for the ipad and a flv
--- The ipad version has the pre and post roll, the flv has just the
--- video segment (the postroll) is a seperate flv. There is likely 
--- a more elegant way to do the option, but this works for me."
-      -- mkolve, in http://code.google.com/p/quvi/issues/detail?id=12
-
 -- Identify the script.
 function ident (page_url)
     local t   = {}
     t.domain  = "theonion.com"
-    t.formats = "default|ipad"
+    t.formats = "default"
     t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
     return t
 end
@@ -44,16 +38,11 @@ function parse (video)
 
     local _,_,s = page:find('http://www.theonion.com/video/(.-),')
     s           = s or error ("no match: flv url")
-
---     http://www.theonion.com/video/oprah-invites-hundreds-of-lucky-fans-to-be-buried,18443/
---     http://videos.theonion.com/onion_video/auto/18443/oprah-invites-hundreds-of-lucky-fans-to-be-buried-iphone.m4v
-
-    if (video.requested_format == "ipad") then
-        _,_,s = page:find('autoplay src="(.-)"')
-        s     = s or error ("no match: ipad url")
-    end
-
-    s         = "http://videos.theonion.com/onion_video/auto/"..(video.id).."/"..(s).."-iphone.m4v"
+    s           = "http://videos.theonion.com/onion_video/auto/"
+                    .. (video.id)
+                    .. "/"
+                    .. (s)
+                    .."-iphone.m4v"
     video.url   = {quvi.unescape(s)}
 
     return video
