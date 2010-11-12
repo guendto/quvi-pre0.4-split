@@ -30,7 +30,7 @@ option "exec"
     optional
 
 option "no-shortened"
-    - "Do not decompress shortened URLs"
+    s "Do not decompress shortened URLs"
     optional
 option "no-verify"
     n "Do not verify video link"

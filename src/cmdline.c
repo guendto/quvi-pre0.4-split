@@ -41,7 +41,7 @@ const char *gengetopt_args_info_help[] = {
   "  -q, --quiet                Turn off output to stderr",
   "      --verbose-libcurl      Turn on libcurl verbose mode",
   "      --exec=arg             Invoke arg after parsing",
-  "      --no-shortened         Do not decompress shortened URLs",
+  "  -s, --no-shortened         Do not decompress shortened URLs",
   "  -n, --no-verify            Do not verify video link",
   "      --page-title=arg       Check that parsed page title matches arg",
   "      --video-id=arg         Check that parsed video ID matches arg",
@@ -658,7 +658,7 @@ cmdline_parser_internal (
         { "quiet",	0, NULL, 'q' },
         { "verbose-libcurl",	0, NULL, 0 },
         { "exec",	1, NULL, 0 },
-        { "no-shortened",	0, NULL, 0 },
+        { "no-shortened",	0, NULL, 's' },
         { "no-verify",	0, NULL, 'n' },
         { "page-title",	1, NULL, 0 },
         { "video-id",	1, NULL, 0 },
@@ -675,7 +675,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hqnadt:f:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hqsnadt:f:", long_options, &option_index);
 
       if (c == -1) break;	/* Exit from `while (1)' loop.  */
 
@@ -694,6 +694,18 @@ cmdline_parser_internal (
               &(local_args_info.quiet_given), optarg, 0, 0, ARG_NO,
               check_ambiguity, override, 0, 0,
               "quiet", 'q',
+              additional_error))
+            goto failure;
+        
+          break;
+        case 's':	/* Do not decompress shortened URLs.  */
+        
+        
+          if (update_arg( 0 , 
+               0 , &(args_info->no_shortened_given),
+              &(local_args_info.no_shortened_given), optarg, 0, 0, ARG_NO,
+              check_ambiguity, override, 0, 0,
+              "no-shortened", 's',
               additional_error))
             goto failure;
         
@@ -854,20 +866,6 @@ cmdline_parser_internal (
                 &(local_args_info.exec_given), optarg, 0, 0, ARG_STRING,
                 check_ambiguity, override, 0, 0,
                 "exec", '-',
-                additional_error))
-              goto failure;
-          
-          }
-          /* Do not decompress shortened URLs.  */
-          else if (strcmp (long_options[option_index].name, "no-shortened") == 0)
-          {
-          
-          
-            if (update_arg( 0 , 
-                 0 , &(args_info->no_shortened_given),
-                &(local_args_info.no_shortened_given), optarg, 0, 0, ARG_NO,
-                check_ambiguity, override, 0, 0,
-                "no-shortened", '-',
                 additional_error))
               goto failure;
           
