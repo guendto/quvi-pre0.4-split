@@ -1,25 +1,50 @@
 
-Undeclared errors when upgrading
+UNDECLARED ERRORS
+=================
 
-Example: upgrading to 0.2.8
+EXAMPLE
+
+Upgrading to 0.2.8
 
 % make
 ...
 lib/quvi.c:225:10: error: 'QUVIOPT_NOSHORTENED' undeclared (first use in this function)
 ...
 
-Cause: AM_ICONV sets CPPFLAGS which contains -I$dir that points to the location
-of an old quvi.h from a previous installation without the enum. This -I$dir
-is then prepended to the list of other -I when "make" is called, which causes
-the compiler to pick the first quvi.h (from the old installation) and croak
-with the above error.
+CAUSE
 
-Workarounds:
-  * Uninstall the old version, or:
+AM_ICONV adds `-I' option to CPPFLAGS. If that path contains an old quvi/quvi.h
+file, you will see the above error when you run `make'.
+
+From <http://www.gnu.org/software/make/manual/make.html#Catalogue-of-Rules>:
+
+  Compiling C programs
+    n.o is made automatically from n.c with a recipe of the
+    form ‘$(CC) $(CPPFLAGS) $(CFLAGS) -c’.
+
+POSSIBLE WORKAROUNDS
+
+  * Uninstall the old version of quvi (recommended)
+
+  Or:
+
   * Edit manually the CPPFLAGS in
+
     Makefile
     lib/Makefile
     src/Makefile
     removing the -I$dir
 
-If you've found an elegant fix to this, please let us know.
+        Note however that this may mess up the libiconv integration
+        with quvi.
+
+REFERENCES
+
+  * <http://www.gnu.org/software/hello/manual/gettext/AM_005fICONV.html>
+    "... it adds an ‘-I’ option to CPPFLAGS if necessary."
+
+NOTES
+
+We'd prefer to fix this at the upstream if we knew how to.
+The CPPFLAGS cannot obviously be overlooked either, otherwise
+libiconv integration will result in errors on some configurations.
