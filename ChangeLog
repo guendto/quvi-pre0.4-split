@@ -1,6 +1,6 @@
 Revision history for quvi.
 
-0.2.8
+0.2.8  Sat Nov 13 2010  legatvs
 Changes:
         - Mark as broken: bloomberg.lua
         - Bump lib interface c+1:0:a+1, backwards compatible with previous release
@@ -14,7 +14,7 @@ Changes:
         - content_type.lua: check for content-type "text/html", assume error
         - Handle errors generated in util/*.lua scripts more discreetly
 Bugfixes:
-        - theonion.lua: thanks to mkolve for the fix (##3107788)
+        - theonion.lua: thanks to mkolve for the fix (#3107788)
         - sevenload.lua: title parsing
         - JSON: escape double quotation marks in title
 
