@@ -11,6 +11,10 @@ Upgrading to 0.2.8
 lib/quvi.c:225:10: error: 'QUVIOPT_NOSHORTENED' undeclared (first use in this function)
 ...
 
+CONFIRMED
+
+  * Arch Linux cross-compiling with mingw32
+
 CAUSE
 
 AM_ICONV adds `-I' option to CPPFLAGS. If that path contains an old quvi/quvi.h
@@ -35,8 +39,7 @@ POSSIBLE WORKAROUNDS
     src/Makefile
     removing the -I$dir
 
-        Note however that this may mess up the libiconv integration
-        with quvi.
+        This may, however, mess up the libiconv integration with quvi.
 
 REFERENCES
 
@@ -45,6 +48,6 @@ REFERENCES
 
 NOTES
 
-We'd prefer to fix this at the upstream if we knew how to.
-The CPPFLAGS cannot obviously be overlooked either, otherwise
-libiconv integration will result in errors on some configurations.
+We'd prefer to fix this at the upstream if we knew how to. The CPPFLAGS cannot
+obviously be overlooked either, otherwise libiconv integration will result in
+errors on some configurations.
