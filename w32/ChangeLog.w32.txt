@@ -1,5 +1,8 @@
 Revision history for quvi (w32) binaries.
 
+0.2.8  Sat Nov 13 2010  legatvs
+         - Bump, read ChangeLog.txt for details
+
 0.2.7  Wed Oct 20 2010
          - Bump, read ChangeLog.txt for details
          - Upgrade libcurl to 7.21.1
