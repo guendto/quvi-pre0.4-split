@@ -104,11 +104,28 @@ l_quvi_fetch (lua_State *l) {
     rc = fetch_to_mem (qv, url, lua_tostring (l,1), st, &data);
 
     if (rc == QUVI_OK) {
-        luaL_buffinit (l, &b);
-        luaL_addstring (&b, data);
-        luaL_pushresult (&b);
-        _free (data);
+
+        if (data != NULL) {
+
+            luaL_buffinit (l, &b);
+            luaL_addstring (&b, data);
+            luaL_pushresult (&b);
+            _free (data);
+
+        }
+
+        else {
+
+        /* Rare. Server returns an empty page (no content). Possibly related
+         * to a proxy software in use. cURL returns CURLE_OK so the only way
+         * we can tell this is by checking the data pointer (==NULL). */
+
+            luaL_error (l,
+                "server returned no data (quvicode=%d, curlcode=0)", rc);
+        }
+
     }
+
     else {
         _free (data);
         luaL_error (l, qv->quvi->errmsg);
