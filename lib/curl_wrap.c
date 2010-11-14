@@ -79,7 +79,7 @@ fetch_to_mem(
     if (!dst)
         return (QUVI_INVARG);
 
-    *dst = 0;
+    *dst = NULL;
 
     if (quvi->status_func) {
         if (quvi->status_func(
@@ -175,7 +175,7 @@ query_file_length(_quvi_t quvi, llst_node_t lnk) {
         return (QUVI_BADHANDLE);
 
     qvl = (_quvi_video_link_t) lnk->data;
-    assert(qvl != 0);
+    assert (qvl != NULL);
 
     if (!qvl)
         return (QUVI_BADHANDLE);
