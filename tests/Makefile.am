@@ -19,6 +19,7 @@ support-funnyordie.pl\
 support-golem.pl\
 support-liveleak.pl\
 support-myubo.pl\
+support-sapo.pl\
 support-sevenload.pl\
 support-spiegel.pl\
 support-theonion.pl\

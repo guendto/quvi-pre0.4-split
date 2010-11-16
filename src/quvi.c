@@ -379,6 +379,7 @@ dump_error(quvi_t quvi, QUVIcode rc, opts_s opts) {
 }
 
 static const char *tests[] = {
+"http://videos.sapo.pt/hd4ZBIHG80zFviLc5YEa",
 "http://www.dailymotion.com/video/xdpig1_city-of-scars_shortfilms",
 "http://www.spiegel.de/video/video-1012582.html",
 "http://vimeo.com/1485507",
