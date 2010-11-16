@@ -1,6 +1,8 @@
 Revision history for quvi.
 
 0.2.9
+Changes:
+        - Add support for videos.sapo.pt (f#3106606)
 Bugfixes:
         - l_quvi_fetch: check data != NULL
 
