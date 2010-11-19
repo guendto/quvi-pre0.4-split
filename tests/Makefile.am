@@ -13,7 +13,7 @@ support-charlierose.pl\
 support-clipfish.pl\
 support-collegehumor.pl\
 support-dailymotion.pl\
-support-evisor.pl\
+support-gaskrank.pl\
 support-funnyhub.pl\
 support-funnyordie.pl\
 support-golem.pl\

@@ -213,7 +213,7 @@ EXTRA_DIST = quviTest.pm.in $(TESTS) $(TESTS_POD) $(TESTS_NSFW)
 @HAVE_PERL_TRUE@TESTS = nosupport-eval.pl support-shortened.pl \
 @HAVE_PERL_TRUE@	support-break.pl support-charlierose.pl \
 @HAVE_PERL_TRUE@	support-clipfish.pl support-collegehumor.pl \
-@HAVE_PERL_TRUE@	support-dailymotion.pl support-evisor.pl \
+@HAVE_PERL_TRUE@	support-dailymotion.pl support-gaskrank.pl \
 @HAVE_PERL_TRUE@	support-funnyhub.pl support-funnyordie.pl \
 @HAVE_PERL_TRUE@	support-golem.pl support-liveleak.pl \
 @HAVE_PERL_TRUE@	support-myubo.pl support-sapo.pl \

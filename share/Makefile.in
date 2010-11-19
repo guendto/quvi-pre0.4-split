@@ -72,7 +72,7 @@ am__nobase_dist_pkgdata_DATA_DIST = lua/README \
 	lua/website/academicearth.lua lua/website/break.lua \
 	lua/website/buzzhumor.lua lua/website/collegehumor.lua \
 	lua/website/charlierose.lua lua/website/clipfish.lua \
-	lua/website/dailymotion.lua lua/website/evisor.lua \
+	lua/website/dailymotion.lua lua/website/gaskrank.lua \
 	lua/website/funnyhub.lua lua/website/funnyordie.lua \
 	lua/website/golem.lua lua/website/google.lua \
 	lua/website/liveleak.lua lua/website/myubo.lua \
@@ -257,7 +257,7 @@ DIST_lua = lua/README lua/util/content_type.lua lua/util/charset.lua \
 	lua/website/academicearth.lua lua/website/break.lua \
 	lua/website/buzzhumor.lua lua/website/collegehumor.lua \
 	lua/website/charlierose.lua lua/website/clipfish.lua \
-	lua/website/dailymotion.lua lua/website/evisor.lua \
+	lua/website/dailymotion.lua lua/website/gaskrank.lua \
 	lua/website/funnyhub.lua lua/website/funnyordie.lua \
 	lua/website/golem.lua lua/website/google.lua \
 	lua/website/liveleak.lua lua/website/myubo.lua \

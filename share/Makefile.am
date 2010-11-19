@@ -12,7 +12,7 @@ lua/website/collegehumor.lua \
 lua/website/charlierose.lua \
 lua/website/clipfish.lua \
 lua/website/dailymotion.lua \
-lua/website/evisor.lua \
+lua/website/gaskrank.lua \
 lua/website/funnyhub.lua \
 lua/website/funnyordie.lua \
 lua/website/golem.lua \

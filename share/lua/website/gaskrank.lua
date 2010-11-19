@@ -19,7 +19,7 @@
 -- Identify the script.
 function ident (page_url)
     local t   = {}
-    t.domain  = "evisor.tv"
+    t.domain  = "gaskrank.tv"
     t.formats = "default"
     t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
     return t
@@ -27,7 +27,7 @@ end
 
 -- Parse video URL.
 function parse (video)
-    video.host_id = "evisor"
+    video.host_id = "gaskrank"
     local page    = quvi.fetch(video.page_url)
 
     local _,_,s = page:find('<meta name="description" content="(.-)"')
