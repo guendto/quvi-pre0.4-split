@@ -1,95 +1,84 @@
 package "quvi"
-version ""
-
-option "version"
+    version ""
+    option "version"
     - "Print version and exit"
     optional
-option "license"
+    option "license"
     - "Print license and exit"
     optional
-option "support"
+    option "support"
     - "Print supported websites and exit"
     optional
-
-option "xml"
+    option "xml"
     - "Print details in XML"
     optional
-option "old"
+    option "old"
     - "Print details in original format"
     optional
-option "quiet"
+    option "quiet"
     q "Turn off output to stderr"
     optional
-option "verbose-libcurl"
+    option "verbose-libcurl"
     - "Turn on libcurl verbose mode"
     optional
-
-option "exec"
+    option "exec"
     - "Invoke arg after parsing"
-    string typestr="arg"
+    string typestr = "arg"
     optional
-
-option "no-shortened"
+    option "no-shortened"
     s "Do not decompress shortened URLs"
     optional
-option "no-verify"
+    option "no-verify"
     n "Do not verify video link"
     optional
-
-option "page-title"
+    option "page-title"
     - "Check that parsed page title matches arg"
-    string typestr="arg"
+    string typestr = "arg"
     optional
-option "video-id"
+    option "video-id"
     - "Check that parsed video ID matches arg"
-    string typestr="arg"
+    string typestr = "arg"
     optional
-option "file-length"
+    option "file-length"
     - "Check that parsed video length matches arg"
-    double typestr="arg"
+    double typestr = "arg"
     optional
-option "file-suffix"
+    option "file-suffix"
     - "Check that parsed video suffix matches arg"
-    string typestr="arg"
+    string typestr = "arg"
     optional
-
-option "test-all"
+    option "test-all"
     a "Run built-in tests"
     optional
-option "dump"
+    option "dump"
     d "Dump video details with --test-all"
-    dependon="test-all"
+    dependon = "test-all"
     optional
-option "test"
+    option "test"
     t "Pattern to match to built-in test URLs"
-    string typestr="arg"
+    string typestr = "arg"
     optional
-
-option "format"
+    option "format"
     f "Video format to query"
-    string typestr="arg"
-    default="default"
+    string typestr = "arg"
+    default = "default"
     optional
-
-option "agent"
+    option "agent"
     - "Identify as arg"
-    string typestr="arg"
-    default="Mozilla/5.0"
+    string typestr = "arg"
+    default = "Mozilla/5.0"
     optional
-option "proxy"
+    option "proxy"
     - "Use proxy for HTTP connections"
-    string typestr="arg"
+    string typestr = "arg"
     optional
-option "no-proxy"
+    option "no-proxy"
     - "Disable use of HTTP proxy"
     optional
-option "connect-timeout"
+    option "connect-timeout"
     - "Seconds connecting allowed to take"
-    int typestr="arg"
-    default="30"
+    int typestr = "arg"
+    default = "30"
     optional
-
-text "\nExample: quvi YOUTUBE_URL -f sd_270p"
-text "\n         quvi URL --exec \"/usr/bin/vlc %u\""
-
-
+    text "\nExample: quvi YOUTUBE_URL -f sd_270p"
+    text "\n         quvi URL --exec \"/usr/bin/vlc %u\""

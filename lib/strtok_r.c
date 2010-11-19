@@ -26,47 +26,45 @@
 #include "platform.h"
 
 /** Copied from GNU C Library with minor changes. */
-char *
-strtok_r (char *s, const char *delim, char **saveptr) {
-    char *t;
+char *strtok_r(char *s, const char *delim, char **saveptr)
+{
+  char *t;
 
-    if (!s)
-        s = *saveptr;
+  if (!s)
+    s = *saveptr;
 
-    s += strspn(s, delim);
+  s += strspn(s, delim);
 
-    if (*s == '\0') {
-        *saveptr = s;
-        return (0);
-    }
+  if (*s == '\0') {
+    *saveptr = s;
+    return (0);
+  }
 
-    t = s;
-    if ( !(s = strpbrk(t, delim)) )
-        *saveptr = strchr(t, '\0');
-    else {
-        *s = '\0';
-        *saveptr = s+1;
-    }
-    return (t);
+  t = s;
+  if (!(s = strpbrk(t, delim)))
+    *saveptr = strchr(t, '\0');
+  else {
+    *s = '\0';
+    *saveptr = s + 1;
+  }
+  return (t);
 }
 
 #ifdef TEST_STRTOK_R
-int
-main (int argc, char **argv) {
-    char *t, *tmp, *dup;
-    if (argc < 3) {
-        fprintf(stderr, "usage: strtok_r [string] [delim]\n");
-        return (0);
-    }
-    dup = strdup(argv[1]);
-    t = strtok_r(dup, argv[2], &tmp);
-    while (t) {
-        puts(t);
-        t = strtok_r(0, argv[2], &tmp);
-    }
-    free(dup);
+int main(int argc, char **argv)
+{
+  char *t, *tmp, *dup;
+  if (argc < 3) {
+    fprintf(stderr, "usage: strtok_r [string] [delim]\n");
     return (0);
+  }
+  dup = strdup(argv[1]);
+  t = strtok_r(dup, argv[2], &tmp);
+  while (t) {
+    puts(t);
+    t = strtok_r(0, argv[2], &tmp);
+  }
+  free(dup);
+  return (0);
 }
 #endif
-
-
