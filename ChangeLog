@@ -2,6 +2,7 @@ Revision history for quvi.
 
 0.2.9
 Changes:
+        - Coding style changes, added doc/CodingStyle
         - evisor.lua -> gasgrank.lua
         - Add support for videos.sapo.pt (f#3106606)
 Bugfixes:
