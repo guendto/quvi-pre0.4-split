@@ -1,0 +1,11 @@
+
+
+Coding style
+================
+
+We use `indent -linux --no-tabs -i2` for C.
+
+
+LUA
+
+Liberal, see the snippets in share/lua/ to get an idea.
