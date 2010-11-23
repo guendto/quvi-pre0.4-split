@@ -20,7 +20,6 @@
 #include <assert.h>
 #include <string.h>
 
-#include <pcre.h>
 #include <curl/curl.h>
 
 #include "quvi/quvi.h"

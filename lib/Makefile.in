@@ -250,8 +250,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 liblua_CFLAGS = @liblua_CFLAGS@
 liblua_LIBS = @liblua_LIBS@
-libpcre_CFLAGS = @libpcre_CFLAGS@
-libpcre_LIBS = @libpcre_LIBS@
 localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
@@ -290,12 +288,10 @@ libquvi_la_CFLAGS = \
 -DDATADIR='"$(datadir)"' \
 -DPKGDATADIR='"$(pkgdatadir)"' \
 $(libcurl_CFLAGS) \
-$(libpcre_CFLAGS) \
 $(liblua_CFLAGS)
 
 libquvi_la_LDFLAGS = \
 $(libcurl_LIBS) \
-$(libpcre_LIBS) \
 $(liblua_LIBS) \
 $(LIBICONV) \
 $(LTLIBICONV) \

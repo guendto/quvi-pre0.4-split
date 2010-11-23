@@ -1,5 +1,8 @@
 Revision history for quvi (w32) binaries.
 
+0.2.9
+        - Remove libpcre
+
 0.2.8  Sat Nov 13 2010  legatvs
          - Bump, read ChangeLog.txt for details
 

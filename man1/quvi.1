@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-11-12" "0.2.8" "quvi manual"
+.TH quvi 1 "2010-11-23" "0.2.9" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -235,7 +235,7 @@ more examples:
 .Sp
 As long as the built-in \s-1URL\s0 contains the pattern, it can be
 matched. Like \f(CW\*(C`\-\-page\-title\*(C'\fR and friends, this feature is
-intended to be used by libquvi tests.
+intended to be used by the libquvi package tests primarily.
 .IP "\fB\-f, \-\-format\fR \fIarg\fR" 4
 .IX Item "-f, --format arg"
 Query for video format \fIarg\fR. You can get a list of the formats
@@ -328,7 +328,7 @@ quvi exits with 0 on success and >0 if an error occurred.
 \&  QUVI_LUAINIT          = 0x07, Lua initialization failure
 \&  QUVI_NOLUAWEBSITE     = 0x08, Failed to find lua website scripts
 \&  \-\-
-\&  QUVI_PCRE             = 0x40, libpcre error occurred
+\&  QUVI_PCRE             = 0x40, libpcre error occurred, deprecated 0.2.9+
 \&  QUVI_NOSUPPORT        = 0x41, libquvi does not support the video host
 \&  QUVI_CURL             = 0x42, libcurl error occurred
 \&  QUVI_ICONV            = 0x43, libiconv error occurred

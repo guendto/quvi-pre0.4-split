@@ -125,7 +125,7 @@ more examples:
 
 As long as the built-in URL contains the pattern, it can be
 matched. Like C<--page-title> and friends, this feature is
-intended to be used by libquvi tests.
+intended to be used by the libquvi package tests primarily.
 
 =item B<-f, --format> I<arg>
 
@@ -244,7 +244,7 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
   QUVI_LUAINIT          = 0x07, Lua initialization failure
   QUVI_NOLUAWEBSITE     = 0x08, Failed to find lua website scripts
   --
-  QUVI_PCRE             = 0x40, libpcre error occurred
+  QUVI_PCRE             = 0x40, libpcre error occurred, deprecated 0.2.9+
   QUVI_NOSUPPORT        = 0x41, libquvi does not support the video host
   QUVI_CURL             = 0x42, libcurl error occurred
   QUVI_ICONV            = 0x43, libiconv error occurred
