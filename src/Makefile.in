@@ -68,7 +68,7 @@ quvi_OBJECTS = $(am_quvi_OBJECTS)
 am__DEPENDENCIES_1 =
 @ENABLE_QUVI_TRUE@quvi_DEPENDENCIES = $(top_builddir)/lib/libquvi.la \
 @ENABLE_QUVI_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-@ENABLE_QUVI_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+@ENABLE_QUVI_TRUE@	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
@@ -229,8 +229,6 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 liblua_CFLAGS = @liblua_CFLAGS@
 liblua_LIBS = @liblua_LIBS@
-libpcre_CFLAGS = @libpcre_CFLAGS@
-libpcre_LIBS = @libpcre_LIBS@
 localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
@@ -264,13 +262,11 @@ top_srcdir = @top_srcdir@
 @ENABLE_QUVI_TRUE@quvi_CFLAGS = \
 @ENABLE_QUVI_TRUE@    -I$(top_builddir)/include \
 @ENABLE_QUVI_TRUE@    -I$(top_srcdir)/lib \
-@ENABLE_QUVI_TRUE@    $(libcurl_CFLAGS) \
-@ENABLE_QUVI_TRUE@    $(libpcre_CFLAGS)
+@ENABLE_QUVI_TRUE@    $(libcurl_CFLAGS)
 
 @ENABLE_QUVI_TRUE@quvi_LDADD = \
 @ENABLE_QUVI_TRUE@    $(top_builddir)/lib/libquvi.la \
 @ENABLE_QUVI_TRUE@    $(libcurl_LIBS) \
-@ENABLE_QUVI_TRUE@    $(libpcre_LIBS) \
 @ENABLE_QUVI_TRUE@    $(LIBICONV) \
 @ENABLE_QUVI_TRUE@    $(LTLIBICONV)
 

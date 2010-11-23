@@ -8,9 +8,6 @@ export CFLAGS="-Wall -Werror -Os -pipe -march=i686"
 export libcurl_CFLAGS="`$MINGW/bin/curl-config --cflags`"
 export libcurl_LIBS="`$MINGW/bin/curl-config --libs`"
 
-export libpcre_CFLAGS="`$MINGW/bin/pcre-config --cflags`"
-export libpcre_LIBS="`$MINGW/bin/pcre-config --libs`"
-
 export liblua_CFLAGS="-I$MINGW/include"
 export liblua_LIBS="-L$MINGW/lib -llua51"
 
@@ -24,7 +21,6 @@ pack_it()
     && make install-strip \
     && make pod2html \
     && cp -v $MINGW/bin/libcurl-4.dll dist/bin \
-    && cp -v $MINGW/bin/libpcre-0.dll dist/bin \
     && cp -v $MINGW/bin/libiconv-2.dll dist/bin \
     && cp -v $MINGW/bin/lua51.dll dist/bin \
     && mkdir -p dist/licenses \

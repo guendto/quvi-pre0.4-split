@@ -1,4 +1,12 @@
 
+
+0.2.9
+
+Removed the PCRE dependency. Since 0.2.0 and Lua we have had no longer
+real use for this. Changed -t of quvi(1) to use strstr(3) instead of
+pcre_*. Using the latter for this was an overkill.
+
+
 Version 0.2.0
 =============
 

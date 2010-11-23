@@ -21,13 +21,11 @@ quvi_SOURCES = $(src) $(hdr)
 quvi_CFLAGS = \
     -I$(top_builddir)/include \
     -I$(top_srcdir)/lib \
-    $(libcurl_CFLAGS) \
-    $(libpcre_CFLAGS)
+    $(libcurl_CFLAGS)
 
 quvi_LDADD =  \
     $(top_builddir)/lib/libquvi.la \
     $(libcurl_LIBS) \
-    $(libpcre_LIBS) \
     $(LIBICONV) \
     $(LTLIBICONV)
 endif

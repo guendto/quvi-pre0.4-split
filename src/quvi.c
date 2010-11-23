@@ -26,7 +26,6 @@
 #include <assert.h>
 
 #include <curl/curl.h>
-#include <pcre.h>
 
 #include "platform.h"
 
@@ -507,31 +506,17 @@ static const char *tests[] = {
 
 static void match_test(quvi_t quvi, opts_s opts, CURL * curl)
 {
-  int err_offset, rc, i;
-  const char *errmsg;
+  int i, no_match;
+  QUVIcode rc;
 
-  for (i = 0; tests[i]; ++i) {
-    pcre *re;
-
-    re = pcre_compile(opts.test_arg, PCRE_CASELESS, &errmsg, &err_offset, NULL);
-
-    if (!re) {
-      fprintf(stderr, "%s\n", errmsg);
-      cmdline_parser_free(&opts);
-      exit(QUVI_PCRE);
-    }
-
-    rc = pcre_exec(re, 0, tests[i], strlen(tests[i]), 0, 0, 0, 0);
-
-    pcre_free(re);
-
-    if (rc >= 0) {              /* match */
+  for (rc = QUVI_OK, no_match = 1, i = 0; tests[i]; ++i) {
+    if (strstr(tests[i], opts.test_arg) != NULL) {
       quvi_video_t v;
-      QUVIcode r;
 
-      r = quvi_parse(quvi, (char *)tests[i], &v);
-      if (r != QUVI_OK)
-        dump_error(quvi, r, opts);
+      no_match = 0;
+      rc = quvi_parse(quvi, (char *)tests[i], &v);
+      if (rc != QUVI_OK)
+        dump_error(quvi, rc, opts);
 
       dump_video(v, opts, curl);
       rc = check_values(v, opts);
@@ -541,30 +526,22 @@ static void match_test(quvi_t quvi, opts_s opts, CURL * curl)
         do {
           quvi_getprop(v, QUVIPROP_VIDEOURL, &video_url);
           invoke_exec(v, video_url, opts);
-        }
-        while (quvi_next_videolink(v) == QUVI_OK);
+        } while (quvi_next_videolink(v) == QUVI_OK);
       }
 
       quvi_parse_close(&v);
-
-      cmdline_parser_free(&opts);
-      quvi_close(&quvi);
-      exit(rc);
-    } else if (rc == PCRE_ERROR_NOMATCH) {
-      continue;
-    } else {
-      fprintf(stderr, "error: pcre_exec: rc = %d\n", rc);
-      cmdline_parser_free(&opts);
-      exit(QUVI_PCRE);
     }
   }
 
-  fprintf(stderr, "error: nothing matched `%s'\n", opts.test_arg);
+  if (no_match) {
+    fprintf(stderr, "error: nothing matched `%s'\n", opts.test_arg);
+    rc = QUVI_NOSUPPORT;
+  }
 
   cmdline_parser_free(&opts);
   quvi_close(&quvi);
 
-  exit(QUVI_PCRE);
+  exit(rc);
 }
 
 static void test_all(quvi_t quvi, opts_s opts, CURL * curl)

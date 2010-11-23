@@ -3,14 +3,12 @@
     Prerequisites
 
 * libcurl   7.18.0+  <http://curl.haxx.se/>
-* libpcre   7.8.0+   <http://pcre.org/>
 * libiconv  1.12.0+  <http://www.gnu.org/software/libiconv/>
 * (lib)lua  5.1+     <http://lua.org/>
 
   [libquvi]------\
-       |   \     [libcurl]
-   [liblua] \       \
-          [libpcre]  \
+       |         [libcurl]
+   [liblua]         \
                      [dragons be here]
 
 
