@@ -101,7 +101,38 @@ void quvi_close(quvi_t * handle)
   }
 }
 
+/* quvi_supported */
+
+
+QUVIcode quvi_supported(quvi_t quvi, char *url)
+{
+  _quvi_video_t video;
+  QUVIcode rc;
+
+  is_invarg(url);
+  is_badhandle(quvi);
+
+  video = calloc(1, sizeof(*video));
+  if (!video)
+    return (QUVI_MEM);
+
+  video->quvi = quvi;
+
+  setvid(video->page_link, "%s", url);
+
+  if (!video->quvi->no_shortened) {
+    rc = is_shortened_url(video);
+    if (rc != QUVI_OK)
+      return (rc);
+  }
+  rc = find_host_script(video);
+  free(video);
+
+  return (rc);
+}
+
 /* quvi_parse */
+
 
 QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t * dst)
 {
@@ -129,7 +160,7 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t * dst)
   }
 
   while (1) {
-    rc = find_host_script(video);
+    rc = find_host_script_and_parse(video);
     if (rc != QUVI_OK)
       return (rc);
     else {
