@@ -2,8 +2,11 @@ Revision history for quvi.
 
 0.2.9
 Changes:
-        - Thanks to Bastien Nocera for:
-            - "Add quvi_supported() public function" patch
+        - Thanks to Bastien Nocera for the following patches:
+            - Dailymotion: Handle embed URLs
+            - Add starttime for YouTube videos
+            - Add QUVIPROP_STARTTIME property
+            - Add quvi_supported() public function
         - Remove PCRE dependency
         - Coding style changes, added doc/CodingStyle
         - evisor.lua -> gasgrank.lua
