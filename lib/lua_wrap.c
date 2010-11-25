@@ -646,6 +646,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
   set_field(l, "page_url", video->page_link);
   set_field(l, "requested_format", video->quvi->format);
   set_field(l, "redirect", "");
+  set_field(l, "starttime", "");
 
   if (lua_pcall(l, 1, 1, 0)) {
     seterr("%s", lua_tostring(l, -1));
@@ -672,6 +673,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
       setvid(video->host_id, "%s", get_field_s(l, qls, "host_id"));
       setvid(video->title, "%s", get_field_s(l, qls, "title"));
       setvid(video->id, "%s", get_field_s(l, qls, "id"));
+      setvid(video->starttime, "%s", get_field_s(l, qls, "starttime"));
 
       rc = iter_video_url(l, qls, "url", video);
     }

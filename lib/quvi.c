@@ -345,6 +345,8 @@ static QUVIcode _getprop(_quvi_video_t video, QUVIproperty prop, ...)
     _setn(lp, video->quvi->httpcode);
   case QUVIPROP_VIDEOFORMAT:
     _sets(video->quvi->format);
+  case QUVIPROP_STARTTIME:
+    _sets(video->starttime);
   default:
     rc = QUVI_INVARG;
   }
