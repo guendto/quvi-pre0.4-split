@@ -220,6 +220,7 @@ void quvi_parse_close(quvi_video_t * handle)
     _free((*video)->page_link);
     _free((*video)->host_id);
     _free((*video)->redirect);
+    _free((*video)->starttime);
 
     _free(*video);
   }
