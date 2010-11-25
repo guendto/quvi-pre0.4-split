@@ -685,8 +685,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
 
 /* Match host script to the url. */
 
-static llst_node_t
-find_host_script_node(_quvi_video_t video, QUVIcode *error)
+static llst_node_t find_host_script_node(_quvi_video_t video, QUVIcode * error)
 {
   llst_node_t curr;
   _quvi_t quvi;
@@ -735,7 +734,7 @@ QUVIcode find_host_script(_quvi_video_t video)
   llst_node_t node;
   QUVIcode rc;
 
-  node = find_host_script_node (video, &rc);
+  node = find_host_script_node(video, &rc);
   if (node != NULL)
     return QUVI_OK;
   return (rc);

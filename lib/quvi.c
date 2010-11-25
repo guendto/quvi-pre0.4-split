@@ -103,7 +103,6 @@ void quvi_close(quvi_t * handle)
 
 /* quvi_supported */
 
-
 QUVIcode quvi_supported(quvi_t quvi, char *url)
 {
   _quvi_video_t video;
@@ -132,7 +131,6 @@ QUVIcode quvi_supported(quvi_t quvi, char *url)
 }
 
 /* quvi_parse */
-
 
 QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t * dst)
 {
