@@ -58,6 +58,9 @@ function parse (video)
     local _,_,s = page_url:find("v=([%w-_]+)")
     video.id    = s or error ("no match: video id")
 
+    local _,_,s = page_url:find('#t=(.+)')
+    video.starttime = s or ''
+
     local t,best = get_video_info (video)
     if (t == nil) then
         t,best = fallback_fetch (page_url, video)
