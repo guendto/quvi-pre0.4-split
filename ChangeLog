@@ -2,6 +2,8 @@ Revision history for quvi.
 
 0.2.9
 Changes:
+        - Thanks to Bastien Nocera for:
+            - "Add quvi_supported() public function" patch
         - Remove PCRE dependency
         - Coding style changes, added doc/CodingStyle
         - evisor.lua -> gasgrank.lua
