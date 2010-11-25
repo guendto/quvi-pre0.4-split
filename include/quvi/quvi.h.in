@@ -402,10 +402,21 @@ QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
 
 /** @} */ /* End of libquvi_getinfo group. */
 
-
 /** @defgroup libquvi_parse Parsing video links
  * @{
  */
+
+/**
+* @brief Checks whether the URL would be supported by one of the scripts
+*
+* @param quvi Handle to session
+* @param url Null-terminated string to an URL
+*
+* @note Close each created handle when done and/or before reusing it
+*
+* @return Non-zero if an error occurred
+*/
+QUVIcode quvi_supported(quvi_t quvi, char *url);
 
 /**
 * @brief Start a new video parsing session

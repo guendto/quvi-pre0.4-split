@@ -685,7 +685,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
 
 /* Match host script to the url. */
 
-QUVIcode find_host_script(_quvi_video_t video)
+static llst_node_t find_host_script_node(_quvi_video_t video, QUVIcode * error)
 {
   llst_node_t curr;
   _quvi_t quvi;
@@ -713,16 +713,52 @@ QUVIcode find_host_script(_quvi_video_t video)
 
     if (rc == QUVI_OK) {
       /* found script. */
-      return (run_parse_func(l, curr, video));
+      *error = rc;
+      return curr;
     } else if (rc != QUVI_NOSUPPORT) {
       /* script error. terminate. */
-      return (rc);
+      *error = rc;
+      return NULL;
     }
 
     curr = curr->next;
   }
 
-  seterr("no support: %s", video->page_link);
+  *error = QUVI_NOSUPPORT;
+  return NULL;
+}
 
-  return (QUVI_NOSUPPORT);
+/* Match host script to the url */
+QUVIcode find_host_script(_quvi_video_t video)
+{
+  llst_node_t node;
+  QUVIcode rc;
+
+  node = find_host_script_node(video, &rc);
+  if (node != NULL)
+    return QUVI_OK;
+  return (rc);
+}
+
+/* Match host script to the url and run parse func */
+QUVIcode find_host_script_and_parse(_quvi_video_t video)
+{
+  llst_node_t curr;
+  _quvi_t quvi;
+  lua_State *l;
+  QUVIcode rc;
+
+  qv = video;
+  quvi = video->quvi;           /* seterr macro uses this. */
+  curr = quvi->website_scripts;
+  l = quvi->lua;
+
+  curr = find_host_script_node(video, &rc);
+  if (curr == NULL) {
+    seterr("no support: %s", video->page_link);
+    return (rc);
+  }
+
+  /* found script. */
+  return (run_parse_func(l, curr, video));
 }
