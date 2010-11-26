@@ -518,8 +518,10 @@ static const char *tests[] = {
 
 static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
 {
+  if (rc != QUVI_NOSUPPORT)
+    fprintf(stderr, "\n");
 
-  fprintf(stderr, "\nerror: %s\n", quvi_strerror(quvi, rc));
+  fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
 
   if (!opts.test_all_given) {
     quvi_close(&quvi);
