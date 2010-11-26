@@ -2,7 +2,9 @@ Revision history for quvi.
 
 0.2.9
 Changes:
+        - Extend --support to use quvi_supported
         - Thanks to Bastien Nocera for the following patches:
+            - Never do network access in quvi_supported()
             - Dailymotion: Handle embed URLs
             - Add starttime for YouTube videos
             - Add QUVIPROP_STARTTIME property
