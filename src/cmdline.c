@@ -55,7 +55,7 @@ const char *gengetopt_args_info_help[] = {
   "      --proxy=arg            Use proxy for HTTP connections",
   "      --no-proxy             Disable use of HTTP proxy",
   "      --connect-timeout=arg  Seconds connecting allowed to take  (default=`30')",
-  "\nExample: quvi YOUTUBE_URL -f sd_270p\n         quvi URL --exec \"/usr/bin/vlc %u\"",
+  "\nExamples:\n  quvi YOUTUBE_URL -f webm_720p\n  quvi URL --exec \"/usr/bin/vlc %u\"\n  quvi --support\n  quvi --support URL",
   0
 };
 
