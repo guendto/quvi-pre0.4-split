@@ -159,16 +159,40 @@ static void version(opts_s opts)
   exit(0);
 }
 
-static void dump_website(char *domain, char *formats)
+static void dump_host(char *domain, char *formats)
 {
   printf("%s\t%s\n", domain, formats);
   quvi_free(domain);
   quvi_free(formats);
 }
 
-static void supports(quvi_t quvi, opts_s opts)
+/* Wraps quvi_supported. */
+static void supported(quvi_t quvi, opts_s opts)
+{
+  QUVIcode rc;
+  int i;
+
+  for (i = 0; i < opts.inputs_num; ++i) {
+    rc = quvi_supported(quvi, (char *)opts.inputs[i]);
+    if (rc == QUVI_OK)
+      spew_qe("%s: OK\n", (char *)opts.inputs[i]);
+    else
+      spew_qe("error: %s\n", quvi_strerror(quvi, rc));
+  }
+
+  quvi_close(&quvi);
+  cmdline_parser_free(&opts);
+
+  exit(rc);
+}
+
+/* dumps all supported hosts to stdout. */
+static void support(quvi_t quvi, opts_s opts)
 {
   int done = 0;
+
+  if (opts.inputs_num > 0)
+    supported(quvi, opts);
 
   while (!done) {
     char *domain, *formats;
@@ -178,7 +202,7 @@ static void supports(quvi_t quvi, opts_s opts)
 
     switch (rc) {
     case QUVI_OK:
-      dump_website(domain, formats);
+      dump_host(domain, formats);
       break;
     case QUVI_LAST:
       done = 1;
@@ -453,18 +477,6 @@ static int check_values(quvi_video_t video, opts_s opts)
   return (rc);
 }
 
-static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
-{
-
-  fprintf(stderr, "\nerror: %s\n", quvi_strerror(quvi, rc));
-
-  if (!opts.test_all_given) {
-    quvi_close(&quvi);
-    cmdline_parser_free(&opts);
-    exit(rc);
-  }
-}
-
 static const char *tests[] = {
   "http://videos.sapo.pt/hd4ZBIHG80zFviLc5YEa",
   "http://www.dailymotion.com/video/xdpig1_city-of-scars_shortfilms",
@@ -503,6 +515,18 @@ static const char *tests[] = {
 
   NULL
 };
+
+static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
+{
+
+  fprintf(stderr, "\nerror: %s\n", quvi_strerror(quvi, rc));
+
+  if (!opts.test_all_given) {
+    quvi_close(&quvi);
+    cmdline_parser_free(&opts);
+    exit(rc);
+  }
+}
 
 static void match_test(quvi_t quvi, opts_s opts, CURL * curl)
 {
@@ -687,7 +711,7 @@ int main(int argc, char *argv[])
   quvi = init_quvi(opts, &curl);
 
   if (opts.support_given)
-    supports(quvi, opts);
+    support(quvi, opts);
 
   /* User input */
 

@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-11-23" "0.2.9" "quvi manual"
+.TH quvi 1 "2010-11-26" "0.2.9" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -154,7 +154,8 @@ Print program version and exit.
 Print license and exit.
 .IP "\fB\-\-support\fR" 4
 .IX Item "--support"
-Print supported hosts and exit.
+Print supported hosts and exit. To check if an \s-1URL\s0 is supported, specify
+an \s-1URL\s0 as an argument to the program. See \*(L"\s-1EXAMPLES\s0\*(R".
 .IP "\fB\-\-xml\fR" 4
 .IX Item "--xml"
 Print the details in \s-1XML\s0 (instead of \s-1JSON\s0). URLs are escaped (\s-1URL\s0 encoded,
@@ -262,6 +263,14 @@ Default is 30.
 .IP "quvi \s-1URL\s0" 4
 .IX Item "quvi URL"
 Test \s-1URL\s0.
+.IP "quvi \-\-support" 4
+.IX Item "quvi --support"
+Dump all supported websites.
+.IP "quvi \-\-support \s-1URL\s0" 4
+.IX Item "quvi --support URL"
+Check if \s-1URL\s0 is supported. Note that some of the shortened URLs will
+fail with this. quvi exit status will be the last exit status of the
+last checked \s-1URL\s0. See also \*(L"\s-1EXIT\s0 \s-1STATUS\s0\*(R".
 .IP "quvi \-a" 4
 .IX Item "quvi -a"
 Run all built-in host tests.

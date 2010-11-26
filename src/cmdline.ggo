@@ -91,3 +91,5 @@ option "connect-timeout"
 
 text "\nExample: quvi YOUTUBE_URL -f sd_270p"
 text "\n         quvi URL --exec \"/usr/bin/vlc %u\""
+text "\n         quvi --support"
+text "\n         quvi --support URL"

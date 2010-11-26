@@ -34,7 +34,8 @@ Print license and exit.
 
 =item B<--support>
 
-Print supported hosts and exit.
+Print supported hosts and exit. To check if an URL is supported, specify
+an URL as an argument to the program. See L</EXAMPLES>.
 
 =item B<--xml>
 
@@ -162,6 +163,16 @@ Default is 30.
 =item quvi URL
 
 Test URL.
+
+=item quvi --support
+
+Dump all supported websites.
+
+=item quvi --support URL
+
+Check if URL is supported. Note that some of the shortened URLs will
+fail with this. quvi exit status will be the last exit status of the
+last checked URL. See also L</EXIT STATUS>.
 
 =item quvi -a
 
