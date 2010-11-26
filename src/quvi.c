@@ -533,6 +533,9 @@ static void match_test(quvi_t quvi, opts_s opts, CURL * curl)
   int i, no_match;
   QUVIcode rc;
 
+  /* None of our tests (should) use shortened URLs. */
+  quvi_setopt(quvi, QUVIOPT_NOSHORTENED, 1L);
+
   for (rc = QUVI_OK, no_match = 1, i = 0; tests[i]; ++i) {
     if (strstr(tests[i], opts.test_arg) != NULL) {
       quvi_video_t v;
@@ -573,6 +576,9 @@ static void test_all(quvi_t quvi, opts_s opts, CURL * curl)
   quvi_video_t video;
   QUVIcode rc;
   int i, m;
+
+  /* None of our tests (should) use shortened URLs. */
+  quvi_setopt(quvi, QUVIOPT_NOSHORTENED, 1L);
 
   spew_qe(":: Run built-in video link tests.\n");
   for (m = 0; tests[m]; ++m) ;
