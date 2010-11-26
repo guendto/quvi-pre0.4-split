@@ -687,12 +687,11 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
 
 /* Match host script to the url. */
 
-static llst_node_t find_host_script_node(_quvi_video_t video, QUVIcode * error)
+static llst_node_t find_host_script_node(_quvi_video_t video, QUVIcode * rc)
 {
   llst_node_t curr;
   _quvi_t quvi;
   lua_State *l;
-  QUVIcode rc;
 
   qv = video;
   quvi = video->quvi;           /* seterr macro uses this. */
@@ -708,58 +707,52 @@ static llst_node_t find_host_script_node(_quvi_video_t video, QUVIcode * error)
     ident.formats = NULL;
 
     /* check if script ident this url. */
-    rc = run_ident_func(&ident, curr);
+    *rc = run_ident_func(&ident, curr);
 
     _free(ident.domain);
     _free(ident.formats);
 
-    if (rc == QUVI_OK) {
-      /* found script. */
-      *error = rc;
+    if (*rc == QUVI_OK) {
+      /* found a script. */
       return (curr);
-    } else if (rc != QUVI_NOSUPPORT) {
-      /* script error. terminate. */
-      *error = rc;
+    } else if (*rc != QUVI_NOSUPPORT) {
+      /* a script error. terminate. */
       return (NULL);
     }
 
     curr = curr->next;
   }
 
+  /* in rc, set by run_ident_func, we trust. */
   seterr("no support: %s", video->page_link);
-  *error = QUVI_NOSUPPORT;
+
   return (NULL);
 }
 
 /* Match host script to the url */
 QUVIcode find_host_script(_quvi_video_t video)
 {
-  llst_node_t node;
   QUVIcode rc;
-
-  node = find_host_script_node(video, &rc);
-  if (node != NULL)
-    return (QUVI_OK);
+  find_host_script_node(video, &rc);
   return (rc);
 }
 
 /* Match host script to the url and run parse func */
 QUVIcode find_host_script_and_parse(_quvi_video_t video)
 {
-  llst_node_t curr;
+  llst_node_t script;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
 
   qv = video;
   quvi = video->quvi;           /* seterr macro uses this. */
-  curr = quvi->website_scripts;
   l = quvi->lua;
 
-  curr = find_host_script_node(video, &rc);
-  if (curr == NULL)
+  script = find_host_script_node(video, &rc);
+  if (script == NULL)
     return (rc);
 
-  /* found script. */
-  return (run_parse_func(l, curr, video));
+  /* found a script. */
+  return (run_parse_func(l, script, video));
 }
