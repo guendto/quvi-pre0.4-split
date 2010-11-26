@@ -478,7 +478,6 @@ QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
 * @param url Null-terminated string to an URL
 *
 * @note
-*   - Close each created handle when done and/or before reusing it
 *   - Returns QUVI_NOSUPPORT for most shortened URLs
 *   - Only exceptions are those that have been hardcoded to lua scripts
 *   as "official" shorteners for those websites (e.g. youtu.be or
