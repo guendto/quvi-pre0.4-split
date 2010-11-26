@@ -120,7 +120,8 @@ QUVIcode quvi_supported(quvi_t quvi, char *url)
   setvid(video->page_link, "%s", url);
 
   rc = find_host_script(video);
-  free(video);
+
+  quvi_parse_close((quvi_video_t) & video);
 
   return (rc);
 }
