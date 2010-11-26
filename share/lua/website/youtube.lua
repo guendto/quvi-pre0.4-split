@@ -35,6 +35,25 @@ local lookup = {
     tgp_144p  = '17'
 }
 
+local domains = {
+    "youtube.com",
+    "youtube-nocookie.com",
+    "youtu.be"
+}
+
+-- Check whether the domain is handled
+function is_handled (page_url)
+    if page_url == nil then
+        return false
+    end
+    for k,domain in pairs(domains) do
+        if page_url:find(domain) ~= nil then
+            return true
+        end
+    end
+    return false
+end
+
 -- Identify the script.
 function ident (page_url)
     local t   = {}
@@ -47,7 +66,7 @@ function ident (page_url)
     if (page_url ~= nil) then
         page_url = youtubify(page_url)
     end
-    t.handles = (page_url ~= nil and page_url:find (t.domain) ~= nil)
+    t.handles = is_handled(page_url)
     return t
 end
 

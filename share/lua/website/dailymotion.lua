@@ -16,12 +16,30 @@
 -- You should have received a copy of the GNU General Public License
 -- along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+local domains = {
+    "dailymotion.",
+    "dai.ly"
+}
+
+-- Check whether the domain is handled
+function is_handled (page_url)
+    if page_url == nil then
+        return false
+    end
+    for k,domain in pairs(domains) do
+        if page_url:find(domain) ~= nil then
+            return true
+        end
+    end
+    return false
+end
+
 -- Identify the script.
 function ident (page_url)
     local t   = {}
     t.domain  = "dailymotion."
     t.formats = "default|best|hq|hd"
-    t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
+    t.handles = is_handled(page_url)
     return t
 end
 

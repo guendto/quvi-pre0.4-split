@@ -119,11 +119,6 @@ QUVIcode quvi_supported(quvi_t quvi, char *url)
 
   setvid(video->page_link, "%s", url);
 
-  if (!video->quvi->no_shortened) {
-    rc = is_shortened_url(video);
-    if (rc != QUVI_OK)
-      return (rc);
-  }
   rc = find_host_script(video);
   free(video);
 
