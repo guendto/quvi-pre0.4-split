@@ -716,18 +716,19 @@ static llst_node_t find_host_script_node(_quvi_video_t video, QUVIcode * error)
     if (rc == QUVI_OK) {
       /* found script. */
       *error = rc;
-      return curr;
+      return (curr);
     } else if (rc != QUVI_NOSUPPORT) {
       /* script error. terminate. */
       *error = rc;
-      return NULL;
+      return (NULL);
     }
 
     curr = curr->next;
   }
 
+  seterr("no support: %s", video->page_link);
   *error = QUVI_NOSUPPORT;
-  return NULL;
+  return (NULL);
 }
 
 /* Match host script to the url */
@@ -738,7 +739,7 @@ QUVIcode find_host_script(_quvi_video_t video)
 
   node = find_host_script_node(video, &rc);
   if (node != NULL)
-    return QUVI_OK;
+    return (QUVI_OK);
   return (rc);
 }
 
@@ -756,10 +757,8 @@ QUVIcode find_host_script_and_parse(_quvi_video_t video)
   l = quvi->lua;
 
   curr = find_host_script_node(video, &rc);
-  if (curr == NULL) {
-    seterr("no support: %s", video->page_link);
+  if (curr == NULL)
     return (rc);
-  }
 
   /* found script. */
   return (run_parse_func(l, curr, video));
