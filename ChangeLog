@@ -14,6 +14,7 @@ Changes:
         - evisor.lua -> gasgrank.lua
         - Add support for videos.sapo.pt (f#3106606)
 Bugfixes:
+        - tube8.lua: fix fetch (p#3121928)
         - l_quvi_fetch: check data != NULL
 
 

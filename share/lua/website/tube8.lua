@@ -28,7 +28,7 @@ end
 -- Parse video URL.
 function parse (video)
     video.host_id = "tube8"
-    local page    = quvi.fetch(video.page_url)
+    local page    = quvi.fetch(video.page_url .. "?processdisclaimer")
 
     local _,_,s = page:find("<title>(.-)%s+-")
     video.title = s or error ("no match: video title")
