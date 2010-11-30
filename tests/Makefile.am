@@ -17,6 +17,7 @@ support-gaskrank.pl\
 support-funnyhub.pl\
 support-funnyordie.pl\
 support-golem.pl\
+support-google.pl\
 support-liveleak.pl\
 support-myubo.pl\
 support-sapo.pl\

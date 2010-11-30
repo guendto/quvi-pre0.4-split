@@ -485,7 +485,7 @@ static const char *tests[] = {
   "http://en.sevenload.com/videos/IUL3gda-Funny-Football-Clips",
   "http://www.myubo.com/page/media_detail.html?movieid=1308f0fb-47c6-40c5-a6f9-1324dac12896",
   "http://www.liveleak.com/view?i=704_1228511265",
-  "http://video.google.com/videoplay?docid=-8669127848070159803",
+  "http://video.google.com/videoplay?docid=-6970952080219955808",
   "http://video.golem.de/internet/2174/firefox-3.5-test.html",
   "http://www.funnyhub.com/videos/pages/crazy-hole-in-one.html",
   "http://www.clipfish.de/video/3100131/matratzendomino/",

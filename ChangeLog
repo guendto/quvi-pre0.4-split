@@ -2,6 +2,7 @@ Revision history for quvi.
 
 0.2.9
 Changes:
+        - Add tests/support-google.pl
         - Extend --support to use quvi_supported
         - Thanks to Bastien Nocera for the following patches:
             - Never do network access in quvi_supported()
