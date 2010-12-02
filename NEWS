@@ -1,10 +1,21 @@
 
-
 0.2.9
-
-Removed the PCRE dependency. Since 0.2.0 and Lua we have had no longer
-real use for this. Changed -t of quvi(1) to use strstr(3) instead of
-pcre_*. Using the latter for this was an overkill.
+Changes:
+        - Add tests/support-google.pl
+        - Extend --support to use quvi_supported
+        - Thanks to Bastien Nocera for the following patches:
+            - Never do network access in quvi_supported()
+            - Dailymotion: Handle embed URLs
+            - Add starttime for YouTube videos
+            - Add QUVIPROP_STARTTIME property
+            - Add quvi_supported() public function
+        - Remove PCRE dependency
+        - Coding style changes, added doc/CodingStyle
+        - evisor.lua -> gasgrank.lua
+        - Add support for videos.sapo.pt (f#3106606)
+Bugfixes:
+        - tube8.lua: fix fetch (p#3121928), thanks to wurpcore for patch
+        - l_quvi_fetch: check data != NULL
 
 
 Version 0.2.0
