@@ -29,7 +29,11 @@ found at <http://repo.or.cz/w/quvi.git>.
     Work with git
 
 Although not required, this is certainly recommended. The examples below
-demonstrate this.
+demonstrate this. Be sure to name and email in your ~/.gitconfig:
+
+    [user]
+    name  = your_name
+    email = your_email
 
     Set QUVI_SHOW_SCANDIR
 
