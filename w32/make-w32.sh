@@ -28,7 +28,7 @@ pack_it()
     && mv dist/share/quvi/lua dist/bin \
     && rm -r dist/share/man dist/share/quvi \
     && rm -rf dist/lib/pkgconfig \
-    && cp -v ../ChangeLog dist/ChangeLog.txt \
+    && cp -v ChangeLog dist/ChangeLog.txt \
     && cp -v ChangeLog.w32.txt dist/ \
     && cp -v man1/quvi.1.html dist/share/doc/quvi \
     && mv dist $distdir \
@@ -38,7 +38,7 @@ pack_it()
 
 clean_up() {
     make distclean 2>/dev/null
-    rm -rf doc examples include lib src tests share man1
+    rm -rf doc examples include lib src tests share man1 ChangeLog
     exit $?
 }
 
@@ -66,6 +66,7 @@ fi
     --host=i486-mingw32 \
     --prefix=$PREFIX \
     --with-libiconv-prefix=$MINGW \
-    --without-man
+    --without-man \
+    && make dist
 
 
