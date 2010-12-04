@@ -19,10 +19,6 @@ if NO_STRUPR
 src += strupr.c
 endif
 
-if NO_STRTOK_R
-src += strtok_r.c
-endif
-
 hdr = \
 curl_wrap.h \
 lua_wrap.h \

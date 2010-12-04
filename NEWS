@@ -1,6 +1,7 @@
 
 0.2.9
 Changes:
+        - Remove dangling lib/strtok_r.c
         - Add tests/support-google.pl
         - Extend --support to use quvi_supported
         - Thanks to Bastien Nocera for the following patches:

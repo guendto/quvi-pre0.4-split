@@ -132,7 +132,8 @@ if [ test x"$host_w32" = "xno" ]; then
     AC_FUNC_MALLOC
     AC_FUNC_REALLOC
 fi
-AC_CHECK_FUNCS([memset strdup strstr strtol strerror strcspn getcwd])
+AC_CHECK_FUNCS(
+[memset strdup strstr strtol strerror strcspn getcwd strchr strspn])
 AC_FUNC_STRTOD
 
 have_asprintf=no
@@ -144,14 +145,6 @@ AM_CONDITIONAL([NO_ASPRINTF], [test x"$have_asprintf" != "xyes"])
 have_strupr=no
 AC_CHECK_FUNCS([strupr], [have_strupr=yes])
 AM_CONDITIONAL([NO_STRUPR], [test x"$have_strupr" != "xyes"])
-
-have_strtok_r=no
-AC_CHECK_FUNCS([strtok_r], [have_strtok_r=yes])
-AM_CONDITIONAL([NO_STRTOK_R], [test x"$have_strtok_r" != "xyes"])
-
-if [ test x"$have_strtok_r" = "xno" ]; then
-    AC_CHECK_FUNCS([strchr strpbrk strspn])
-fi
 
 # --enable-quvi
 AC_ARG_ENABLE([quvi],
