@@ -744,6 +744,14 @@ int main(int argc, char *argv[])
       assert(video != 0);
       dump_video(video, opts, curl);
 
+      if (opts.exec_given) {
+        char *video_url = NULL;
+        do {
+          quvi_getprop(video, QUVIPROP_VIDEOURL, &video_url);
+          invoke_exec(video, video_url, opts);
+        } while (quvi_next_videolink(video) == QUVI_OK);
+      }
+
       quvi_parse_close(&video);
       assert(video == 0);
     }
