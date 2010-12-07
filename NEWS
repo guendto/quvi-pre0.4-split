@@ -1,19 +1,21 @@
 
-0.2.9
+0.2.9   Tue Dec 07 2010     Toni Gundogdu
 Changes:
-        - Remove dangling lib/strtok_r.c
+        - Set <http://quvi.sourceforge.net/> as new home
         - Add tests/support-google.pl
+        - Add support for videos.sapo.pt (f#3106606)
         - Extend --support to use quvi_supported
+        - Remove dangling lib/strtok_r.c
+        - Remove PCRE dependency
+        - Remove myubo.lua: dead site
         - Thanks to Bastien Nocera for the following patches:
             - Never do network access in quvi_supported()
             - Dailymotion: Handle embed URLs
             - Add starttime for YouTube videos
             - Add QUVIPROP_STARTTIME property
             - Add quvi_supported() public function
-        - Remove PCRE dependency
         - Coding style changes, added doc/CodingStyle
         - evisor.lua -> gasgrank.lua
-        - Add support for videos.sapo.pt (f#3106606)
 Bugfixes:
         - quvi URL --exec does nothing (b#3125018)
         - tube8.lua: fix fetch (p#3121928), thanks to wurpcore for patch
