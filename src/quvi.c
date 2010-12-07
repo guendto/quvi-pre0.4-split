@@ -478,6 +478,7 @@ static int check_values(quvi_video_t video, opts_s opts)
 }
 
 static const char *tests[] = {
+  "http://www.cbsnews.com/video/watch/?id=7118769n",
   "http://videos.sapo.pt/hd4ZBIHG80zFviLc5YEa",
   "http://www.dailymotion.com/video/xdpig1_city-of-scars_shortfilms",
   "http://www.spiegel.de/video/video-1012582.html",

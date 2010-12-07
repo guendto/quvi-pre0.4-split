@@ -9,6 +9,7 @@ TESTS =\
 nosupport-eval.pl\
 support-shortened.pl\
 support-break.pl\
+support-cbsnews.pl\
 support-charlierose.pl\
 support-clipfish.pl\
 support-collegehumor.pl\
