@@ -190,7 +190,7 @@ binaries on your system.
 
 Make sure you have quvi binaries installed to your path.
 
-    mkdir -p foo/quvi/lua/website ; cd foo
+    mkdir -p foo/lua/website ; cd foo
     cp $prefix/share/quvi/lua/website/buzzhumor.lua lua/website/foo.lua
     git init ; git add . ; git commit -am 'initial commit'
     (
