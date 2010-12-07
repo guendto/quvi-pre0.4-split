@@ -18,7 +18,6 @@ lua/website/funnyordie.lua \
 lua/website/golem.lua \
 lua/website/google.lua \
 lua/website/liveleak.lua \
-lua/website/myubo.lua \
 lua/website/sapo.lua \
 lua/website/sevenload.lua \
 lua/website/spiegel.lua \

@@ -75,13 +75,12 @@ am__nobase_dist_pkgdata_DATA_DIST = lua/README \
 	lua/website/dailymotion.lua lua/website/gaskrank.lua \
 	lua/website/funnyhub.lua lua/website/funnyordie.lua \
 	lua/website/golem.lua lua/website/google.lua \
-	lua/website/liveleak.lua lua/website/myubo.lua \
-	lua/website/sapo.lua lua/website/sevenload.lua \
-	lua/website/spiegel.lua lua/website/theonion.lua \
-	lua/website/vimeo.lua lua/website/youtube.lua \
-	lua/website/tube8.lua lua/website/xvideos.lua \
-	lua/website/youjizz.lua lua/website/bloomberg.lua \
-	lua/website/cctv.lua
+	lua/website/liveleak.lua lua/website/sapo.lua \
+	lua/website/sevenload.lua lua/website/spiegel.lua \
+	lua/website/theonion.lua lua/website/vimeo.lua \
+	lua/website/youtube.lua lua/website/tube8.lua \
+	lua/website/xvideos.lua lua/website/youjizz.lua \
+	lua/website/bloomberg.lua lua/website/cctv.lua
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -258,11 +257,10 @@ DIST_lua = lua/README lua/util/content_type.lua lua/util/charset.lua \
 	lua/website/dailymotion.lua lua/website/gaskrank.lua \
 	lua/website/funnyhub.lua lua/website/funnyordie.lua \
 	lua/website/golem.lua lua/website/google.lua \
-	lua/website/liveleak.lua lua/website/myubo.lua \
-	lua/website/sapo.lua lua/website/sevenload.lua \
-	lua/website/spiegel.lua lua/website/theonion.lua \
-	lua/website/vimeo.lua lua/website/youtube.lua $(am__append_1) \
-	$(am__append_2)
+	lua/website/liveleak.lua lua/website/sapo.lua \
+	lua/website/sevenload.lua lua/website/spiegel.lua \
+	lua/website/theonion.lua lua/website/vimeo.lua \
+	lua/website/youtube.lua $(am__append_1) $(am__append_2)
 EXTRA_DIST = $(DIST_lua)
 nobase_dist_pkgdata_DATA = $(DIST_lua) $(DIST_howtos)
 all: all-am
