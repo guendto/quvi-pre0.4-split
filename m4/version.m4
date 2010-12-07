@@ -1,4 +1,4 @@
-m4_define([_QUVI_VERSION], [0.2.9])
+m4_define([_QUVI_VERSION], [0.2.10])
 m4_define([_QUVI_CURRENT], [3])
 m4_define([_QUVI_REVISION], [1])
 m4_define([_QUVI_AGE], [3])
