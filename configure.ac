@@ -7,9 +7,9 @@ m4_include([m4/version.m4])
 
 AC_INIT(
     [quvi], [_QUVI_VERSION],
-    [http://sourceforge.net/projects/quvi/support/],
+    [http://sourceforge.net/apps/trac/quvi],
     [],
-    [http://quvi.googlecode.com/])
+    [http://quvi.sourceforge.net/])
 
 # Interface:
 QUVI_CURRENT=_QUVI_CURRENT
