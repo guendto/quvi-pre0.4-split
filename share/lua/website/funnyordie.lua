@@ -38,7 +38,7 @@ function parse (video)
     video.id    = s or error ("no match: video id")
 
     local _,_,s = page:find('<video src="(.-)"')
-    video.url   = {s} or error ("no match: flv url")
+    video.url   = {s or error ("no match: flv url")}
 
     return video
 end
