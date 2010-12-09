@@ -174,7 +174,7 @@ typedef int (*filter_func) (const struct dirent *);
 static QUVIcode
 scan_dir(llst_node_t * dst, const char *path, filter_func filter)
 {
-  char *show_scandir;
+  char *show_scandir, *show_script;
   struct dirent *de;
   DIR *dir;
 
@@ -183,6 +183,7 @@ scan_dir(llst_node_t * dst, const char *path, filter_func filter)
     return (QUVI_OK);
 
   show_scandir = getenv("QUVI_SHOW_SCANDIR");
+  show_script = getenv("QUVI_SHOW_SCRIPT");
 
   if (show_scandir)
     fprintf(stderr, "%s: %s\n", __PRETTY_FUNCTION__, path);
@@ -200,6 +201,9 @@ scan_dir(llst_node_t * dst, const char *path, filter_func filter)
 
       asprintf((char **)&qls->basename, "%s", de->d_name);
       asprintf((char **)&qls->path, "%s/%s", path, de->d_name);
+
+      if (show_script)
+        fprintf(stderr, "%s: %s\n", __PRETTY_FUNCTION__, qls->path);
 
       llst_add(dst, qls);
     }
