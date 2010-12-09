@@ -135,9 +135,7 @@ function get_video_info (video, result)
         end
     end
 
-    if (url == nil) then error ("no match: video url") end
-
-    video.url = {url}
+    video.url = {url or error ("no match: video url")}
 
     return video
 end
