@@ -30,6 +30,7 @@ pack_it()
     && rm -rf dist/lib/pkgconfig \
     && cp -v ChangeLog dist/ChangeLog.txt \
     && cp -v ChangeLog.w32.txt dist/ \
+    && cp -v ../NEWS dist/NEWS.txt \
     && cp -v man1/quvi.1.html dist/share/doc/quvi \
     && mv dist $distdir \
     && 7za a $archive $distdir

@@ -1,6 +1,10 @@
 Revision history for quvi (w32) binaries.
 
-0.2.9
+0.2.10  Fri Dec 10 2010     Toni Gundogdu
+        - Add NEWS.txt
+        - Bump, read NEWS.txt for details
+
+0.2.9   Tue Dec 07 2010     Toni Gundogdu
         - Remove libpcre
 
 0.2.8  Sat Nov 13 2010  legatvs
