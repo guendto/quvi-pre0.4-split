@@ -18994,7 +18994,7 @@ fi
 
 
 fi
-for ac_func in memset strdup strstr strtol strerror strcspn getcwd strchr strspn
+for ac_func in memset strdup strstr strtol strerror strcspn getcwd strchr strrchr strspn
 do :
   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
 ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"

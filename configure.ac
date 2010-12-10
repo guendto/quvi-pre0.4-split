@@ -133,7 +133,7 @@ if [ test x"$host_w32" = "xno" ]; then
     AC_FUNC_REALLOC
 fi
 AC_CHECK_FUNCS(
-[memset strdup strstr strtol strerror strcspn getcwd strchr strspn])
+[memset strdup strstr strtol strerror strcspn getcwd strchr strrchr strspn])
 AC_FUNC_STRTOD
 
 have_asprintf=no
