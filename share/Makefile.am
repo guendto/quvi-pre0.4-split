@@ -6,6 +6,7 @@ lua/util/charset.lua \
 lua/util/trim.lua \
 lua/website/README \
 lua/website/academicearth.lua \
+lua/website/bloomberg.lua \
 lua/website/break.lua \
 lua/website/buzzhumor.lua \
 lua/website/cbsnews.lua \
@@ -35,7 +36,6 @@ endif
 
 if ENABLE_BROKEN
 DIST_lua += \
-lua/website/bloomberg.lua \
 lua/website/cctv.lua
 endif
 

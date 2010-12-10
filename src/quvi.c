@@ -500,8 +500,8 @@ static const char *tests[] = {
   "http://www.academicearth.org/lectures/intro-roman-architecture",
   "http://www.collegehumor.com/video:1942317",
   "http://www.theonion.com/video/time-announces-new-version-of-magazine-aimed-at-ad,17950/",
-#ifdef ENABLE_BROKEN
   "http://www.bloomberg.com/video/63722844/",
+#ifdef ENABLE_BROKEN
 /* single-segment */
   "http://space.tv.cctv.com/video/VIDE1212909276513233",
 /* multi-segment */
