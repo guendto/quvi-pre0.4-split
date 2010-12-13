@@ -9,9 +9,9 @@ If you are using git:
 If you are working with diff, then at very least, use "diff -u" when you
 generate the patch.
 
-The preferred way to do this is to submit your patch to the patch tracker at:
-  <http://sourceforge.net/tracker/?group_id=354489>
+Visit the website at <http://quvi.sourceforge.net/> and click
+"Development". You can submit your patches to the Trac that we use.
 
-Otherwise, email it directly to the author (<legatvs at sign gmail com>).
+Alternatively, email them to the maintainer at <legatvs at sign gmail com>.
 
 Thanks!
