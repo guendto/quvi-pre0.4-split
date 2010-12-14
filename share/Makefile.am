@@ -35,8 +35,7 @@ lua/website/youjizz.lua
 endif
 
 if ENABLE_BROKEN
-DIST_lua += \
-lua/website/cctv.lua
+DIST_lua +=
 endif
 
 EXTRA_DIST = $(DIST_lua)

@@ -40,9 +40,7 @@ target_triplet = @target@
 @ENABLE_NSFW_TRUE@lua/website/xvideos.lua \
 @ENABLE_NSFW_TRUE@lua/website/youjizz.lua
 
-@ENABLE_BROKEN_TRUE@am__append_2 = \
-@ENABLE_BROKEN_TRUE@lua/website/cctv.lua
-
+@ENABLE_BROKEN_TRUE@am__append_2 = 
 subdir = share
 DIST_COMMON = $(am__nobase_dist_pkgdata_DATA_DIST) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -79,8 +77,7 @@ am__nobase_dist_pkgdata_DATA_DIST = lua/README \
 	lua/website/sevenload.lua lua/website/spiegel.lua \
 	lua/website/theonion.lua lua/website/vimeo.lua \
 	lua/website/youtube.lua lua/website/tube8.lua \
-	lua/website/xvideos.lua lua/website/youjizz.lua \
-	lua/website/cctv.lua
+	lua/website/xvideos.lua lua/website/youjizz.lua
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \

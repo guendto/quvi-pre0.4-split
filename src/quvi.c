@@ -503,16 +503,12 @@ static const char *tests[] = {
   "http://www.collegehumor.com/video:1942317",
   "http://www.theonion.com/video/time-announces-new-version-of-magazine-aimed-at-ad,17950/",
   "http://www.bloomberg.com/video/63722844/",
-#ifdef ENABLE_BROKEN
-/* single-segment */
-  "http://space.tv.cctv.com/video/VIDE1212909276513233",
-/* multi-segment */
-  "http://space.tv.cctv.com/video/VIDE1247468077860061",
-#endif
 #ifdef ENABLE_NSFW
   "http://www.tube8.com/fetish/japanese-melon-gal-censored/186133/",
   "http://www.xvideos.com/video243887/devi_emmerson_body_painting",
   "http://www.youjizz.com/videos/glamour-girls---melissa-125602.html",
+#endif
+#ifdef ENABLE_BROKEN
 #endif
 
   NULL

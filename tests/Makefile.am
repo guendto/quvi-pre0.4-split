@@ -32,8 +32,7 @@ support-academicearth.pl
 # NOTE: academicearth.pl has to come after youtube.
 # The former uses youtube for hosting some of its videos.
 
-TESTS_BROKEN =\
-support-cctv.pl
+TESTS_BROKEN =
 
 if ENABLE_BROKEN
 TESTS += $(TESTS_BROKEN)
