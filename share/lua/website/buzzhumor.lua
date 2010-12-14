@@ -23,7 +23,7 @@
 -- Identify the script.
 function ident (page_url)
     local t   = {}
-    t.domain  = "buzzhumor.com", "default"
+    t.domain  = "buzzhumor.com"
     t.formats = "default"
     t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
     return t
