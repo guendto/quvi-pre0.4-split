@@ -1,5 +1,8 @@
 Revision history for quvi (w32) binaries.
 
+0.2.11
+        - License changes, read NEWS.txt
+
 0.2.10  Fri Dec 10 2010     Toni Gundogdu
         - Add NEWS.txt
         - Bump, read NEWS.txt for details
