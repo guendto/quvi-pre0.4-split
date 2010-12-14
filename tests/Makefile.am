@@ -18,6 +18,7 @@ support-dailymotion.pl\
 support-gaskrank.pl\
 support-funnyhub.pl\
 support-funnyordie.pl\
+support-globo.pl\
 support-golem.pl\
 support-google.pl\
 support-liveleak.pl\

@@ -480,6 +480,7 @@ static int check_values(quvi_video_t video, opts_s opts)
 }
 
 static const char *tests[] = {
+  "http://video.globo.com/Videos/Player/Noticias/0,,GIM1392245-7823-QUATRO+MEDICOS+SAO+PRESOS+POR+VENDER+E+USAR+PRODUTOS+FALSOS+NO+RIO,00.html",
   "http://www.cbsnews.com/video/watch/?id=7118769n",
   "http://videos.sapo.pt/hd4ZBIHG80zFviLc5YEa",
   "http://www.dailymotion.com/video/xdpig1_city-of-scars_shortfilms",

@@ -17,6 +17,7 @@ lua/website/dailymotion.lua \
 lua/website/gaskrank.lua \
 lua/website/funnyhub.lua \
 lua/website/funnyordie.lua \
+lua/website/globo.lua \
 lua/website/golem.lua \
 lua/website/google.lua \
 lua/website/liveleak.lua \
