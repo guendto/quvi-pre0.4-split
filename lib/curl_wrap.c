@@ -58,11 +58,14 @@ quvi_write_callback_default(void *p, size_t size, size_t nmemb, void *data)
   return (rsize);
 }
 
+/* lua_wrap.c */
+extern char *lua_get_field_s(lua_State *, const char *);
+
 QUVIcode
-fetch_to_mem(_quvi_video_t video,
-             const char *url,
-             const char *cookie_header, const QUVIstatusType type, char **dst)
+fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l, char **dst)
 {
+  char *fetch_type, *arbitrary_cookie, *user_agent;
+  QUVIstatusType fetch_type_n;
   long respcode, conncode;
   CURLcode curlcode;
   struct mem_s mem;
@@ -81,9 +84,27 @@ fetch_to_mem(_quvi_video_t video,
     return (QUVI_INVARG);
 
   *dst = NULL;
+  fetch_type = NULL;
+  user_agent = NULL;
+  arbitrary_cookie = NULL;
+  fetch_type_n = QUVISTATUSTYPE_PAGE;   /* default */
+
+  /* Additional settings from LUA table */
+
+  if (lua_istable(l, 2)) {
+    fetch_type = lua_get_field_s(l, "fetch_type");
+    if (fetch_type) {
+      if (strcmp(fetch_type, "config") == 0)
+        fetch_type_n = QUVISTATUSTYPE_CONFIG;
+      else if (strcmp(fetch_type, "playlist") == 0)
+        fetch_type_n = QUVISTATUSTYPE_PLAYLIST;
+    }
+    arbitrary_cookie = lua_get_field_s(l, "arbitrary_cookie");
+    user_agent = lua_get_field_s(l, "user_agent");
+  }
 
   if (quvi->status_func) {
-    if (quvi->status_func(makelong(QUVISTATUS_FETCH, type),
+    if (quvi->status_func(makelong(QUVISTATUS_FETCH, fetch_type_n),
                           (void *)url) != QUVI_OK) {
       return (QUVI_ABORTEDBYCALLBACK);
     }
@@ -101,8 +122,11 @@ fetch_to_mem(_quvi_video_t video,
   else
     csetopt(CURLOPT_WRITEFUNCTION, quvi_write_callback_default);
 
-  if (cookie_header != NULL && *cookie_header != '\0')
-    csetopt(CURLOPT_COOKIE, cookie_header);
+  if (arbitrary_cookie != NULL && *arbitrary_cookie != '\0')
+    csetopt(CURLOPT_COOKIE, arbitrary_cookie);
+
+  if (user_agent != NULL && *user_agent != '\0')
+    csetopt(CURLOPT_USERAGENT, user_agent);
 
   curlcode = curl_easy_perform(quvi->curl);
   respcode = 0;

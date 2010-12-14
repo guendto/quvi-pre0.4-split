@@ -84,18 +84,19 @@ quvi exposes the following C functions to the website scripts. Each of
 these are in the "quvi" object, e.g. quvi.fetch.
 
 
-3.1. Function: string quvi.fetch (url, what, arbitrary_cookie)
+3.1. Function: string quvi.fetch (url, options)
 --------------------------------------------------------------
 
 Fetches data from the specified URL.
 
 Parameters:
   * url (string)                - URL to fetch
-  * what (string)               - "page", "config" or "playlist" (optional)
-  * arbitrary_cookie (string)   - e.g. "foo=bar" (optional)
+  * options (table)             - Additional options* [optional]
 
-quvi converts the `what' string to a matching QUVIstatusstype (see
-quvi/quvi.h). If `what' is nil (undefined), quvi defaults to "page".
+options:
+  * fetch_type       (string)   ("page"|"config"|"playlist") =page
+  * arbitrary_cookie (string)   e.g. "foo=1;bar=2"
+  * user_agent       (string)   e.g. "foo/0.1"
 
 arbitrary_cookie value is passed (as it is) to libcurl, see:
   http://curl.haxx.se/libcurl/c/curl_easy_setopt.html#CURLOPTCOOKIE

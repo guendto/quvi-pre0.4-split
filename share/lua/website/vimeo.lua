@@ -43,7 +43,7 @@ function parse (video)
     local _,_,s = page:find('clip_id=(.-)[&"]')
     video.id    = s or error ("no match: video id")
     local config_url = "http://vimeo.com/moogaloop/load/clip:" .. video.id
-    local config = quvi.fetch(config_url, "config")
+    local config = quvi.fetch (config_url, {fetch_type = 'config'})
 
     local _,_,s = config:find("<caption>(.-)</")
     video.title = s or error ("no match: video title")

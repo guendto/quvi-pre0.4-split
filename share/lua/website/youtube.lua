@@ -101,7 +101,8 @@ function get_video_info (video, result)
          .. video.id
          .. "&el=detailpage&ps=default&eurl=&gl=US&hl=en"
 
-    local config = decode (quvi.fetch (config_url, "config"))
+    local opts   = { fetch_type = 'config' }
+    local config = decode (quvi.fetch (config_url, opts))
 
     if (config['reason']) then
         local reason = unescape (config['reason'])

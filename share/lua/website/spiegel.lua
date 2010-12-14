@@ -53,7 +53,7 @@ function parse (video)
         "http://www1.spiegel.de/active/playlist/fcgi/playlist.fcgi/"
         .. "asset=flashvideo/mode=id/id=%s", video.id)
 
-    local playlist = quvi.fetch(playlist_url, "playlist")
+    local playlist = quvi.fetch (playlist_url, {fetch_type = 'playlist'})
 
     local _,_,s = playlist:find("<headline>(.-)</")
     video.title = s or error ("no match: video title")
@@ -61,8 +61,7 @@ function parse (video)
     local config_url = string.format(
         "http://video.spiegel.de/flash/%s.xml", video.id)
 
-    local config = quvi.fetch(config_url, "config")
-
+    local config = quvi.fetch (config_url, {fetch_type = 'config'})
     local format = lookup[default]
 
     for k,v in pairs (lookup) do

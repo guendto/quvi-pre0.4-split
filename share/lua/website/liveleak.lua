@@ -42,11 +42,13 @@ function parse (video)
 
     local _,_,s      = page:find("'config','(.-)'")
     local config_url = s or error ("no match: config")
-    local config     = quvi.fetch(quvi.unescape(config_url), "config")
+    local opts       = { fetch_type = 'config' }
+    local config     = quvi.fetch (quvi.unescape (config_url), opts)
 
     local _,_,s        = config:find("<file>(.-)</")
     local playlist_url = s or error ("no match: playlist")
-    local playlist     = quvi.fetch(playlist_url, "playlist")
+    opts.fetch_type    = 'playlist'
+    local playlist     = quvi.fetch (playlist_url, opts)
 
     local _,_,s = playlist:find("<location>(.-)</")
     video.url   = {s or error ("no match: location")}

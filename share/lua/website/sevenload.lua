@@ -41,7 +41,7 @@ function parse (video)
     local config_url = s or error ("no match: config")
 
     config_url       = quvi.unescape(config_url)
-    local config     = quvi.fetch(config_url, "config")
+    local config     = quvi.fetch (config_url, {fetch_type = 'config'})
 
     local _,_,s = config_url:find("itemId=(%w+)")
     video.id    = s or error ("no match: video id")

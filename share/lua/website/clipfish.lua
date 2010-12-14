@@ -47,7 +47,7 @@ function parse (video)
         string.format("http://www.clipfish.de/video_n.php?p=0|DE&vid=%s",
             video.id)
 
-    local config = quvi.fetch(config_url, "config")
+    local config = quvi.fetch (config_url, {fetch_type = 'config'})
 
     local _,_,s = config:find("&url=(.-)&")
     video.url   = {s or error ("no match: url")}

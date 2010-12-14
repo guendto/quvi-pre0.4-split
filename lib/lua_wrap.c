@@ -77,10 +77,10 @@ static _quvi_video_t qv = NULL;
 static int l_quvi_fetch(lua_State * l)
 {
   QUVIstatusType st;
-  char *data, *url;
   luaL_Buffer b;
   _quvi_t quvi;
   QUVIcode rc;
+  char *data;
 
   quvi = qv->quvi;
   st = QUVISTATUSTYPE_PAGE;
@@ -88,24 +88,7 @@ static int l_quvi_fetch(lua_State * l)
   if (!lua_isstring(l, 1))
     luaL_error(l, "`quvi.fetch' expects `url' argument");
 
-  url = (char *)lua_tostring(l, 1);
-
-  if (lua_isstring(l, 2)) {
-
-    const char *type = lua_tostring(l, 2);
-
-    if (strcmp(type, "config") == 0)
-      st = QUVISTATUSTYPE_CONFIG;
-
-    else if (strcmp(type, "playlist") == 0)
-      st = QUVISTATUSTYPE_PLAYLIST;
-
-    lua_remove(l, 2);
-  }
-
-  lua_remove(l, 1);
-
-  rc = fetch_to_mem(qv, url, lua_tostring(l, 1), st, &data);
+  rc = fetch_to_mem(qv, lua_tostring(l, 1), l, &data);
 
   if (rc == QUVI_OK) {
 
@@ -353,11 +336,21 @@ static void set_key(lua_State * l, const char *key)
         } \
     } while (0)
 
-static char *get_field_s(lua_State * l, _quvi_lua_script_t qls, const char *key)
+static char *get_field_req_s(lua_State * l, _quvi_lua_script_t qls,
+                             const char *key)
 {
   char *s;
   set_key(l, key);
   _istype(string);
+  s = (char *)lua_tostring(l, -1);
+  lua_pop(l, 1);
+  return (s);
+}
+
+char *lua_get_field_s(lua_State * l, const char *key)
+{
+  char *s;
+  set_key(l, key);
   s = (char *)lua_tostring(l, -1);
   lua_pop(l, 1);
   return (s);
@@ -614,8 +607,8 @@ QUVIcode run_ident_func(lua_ident_t ident, llst_node_t node)
   }
 
   if (lua_istable(l, -1)) {
-    ident->domain = strdup(get_field_s(l, qls, "domain"));
-    ident->formats = strdup(get_field_s(l, qls, "formats"));
+    ident->domain = strdup(get_field_req_s(l, qls, "domain"));
+    ident->formats = strdup(get_field_req_s(l, qls, "formats"));
     rc = get_field_b(l, qls, "handles")
         ? QUVI_OK : QUVI_NOSUPPORT;
   } else
@@ -665,7 +658,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
     return (QUVI_LUA);
   }
 
-  setvid(video->redirect, "%s", get_field_s(l, qls, "redirect"));
+  setvid(video->redirect, "%s", get_field_req_s(l, qls, "redirect"));
 
   if (strlen(video->redirect) == 0) {
 
@@ -677,10 +670,10 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
 
     if (rc == QUVI_OK) {
 
-      setvid(video->host_id, "%s", get_field_s(l, qls, "host_id"));
-      setvid(video->title, "%s", get_field_s(l, qls, "title"));
-      setvid(video->id, "%s", get_field_s(l, qls, "id"));
-      setvid(video->starttime, "%s", get_field_s(l, qls, "starttime"));
+      setvid(video->host_id, "%s", get_field_req_s(l, qls, "host_id"));
+      setvid(video->title, "%s", get_field_req_s(l, qls, "title"));
+      setvid(video->id, "%s", get_field_req_s(l, qls, "id"));
+      setvid(video->starttime, "%s", get_field_req_s(l, qls, "starttime"));
 
       rc = iter_video_url(l, qls, "url", video);
     }

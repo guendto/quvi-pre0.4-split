@@ -51,7 +51,9 @@ end
 function parse (video)
     video.host_id  = "dailymotion"
     video.page_url = normalize (video.page_url)
-    local page     = quvi.fetch(video.page_url, "page", "family_filter=off")
+
+    local opts  = { arbitrary_cookie = 'family_filter=off' }
+    local page  = quvi.fetch(video.page_url, opts)
 
     if (page:find('SWFObject("http:")') ~= nil) then
         error ("Looks like a partner video. Refusing to continue.")

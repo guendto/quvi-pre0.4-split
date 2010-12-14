@@ -40,10 +40,9 @@ function parse (video)
     local config_url =
         string.format("http://video.golem.de/xml/%s", video.id)
 
-    local config = quvi.fetch(config_url, "config")
-
-    local _,_,s = config:find("<title>(.-)</")
-    video.title = s or error ("no match: video title")
+    local config = quvi.fetch (config_url, {fetch_type = 'config'})
+    local _,_,s  = config:find("<title>(.-)</")
+    video.title  = s or error ("no match: video title")
 
     video_url =
         string.format("http://video.golem.de/download/%s", video.id)

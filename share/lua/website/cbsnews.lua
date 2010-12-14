@@ -43,7 +43,7 @@ function parse (video)
         .. s
         .. "&iod=videoMedia"
 
-    local xml  = quvi.fetch(s, 'config')
+    local xml  = quvi.fetch (s, {fetch_type = 'config'})
 
     -- Grab title from the XML.
     local _,_,s = xml:find ('<Title>.-CDATA%[(.-)%]')
