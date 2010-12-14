@@ -35,18 +35,19 @@ build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
 @HAVE_PERL_TRUE@TESTS = nosupport-eval.pl support-shortened.pl \
-@HAVE_PERL_TRUE@	support-bloomberg.pl support-break.pl \
-@HAVE_PERL_TRUE@	support-cbsnews.pl support-charlierose.pl \
-@HAVE_PERL_TRUE@	support-clipfish.pl support-collegehumor.pl \
-@HAVE_PERL_TRUE@	support-dailymotion.pl support-gaskrank.pl \
-@HAVE_PERL_TRUE@	support-funnyhub.pl support-funnyordie.pl \
-@HAVE_PERL_TRUE@	support-globo.pl support-golem.pl \
-@HAVE_PERL_TRUE@	support-google.pl support-liveleak.pl \
+@HAVE_PERL_TRUE@	support-academicearth.pl support-bloomberg.pl \
+@HAVE_PERL_TRUE@	support-break.pl support-cbsnews.pl \
+@HAVE_PERL_TRUE@	support-charlierose.pl support-clipfish.pl \
+@HAVE_PERL_TRUE@	support-collegehumor.pl support-dailymotion.pl \
+@HAVE_PERL_TRUE@	support-gaskrank.pl support-funnyhub.pl \
+@HAVE_PERL_TRUE@	support-funnyordie.pl support-globo.pl \
+@HAVE_PERL_TRUE@	support-golem.pl support-google.pl \
+@HAVE_PERL_TRUE@	support-buzzhumor.pl support-liveleak.pl \
 @HAVE_PERL_TRUE@	support-sapo.pl support-sevenload.pl \
 @HAVE_PERL_TRUE@	support-spiegel.pl support-theonion.pl \
-@HAVE_PERL_TRUE@	support-vimeo.pl support-youtube.pl \
-@HAVE_PERL_TRUE@	support-academicearth.pl $(am__EXEEXT_2) \
-@HAVE_PERL_TRUE@	$(am__append_2) $(am__append_3)
+@HAVE_PERL_TRUE@	support-youtube.pl support-vimeo.pl \
+@HAVE_PERL_TRUE@	$(am__EXEEXT_2) $(am__append_2) \
+@HAVE_PERL_TRUE@	$(am__append_3)
 @ENABLE_BROKEN_TRUE@@HAVE_PERL_TRUE@am__append_1 = $(TESTS_BROKEN)
 @HAVE_PERL_POD_CHECKER_TRUE@@HAVE_PERL_TRUE@am__append_2 = $(TESTS_POD)
 @ENABLE_NSFW_TRUE@@HAVE_PERL_TRUE@am__append_3 = $(TESTS_NSFW)
