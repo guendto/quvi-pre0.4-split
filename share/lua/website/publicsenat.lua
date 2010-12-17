@@ -34,7 +34,7 @@ function parse (video)
 
    video.host_id = "publicsenat"
 
-   local _,_,s    = video.page_url:find("^http://www.publicsenat.fr/vod/(%d+)$")
+   local _,_,s    = video.page_url:find("^http://www.publicsenat.fr/vod/.-(%d+)$")
    video.id = s or error ("no match: video id")
 
    local page    = quvi.fetch(iframe_url .. video.id)
