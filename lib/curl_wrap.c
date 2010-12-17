@@ -178,11 +178,13 @@ fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l, char **dst)
 
 QUVIcode query_file_length(_quvi_t quvi, llst_node_t lnk)
 {
+  static const char *scheme = "http://";
   long respcode, conncode;
   _quvi_video_link_t qvl;
   CURLcode curlcode;
   struct mem_s mem;
   QUVIcode rc;
+  char buf[8];
 
   if (!quvi)
     return (QUVI_BADHANDLE);
@@ -196,25 +198,29 @@ QUVIcode query_file_length(_quvi_t quvi, llst_node_t lnk)
   if (!qvl)
     return (QUVI_BADHANDLE);
 
+  qvl->url = from_html_entities(qvl->url);
+
+  /* We can currently check HTTP URLs only */
+  memset(&buf, 0, sizeof(buf));
+  if (strcmp(strncpy(buf, qvl->url, strlen(scheme)), scheme) != 0)
+    return (QUVI_OK);           /* Skip video URL verification discreetly. */
+
   if (quvi->status_func) {
     if (quvi->status_func(makelong(QUVISTATUS_VERIFY, 0), 0) != QUVI_OK) {
       return (QUVI_ABORTEDBYCALLBACK);
     }
   }
 
-  memset(&mem, 0, sizeof(mem));
+  csetopt(CURLOPT_URL, qvl->url);
+  csetopt(CURLOPT_NOBODY, 1L);  /* get -> head */
 
+  memset(&mem, 0, sizeof(mem));
   csetopt(CURLOPT_WRITEDATA, &mem);
 
   if (quvi->write_func)
     csetopt(CURLOPT_WRITEFUNCTION, (curl_write_callback) quvi->write_func);
   else
     csetopt(CURLOPT_WRITEFUNCTION, quvi_write_callback_default);
-
-  qvl->url = from_html_entities(qvl->url);
-
-  csetopt(CURLOPT_URL, qvl->url);
-  csetopt(CURLOPT_NOBODY, 1L);  /* get -> head */
 
   curlcode = curl_easy_perform(quvi->curl);
 
