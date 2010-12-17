@@ -33,15 +33,20 @@ end
 function parse (video)
     video.host_id = "vimeo"
     
-    is_player, _, vid = video.page_url:find("^http://player.vimeo.com/video/(%d+)")
+    is_player, _, video.id =
+        video.page_url:find("^http://player.vimeo.com/video/(%d+)")
+
     if ( is_player ~= nil ) then
         video.page_url = "http://vimeo.com/" .. vid
     end
 
-    local page    = quvi.fetch(video.page_url)
+    if (video.id == nil) then
+        local _,_,s = video.page_url:find('vimeo.com/(%d+)')
+        video.id    = s
+    end
 
-    local _,_,s = page:find('clip_id=(.-)[&"]')
-    video.id    = s or error ("no match: video id")
+    if (video.id == nil) then error ("no match: video") end
+
     local config_url = "http://vimeo.com/moogaloop/load/clip:" .. video.id
     local config = quvi.fetch (config_url, {fetch_type = 'config'})
 
