@@ -13,5 +13,8 @@ If you are using git:
 Otherwise:
   * When working with diff, please use "diff -u"
 
+NOTE: If you are submitting a new website script, please include
+      *a test URL* with your patch.
+
 WWW: <http://quvi.sourceforge.net/> / Development
     You can submit your patches to the Trac that we use.
