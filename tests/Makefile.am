@@ -24,6 +24,7 @@ support-golem.pl \
 support-google.pl \
 support-buzzhumor.pl \
 support-liveleak.pl \
+support-publicsenat.pl \
 support-sapo.pl \
 support-sevenload.pl \
 support-spiegel.pl \
