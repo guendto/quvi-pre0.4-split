@@ -19,30 +19,33 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 -- 02110-1301  USA
 
-
+-- Identify the script.
 function ident (page_url)
     local t   = {}
     t.domain  = "publicsenat.fr"
-    t.formats = "default|flv"
+    t.formats = "default"
     t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
     return t
 end
 
--- Parse video URL at info.francetelevisions.fr.
+-- Parse video URL.
 function parse (video)
-   local iframe_url = "http://videos.publicsenat.fr/vodiFrame.php?idE="
+    video.host_id = "publicsenat"
+    local page    = quvi.fetch (video.page_url)
 
-   video.host_id = "publicsenat"
+    local _,_,s = page:find  ('<title>(.-)%s+%|')
+    video.title = s or error ("no match: video title")
 
-   local _,_,s    = video.page_url:find("^http://www.publicsenat.fr/vod/.-(%d+)$")
-   video.id = s or error ("no match: video id")
+    local _,_,s = video.page_url:find ("^http://www.publicsenat.fr/vod/.-(%d+)")
+    video.id    = s or error ("no match: video id")
 
-   local page    = quvi.fetch(iframe_url .. video.id)
-   local _,_,s = page:find('<input type="hidden" id="flvEmissionSelect" value="(http://flash\.od\.tv[-]radio\.com/publicsenat/.-)">')
-   video.url = {s or error ("no match: url")}
+    local config_url =
+        "http://videos.publicsenat.fr/vodiFrame.php?idE="
+        .. video.id
 
-   local _,_,s =  s:find('/([^/]+)$')
-   video.title = s or error ("no match: title")
+    local config = quvi.fetch  (config_url, {fetch_type = 'config'})
+    local _,_,s  = config:find ('id="flvEmissionSelect" value="(.-)"')
+    video.url    = {s or error ("no match: url")}
 
-   return video
+    return video
 end
