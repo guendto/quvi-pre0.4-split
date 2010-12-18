@@ -36,7 +36,7 @@ function parse (video)
     local _,_,s = page:find  ('<title>(.-)%s+%|')
     video.title = s or error ("no match: video title")
 
-    local _,_,s = video.page_url:find ("^http://www.publicsenat.fr/vod/.-(%d+)")
+    local _,_,s = video.page_url:find ("^http://www.publicsenat.fr/vod/.-(%d+)$")
     video.id    = s or error ("no match: video id")
 
     local config_url =
