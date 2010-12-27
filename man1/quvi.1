@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-12-07" "0.2.9" "quvi manual"
+.TH quvi 1 "2010-12-12" "0.2.12" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -343,32 +343,6 @@ quvi exits with 0 on success and >0 if an error occurred.
 \&  QUVI_ICONV            = 0x43, libiconv error occurred
 \&  QUVI_LUA              = 0x44, lua error occurred
 .Ve
-.SH "CONTRIBUTING"
-.IX Header "CONTRIBUTING"
-.IP "\fBAdd support for another website\fR" 4
-.IX Item "Add support for another website"
-On most systems you can find the READMEs and HOWTOs from \f(CW$prefix\fR/share/quvi
-and \f(CW$prefix\fR/share/doc/quvi directories. You can find the same files in
-release source tarballs, and at:
-.Sp
-.Vb 3
-\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
-\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua>
-\&    <http://repo.or.cz/w/quvi.git/tree/HEAD:/share/lua/website>
-.Ve
-.IP "\fBSubmitting patches\fR" 4
-.IX Item "Submitting patches"
-If you have cooked up a patch, please submit it to the tracker (see \*(L"\s-1BUGS\s0\*(R").
-.Sp
-If you are working with git and you have established a repo from which
-we can pull the changes from, you can use the same tracker for leaving
-pull requests.
-.SH "BUGS"
-.IX Header "BUGS"
-.IP "\fBTrackers\fR" 4
-.IX Item "Trackers"
-Bugs, support, patches, etc. trackers for these can be found at:
-  <http://sourceforge.net/projects/quvi/support>
 .SH "DEBUGGING TIPS"
 .IX Header "DEBUGGING TIPS"
 .IP "\fB\-\-verbose\-libcurl\fR" 4
@@ -376,16 +350,18 @@ Bugs, support, patches, etc. trackers for these can be found at:
 You can use this switch to amp up libcurl verbosity.
 .IP "\fBDebug symbols\fR" 4
 .IX Item "Debug symbols"
-Compile quvi with \f(CW\*(C`\-g\*(C'\fR (see \f(CW\*(C`g++(1)\*(C'\fR) for debug symbols.
+Compile quvi with \f(CW\*(C`\-g\*(C'\fR, refer to \f(CWgcc(1)\fR documentation for the
+details.
 .IP "\fBOther tools\fR" 4
 .IX Item "Other tools"
 Make use of such tools as \f(CWstrace(1)\fR, \f(CWgdb(1)\fR and \f(CWvalgrind(1)\fR.
 They may prove invaluable.
-.SH "OTHER"
-.IX Header "OTHER"
-.IP "\fB\s-1WWW\s0\fR" 4
-.IX Item "WWW"
+.SH "WWW"
+.IX Header "WWW"
 <http://quvi.sourceforge.net/>
+.SH "CONTRIBUTE"
+.IX Header "CONTRIBUTE"
+<http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 Toni Gundogdu <legatvs at sign gmail com>.
@@ -393,5 +369,3 @@ Toni Gundogdu <legatvs at sign gmail com>.
 Thanks to all those who have contributed to the project
 by sending patches, reporting bugs and writing feedback.
 You know who you are.
-.PP
-See also \*(L"\s-1BUGS\s0\*(R", \*(L"\s-1DEBUGGING\s0 \s-1TIPS\s0\*(R" and \*(L"\s-1CONTRIBUTING\s0\*(R".
