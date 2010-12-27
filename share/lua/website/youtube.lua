@@ -96,10 +96,14 @@ end
 
 function get_video_info (video, result)
 
+    local _,_,s = video.page_url:find ('^(%w+)://')
+    local scheme = s or error ("no match: scheme")
+
     local config_url =
-        "http://www.youtube.com/get_video_info?&video_id="
-         .. video.id
-         .. "&el=detailpage&ps=default&eurl=&gl=US&hl=en"
+        scheme
+        .. "://www.youtube.com/get_video_info?&video_id="
+        .. video.id
+        .. "&el=detailpage&ps=default&eurl=&gl=US&hl=en"
 
     local opts   = { fetch_type = 'config' }
     local config = decode (quvi.fetch (config_url, opts))
