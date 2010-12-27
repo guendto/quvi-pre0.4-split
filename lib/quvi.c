@@ -51,11 +51,7 @@ QUVIcode quvi_init(quvi_t * dst)
 
   *dst = (quvi_t) quvi;
 
-#ifndef HOST_W32
-  curl_global_init(CURL_GLOBAL_NOTHING);
-#else
-  curl_global_init(CURL_GLOBAL_WIN32);
-#endif
+  curl_global_init(CURL_GLOBAL_ALL);
 
   quvi->curl = curl_easy_init();
   if (!quvi->curl) {
