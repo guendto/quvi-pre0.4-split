@@ -29,6 +29,7 @@ struct lua_ident_s {
   char *url;
   char *domain;
   char *formats;
+  long categories;
 };
 
 typedef struct lua_ident_s *lua_ident_t;

@@ -21,29 +21,33 @@
 --
 
 -- Identify the script.
-function ident (page_url)
-    local t   = {}
-    t.domain  = "tube8.com"
-    t.formats = "default"
-    t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
+function ident (self)
+    local t      = {}
+    t.domain     = "tube8.com"
+    t.formats    = "default"
+    package.path = self.script_dir .. '/?.lua'
+    local C      = require 'quvi/const'
+    t.categories = C.proto_http
+    t.handles    =
+        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
     return t
 end
 
 -- Parse video URL.
-function parse (video)
-    video.host_id = "tube8"
-    local page    = quvi.fetch(video.page_url .. "?processdisclaimer")
+function parse (self)
+    self.host_id = "tube8"
+    local page   = quvi.fetch(self.page_url .. "?processdisclaimer")
 
     local _,_,s = page:find("<title>(.-)%s+-")
-    video.title = s or error ("no match: video title")
+    self.title  = s or error ("no match: video title")
 
     local _,_,s = page:find('name="vidId" value="(%d+)"')
-    video.id    = s or error ("no match: video id")
+    self.id     = s or error ("no match: video id")
 
     local _,_,s = page:find('videourl="(.-)"')
-    video.url   = {s or error ("no match: file")}
+    self.url    = {s or error ("no match: file")}
 
-    return video
+    return self
 end
 
 

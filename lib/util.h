@@ -51,4 +51,6 @@ char *from_html_entities(char *src);
 
 int add_video_link(llst_node_t * lst, const char *fmt, ...);
 
+char *dirname_from(const char *s);
+
 #endif

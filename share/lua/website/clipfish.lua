@@ -21,38 +21,41 @@
 --
 
 -- Identify the script.
-function ident (page_url)
-    local t   = {}
-    t.domain  = "clipfish.de"
-    t.formats = "default"
-    t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
+function ident (self)
+    local t      = {}
+    t.domain     = "clipfish.de"
+    t.formats    = "default"
+    package.path = self.script_dir .. '/?.lua'
+    local C      = require 'quvi/const'
+    t.categories = C.proto_http
+    t.handles    =
+        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
     return t
 end
 
 -- Parse video URL.
-function parse (video)
-    video.host_id = "clipfish"
-    local page    = quvi.fetch(video.page_url)
+function parse (self)
+    self.host_id = "clipfish"
+    local page   = quvi.fetch(self.page_url)
 
     local _,_,s = page:find("<title>(.-)</title>")
-    video.title = s or error ("no match: video title")
+    self.title  = s or error ("no match: video title")
 
-    video.title = video.title:gsub("Video:%s+", "")
-    video.title = video.title:gsub("%s+-%s+Clipfish", "")
+    self.title = self.title:gsub("Video:%s+", "")
+    self.title = self.title:gsub("%s+-%s+Clipfish", "")
 
     local _,_,s = page:find("/video/(.-)/")
-    video.id    = s or error ("no match: video id")
+    self.id     = s or error ("no match: video id")
 
     local config_url =
         string.format("http://www.clipfish.de/video_n.php?p=0|DE&vid=%s",
-            video.id)
+            self.id)
 
     local config = quvi.fetch (config_url, {fetch_type = 'config'})
+    local _,_,s  = config:find("&url=(.-)&")
+    self.url     = {s or error ("no match: url")}
 
-    local _,_,s = config:find("&url=(.-)&")
-    video.url   = {s or error ("no match: url")}
-
-    return video
+    return self
 end
 
 

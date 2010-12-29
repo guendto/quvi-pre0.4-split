@@ -366,6 +366,16 @@ static int get_field_b(lua_State * l, _quvi_lua_script_t qls, const char *key)
   return (b);
 }
 
+static long get_field_n(lua_State * l, _quvi_lua_script_t qls, const char *key)
+{
+  long n;
+  set_key(l, key);
+  _istype(number);
+  n = lua_tonumber(l, -1);
+  lua_pop(l, 1);
+  return (n);
+}
+
 static QUVIcode
 iter_video_url(lua_State * l,
                _quvi_lua_script_t qls, const char *key, _quvi_video_t qv)
@@ -564,6 +574,7 @@ QUVIcode run_lua_charset_func(_quvi_video_t video, const char *data)
 QUVIcode run_ident_func(lua_ident_t ident, llst_node_t node)
 {
   _quvi_lua_script_t qls;
+  char *script_dir;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
@@ -598,19 +609,33 @@ QUVIcode run_ident_func(lua_ident_t ident, llst_node_t node)
     return (QUVI_LUA);
   }
 
-  if (ident->url)
-    lua_pushstring(l, ident->url);
+  script_dir = dirname_from(qls->path);
 
-  if (lua_pcall(l, (ident->url ? 1 : 0), 1, 0)) {
+  lua_newtable(l);
+  set_field(l, "page_url", ident->url);
+  set_field(l, "script_dir", script_dir);
+
+  _free(script_dir);
+
+  if (lua_pcall(l, 1, 1, 0)) {
     seterr("%s", lua_tostring(l, -1));
     return (QUVI_LUA);
   }
 
   if (lua_istable(l, -1)) {
+
     ident->domain = strdup(get_field_req_s(l, qls, "domain"));
+
     ident->formats = strdup(get_field_req_s(l, qls, "formats"));
+
+    ident->categories = get_field_n(l, qls, "categories");
+
     rc = get_field_b(l, qls, "handles")
         ? QUVI_OK : QUVI_NOSUPPORT;
+
+    if (rc == QUVI_OK)
+      rc = ident->categories & quvi->category ? QUVI_OK : QUVI_NOSUPPORT;
+
   } else
     luaL_error(l, "expected `ident' function to return a table");
 
@@ -626,6 +651,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
 {
   static const char func_name[] = "parse";
   _quvi_lua_script_t qls;
+  char *script_dir;
   _quvi_t quvi;
   QUVIcode rc;
 
@@ -642,11 +668,16 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
     return (QUVI_LUA);
   }
 
+  script_dir = dirname_from(qls->path);
+
   lua_newtable(l);
   set_field(l, "page_url", video->page_link);
   set_field(l, "requested_format", video->quvi->format);
   set_field(l, "redirect", "");
   set_field(l, "starttime", "");
+  set_field(l, "script_dir", script_dir);
+
+  _free(script_dir);
 
   if (lua_pcall(l, 1, 1, 0)) {
     seterr("%s", lua_tostring(l, -1));
@@ -706,24 +737,24 @@ static llst_node_t find_host_script_node(_quvi_video_t video, QUVIcode * rc)
     ident.domain = NULL;
     ident.formats = NULL;
 
-    /* check if script ident this url. */
+    /* Check if script ident this url. */
     *rc = run_ident_func(&ident, curr);
 
     _free(ident.domain);
     _free(ident.formats);
 
     if (*rc == QUVI_OK) {
-      /* found a script. */
+      /* Found a script. */
       return (curr);
     } else if (*rc != QUVI_NOSUPPORT) {
-      /* a script error. terminate. */
+      /* A script error. Terminate with it. */
       return (NULL);
     }
 
     curr = curr->next;
   }
 
-  /* in rc, set by run_ident_func, we trust. */
+  /* Trust that run_ident_func sets the rc. */
   seterr("no support: %s", video->page_link);
 
   return (NULL);

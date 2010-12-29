@@ -22,6 +22,7 @@
 #include <string.h>
 #include <errno.h>
 #include <stdarg.h>
+#include <libgen.h>
 #include <assert.h>
 
 #include <curl/curl.h>
@@ -187,4 +188,12 @@ int add_video_link(llst_node_t * lst, const char *fmt, ...)
   }
 
   return (llst_add(lst, qvl));
+}
+
+char *dirname_from(const char *s)
+{
+  char *t = strdup(s);
+  char *p = strdup(dirname(t));
+  _free(t);
+  return (p);
 }

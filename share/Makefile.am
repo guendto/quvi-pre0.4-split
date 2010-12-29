@@ -5,6 +5,8 @@ lua/util/content_type.lua \
 lua/util/charset.lua \
 lua/util/trim.lua \
 lua/website/README \
+lua/website/quvi/bit.lua \
+lua/website/quvi/const.lua \
 lua/website/academicearth.lua \
 lua/website/bloomberg.lua \
 lua/website/break.lua \

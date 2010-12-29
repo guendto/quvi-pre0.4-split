@@ -617,6 +617,22 @@ static quvi_t init_quvi(opts_s opts, CURL ** curl)
   quvi_setopt(quvi, QUVIOPT_NOSHORTENED, opts.no_shortened_given);
   quvi_setopt(quvi, QUVIOPT_NOVERIFY, opts.no_verify_given);
 
+  if (opts.category_all_given)
+    quvi_setopt(quvi, QUVIOPT_CATEGORY, QUVIPROTO_ALL);
+  else {
+    long n = 0;
+    if (opts.category_http_given)
+      n |= QUVIPROTO_HTTP;
+    if (opts.category_mms_given)
+      n |= QUVIPROTO_MMS;
+    if (opts.category_rtsp_given)
+      n |= QUVIPROTO_RTSP;
+    if (opts.category_rtmp_given)
+      n |= QUVIPROTO_RTMP;
+    if (n > 0)
+      quvi_setopt(quvi, QUVIOPT_CATEGORY, n);
+  }
+
   quvi_setopt(quvi, QUVIOPT_STATUSFUNCTION, status_callback);
   quvi_setopt(quvi, QUVIOPT_WRITEFUNCTION, write_callback);
 
