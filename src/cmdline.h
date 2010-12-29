@@ -60,6 +60,16 @@ extern "C" {
                                  /**< @brief Do not decompress shortened URLs help description.  */
     const char *no_verify_help;
                               /**< @brief Do not verify video link help description.  */
+    const char *category_http_help;
+                                  /**< @brief Category HTTP website scripts help description.  */
+    const char *category_mms_help;
+                                 /**< @brief Category MMS website scripts help description.  */
+    const char *category_rtsp_help;
+                                  /**< @brief Category RTSP website scripts help description.  */
+    const char *category_rtmp_help;
+                                  /**< @brief Category RTMP website scripts help description.  */
+    const char *category_all_help;
+                                 /**< @brief All website script categories help description.  */
     char *page_title_arg;       /**< @brief Check that parsed page title matches arg.  */
     char *page_title_orig;      /**< @brief Check that parsed page title matches arg original value given at command line.  */
     const char *page_title_help;
@@ -77,7 +87,7 @@ extern "C" {
     const char *file_suffix_help;
                                 /**< @brief Check that parsed video suffix matches arg help description.  */
     const char *test_all_help;
-                             /**< @brief Run built-in tests help description.  */
+                             /**< @brief Run all built-in tests of category QUVIPROTO_HTTP help description.  */
     const char *dump_help;
                          /**< @brief Dump video details with --test-all help description.  */
     char *test_arg;     /**< @brief Pattern to match to built-in test URLs.  */
@@ -114,6 +124,11 @@ extern "C" {
     unsigned int exec_given;    /**< @brief Whether exec was given.  */
     unsigned int no_shortened_given;    /**< @brief Whether no-shortened was given.  */
     unsigned int no_verify_given;       /**< @brief Whether no-verify was given.  */
+    unsigned int category_http_given;   /**< @brief Whether category-http was given.  */
+    unsigned int category_mms_given;    /**< @brief Whether category-mms was given.  */
+    unsigned int category_rtsp_given;   /**< @brief Whether category-rtsp was given.  */
+    unsigned int category_rtmp_given;   /**< @brief Whether category-rtmp was given.  */
+    unsigned int category_all_given;    /**< @brief Whether category-all was given.  */
     unsigned int page_title_given;      /**< @brief Whether page-title was given.  */
     unsigned int video_id_given;/**< @brief Whether video-id was given.  */
     unsigned int file_length_given;     /**< @brief Whether file-length was given.  */

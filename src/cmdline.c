@@ -43,12 +43,17 @@ const char *gengetopt_args_info_help[] = {
   "      --exec=arg             Invoke arg after parsing",
   "  -s, --no-shortened         Do not decompress shortened URLs",
   "  -n, --no-verify            Do not verify video link",
+  "      --category-http        Category HTTP website scripts",
+  "      --category-mms         Category MMS website scripts",
+  "      --category-rtsp        Category RTSP website scripts",
+  "      --category-rtmp        Category RTMP website scripts",
+  "      --category-all         All website script categories",
   "      --page-title=arg       Check that parsed page title matches arg",
   "      --video-id=arg         Check that parsed video ID matches arg",
   "      --file-length=arg      Check that parsed video length matches arg",
   "      --file-suffix=arg      Check that parsed video suffix matches arg",
-  "  -a, --test-all             Run built-in tests",
-  "  -d, --dump                 Dump video details with --test-all",
+  "      --test-all             Run all built-in tests of category QUVIPROTO_HTTP",
+  "      --dump                 Dump video details with --test-all",
   "  -t, --test=arg             Pattern to match to built-in test URLs",
   "  -f, --format=arg           Video format to query  (default=`default')",
   "      --agent=arg            Identify as arg  (default=`Mozilla/5.0')",
@@ -113,6 +118,11 @@ void clear_given(struct gengetopt_args_info *args_info)
   args_info->exec_given = 0;
   args_info->no_shortened_given = 0;
   args_info->no_verify_given = 0;
+  args_info->category_http_given = 0;
+  args_info->category_mms_given = 0;
+  args_info->category_rtsp_given = 0;
+  args_info->category_rtmp_given = 0;
+  args_info->category_all_given = 0;
   args_info->page_title_given = 0;
   args_info->video_id_given = 0;
   args_info->file_length_given = 0;
@@ -168,18 +178,23 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->exec_help = gengetopt_args_info_help[8];
   args_info->no_shortened_help = gengetopt_args_info_help[9];
   args_info->no_verify_help = gengetopt_args_info_help[10];
-  args_info->page_title_help = gengetopt_args_info_help[11];
-  args_info->video_id_help = gengetopt_args_info_help[12];
-  args_info->file_length_help = gengetopt_args_info_help[13];
-  args_info->file_suffix_help = gengetopt_args_info_help[14];
-  args_info->test_all_help = gengetopt_args_info_help[15];
-  args_info->dump_help = gengetopt_args_info_help[16];
-  args_info->test_help = gengetopt_args_info_help[17];
-  args_info->format_help = gengetopt_args_info_help[18];
-  args_info->agent_help = gengetopt_args_info_help[19];
-  args_info->proxy_help = gengetopt_args_info_help[20];
-  args_info->no_proxy_help = gengetopt_args_info_help[21];
-  args_info->connect_timeout_help = gengetopt_args_info_help[22];
+  args_info->category_http_help = gengetopt_args_info_help[11];
+  args_info->category_mms_help = gengetopt_args_info_help[12];
+  args_info->category_rtsp_help = gengetopt_args_info_help[13];
+  args_info->category_rtmp_help = gengetopt_args_info_help[14];
+  args_info->category_all_help = gengetopt_args_info_help[15];
+  args_info->page_title_help = gengetopt_args_info_help[16];
+  args_info->video_id_help = gengetopt_args_info_help[17];
+  args_info->file_length_help = gengetopt_args_info_help[18];
+  args_info->file_suffix_help = gengetopt_args_info_help[19];
+  args_info->test_all_help = gengetopt_args_info_help[20];
+  args_info->dump_help = gengetopt_args_info_help[21];
+  args_info->test_help = gengetopt_args_info_help[22];
+  args_info->format_help = gengetopt_args_info_help[23];
+  args_info->agent_help = gengetopt_args_info_help[24];
+  args_info->proxy_help = gengetopt_args_info_help[25];
+  args_info->no_proxy_help = gengetopt_args_info_help[26];
+  args_info->connect_timeout_help = gengetopt_args_info_help[27];
 
 }
 
@@ -326,6 +341,16 @@ int cmdline_parser_dump(FILE * outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "no-shortened", 0, 0);
   if (args_info->no_verify_given)
     write_into_file(outfile, "no-verify", 0, 0);
+  if (args_info->category_http_given)
+    write_into_file(outfile, "category-http", 0, 0);
+  if (args_info->category_mms_given)
+    write_into_file(outfile, "category-mms", 0, 0);
+  if (args_info->category_rtsp_given)
+    write_into_file(outfile, "category-rtsp", 0, 0);
+  if (args_info->category_rtmp_given)
+    write_into_file(outfile, "category-rtmp", 0, 0);
+  if (args_info->category_all_given)
+    write_into_file(outfile, "category-all", 0, 0);
   if (args_info->page_title_given)
     write_into_file(outfile, "page-title", args_info->page_title_orig, 0);
   if (args_info->video_id_given)
@@ -467,8 +492,7 @@ cmdline_parser_required2(struct gengetopt_args_info *args_info,
 
   /* checks for dependences among options */
   if (args_info->dump_given && !args_info->test_all_given) {
-    fprintf(stderr,
-            "%s: '--dump' ('-d') option depends on option 'test-all'%s\n",
+    fprintf(stderr, "%s: '--dump' option depends on option 'test-all'%s\n",
             prog_name, (additional_error ? additional_error : ""));
     error = 1;
   }
@@ -641,12 +665,17 @@ cmdline_parser_internal(int argc, char **argv,
       {"exec", 1, NULL, 0},
       {"no-shortened", 0, NULL, 's'},
       {"no-verify", 0, NULL, 'n'},
+      {"category-http", 0, NULL, 0},
+      {"category-mms", 0, NULL, 0},
+      {"category-rtsp", 0, NULL, 0},
+      {"category-rtmp", 0, NULL, 0},
+      {"category-all", 0, NULL, 0},
       {"page-title", 1, NULL, 0},
       {"video-id", 1, NULL, 0},
       {"file-length", 1, NULL, 0},
       {"file-suffix", 1, NULL, 0},
-      {"test-all", 0, NULL, 'a'},
-      {"dump", 0, NULL, 'd'},
+      {"test-all", 0, NULL, 0},
+      {"dump", 0, NULL, 0},
       {"test", 1, NULL, 't'},
       {"format", 1, NULL, 'f'},
       {"agent", 1, NULL, 0},
@@ -656,7 +685,7 @@ cmdline_parser_internal(int argc, char **argv,
       {0, 0, 0, 0}
     };
 
-    c = getopt_long(argc, argv, "hqsnadt:f:", long_options, &option_index);
+    c = getopt_long(argc, argv, "hqsnt:f:", long_options, &option_index);
 
     if (c == -1)
       break;                    /* Exit from `while (1)' loop.  */
@@ -694,26 +723,6 @@ cmdline_parser_internal(int argc, char **argv,
                      &(local_args_info.no_verify_given), optarg, 0, 0, ARG_NO,
                      check_ambiguity, override, 0, 0,
                      "no-verify", 'n', additional_error))
-        goto failure;
-
-      break;
-    case 'a':                  /* Run built-in tests.  */
-
-      if (update_arg(0,
-                     0, &(args_info->test_all_given),
-                     &(local_args_info.test_all_given), optarg, 0, 0, ARG_NO,
-                     check_ambiguity, override, 0, 0,
-                     "test-all", 'a', additional_error))
-        goto failure;
-
-      break;
-    case 'd':                  /* Dump video details with --test-all.  */
-
-      if (update_arg(0,
-                     0, &(args_info->dump_given),
-                     &(local_args_info.dump_given), optarg, 0, 0, ARG_NO,
-                     check_ambiguity, override, 0, 0,
-                     "dump", 'd', additional_error))
         goto failure;
 
       break;
@@ -816,6 +825,61 @@ cmdline_parser_internal(int argc, char **argv,
           goto failure;
 
       }
+      /* Category HTTP website scripts.  */
+      else if (strcmp(long_options[option_index].name, "category-http") == 0) {
+
+        if (update_arg(0,
+                       0, &(args_info->category_http_given),
+                       &(local_args_info.category_http_given), optarg, 0, 0,
+                       ARG_NO, check_ambiguity, override, 0, 0, "category-http",
+                       '-', additional_error))
+          goto failure;
+
+      }
+      /* Category MMS website scripts.  */
+      else if (strcmp(long_options[option_index].name, "category-mms") == 0) {
+
+        if (update_arg(0,
+                       0, &(args_info->category_mms_given),
+                       &(local_args_info.category_mms_given), optarg, 0, 0,
+                       ARG_NO, check_ambiguity, override, 0, 0, "category-mms",
+                       '-', additional_error))
+          goto failure;
+
+      }
+      /* Category RTSP website scripts.  */
+      else if (strcmp(long_options[option_index].name, "category-rtsp") == 0) {
+
+        if (update_arg(0,
+                       0, &(args_info->category_rtsp_given),
+                       &(local_args_info.category_rtsp_given), optarg, 0, 0,
+                       ARG_NO, check_ambiguity, override, 0, 0, "category-rtsp",
+                       '-', additional_error))
+          goto failure;
+
+      }
+      /* Category RTMP website scripts.  */
+      else if (strcmp(long_options[option_index].name, "category-rtmp") == 0) {
+
+        if (update_arg(0,
+                       0, &(args_info->category_rtmp_given),
+                       &(local_args_info.category_rtmp_given), optarg, 0, 0,
+                       ARG_NO, check_ambiguity, override, 0, 0, "category-rtmp",
+                       '-', additional_error))
+          goto failure;
+
+      }
+      /* All website script categories.  */
+      else if (strcmp(long_options[option_index].name, "category-all") == 0) {
+
+        if (update_arg(0,
+                       0, &(args_info->category_all_given),
+                       &(local_args_info.category_all_given), optarg, 0, 0,
+                       ARG_NO, check_ambiguity, override, 0, 0, "category-all",
+                       '-', additional_error))
+          goto failure;
+
+      }
       /* Check that parsed page title matches arg.  */
       else if (strcmp(long_options[option_index].name, "page-title") == 0) {
 
@@ -861,6 +925,28 @@ cmdline_parser_internal(int argc, char **argv,
                        &(local_args_info.file_suffix_given), optarg, 0, 0,
                        ARG_STRING, check_ambiguity, override, 0, 0,
                        "file-suffix", '-', additional_error))
+          goto failure;
+
+      }
+      /* Run all built-in tests of category QUVIPROTO_HTTP.  */
+      else if (strcmp(long_options[option_index].name, "test-all") == 0) {
+
+        if (update_arg(0,
+                       0, &(args_info->test_all_given),
+                       &(local_args_info.test_all_given), optarg, 0, 0, ARG_NO,
+                       check_ambiguity, override, 0, 0,
+                       "test-all", '-', additional_error))
+          goto failure;
+
+      }
+      /* Dump video details with --test-all.  */
+      else if (strcmp(long_options[option_index].name, "dump") == 0) {
+
+        if (update_arg(0,
+                       0, &(args_info->dump_given),
+                       &(local_args_info.dump_given), optarg, 0, 0, ARG_NO,
+                       check_ambiguity, override, 0, 0,
+                       "dump", '-', additional_error))
           goto failure;
 
       }
