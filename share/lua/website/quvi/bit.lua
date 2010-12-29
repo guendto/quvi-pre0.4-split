@@ -42,7 +42,7 @@ end
 function M.bit (p) return 2 ^ (p - 1) end
 
 -- e.g. "if has_bit (foo, bit (n)) then ..."
-function M.has_bit(x, p) return x % (p + p) >= p end 
+function M.has_bit(x, p) return x % (p + p) >= p end
 
 return M
 
