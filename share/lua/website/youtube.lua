@@ -59,7 +59,7 @@ function is_handled (page_url)
 end
 
 -- Identify the script.
-function ident (page_url)
+function ident (self)
     local t   = {}
     t.domain  = "youtube.com"
     t.formats = ""
@@ -67,24 +67,27 @@ function ident (page_url)
         t.formats = t.formats .."|".. k
     end
     t.formats = "default|best" .. t.formats
-    if (page_url ~= nil) then
-        page_url = youtubify(page_url)
+    if (self.page_url ~= nil) then
+        self.page_url = youtubify(self.page_url)
     end
-    t.handles = is_handled(page_url)
+    package.path = self.script_dir .. '/?.lua'
+    local C      = require 'quvi/const'
+    t.categories = C.proto_http
+    t.handles    = is_handled(self.page_url)
     return t
 end
 
-function parse (video)
-    video.host_id  = "youtube"
-    local page_url = youtubify(video.page_url)
+function parse (self)
+    self.host_id  = "youtube"
+    local page_url = youtubify(self.page_url)
 
     local _,_,s = page_url:find("v=([%w-_]+)")
-    video.id    = s or error ("no match: video id")
+    self.id    = s or error ("no match: video id")
 
     local _,_,s = page_url:find('#t=(.+)')
-    video.starttime = s or ''
+    self.starttime = s or ''
 
-    return get_video_info (video)
+    return get_video_info (self)
 end
 
 -- Youtubify the URL.
@@ -94,15 +97,15 @@ function youtubify (url)
     return url
 end
 
-function get_video_info (video, result)
+function get_video_info (self, result)
 
-    local _,_,s = video.page_url:find ('^(%w+)://')
+    local _,_,s  = self.page_url:find ('^(%w+)://')
     local scheme = s or error ("no match: scheme")
 
     local config_url =
         scheme
         .. "://www.youtube.com/get_video_info?&video_id="
-        .. video.id
+        .. self.id
         .. "&el=detailpage&ps=default&eurl=&gl=US&hl=en"
 
     local opts   = { fetch_type = 'config' }
@@ -114,8 +117,8 @@ function get_video_info (video, result)
         error (reason..' (code='..code..')')
     end
 
-    video.title = config['title'] or error ('no match: video title')
-    video.title = unescape (video.title)
+    self.title = config['title'] or error ('no match: video title')
+    self.title = unescape (self.title)
 
     local fmt_url_map =
         config['fmt_url_map'] or error ("no match: fmt_url_map")
@@ -134,19 +137,19 @@ function get_video_info (video, result)
     -- Choose URL.
     local url = nil
 
-    if (video.requested_format == 'best') then
+    if (self.requested_format == 'best') then
         url = best
     else
-        url = to_url (video.requested_format, t)
-        if (url == nil and video.requested_format ~= 'default') then
+        url = to_url (self.requested_format, t)
+        if (url == nil and self.requested_format ~= 'default') then
             -- Fallback to our 'default'.
             url = to_url ('default', t)
         end
     end
 
-    video.url = {url or error ("no match: video url")}
+    self.url = {url or error ("no match: video url")}
 
-    return video
+    return self
 end
 
 function to_url (fmt, t)

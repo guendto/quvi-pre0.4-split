@@ -20,34 +20,14 @@
 -- 02110-1301  USA
 --
 
--- Identify the script.
-function ident (self)
-    local t      = {}
-    t.domain     = "buzzhumor.com"
-    t.formats    = "default"
-    package.path = self.script_dir .. '/?.lua'
-    local C      = require 'quvi/const'
-    t.categories = C.proto_http
-    t.handles    =
-        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
-    return t
-end
+local M = {}
 
--- Parse video URL.
-function parse (self)
-    self.host_id = "buzzhumor"
-    local page   = quvi.fetch(self.page_url)
+-- Protocol categories.
+M.proto_http = 0x1
+M.proto_mms  = 0x2
+M.proto_rtsp = 0x4
+M.proto_rtmp = 0x8
 
-    local _,_,s = page:find("<title>(.-)</title>")
-    self.title  = s or error ("no match: video title")
-
-    local _,_,s = page:find("/videos/(%d+)")
-    self.id     = s or error ("no match: video id")
-
-    local _,_,s = page:find('&file=(.-)"')
-    self.url    = {s or error ("no match: file")}
-
-    return self
-end
+return M
 
 

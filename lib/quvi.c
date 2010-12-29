@@ -59,8 +59,9 @@ QUVIcode quvi_init(quvi_t * dst)
     return (QUVI_CURLINIT);
   }
 
-  /* set defaults */
+  /* Set library defaults. */
   quvi_setopt(quvi, QUVIOPT_FORMAT, "default");
+  quvi_setopt(quvi, QUVIOPT_CATEGORY, QUVIPROTO_HTTP);
 
   csetopt(CURLOPT_USERAGENT, "Mozilla/5.0");
   csetopt(CURLOPT_FOLLOWLOCATION, 1L);
@@ -229,14 +230,14 @@ static QUVIcode _setopt(_quvi_t quvi, QUVIoption opt, va_list arg)
         asprintf(&opt, "%s", va_arg(arg,char *)); \
     } while(0); break
 
-#define _seti(opt) \
-    do { opt = va_arg(arg,int); } while(0); break
+#define _setn(opt) \
+    do { opt = va_arg(arg,long); } while(0); break
 
   switch (opt) {
   case QUVIOPT_FORMAT:
     _sets(quvi->format);
   case QUVIOPT_NOVERIFY:
-    _seti(quvi->no_verify);
+    _setn(quvi->no_verify);
   case QUVIOPT_STATUSFUNCTION:
     quvi->status_func = va_arg(arg, quvi_callback_status);
     break;
@@ -244,12 +245,14 @@ static QUVIcode _setopt(_quvi_t quvi, QUVIoption opt, va_list arg)
     quvi->write_func = va_arg(arg, quvi_callback_write);
     break;
   case QUVIOPT_NOSHORTENED:
-    _seti(quvi->no_shortened);
+    _setn(quvi->no_shortened);
+  case QUVIOPT_CATEGORY:
+    _setn(quvi->category);
   default:
     return (QUVI_INVARG);
   }
 #undef _sets
-#undef _seti
+#undef _setn
   return (QUVI_OK);
 }
 

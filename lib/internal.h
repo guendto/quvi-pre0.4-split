@@ -55,8 +55,9 @@
 
 struct _quvi_s {
   char *format;
-  int no_verify;
-  int no_shortened;
+  long no_verify;
+  long no_shortened;
+  long category;
   quvi_callback_status status_func;
   quvi_callback_write write_func;
   void *curl;

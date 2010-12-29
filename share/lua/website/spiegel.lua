@@ -30,42 +30,45 @@ local lookup = {
 }
 
 -- Identify the script.
-function ident (page_url)
+function ident (self)
     local t   = {}
     t.domain  = "spiegel.de"
     t.formats = ""
     for k,_ in pairs (lookup) do
         t.formats = t.formats .."|".. k
     end
-    t.formats = t.formats:gsub("^%|","")
-    t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
+    t.formats    = t.formats:gsub("^%|","")
+    local C      = require 'quvi/const'
+    t.categories = C.proto_http
+    t.handles    =
+        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
     return t
 end
 
 -- Parse video URL.
-function parse (video)
-    video.host_id = "spiegel"
+function parse (self)
+    self.host_id = "spiegel"
 
-    local _,_,s = video.page_url:find("/video/video%-(.-)%.")
-    video.id    = s or error ("no match: video id")
+    local _,_,s = self.page_url:find("/video/video%-(.-)%.")
+    self.id     = s or error ("no match: video id")
 
     local playlist_url = string.format(
         "http://www1.spiegel.de/active/playlist/fcgi/playlist.fcgi/"
-        .. "asset=flashvideo/mode=id/id=%s", video.id)
+        .. "asset=flashvideo/mode=id/id=%s", self.id)
 
     local playlist = quvi.fetch (playlist_url, {fetch_type = 'playlist'})
 
     local _,_,s = playlist:find("<headline>(.-)</")
-    video.title = s or error ("no match: video title")
+    self.title  = s or error ("no match: video title")
 
     local config_url = string.format(
-        "http://video.spiegel.de/flash/%s.xml", video.id)
+        "http://video.spiegel.de/flash/%s.xml", self.id)
 
     local config = quvi.fetch (config_url, {fetch_type = 'config'})
     local format = lookup[default]
 
     for k,v in pairs (lookup) do
-        if (k == video.requested_format) then
+        if (k == self.requested_format) then
             format = v
             break
         end
@@ -76,12 +79,12 @@ function parse (video)
     for id,w,h,c,b,s in config:gfind(pattern) do
         fname = string.format("%s_%sx%s_%s_%s.%s",id,w,h,c,b,s)
         if (format == string.format("%s_%s",c,b)) then
-            video.url = {"http://video.spiegel.de/flash/"..fname}
+            self.url = {"http://video.spiegel.de/flash/"..fname}
             break
         end
     end
 
-    return video
+    return self
 end
 
 

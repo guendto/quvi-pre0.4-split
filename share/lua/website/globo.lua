@@ -25,28 +25,32 @@
 -- user-agent.
 
 -- Identify the script.
-function ident (page_url)
-    local t   = {}
-    t.domain  = "globo.com"
-    t.formats = "default"
-    t.handles = (page_url ~= nil and page_url:find(t.domain) ~= nil)
+function ident (self)
+    local t      = {}
+    t.domain     = "globo.com"
+    t.formats    = "default"
+    package.path = self.script_dir .. '/?.lua'
+    local C      = require 'quvi/const'
+    t.categories = C.proto_http
+    t.handles    =
+        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
     return t
 end
 
 -- Parse video URL.
-function parse (video)
-    video.host_id = "globo"
-    local page    = quvi.fetch(video.page_url)
+function parse (self)
+    self.host_id = "globo"
+    local page   = quvi.fetch(self.page_url)
 
     local _,_,s = page:find('midiaId: (.-),')
-    video.id    = s or error ("no match: video id")
+    self.id     = s or error ("no match: video id")
 
     local _,_,s = page:find('<title>.*-.*- (.-)</title>')
-    video.title = s or error ("no match: video title")
+    self.title  = s or error ("no match: video title")
 
     s = "http://playervideo.globo.com/webmedia/GMCPlayListASX"
         .. "?flash=true&midiaId="
-        .. video.id
+        .. self.id
 
     -- Unless user-agent is set here to 'iphone', URL verification
     -- *will* fail (HTTP/403) later. Fetching below itself does not
@@ -55,9 +59,9 @@ function parse (video)
     local opts  = {fetch_type = 'config', user_agent = 'iphone'}
     local xml   = quvi.fetch (s, opts)
     local _,_,s = xml:find('<video duration=".*" src="(.-)%?')
-    video.url   = {s or error ('no match: video url')}
+    self.url    = {s or error ('no match: video url')}
 
-    return video
+    return self
 end
 
 

@@ -105,6 +105,7 @@ QUVIOPT_NOVERIFY,       /**< Do not verify video link */
 QUVIOPT_STATUSFUNCTION, /**< Callback function for status updates */
 QUVIOPT_WRITEFUNCTION,  /**< Callback function for writing data */
 QUVIOPT_NOSHORTENED,    /**< Do not "decompress" shortened URLs */
+QUVIOPT_CATEGORY,       /**< Bit pattern of (OR'd) website script categories */
 } QUVIoption;
 
 #define QUVIINFO_VOID       0x100000 /**< void type */
@@ -112,6 +113,24 @@ QUVIOPT_NOSHORTENED,    /**< Do not "decompress" shortened URLs */
 #define QUVIINFO_STRING     0x300000 /**< string type */
 #define QUVIINFO_DOUBLE     0x400000 /**< double type */
 #define QUVIINFO_TYPEMASK   0xf00000 /**< type mask */
+
+/** @enum QUVIcategory Website script category
+*
+* Used (together with QUVIOPT_CATEGORY) to specify which of the website
+* script categories the application  wants to use. The library defaults
+* to QUVIPROTO_HTTP.
+*
+* @sa: QUVIOPT_CATEGORY
+*/
+typedef enum {
+QUVIPROTO_HTTP = 0x1, /**< Protocol category HTTP */
+QUVIPROTO_MMS  = 0x2, /**< Protocol category MMS */
+QUVIPROTO_RTSP = 0x4, /**< Protocol category RTSP */
+QUVIPROTO_RTMP = 0x8, /**< Protocol category RTMP */
+QUVIPROTO_ALL  =
+    (QUVIPROTO_HTTP|QUVIPROTO_MMS|QUVIPROTO_RTSP|QUVIPROTO_RTMP)
+    /**< All protocol categories */
+} QUVIcategory;
 
 /** @enum QUVIinfo Info codes to be used with quvi_getinfo()
 *

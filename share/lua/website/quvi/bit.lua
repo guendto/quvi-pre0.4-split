@@ -20,34 +20,30 @@
 -- 02110-1301  USA
 --
 
--- Identify the script.
-function ident (self)
-    local t      = {}
-    t.domain     = "buzzhumor.com"
-    t.formats    = "default"
-    package.path = self.script_dir .. '/?.lua'
-    local C      = require 'quvi/const'
-    t.categories = C.proto_http
-    t.handles    =
-        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
-    return t
+local M = {}
+
+function M.bit_or (x, y) -- http://is.gd/iVg4x
+    local p = 1
+    while p < x do p = p + p end
+    while p < y do p = p + p end
+    local z = 0
+    repeat
+        if p <= x or p <= y then
+            z = z + p
+            if p <= x then x = x - p end
+            if p <= y then y = y - p end
+        end
+        p = p * 0.5
+    until p < 1
+    return z
 end
 
--- Parse video URL.
-function parse (self)
-    self.host_id = "buzzhumor"
-    local page   = quvi.fetch(self.page_url)
+-- 1-based indexing
+function M.bit (p) return 2 ^ (p - 1) end
 
-    local _,_,s = page:find("<title>(.-)</title>")
-    self.title  = s or error ("no match: video title")
+-- e.g. "if has_bit (foo, bit (n)) then ..."
+function M.has_bit(x, p) return x % (p + p) >= p end 
 
-    local _,_,s = page:find("/videos/(%d+)")
-    self.id     = s or error ("no match: video id")
-
-    local _,_,s = page:find('&file=(.-)"')
-    self.url    = {s or error ("no match: file")}
-
-    return self
-end
+return M
 
 
