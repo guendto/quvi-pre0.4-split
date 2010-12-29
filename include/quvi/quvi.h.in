@@ -427,7 +427,7 @@ QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
 * quvi_t quvi;
 * quvi_video_t video;
 * quvi_init(&quvi);
-* quvi_parse(quvi, "http://www.youtube.com/watch?v=DeWsZ2b_pK4", &video);
+* quvi_parse(quvi, "http://vimeo.com/1485507", &video);
 * ...
 * @endcode
 */
