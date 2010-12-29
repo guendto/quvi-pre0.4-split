@@ -7,6 +7,7 @@ lua/util/trim.lua \
 lua/website/README \
 lua/website/quvi/bit.lua \
 lua/website/quvi/const.lua \
+lua/website/quvi/util.lua \
 lua/website/academicearth.lua \
 lua/website/bloomberg.lua \
 lua/website/break.lua \

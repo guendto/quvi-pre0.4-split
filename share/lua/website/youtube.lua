@@ -109,21 +109,22 @@ function get_video_info (self, result)
         .. "&el=detailpage&ps=default&eurl=&gl=US&hl=en"
 
     local opts   = { fetch_type = 'config' }
-    local config = decode (quvi.fetch (config_url, opts))
+    local U      = require 'quvi/util'
+    local config = U.decode (quvi.fetch (config_url, opts))
 
     if (config['reason']) then
-        local reason = unescape (config['reason'])
+        local reason = U.unescape (config['reason'])
         local code   = config['errorcode']
         error (reason..' (code='..code..')')
     end
 
     self.title = config['title'] or error ('no match: video title')
-    self.title = unescape (self.title)
+    self.title = U.unescape (self.title)
 
     local fmt_url_map =
         config['fmt_url_map'] or error ("no match: fmt_url_map")
 
-    fmt_url_map = unescape (fmt_url_map) .. ','
+    fmt_url_map = U.unescape (fmt_url_map) .. ','
 
     -- Assume first found URL to be the 'best'.
     local best  = nil
@@ -171,25 +172,6 @@ function to_url (fmt, t)
         function (k,v) if (id == k) then url = v end end)
 
     return url
-end
-
--- http://www.lua.org/pil/20.3.html
-function decode (s)
-    r = {}
-    for n,v in s:gfind ("([^&=]+)=([^&=]+)") do
-        n = unescape (n)
-        r[n] = v
-    end
-    return r
-end
-
--- http://www.lua.org/pil/20.3.html
-function unescape (s)
-    s = s:gsub ('+', ' ')
-    s = s:gsub ('%%(%x%x)', function (h)
-            return string.char (tonumber (h, 16))
-        end)
-    return s
 end
 
 
