@@ -22043,39 +22043,45 @@ $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: Configured to build quvi/libquvi:
+{ $as_echo "$as_me:${as_lineno-$LINENO}:
 
-    quvi version:   ${VERSION}  g:$git_describe  b:$build_date
+Configured:
+    quvi version:   ${VERSION}  g:${git_describe}  b:${build_date}
     host setup:     ${host}
-    install prefix: ${prefix}
     compiler:       ${CC}
     cflags:         ${CFLAGS}
+    prefix:         ${prefix}
 
 Options:
     build libquvi:  shared=${enable_shared} static=${enable_static}
-    build quvi:     ${enable_quvi}
     build examples: ${enable_examples}
-    enable nsfw:    ${enable_nsfw}
+    build quvi:     ${enable_quvi}
+    --
     enable broken:  ${enable_broken}
     enable tests:   ${enable_tests}
+    enable nsfw:    ${enable_nsfw}
+    --
     install manual: ${with_man}
     install docs:   ${with_doc}
 " >&5
-$as_echo "$as_me: Configured to build quvi/libquvi:
+$as_echo "$as_me:
 
-    quvi version:   ${VERSION}  g:$git_describe  b:$build_date
+Configured:
+    quvi version:   ${VERSION}  g:${git_describe}  b:${build_date}
     host setup:     ${host}
-    install prefix: ${prefix}
     compiler:       ${CC}
     cflags:         ${CFLAGS}
+    prefix:         ${prefix}
 
 Options:
     build libquvi:  shared=${enable_shared} static=${enable_static}
-    build quvi:     ${enable_quvi}
     build examples: ${enable_examples}
-    enable nsfw:    ${enable_nsfw}
+    build quvi:     ${enable_quvi}
+    --
     enable broken:  ${enable_broken}
     enable tests:   ${enable_tests}
+    enable nsfw:    ${enable_nsfw}
+    --
     install manual: ${with_man}
     install docs:   ${with_doc}
 " >&6;}

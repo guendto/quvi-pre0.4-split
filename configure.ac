@@ -232,21 +232,24 @@ AC_CONFIG_FILES([
 
 AC_OUTPUT
 
-AC_MSG_NOTICE([Configured to build quvi/libquvi:
+AC_MSG_NOTICE([
 
-    quvi version:   ${VERSION}  g:$git_describe  b:$build_date
+Configured:
+    quvi version:   ${VERSION}  g:${git_describe}  b:${build_date}
     host setup:     ${host}
-    install prefix: ${prefix}
     compiler:       ${CC}
     cflags:         ${CFLAGS}
+    prefix:         ${prefix}
 
 Options:
     build libquvi:  shared=${enable_shared} static=${enable_static}
-    build quvi:     ${enable_quvi}
     build examples: ${enable_examples}
-    enable nsfw:    ${enable_nsfw}
+    build quvi:     ${enable_quvi}
+    --
     enable broken:  ${enable_broken}
     enable tests:   ${enable_tests}
+    enable nsfw:    ${enable_nsfw}
+    --
     install manual: ${with_man}
     install docs:   ${with_doc}
 ])
