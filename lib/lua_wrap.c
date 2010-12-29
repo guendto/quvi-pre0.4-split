@@ -651,6 +651,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
 {
   static const char func_name[] = "parse";
   _quvi_lua_script_t qls;
+  char *script_dir;
   _quvi_t quvi;
   QUVIcode rc;
 
@@ -667,11 +668,16 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
     return (QUVI_LUA);
   }
 
+  script_dir = dirname_from(qls->path);
+
   lua_newtable(l);
   set_field(l, "page_url", video->page_link);
   set_field(l, "requested_format", video->quvi->format);
   set_field(l, "redirect", "");
   set_field(l, "starttime", "");
+  set_field(l, "script_dir", script_dir);
+
+  _free(script_dir);
 
   if (lua_pcall(l, 1, 1, 0)) {
     seterr("%s", lua_tostring(l, -1));
