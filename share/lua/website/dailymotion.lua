@@ -55,6 +55,12 @@ function parse (self)
     self.host_id  = "dailymotion"
     self.page_url = normalize (self.page_url)
 
+    local _,_,s = self.page_url:find ('/family_filter%?urlback=(.+)')
+    if (s ~= nil) then
+        self.page_url = 'http://dailymotion.com' .. quvi.unescape (s)
+            -- We set family_filter arbitrary cookie below.
+    end
+
     local opts = { arbitrary_cookie = 'family_filter=off' }
     local page = quvi.fetch(self.page_url, opts)
 
@@ -67,6 +73,31 @@ function parse (self)
 
     local _,_,s = page:find("video/(.-)_")
     self.id     = s or error ("no match: video id")
+
+    -- Some videos have only one link available.
+    local _,_,s = page:find ('"video", "(.-)"')
+    if (s ~= nil) then
+        self.url = {s}
+    else
+        parse_video_url (self)
+    end
+
+    if (self.url == nil) then
+        error ('no match: video url')
+    end
+
+    return self
+end
+
+function normalize (url)
+    if (url:find ("/swf/")) then
+        url = url:gsub ("/video/", "/")
+        url = url:gsub ("/swf/", "/video/")
+    end
+    return url
+end
+
+function parse_video_url (self)
 
     local best    = nil
     local req_fmt = self.requested_format
@@ -89,19 +120,7 @@ function parse (self)
         self.url = {best}
     end
 
-    if (self.url == nil) then
-        error ("no match: format id, path")
-    end
-
-    return self
-end
-
-function normalize (url)
-    if (url:find ("/swf/")) then
-        url = url:gsub ("/video/", "/")
-        url = url:gsub ("/swf/", "/video/")
-    end
-    return url
+    return self.url
 end
 
 
