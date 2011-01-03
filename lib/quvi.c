@@ -503,15 +503,23 @@ quvi_next_supported_website(quvi_t handle, char **domain, char **formats)
 
   rc = run_ident_func(&ident, curr_host);
 
-  *domain = ident.domain;
-  *formats = ident.formats;
+  if (rc == QUVI_NOSUPPORT) {
+    /* The website scripts return QUVI_NOSUPPORT in all cases. This is
+     * because of the undefined URL that we pass to them above (ident.url
+     * = NULL). We are only interested in the `domain' and `formats'
+     * information anyway, so this is OK. */
+    if (ident.categories & quvi->category) {
+      *domain = ident.domain;
+      *formats = ident.formats;
+      rc = QUVI_OK;
+    } else {
+      _free(ident.domain);
+      _free(ident.formats);
+      rc = quvi_next_supported_website(handle, domain, formats);
+    }
+  }
 
-  /*
-   * Scripts will return QUVI_NOSUPPORT because
-   * of the "ident.url=0" above. This is OK since
-   * we ignore the "will_handle" value altogether.
-   */
-  return (rc == QUVI_NOSUPPORT ? QUVI_OK : rc);
+  return (rc);
 }
 
 /* quvi_next_host, NOTE: deprecated. */
