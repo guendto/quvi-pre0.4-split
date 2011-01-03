@@ -46,12 +46,12 @@ function parse (self)
 
     local _,_,s = page:find('http://www.theonion.com/video/(.-),')
     s           = s or error ("no match: flv url")
-    s           = "http://videos.theonion.com/onion_video/auto/"
-                    .. (self.id)
-                    .. "/"
-                    .. (s)
-                    .."-iphone.m4v"
-    self.url   = {quvi.unescape(s)}
+
+    s = string.format(
+        "http://videos.theonion.com/onion_video/auto/%s/%s-iphone.m4v",
+        self.id, s
+    )
+    self.url   = {s}
 
     return self
 end
