@@ -37,3 +37,4 @@ char *strupr(char *src);
 #endif
 
 #endif
+/* vim: set ts=2 sw=2 tw=72 expandtab: */

@@ -54,3 +54,4 @@ int add_video_link(llst_node_t * lst, const char *fmt, ...);
 char *dirname_from(const char *s);
 
 #endif
+/* vim: set ts=2 sw=2 tw=72 expandtab: */

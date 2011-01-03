@@ -787,3 +787,5 @@ QUVIcode find_host_script_and_parse(_quvi_video_t video)
   /* found a script. */
   return (run_parse_func(l, script, video));
 }
+
+/* vim: set ts=2 sw=2 tw=72 expandtab: */

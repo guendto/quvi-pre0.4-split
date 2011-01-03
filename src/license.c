@@ -35,3 +35,4 @@ char LICENSE[] =
     " * License along with this library; if not, write to the Free Software\n"
     " * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n"
     " * 02110-1301  USA\n" " */";
+/* vim: set ts=2 sw=2 tw=72 expandtab: */

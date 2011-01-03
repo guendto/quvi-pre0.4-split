@@ -28,3 +28,4 @@ QUVIcode query_file_length(_quvi_t, llst_node_t);
 QUVIcode is_shortened_url(_quvi_video_t);
 
 #endif
+/* vim: set ts=2 sw=2 tw=72 expandtab: */

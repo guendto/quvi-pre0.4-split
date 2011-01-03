@@ -371,3 +371,5 @@ QUVIcode is_shortened_url(_quvi_video_t video)
 
   return (rc);
 }
+
+/* vim: set ts=2 sw=2 tw=72 expandtab: */

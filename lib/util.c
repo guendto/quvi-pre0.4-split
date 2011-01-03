@@ -197,3 +197,5 @@ char *dirname_from(const char *s)
   _free(t);
   return (p);
 }
+
+/* vim: set ts=2 sw=2 tw=72 expandtab: */

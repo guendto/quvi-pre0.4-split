@@ -104,3 +104,4 @@ struct _quvi_lua_script_s {
 typedef struct _quvi_lua_script_s *_quvi_lua_script_t;
 
 #endif
+/* vim: set ts=2 sw=2 tw=72 expandtab: */

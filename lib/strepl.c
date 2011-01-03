@@ -57,3 +57,5 @@ char *strepl(const char *str, const char *old, const char *new)
 
   return (ret);
 }
+
+/* vim: set ts=2 sw=2 tw=72 expandtab: */
