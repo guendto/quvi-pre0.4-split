@@ -489,34 +489,6 @@ QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...);
  */
 
 /**
-* @brief Checks whether the URL would be supported by one of the scripts
-*
-* This function does not require an Internet connection. Note that this
-* function will return QUVI_NOSUPPORT for nearly all shortened (or
-* "compressed") URLs as they require querying a redirection over the
-* Internet. See the "Exceptions" below.
-*
-* @param quvi Handle to session
-* @param url Null-terminated string to an URL
-*
-* @note
-*   - Most shorteners require retrieving the redirection from the
-*     services before
-*   - Returns QUVI_NOSUPPORT for most shortened URLs
-*   - Examples:
-*     - is.gd
-*     - goo.gl
-*     - ...
-*   - Exceptions:
-*     - youtu.be (script: youtube.lua)
-*     - dai.y (script: dailymotion.lua)
-*     - These services do not "compress" the video ID which can be used
-*     in the above scripts to reconstruct the original URL
-* @return Non-zero if an error occurred
-*/
-QUVIcode quvi_supported(quvi_t quvi, char *url);
-
-/**
 * @brief Move to the next video link (if any)
 *
 * Used to iterate video links for the parsed video page.
@@ -575,6 +547,34 @@ void quvi_parse_close(quvi_video_t *video);
 /** @defgroup libquvi_misc Misc. utility functions
  * @{
  */
+
+/**
+* @brief Checks whether the URL would be supported by one of the scripts
+*
+* This function does not require an Internet connection. Note that this
+* function will return QUVI_NOSUPPORT for nearly all shortened (or
+* "compressed") URLs as they require querying a redirection over the
+* Internet. See the "Exceptions" below.
+*
+* @param quvi Handle to session
+* @param url Null-terminated string to an URL
+*
+* @note
+*   - Most shorteners require retrieving the redirection from the
+*     services before
+*   - Returns QUVI_NOSUPPORT for most shortened URLs
+*   - Examples:
+*     - is.gd
+*     - goo.gl
+*     - ...
+*   - Exceptions:
+*     - youtu.be (script: youtube.lua)
+*     - dai.y (script: dailymotion.lua)
+*     - These services do not "compress" the video ID which can be used
+*     in the above scripts to reconstruct the original URL
+* @return Non-zero if an error occurred
+*/
+QUVIcode quvi_supported(quvi_t quvi, char *url);
 
 /**
 * @brief Return next supported video website
