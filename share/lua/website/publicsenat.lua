@@ -1,4 +1,5 @@
 
+-- quvi
 -- Copyright (C) 2010 Raphaël Droz.
 --
 -- This file is part of quvi <http://quvi.googlecode.com/>.
@@ -52,3 +53,5 @@ function parse (self)
 
     return self
 end
+
+-- vim: set ts=4 sw=4 tw=72 expandtab:

@@ -46,4 +46,4 @@ function M.has_bit(x, p) return x % (p + p) >= p end
 
 return M
 
-
+-- vim: set ts=4 sw=4 tw=72 expandtab:
