@@ -30,7 +30,7 @@ AC_GNU_SOURCE
 AC_DEFINE_UNQUOTED([CANONICAL_TARGET], "$target", [...])
 AC_DEFINE_UNQUOTED([CANONICAL_HOST], "$host", [...])
 
-AM_INIT_AUTOMAKE([-Wall -Werror foreign dist-bzip2 dist-lzma])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign dist-bzip2 dist-xz])
 
 LT_INIT()
 LT_PREREQ([2.2])
