@@ -1,0 +1,12 @@
+autom4te.cache
+configure.scan
+autoscan.log
+CHECKLIST
+patches/
+*.patch
+*.diff
+TODO*
+tmp/
+*.swp
+usr/
+*~
