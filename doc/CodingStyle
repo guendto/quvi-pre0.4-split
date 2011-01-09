@@ -1,10 +1,13 @@
 
-
 Coding style
 ================
 
-We use `indent -linux --no-tabs -i2` for C. See also
-the $top_srcdir/examples/git-hooks/ dir.
+C
+
+We use `indent -linux --no-tabs -i2 -l72` for C. See also
+$top_srcdir/scripts/indent_c.sh
+
+/* vim: set ts=2 sw=2 tw=72 expandtab: */
 
 
 LUA
@@ -14,3 +17,5 @@ Editor settings:
     * Insert spaces instead of tabs
     * Automatic indentation (recommended)
     * Set right margin to 80 or 72 (preferred)
+
+-- vim: set ts=4 sw=4 tw=72 expandtab:
