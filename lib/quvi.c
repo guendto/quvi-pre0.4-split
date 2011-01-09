@@ -63,9 +63,9 @@ QUVIcode quvi_init(quvi_t * dst)
   quvi_setopt(quvi, QUVIOPT_FORMAT, "default");
   quvi_setopt(quvi, QUVIOPT_CATEGORY, QUVIPROTO_HTTP);
 
-  csetopt(CURLOPT_USERAGENT, "Mozilla/5.0");
-  csetopt(CURLOPT_FOLLOWLOCATION, 1L);
-  csetopt(CURLOPT_NOBODY, 0L);
+  curl_easy_setopt(quvi->curl, CURLOPT_USERAGENT, "Mozilla/5.0");
+  curl_easy_setopt(quvi->curl, CURLOPT_FOLLOWLOCATION, 1L);
+  curl_easy_setopt(quvi->curl, CURLOPT_NOBODY, 0L);
 
   return (init_lua(quvi));
 }
@@ -116,7 +116,7 @@ QUVIcode quvi_supported(quvi_t quvi, char *url)
 
   video->quvi = quvi;
 
-  setvid(video->page_link, "%s", url);
+  freprintf(&video->page_link, "%s", url);
 
   rc = find_host_script(video);
 
@@ -144,7 +144,7 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t * dst)
   *dst = video;
   video->quvi = quvi;
 
-  setvid(video->page_link, "%s", url);
+  freprintf(&video->page_link, "%s", url);
 
   if (!video->quvi->no_shortened) {
     rc = is_shortened_url(video);
@@ -158,7 +158,7 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t * dst)
       return (rc);
     else {
       if (strlen(video->redirect)) {    /* Found a redirect. */
-        setvid(video->page_link, "%s", video->redirect);
+        freprintf(&video->page_link, "%s", video->redirect);
         continue;
       } else
         break;

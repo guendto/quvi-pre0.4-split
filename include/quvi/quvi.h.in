@@ -45,7 +45,7 @@
 /** @enum QUVIversion Types used with quvi_version() */
 typedef enum {
 QUVI_VERSION = 0x00,    /**< Version string only */
-QUVI_VERSION_LONG,      /**< Version string, build date and misc. features */
+QUVI_VERSION_LONG       /**< Version string, build date and misc. features */
 } QUVIversion;
 
 /** @enum QUVIcode Return codes */
@@ -67,14 +67,14 @@ QUVI_PCRE = 0x40, /**< libpcre error occurred @deprecated since 0.2.9 */
 QUVI_NOSUPPORT,   /**< libquvi does not support the video host */
 QUVI_CURL,        /**< libcurl error occurred */
 QUVI_ICONV,       /**< libiconv error occurred */
-QUVI_LUA,         /**< lua error occurred */
+QUVI_LUA          /**< lua error occurred */
 } QUVIcode;
 
 /** @enum QUVIstatus Status codes */
 typedef enum {
 QUVISTATUS_FETCH  = 0x00,   /**< Status changed to fetch (page, config, etc.) */
 QUVISTATUS_VERIFY,          /**< Status changed to verify video link */
-QUVISTATUS_SHORTENED,       /**< Status changed to check for shortened URL */
+QUVISTATUS_SHORTENED        /**< Status changed to check for shortened URL */
 } QUVIstatus;
 
 /** @enum QUVIstatusType Status type codes */
@@ -84,7 +84,7 @@ QUVISTATUSTYPE_PAGE = 0x00,   /**< Fetching video page */
 QUVISTATUSTYPE_CONFIG,        /**< Fetching config */
 QUVISTATUSTYPE_PLAYLIST,      /**< Fetching playlist */
 /* Generic types: */
-QUVISTATUSTYPE_DONE,          /**< General purpose "done" status type */
+QUVISTATUSTYPE_DONE           /**< General purpose "done" status type */
 } QUVIstatusType;
 
 /** @enum QUVIoption Option codes to be used with quvi_setopt()
@@ -105,7 +105,7 @@ QUVIOPT_NOVERIFY,       /**< Do not verify video link */
 QUVIOPT_STATUSFUNCTION, /**< Callback function for status updates */
 QUVIOPT_WRITEFUNCTION,  /**< Callback function for writing data */
 QUVIOPT_NOSHORTENED,    /**< Do not "decompress" shortened URLs */
-QUVIOPT_CATEGORY,       /**< Bit pattern of (OR'd) website script categories */
+QUVIOPT_CATEGORY        /**< Bit pattern of (OR'd) website script categories */
 } QUVIoption;
 
 #define QUVIINFO_VOID       0x100000 /**< void type */

@@ -145,14 +145,41 @@ static size_t write_callback(void *p, size_t size, size_t nmemb, void *data)
   return r;
 }
 
-extern char LICENSE[];
+/* Divided into smaller blocks. Otherwise -pedantic objects. */
+
+#define LICENSE_1 \
+"/* quvi\n" \
+" * Copyright (C) 2009,2010,2011  Toni Gundogdu <legatvs@gmail.com>\n"
+
+#define LICENSE_2 \
+" * This library is free software; you can redistribute it and/or\n" \
+" * modify it under the terms of the GNU Lesser General Public\n" \
+" * License as published by the Free Software Foundation; either\n" \
+" * version 2.1 of the License, or (at your option) any later version.\n"
+
+#define LICENSE_3 \
+" * This library is distributed in the hope that it will be useful,\n" \
+" * but WITHOUT ANY WARRANTY; without even the implied warranty of\n" \
+" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n" \
+" * Lesser General Public License for more details.\n"
+
+#define LICENSE_4 \
+" * You should have received a copy of the GNU Lesser General Public\n" \
+" * License along with this library; if not, write to the Free Software\n" \
+" * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n" \
+" * 02110-1301  USA\n" " */"
 
 static void license(opts_s opts)
 {
-  printf("%s\n", LICENSE);
+  printf("%s *\n%s *\n%s *\n%s\n", LICENSE_1, LICENSE_2, LICENSE_3, LICENSE_4);
   cmdline_parser_free(&opts);
   exit(0);
 }
+
+#undef LICENSE_4
+#undef LICENSE_3
+#undef LICENSE_2
+#undef LICENSE_1
 
 static void version(opts_s opts)
 {

@@ -38,21 +38,6 @@
         if (p) { free(p); p=0; } \
     } while(0)
 
-#define seterr(args...) \
-    do { \
-        _free(quvi->errmsg); \
-        asprintf(&quvi->errmsg, args); \
-    } while(0)
-
-#define setvid(prop,args...) \
-    do { \
-        _free(prop); \
-        asprintf(&prop, args); \
-    } while(0)
-
-#define csetopt(opt,param) \
-    curl_easy_setopt(quvi->curl,opt,param)
-
 struct _quvi_s {
   char *format;
   long no_verify;

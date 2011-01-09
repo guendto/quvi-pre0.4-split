@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2009,2010  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2009,2010,2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,6 +36,19 @@
 #include "curl_wrap.h"
 #include "util.h"
 
+char *freprintf(char **dst, const char *fmt, ...)
+{
+  va_list args;
+
+  _free(*dst);
+
+  va_start(args, fmt);
+  vasprintf(dst, fmt, args);
+  va_end(args);
+
+  return (*dst);
+}
+
 #ifdef HAVE_ICONV
 QUVIcode to_utf8(_quvi_video_t video)
 {
@@ -45,14 +58,12 @@ QUVIcode to_utf8(_quvi_video_t video)
   ICONV_CONST char *inptr;
   char *from, *wptr;
   iconv_t cd;
-  _quvi_t quvi;
 
   assert(video != 0);
   assert(video->quvi != 0);
   assert(video->title != 0);
   assert(video->charset != 0);
 
-  quvi = video->quvi;
   wptr = outbuf;
   inptr = inbuf;
   avail = sizeof(outbuf);
@@ -77,11 +88,12 @@ QUVIcode to_utf8(_quvi_video_t video)
   }
 
   if (cd == (iconv_t) - 1) {
-    if (errno == EINVAL)
-      seterr("conversion from %s to %s unavailable", from, to);
-    else {
+    if (errno == EINVAL) {
+      freprintf(&video->quvi->errmsg,
+                "conversion from %s to %s unavailable", from, to);
+    } else {
 #ifdef HAVE_STRERROR
-      seterr("iconv_open: %s", strerror(errno));
+      freprintf(&video->quvi->errmsg, "iconv_open: %s", strerror(errno));
 #else
       perror("iconv_open");
 #endif
@@ -97,11 +109,13 @@ QUVIcode to_utf8(_quvi_video_t video)
   cd = 0;
 
   if (iconv_code == (size_t) - 1) {
-    seterr("converting characters from '%s' to '%s' failed", from, to);
+    freprintf(&video->quvi->errmsg,
+              "converting characters from '%s' to '%s' failed", from, to);
     _free(from);
     return (QUVI_ICONV);
-  } else
-    setvid(video->title, "%s", outbuf);
+  } else {
+    freprintf(&video->title, "%s", outbuf);
+  }
 
   _free(from);
 
