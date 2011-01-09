@@ -102,7 +102,7 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
 	distdir dist dist-all distcheck
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = include lib man1 src examples share doc tests
+DIST_SUBDIRS = include lib man1 src examples share doc scripts tests
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -293,7 +293,8 @@ ChangeLog.pre-gitlog
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libquvi.pc
-SUBDIRS = include lib man1 src examples share doc $(am__append_1)
+SUBDIRS = include lib man1 src examples share doc scripts \
+	$(am__append_1)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

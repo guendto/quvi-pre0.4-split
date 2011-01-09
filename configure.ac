@@ -226,6 +226,7 @@ AC_CONFIG_FILES([
     examples/Makefile
     tests/Makefile
     tests/quviTest.pm
+    scripts/Makefile
     libquvi.pc
     doxygen.conf
 ])
