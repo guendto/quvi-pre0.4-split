@@ -44,7 +44,8 @@ struct mem_s {
 };
 
 size_t
-quvi_write_callback_default(void *p, size_t size, size_t nmemb, void *data)
+quvi_write_callback_default(void *p, size_t size, size_t nmemb,
+                            void *data)
 {
   struct mem_s *m = (struct mem_s *)data;
   const size_t rsize = size * nmemb;
@@ -62,7 +63,8 @@ quvi_write_callback_default(void *p, size_t size, size_t nmemb, void *data)
 extern char *lua_get_field_s(lua_State *, const char *);
 
 QUVIcode
-fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l, char **dst)
+fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l,
+             char **dst)
 {
   char *fetch_type, *arbitrary_cookie, *user_agent;
   QUVIstatusType fetch_type_n;
@@ -98,8 +100,9 @@ fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l, char **dst)
   }
 
   if (video->quvi->status_func) {
-    if (video->quvi->status_func(makelong(QUVISTATUS_FETCH, fetch_type_n),
-                                 (void *)url) != QUVI_OK) {
+    if (video->quvi->
+        status_func(makelong(QUVISTATUS_FETCH, fetch_type_n),
+                    (void *)url) != QUVI_OK) {
       return (QUVI_ABORTEDBYCALLBACK);
     }
   }
@@ -116,7 +119,8 @@ fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l, char **dst)
                    : (curl_write_callback) quvi_write_callback_default);
 
   if (arbitrary_cookie != NULL && *arbitrary_cookie != '\0') {
-    curl_easy_setopt(video->quvi->curl, CURLOPT_COOKIE, arbitrary_cookie);
+    curl_easy_setopt(video->quvi->curl, CURLOPT_COOKIE,
+                     arbitrary_cookie);
   }
 
   if (user_agent != NULL && *user_agent != '\0') {
@@ -128,8 +132,10 @@ fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l, char **dst)
   conncode = 0;
   rc = QUVI_OK;
 
-  curl_easy_getinfo(video->quvi->curl, CURLINFO_RESPONSE_CODE, &respcode);
-  curl_easy_getinfo(video->quvi->curl, CURLINFO_HTTP_CONNECTCODE, &conncode);
+  curl_easy_getinfo(video->quvi->curl, CURLINFO_RESPONSE_CODE,
+                    &respcode);
+  curl_easy_getinfo(video->quvi->curl, CURLINFO_HTTP_CONNECTCODE,
+                    &conncode);
 
   if (curlcode == CURLE_OK && respcode == 200) {
 
@@ -149,7 +155,8 @@ fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l, char **dst)
 
     if (curlcode == CURLE_OK) {
       freprintf(&video->quvi->errmsg,
-                "server response code %ld (conncode=%ld)", respcode, conncode);
+                "server response code %ld (conncode=%ld)", respcode,
+                conncode);
     }
 
     else {
@@ -244,7 +251,8 @@ QUVIcode query_file_length(_quvi_t quvi, llst_node_t lnk)
                         CURLINFO_CONTENT_LENGTH_DOWNLOAD, &qvl->length);
 
       if (quvi->status_func) {
-        if (quvi->status_func(makelong(QUVISTATUS_VERIFY, QUVISTATUSTYPE_DONE),
+        if (quvi->status_func(makelong
+                              (QUVISTATUS_VERIFY, QUVISTATUSTYPE_DONE),
                               0) != QUVI_OK) {
           rc = QUVI_ABORTEDBYCALLBACK;
         }
@@ -256,7 +264,8 @@ QUVIcode query_file_length(_quvi_t quvi, llst_node_t lnk)
       }
     } else {
       freprintf(&quvi->errmsg,
-                "server response code %ld (conncode=%ld)", respcode, conncode);
+                "server response code %ld (conncode=%ld)", respcode,
+                conncode);
       rc = QUVI_CURL;
     }
   } else {
@@ -314,8 +323,10 @@ QUVIcode is_shortened_url(_quvi_video_t video)
   conncode = 0;
   rc = QUVI_OK;
 
-  curl_easy_getinfo(video->quvi->curl, CURLINFO_RESPONSE_CODE, &respcode);
-  curl_easy_getinfo(video->quvi->curl, CURLINFO_HTTP_CONNECTCODE, &conncode);
+  curl_easy_getinfo(video->quvi->curl, CURLINFO_RESPONSE_CODE,
+                    &respcode);
+  curl_easy_getinfo(video->quvi->curl, CURLINFO_HTTP_CONNECTCODE,
+                    &conncode);
 
   if (curlcode == CURLE_OK) {
 
@@ -339,7 +350,8 @@ QUVIcode is_shortened_url(_quvi_video_t video)
 
     if (video->quvi->status_func) {
 
-      const long param = makelong(QUVISTATUS_SHORTENED, QUVISTATUSTYPE_DONE);
+      const long param =
+          makelong(QUVISTATUS_SHORTENED, QUVISTATUSTYPE_DONE);
 
       rc = video->quvi->status_func(param, 0);
 

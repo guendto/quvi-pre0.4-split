@@ -473,7 +473,8 @@ static llst_node_t curr_host = NULL;
 /* quvi_next_supported_website */
 
 QUVIcode
-quvi_next_supported_website(quvi_t handle, char **domain, char **formats)
+quvi_next_supported_website(quvi_t handle, char **domain,
+                            char **formats)
 {
   struct lua_ident_s ident;
   _quvi_t quvi;

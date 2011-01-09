@@ -93,7 +93,8 @@ QUVIcode to_utf8(_quvi_video_t video)
                 "conversion from %s to %s unavailable", from, to);
     } else {
 #ifdef HAVE_STRERROR
-      freprintf(&video->quvi->errmsg, "iconv_open: %s", strerror(errno));
+      freprintf(&video->quvi->errmsg, "iconv_open: %s",
+                strerror(errno));
 #else
       perror("iconv_open");
 #endif
@@ -110,7 +111,8 @@ QUVIcode to_utf8(_quvi_video_t video)
 
   if (iconv_code == (size_t) - 1) {
     freprintf(&video->quvi->errmsg,
-              "converting characters from '%s' to '%s' failed", from, to);
+              "converting characters from '%s' to '%s' failed", from,
+              to);
     _free(from);
     return (QUVI_ICONV);
   } else {

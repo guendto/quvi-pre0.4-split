@@ -135,7 +135,8 @@ static int status_callback(long param, void *data)
   return (0);
 }
 
-static size_t write_callback(void *p, size_t size, size_t nmemb, void *data)
+static size_t write_callback(void *p, size_t size, size_t nmemb,
+                             void *data)
 {
   size_t r = quvi_write_callback_default(p, size, nmemb, data);
   /* Could do something useful here. */
@@ -171,7 +172,8 @@ static size_t write_callback(void *p, size_t size, size_t nmemb, void *data)
 
 static void license(opts_s opts)
 {
-  printf("%s *\n%s *\n%s *\n%s\n", LICENSE_1, LICENSE_2, LICENSE_3, LICENSE_4);
+  printf("%s *\n%s *\n%s *\n%s\n", LICENSE_1, LICENSE_2, LICENSE_3,
+         LICENSE_4);
   cmdline_parser_free(&opts);
   exit(0);
 }
@@ -248,7 +250,8 @@ static void support(quvi_t quvi, opts_s opts)
   exit(0);
 }
 
-static void invoke_exec(quvi_video_t video, const char *video_url, opts_s opts)
+static void invoke_exec(quvi_video_t video, const char *video_url,
+                        opts_s opts)
 {
   char *quoted_url, *arg;
   int rc;
@@ -282,7 +285,8 @@ static void
 dump_video_link_xml(CURL * curl,
                     int i,
                     char *video_url,
-                    double file_length, char *file_ct, char *file_suffix)
+                    double file_length, char *file_ct,
+                    char *file_suffix)
 {
   char *url;
 
@@ -305,7 +309,8 @@ dump_video_link_xml(CURL * curl,
 static void
 dump_video_link_old(int i,
                     char *video_url,
-                    double file_length, char *file_suffix, char *file_ct)
+                    double file_length, char *file_suffix,
+                    char *file_ct)
 {
   spew("link %02d  : %s\n"
        ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
@@ -315,7 +320,8 @@ dump_video_link_old(int i,
 static void
 dump_video_link_json(int i,
                      char *video_url,
-                     double file_length, char *file_suffix, char *file_ct)
+                     double file_length, char *file_suffix,
+                     char *file_ct)
 {
   spew("    {\n"
        "      \"id\": \"%d\",\n"
@@ -324,10 +330,12 @@ dump_video_link_json(int i,
        "      \"file_suffix\": \"%s\",\n"
        "      \"url\": \"%s\"\n"
        "    }%s\n",
-       i, file_length, file_ct, file_suffix, video_url, i > 1 ? "," : "");
+       i, file_length, file_ct, file_suffix, video_url,
+       i > 1 ? "," : "");
 }
 
-static void dump_video_links(quvi_video_t video, opts_s opts, CURL * curl)
+static void dump_video_links(quvi_video_t video, opts_s opts,
+                             CURL * curl)
 {
   int i = 0;
   do {
@@ -346,17 +354,19 @@ static void dump_video_links(quvi_video_t video, opts_s opts, CURL * curl)
                           file_ct, file_suffix);
 
     else if (opts.old_given)
-      dump_video_link_old(i, video_url, file_length, file_suffix, file_ct);
+      dump_video_link_old(i, video_url, file_length, file_suffix,
+                          file_ct);
     else
-      dump_video_link_json(i, video_url, file_length, file_suffix, file_ct);
+      dump_video_link_json(i, video_url, file_length, file_suffix,
+                           file_ct);
   }
   while (quvi_next_videolink(video) == QUVI_OK);
 }
 
 static void
 dump_video_xml(CURL * curl,
-               char *video_id, char *host, char *format, char *page_title,
-               char *page_link)
+               char *video_id, char *host, char *format,
+               char *page_title, char *page_link)
 {
   char *url;
 
@@ -377,8 +387,8 @@ dump_video_xml(CURL * curl,
 }
 
 static void
-dump_video_old(char *video_id, char *host, char *format, char *page_title,
-               char *page_link)
+dump_video_old(char *video_id, char *host, char *format,
+               char *page_title, char *page_link)
 {
   spew(" > Dump video:\n"
        "host    : %s\n"
@@ -390,8 +400,8 @@ dump_video_old(char *video_id, char *host, char *format, char *page_title,
 }
 
 static void
-dump_video_json(char *video_id, char *host, char *format, char *page_title,
-                char *page_link)
+dump_video_json(char *video_id, char *host, char *format,
+                char *page_title, char *page_link)
 {
   char *t;
 
@@ -444,7 +454,8 @@ expect_error(const char *what, const char *expected, const char *got)
 }
 
 static void
-expect_error_d(const char *what, const double expected, const double got)
+expect_error_d(const char *what, const double expected,
+               const double got)
 {
   fprintf(stderr,
           "error: %s:\n  expected: \"%.0f\"\n  got: \"%.0f\"\n\n", what,
@@ -679,7 +690,8 @@ static quvi_t init_quvi(opts_s opts, CURL ** curl)
 
   curl_easy_setopt(*curl, CURLOPT_VERBOSE, opts.verbose_libcurl_given);
 
-  curl_easy_setopt(*curl, CURLOPT_CONNECTTIMEOUT, opts.connect_timeout_arg);
+  curl_easy_setopt(*curl, CURLOPT_CONNECTTIMEOUT,
+                   opts.connect_timeout_arg);
 
   return (quvi);
 }

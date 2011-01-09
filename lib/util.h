@@ -39,7 +39,8 @@ QUVIcode format_output_filename(_quvi_video_t video, char **dst);
 QUVIcode
 parse_page_common(const char *url,
                   _quvi_video_t video,
-                  char **content, const char *re_id, const char *re_title);
+                  char **content, const char *re_id,
+                  const char *re_title);
 
 QUVIcode to_utf8(_quvi_video_t video);
 
