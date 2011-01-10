@@ -4,8 +4,7 @@ Coding style
 
 C
 
-We use `indent -linux --no-tabs -i2 -l72` for C. See also
-$top_srcdir/scripts/indent_c.sh
+See $top_srcdir/scripts/astyle_c.sh file.
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */
 

@@ -1,1 +1,1 @@
-EXTRA_DIST = indent_c.sh
+EXTRA_DIST = astyle_c.sh

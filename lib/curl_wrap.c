@@ -38,7 +38,8 @@ static void *_realloc(void *p, const size_t size)
   return malloc(size);
 }
 
-struct mem_s {
+struct mem_s
+{
   size_t size;
   char *p;
 };
@@ -50,12 +51,13 @@ quvi_write_callback_default(void *p, size_t size, size_t nmemb,
   struct mem_s *m = (struct mem_s *)data;
   const size_t rsize = size * nmemb;
   void *tmp = _realloc(m->p, m->size + rsize + 1);
-  if (tmp) {
-    m->p = (char *)tmp;
-    memcpy(&(m->p[m->size]), p, rsize);
-    m->size += rsize;
-    m->p[m->size] = '\0';
-  }
+  if (tmp)
+    {
+      m->p = (char *)tmp;
+      memcpy(&(m->p[m->size]), p, rsize);
+      m->size += rsize;
+      m->p[m->size] = '\0';
+    }
   return (rsize);
 }
 
@@ -87,25 +89,29 @@ fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l,
 
   /* Additional settings from LUA table */
 
-  if (lua_istable(l, 2)) {
-    fetch_type = lua_get_field_s(l, "fetch_type");
-    if (fetch_type) {
-      if (strcmp(fetch_type, "config") == 0)
-        fetch_type_n = QUVISTATUSTYPE_CONFIG;
-      else if (strcmp(fetch_type, "playlist") == 0)
-        fetch_type_n = QUVISTATUSTYPE_PLAYLIST;
+  if (lua_istable(l, 2))
+    {
+      fetch_type = lua_get_field_s(l, "fetch_type");
+      if (fetch_type)
+        {
+          if (strcmp(fetch_type, "config") == 0)
+            fetch_type_n = QUVISTATUSTYPE_CONFIG;
+          else if (strcmp(fetch_type, "playlist") == 0)
+            fetch_type_n = QUVISTATUSTYPE_PLAYLIST;
+        }
+      arbitrary_cookie = lua_get_field_s(l, "arbitrary_cookie");
+      user_agent = lua_get_field_s(l, "user_agent");
     }
-    arbitrary_cookie = lua_get_field_s(l, "arbitrary_cookie");
-    user_agent = lua_get_field_s(l, "user_agent");
-  }
 
-  if (video->quvi->status_func) {
-    if (video->quvi->
-        status_func(makelong(QUVISTATUS_FETCH, fetch_type_n),
-                    (void *)url) != QUVI_OK) {
-      return (QUVI_ABORTEDBYCALLBACK);
+  if (video->quvi->status_func)
+    {
+      if (video->quvi->
+          status_func(makelong(QUVISTATUS_FETCH, fetch_type_n),
+                      (void *)url) != QUVI_OK)
+        {
+          return (QUVI_ABORTEDBYCALLBACK);
+        }
     }
-  }
 
   curl_easy_setopt(video->quvi->curl, CURLOPT_URL, url);
   curl_easy_setopt(video->quvi->curl, CURLOPT_ENCODING, "");
@@ -118,14 +124,16 @@ fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l,
                    ? (curl_write_callback) video->quvi->write_func
                    : (curl_write_callback) quvi_write_callback_default);
 
-  if (arbitrary_cookie != NULL && *arbitrary_cookie != '\0') {
-    curl_easy_setopt(video->quvi->curl, CURLOPT_COOKIE,
-                     arbitrary_cookie);
-  }
+  if (arbitrary_cookie != NULL && *arbitrary_cookie != '\0')
+    {
+      curl_easy_setopt(video->quvi->curl, CURLOPT_COOKIE,
+                       arbitrary_cookie);
+    }
 
-  if (user_agent != NULL && *user_agent != '\0') {
-    curl_easy_setopt(video->quvi->curl, CURLOPT_USERAGENT, user_agent);
-  }
+  if (user_agent != NULL && *user_agent != '\0')
+    {
+      curl_easy_setopt(video->quvi->curl, CURLOPT_USERAGENT, user_agent);
+    }
 
   curlcode = curl_easy_perform(video->quvi->curl);
   respcode = 0;
@@ -137,42 +145,49 @@ fetch_to_mem(_quvi_video_t video, const char *url, lua_State * l,
   curl_easy_getinfo(video->quvi->curl, CURLINFO_HTTP_CONNECTCODE,
                     &conncode);
 
-  if (curlcode == CURLE_OK && respcode == 200) {
+  if (curlcode == CURLE_OK && respcode == 200)
+    {
 
-    if (video->quvi->status_func) {
+      if (video->quvi->status_func)
+        {
 
-      if (video->quvi->status_func(makelong(QUVISTATUS_FETCH,
-                                            QUVISTATUSTYPE_DONE),
-                                   0) != QUVI_OK) {
-        rc = QUVI_ABORTEDBYCALLBACK;
-      }
+          if (video->quvi->status_func(makelong(QUVISTATUS_FETCH,
+                                                QUVISTATUSTYPE_DONE),
+                                       0) != QUVI_OK)
+            {
+              rc = QUVI_ABORTEDBYCALLBACK;
+            }
+
+        }
 
     }
 
-  }
+  else
+    {
 
-  else {
+      if (curlcode == CURLE_OK)
+        {
+          freprintf(&video->quvi->errmsg,
+                    "server response code %ld (conncode=%ld)", respcode,
+                    conncode);
+        }
 
-    if (curlcode == CURLE_OK) {
-      freprintf(&video->quvi->errmsg,
-                "server response code %ld (conncode=%ld)", respcode,
-                conncode);
+      else
+        {
+          freprintf(&video->quvi->errmsg,
+                    "%s (curlcode=%d, conncode=%ld)",
+                    curl_easy_strerror(curlcode), curlcode, conncode);
+        }
+
+      rc = QUVI_CURL;
     }
 
-    else {
-      freprintf(&video->quvi->errmsg,
-                "%s (curlcode=%d, conncode=%ld)",
-                curl_easy_strerror(curlcode), curlcode, conncode);
+  if (mem.p)
+    {
+      *dst = mem.p;
+      if (rc == QUVI_OK && !video->charset)       /* charset */
+        run_lua_charset_func(video, mem.p);
     }
-
-    rc = QUVI_CURL;
-  }
-
-  if (mem.p) {
-    *dst = mem.p;
-    if (rc == QUVI_OK && !video->charset)       /* charset */
-      run_lua_charset_func(video, mem.p);
-  }
 
   video->quvi->httpcode = respcode;
   video->quvi->curlcode = curlcode;
@@ -209,11 +224,13 @@ QUVIcode query_file_length(_quvi_t quvi, llst_node_t lnk)
   if (strcmp(strncpy(buf, qvl->url, strlen(scheme)), scheme) != 0)
     return (QUVI_OK);           /* Skip video URL verification discreetly. */
 
-  if (quvi->status_func) {
-    if (quvi->status_func(makelong(QUVISTATUS_VERIFY, 0), 0) != QUVI_OK) {
-      return (QUVI_ABORTEDBYCALLBACK);
+  if (quvi->status_func)
+    {
+      if (quvi->status_func(makelong(QUVISTATUS_VERIFY, 0), 0) != QUVI_OK)
+        {
+          return (QUVI_ABORTEDBYCALLBACK);
+        }
     }
-  }
 
   curl_easy_setopt(quvi->curl, CURLOPT_URL, qvl->url);
   curl_easy_setopt(quvi->curl, CURLOPT_NOBODY, 1L);     /* get -> head */
@@ -236,43 +253,52 @@ QUVIcode query_file_length(_quvi_t quvi, llst_node_t lnk)
   curl_easy_getinfo(quvi->curl, CURLINFO_RESPONSE_CODE, &respcode);
   curl_easy_getinfo(quvi->curl, CURLINFO_HTTP_CONNECTCODE, &conncode);
 
-  if (curlcode == CURLE_OK) {
+  if (curlcode == CURLE_OK)
+    {
 
-    if (respcode == 200 || respcode == 206) {
+      if (respcode == 200 || respcode == 206)
+        {
 
-      const char *ct;
+          const char *ct;
 
-      curl_easy_getinfo(quvi->curl, CURLINFO_CONTENT_TYPE, &ct);
+          curl_easy_getinfo(quvi->curl, CURLINFO_CONTENT_TYPE, &ct);
 
-      _free(qvl->content_type);
-      asprintf(&qvl->content_type, "%s", ct);
+          _free(qvl->content_type);
+          asprintf(&qvl->content_type, "%s", ct);
 
-      curl_easy_getinfo(quvi->curl,
-                        CURLINFO_CONTENT_LENGTH_DOWNLOAD, &qvl->length);
+          curl_easy_getinfo(quvi->curl,
+                            CURLINFO_CONTENT_LENGTH_DOWNLOAD, &qvl->length);
 
-      if (quvi->status_func) {
-        if (quvi->status_func(makelong
-                              (QUVISTATUS_VERIFY, QUVISTATUSTYPE_DONE),
-                              0) != QUVI_OK) {
-          rc = QUVI_ABORTEDBYCALLBACK;
+          if (quvi->status_func)
+            {
+              if (quvi->status_func(makelong
+                                    (QUVISTATUS_VERIFY, QUVISTATUSTYPE_DONE),
+                                    0) != QUVI_OK)
+                {
+                  rc = QUVI_ABORTEDBYCALLBACK;
+                }
+            }
+
+          if (rc == QUVI_OK)
+            {
+              /* Content-Type -> suffix. */
+              rc = run_lua_suffix_func(quvi, qvl);
+            }
         }
-      }
-
-      if (rc == QUVI_OK) {
-        /* Content-Type -> suffix. */
-        rc = run_lua_suffix_func(quvi, qvl);
-      }
-    } else {
-      freprintf(&quvi->errmsg,
-                "server response code %ld (conncode=%ld)", respcode,
-                conncode);
+      else
+        {
+          freprintf(&quvi->errmsg,
+                    "server response code %ld (conncode=%ld)", respcode,
+                    conncode);
+          rc = QUVI_CURL;
+        }
+    }
+  else
+    {
+      freprintf(&quvi->errmsg, "%s (curlcode=%d, conncode=%ld)",
+                curl_easy_strerror(curlcode), curlcode, conncode);
       rc = QUVI_CURL;
     }
-  } else {
-    freprintf(&quvi->errmsg, "%s (curlcode=%d, conncode=%ld)",
-              curl_easy_strerror(curlcode), curlcode, conncode);
-    rc = QUVI_CURL;
-  }
 
   quvi->httpcode = respcode;
   quvi->curlcode = curlcode;
@@ -296,10 +322,11 @@ QUVIcode is_shortened_url(_quvi_video_t video)
 
   assert(video != NULL);
 
-  if (video->quvi->status_func) {
-    if (video->quvi->status_func(QUVISTATUS_SHORTENED, 0) != QUVI_OK)
-      return (QUVI_ABORTEDBYCALLBACK);
-  }
+  if (video->quvi->status_func)
+    {
+      if (video->quvi->status_func(QUVISTATUS_SHORTENED, 0) != QUVI_OK)
+        return (QUVI_ABORTEDBYCALLBACK);
+    }
 
   memset(&mem, 0, sizeof(mem));
   curl_easy_setopt(video->quvi->curl, CURLOPT_WRITEDATA, &mem);
@@ -328,42 +355,48 @@ QUVIcode is_shortened_url(_quvi_video_t video)
   curl_easy_getinfo(video->quvi->curl, CURLINFO_HTTP_CONNECTCODE,
                     &conncode);
 
-  if (curlcode == CURLE_OK) {
+  if (curlcode == CURLE_OK)
+    {
 
-    if (respcode >= 301 && respcode <= 303) {
+      if (respcode >= 301 && respcode <= 303)
+        {
 
-      /* A redirect. */
+          /* A redirect. */
 
-      char *url = NULL;
+          char *url = NULL;
 
-      curl_easy_getinfo(video->quvi->curl, CURLINFO_REDIRECT_URL, &url);
-      freprintf(&video->page_link, "%s", url);
+          curl_easy_getinfo(video->quvi->curl, CURLINFO_REDIRECT_URL, &url);
+          freprintf(&video->page_link, "%s", url);
 
-      rc = QUVI_OK;
+          rc = QUVI_OK;
+
+        }
+      /* respcode >= 301 && respcode <= 303 */
+      else
+        {
+          /* Most likely not a shortened URL redirect. Let it pass. */
+          rc = QUVI_OK;
+        }
+
+      if (video->quvi->status_func)
+        {
+
+          const long param =
+            makelong(QUVISTATUS_SHORTENED, QUVISTATUSTYPE_DONE);
+
+          rc = video->quvi->status_func(param, 0);
+
+        }
 
     }
-    /* respcode >= 301 && respcode <= 303 */
-    else {
-      /* Most likely not a shortened URL redirect. Let it pass. */
-      rc = QUVI_OK;
+  else
+    {
+
+      freprintf(&video->quvi->errmsg, "%s (curlcode=%d, conncode=%ld)",
+                curl_easy_strerror(curlcode), curlcode, conncode);
+
+      rc = QUVI_CURL;
     }
-
-    if (video->quvi->status_func) {
-
-      const long param =
-          makelong(QUVISTATUS_SHORTENED, QUVISTATUSTYPE_DONE);
-
-      rc = video->quvi->status_func(param, 0);
-
-    }
-
-  } else {
-
-    freprintf(&video->quvi->errmsg, "%s (curlcode=%d, conncode=%ld)",
-              curl_easy_strerror(curlcode), curlcode, conncode);
-
-    rc = QUVI_CURL;
-  }
 
   if (mem.p)
     _free(mem.p);

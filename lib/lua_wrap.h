@@ -24,7 +24,8 @@ int init_lua(_quvi_t);
 
 void free_lua(_quvi_t *);
 
-struct lua_ident_s {
+struct lua_ident_s
+{
   _quvi_t quvi;
   char *url;
   char *domain;

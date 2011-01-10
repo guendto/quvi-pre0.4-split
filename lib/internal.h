@@ -38,7 +38,8 @@
         if (p) { free(p); p=0; } \
     } while(0)
 
-struct _quvi_s {
+struct _quvi_s
+{
   char *format;
   long no_verify;
   long no_shortened;
@@ -57,7 +58,8 @@ struct _quvi_s {
 
 typedef struct _quvi_s *_quvi_t;
 
-struct _quvi_video_link_s {
+struct _quvi_video_link_s
+{
   char *url;
   char *suffix;
   char *content_type;
@@ -66,7 +68,8 @@ struct _quvi_video_link_s {
 
 typedef struct _quvi_video_link_s *_quvi_video_link_t;
 
-struct _quvi_video_s {
+struct _quvi_video_s
+{
   _quvi_t quvi;
   char *id;
   char *title;
@@ -81,7 +84,8 @@ struct _quvi_video_s {
 
 typedef struct _quvi_video_s *_quvi_video_t;
 
-struct _quvi_lua_script_s {
+struct _quvi_lua_script_s
+{
   char *basename;
   char *path;
 };

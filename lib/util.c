@@ -81,43 +81,51 @@ QUVIcode to_utf8(_quvi_video_t video)
   cd = iconv_open(to, from);
 
   /* If that fails, then without TRANSLIT. */
-  if (cd == (iconv_t) - 1) {
-    _free(from);
-    asprintf(&from, "%s", video->charset);
-    cd = iconv_open(to, from);
-  }
-
-  if (cd == (iconv_t) - 1) {
-    if (errno == EINVAL) {
-      freprintf(&video->quvi->errmsg,
-                "conversion from %s to %s unavailable", from, to);
-    } else {
-#ifdef HAVE_STRERROR
-      freprintf(&video->quvi->errmsg, "iconv_open: %s",
-                strerror(errno));
-#else
-      perror("iconv_open");
-#endif
+  if (cd == (iconv_t) - 1)
+    {
+      _free(from);
+      asprintf(&from, "%s", video->charset);
+      cd = iconv_open(to, from);
     }
 
-    _free(from);
+  if (cd == (iconv_t) - 1)
+    {
+      if (errno == EINVAL)
+        {
+          freprintf(&video->quvi->errmsg,
+                    "conversion from %s to %s unavailable", from, to);
+        }
+      else
+        {
+#ifdef HAVE_STRERROR
+          freprintf(&video->quvi->errmsg, "iconv_open: %s",
+                    strerror(errno));
+#else
+          perror("iconv_open");
+#endif
+        }
 
-    return (QUVI_ICONV);
-  }
+      _free(from);
+
+      return (QUVI_ICONV);
+    }
 
   iconv_code = iconv(cd, &inptr, &insize, &wptr, &avail);
   iconv_close(cd);
   cd = 0;
 
-  if (iconv_code == (size_t) - 1) {
-    freprintf(&video->quvi->errmsg,
-              "converting characters from '%s' to '%s' failed", from,
-              to);
-    _free(from);
-    return (QUVI_ICONV);
-  } else {
-    freprintf(&video->title, "%s", outbuf);
-  }
+  if (iconv_code == (size_t) - 1)
+    {
+      freprintf(&video->quvi->errmsg,
+                "converting characters from '%s' to '%s' failed", from,
+                to);
+      _free(from);
+      return (QUVI_ICONV);
+    }
+  else
+    {
+      freprintf(&video->title, "%s", outbuf);
+    }
 
   _free(from);
 
@@ -144,12 +152,14 @@ char *unescape(_quvi_t quvi, char *s)
 
 char *from_html_entities(char *src)
 {
-  struct lookup_s {
+  struct lookup_s
+  {
     const char *from;
     const char *to;
   };
 
-  static const struct lookup_s conv[] = {
+  static const struct lookup_s conv[] =
+  {
     {"&quot;", "\""},
     {"&#34;", "\""},
     {"&amp;", "&"},
@@ -198,10 +208,11 @@ int add_video_link(llst_node_t * lst, const char *fmt, ...)
   vasprintf((char **)&qvl->url, fmt, args);
   va_end(args);
 
-  if (!qvl->url) {
-    _free(qvl);
-    return (QUVI_MEM);
-  }
+  if (!qvl->url)
+    {
+      _free(qvl);
+      return (QUVI_MEM);
+    }
 
   return (llst_add(lst, qvl));
 }

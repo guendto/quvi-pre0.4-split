@@ -20,7 +20,8 @@
 #ifndef llst_h
 #define llst_h
 
-struct _llst_node_s {
+struct _llst_node_s
+{
   struct _llst_node_s *next;
   struct _llst_node_s *prev;
   void *data;
