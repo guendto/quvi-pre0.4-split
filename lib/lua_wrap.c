@@ -406,9 +406,8 @@ iter_video_url(lua_State * l,
 
   while (lua_next(l, -2) && rc == QUVI_OK)
     {
-
       if (!lua_isstring(l, -1))
-        luaL_error(l, "expected array to contain only strings");
+        luaL_error(l, "%s: expected an array of URL strings", qls->path);
 
       rc = add_video_link(&qv->link, "%s", lua_tostring(l, -1));
 
@@ -450,19 +449,20 @@ static _quvi_lua_script_t find_util_script(_quvi_t quvi,
 static QUVIcode
 prep_util_script(_quvi_t quvi,
                  const char *script_fname,
-                 const char *func_name, lua_State ** pl)
+                 const char *func_name, lua_State ** pl,
+                 _quvi_lua_script_t *qls)
 {
-  _quvi_lua_script_t qls;
   lua_State *l;
 
   assert(quvi != NULL);
   assert(func_name != NULL);
   assert(script_fname != NULL);
 
-  *pl = NULL;
+  *pl  = NULL;
+  *qls = NULL;
 
-  qls = find_util_script(quvi, script_fname);
-  if (!qls)
+  *qls = find_util_script(quvi, script_fname);
+  if (*qls == NULL)
     return (QUVI_NOLUAUTIL);
 
   l = quvi->lua;
@@ -471,14 +471,16 @@ prep_util_script(_quvi_t quvi,
   lua_pushnil(l);
   lua_getglobal(l, func_name);
 
-  if (luaL_dofile(l, (qls)->path))
-    luaL_error(l, "%s", lua_tostring(l, -1));
+  if (luaL_dofile(l, (*qls)->path))
+    luaL_error(l, "%s: %s", (*qls)->path, lua_tostring(l, -1));
 
   lua_getglobal(l, func_name);
 
   if (!lua_isfunction(l, -1))
-    luaL_error(l, "%s: function `%s' not found", (qls)->path,
-               func_name);
+    {
+      luaL_error(l,
+                 "%s: function `%s' not found", (*qls)->path, func_name);
+    }
 
   *pl = l;
 
@@ -491,29 +493,33 @@ QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_video_link_t qvl)
 {
   const static char script_fname[] = "content_type.lua";
   const static char func_name[] = "suffix_from_contenttype";
+  _quvi_lua_script_t qls;
   lua_State *l;
   QUVIcode rc;
 
   assert(quvi != NULL);
   assert(qvl != NULL);
 
-  rc = prep_util_script(quvi, script_fname, func_name, &l);
-
+  rc = prep_util_script(quvi, script_fname, func_name, &l, &qls);
   if (rc != QUVI_OK)
     return (rc);
 
   assert(l != NULL);
+  assert(qls != NULL);
 
   lua_pushstring(l, qvl->content_type);
 
   if (lua_pcall(l, 1, 1, 0))
-    luaL_error(l, lua_tostring(l, -1));
+    luaL_error(l, "%s: %s", qls->path, lua_tostring(l, -1));
 
   if (lua_isstring(l, -1))
     freprintf(&qvl->suffix, "%s", lua_tostring(l, -1));
   else
-    luaL_error(l, "expected `%s' function to return a string",
-               func_name);
+    {
+      luaL_error(l,
+                 "%s: expected `%s' function to return a string",
+                 qls->path, func_name);
+    }
 
   lua_pop(l, 1);
 
@@ -526,6 +532,7 @@ static QUVIcode run_lua_trim_fields_func(_quvi_video_t video, int ref)
 {
   const static char script_fname[] = "trim.lua";
   const static char func_name[] = "trim_fields";
+  _quvi_lua_script_t qls;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
@@ -535,21 +542,24 @@ static QUVIcode run_lua_trim_fields_func(_quvi_video_t video, int ref)
   quvi = video->quvi;
   assert(quvi != NULL);
 
-  rc = prep_util_script(quvi, script_fname, func_name, &l);
-
+  rc = prep_util_script(quvi, script_fname, func_name, &l, &qls);
   if (rc != QUVI_OK)
     return (rc);
 
   assert(l != NULL);
+  assert(qls != NULL);
 
   lua_rawgeti(l, LUA_REGISTRYINDEX, ref);
 
   if (lua_pcall(l, 1, 1, 0))
-    luaL_error(l, lua_tostring(l, -1));
+    luaL_error(l, "%s: %s", qls->path, lua_tostring(l, -1));
 
   if (!lua_istable(l, -1))
-    luaL_error(l, "expected `%s' function to return a table",
-               func_name);
+    {
+      luaL_error(l,
+                 "%s: expected `%s' function to return a table",
+                 qls->path, func_name);
+    }
 
   return (QUVI_OK);
 }
@@ -560,6 +570,7 @@ QUVIcode run_lua_charset_func(_quvi_video_t video, const char *data)
 {
   const static char script_fname[] = "charset.lua";
   const static char func_name[] = "charset_from_data";
+  _quvi_lua_script_t qls;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
@@ -568,24 +579,27 @@ QUVIcode run_lua_charset_func(_quvi_video_t video, const char *data)
   quvi = video->quvi;
   assert(quvi != NULL);
 
-  rc = prep_util_script(quvi, script_fname, func_name, &l);
-
+  rc = prep_util_script(quvi, script_fname, func_name, &l, &qls);
   if (rc != QUVI_OK)
     return (rc);
 
   assert(l != NULL);
+  assert(qls != NULL);
 
   lua_pushstring(l, data);
 
   if (lua_pcall(l, 1, 1, 0))
-    luaL_error(l, lua_tostring(l, -1));
+    luaL_error(l, "%s: %s", qls->path, lua_tostring(l, -1));
 
   if (lua_isstring(l, -1))
     freprintf(&video->charset, "%s", lua_tostring(l, -1));
   else if (lua_isnil(l, -1)) ;  /* Charset was not found. We can live with that. */
   else
-    luaL_error(l, "expected `%s' function to return a string",
-               func_name);
+    {
+      luaL_error(l,
+                 "%s: expected `%s' function to return a string",
+                 qls->path, func_name);
+    }
 
   lua_pop(l, 1);
 
@@ -669,7 +683,10 @@ QUVIcode run_ident_func(lua_ident_t ident, llst_node_t node)
 
     }
   else
-    luaL_error(l, "expected `ident' function to return a table");
+    {
+      luaL_error(l,
+                 "%s: expected `ident' function to return a table", qls->path);
+    }
 
   lua_pop(l, 1);
 
