@@ -40,14 +40,14 @@ end
 
 -- Identify the script.
 function ident (self)
-    local t      = {}
-    t.domain     = "dailymotion."
-    t.formats    = "default|best|hq|hd"
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
-    t.categories = C.proto_http
-    t.handles    = is_handled (self.page_url)
-    return t
+    local r      = {}
+    r.domain     = "dailymotion."
+    r.formats    = "default|best|hq|hd"
+    r.categories = C.proto_http
+    r.handles    = is_handled (self.page_url)
+    return r
 end
 
 -- Parse video URL.

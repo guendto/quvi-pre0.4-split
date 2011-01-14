@@ -22,15 +22,15 @@
 
 -- Identify the script.
 function ident (self)
-    local t      = {}
-    t.domain     = "cbsnews.com"
-    t.formats    = "default|best|1100k|598k|386k"
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
-    t.categories = C.proto_http
-    t.handles    =
-        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
-    return t
+    local r      = {}
+    r.domain     = "cbsnews.com"
+    r.formats    = "default|best|1100k|598k|386k"
+    r.categories = C.proto_http
+    r.handles    =
+        (self.page_url ~= nil and self.page_url:find(r.domain) ~= nil)
+    return r
 end
 
 -- Parse video URL.

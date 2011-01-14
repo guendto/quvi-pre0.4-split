@@ -119,14 +119,14 @@ Open the foo.lua file in your favorite editor, e.g.:
 
 Start by changing the details in the `ident' function, e.g.:
 
--   t.domain  = 'buzzhumor.com"
-+   t.domain  = 'foo.bar'
+-   r.domain  = 'buzzhumor.com"
++   r.domain  = 'foo.bar'
 
-You can leave t.formats untouched, unless you know that the website
+You can leave r.formats untouched, unless you know that the website
 supports more than one video format -- and you know how to get to those.
 See youtube.lua, dailymotion.lua and vimeo.lua for examples of this.
 
-You should change t.categories only if you know that the website returns
+You should change r.categories only if you know that the website returns
 video URLs to other than the HTTP protocol.
 
 Next there is the `parse' function. This is where the magic happens.

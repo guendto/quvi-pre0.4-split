@@ -60,21 +60,21 @@ end
 
 -- Identify the script.
 function ident (self)
-    local t   = {}
-    t.domain  = "youtube.com"
-    t.formats = ""
+    package.path = self.script_dir .. '/?.lua'
+    local C      = require 'quvi/const'
+    local r      = {}
+    r.domain     = "youtube.com"
+    r.formats    = ""
     for k,_ in pairs (fmt_id_lookup) do
-        t.formats = t.formats .."|".. k
+        r.formats = r.formats .."|".. k
     end
-    t.formats = "default|best" .. t.formats
+    r.formats = "default|best" .. r.formats
     if (self.page_url ~= nil) then
         self.page_url = youtubify(self.page_url)
     end
-    package.path = self.script_dir .. '/?.lua'
-    local C      = require 'quvi/const'
-    t.categories = C.proto_http
-    t.handles    = is_handled(self.page_url)
-    return t
+    r.categories = C.proto_http
+    r.handles    = is_handled(self.page_url)
+    return r
 end
 
 function parse (self)

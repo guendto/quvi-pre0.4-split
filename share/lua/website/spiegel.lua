@@ -31,18 +31,19 @@ local lookup = {
 
 -- Identify the script.
 function ident (self)
-    local t   = {}
-    t.domain  = "spiegel.de"
-    t.formats = ""
-    for k,_ in pairs (lookup) do
-        t.formats = t.formats .."|".. k
-    end
-    t.formats    = t.formats:gsub("^%|","")
+    package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
-    t.categories = C.proto_http
-    t.handles    =
-        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
-    return t
+    local r      = {}
+    r.domain     = "spiegel.de"
+    r.formats    = ""
+    for k,_ in pairs (lookup) do
+        r.formats = r.formats .."|".. k
+    end
+    r.formats    = r.formats:gsub("^%|","")
+    r.categories = C.proto_http
+    r.handles    =
+        (self.page_url ~= nil and self.page_url:find(r.domain) ~= nil)
+    return r
 end
 
 -- Parse video URL.

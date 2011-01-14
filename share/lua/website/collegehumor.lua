@@ -22,17 +22,17 @@
 
 -- Identify the script.
 function ident (self)
-    local t      = {}
-    t.domain     = "collegehumor.com"
-    t.formats    = "default"
--- Commented out due to limited hd support
---    t.formats  = "default|best|hd"
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
-    t.categories = C.proto_http
-    t.handles    =
-        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
-    return t
+    local r      = {}
+    r.domain     = "collegehumor.com"
+    r.formats    = "default"
+-- Commented out due to limited hd support
+--    r.formats  = "default|best|hd"
+    r.categories = C.proto_http
+    r.handles    =
+        (self.page_url ~= nil and self.page_url:find(r.domain) ~= nil)
+    return r
 end
 
 -- Parse video URL.

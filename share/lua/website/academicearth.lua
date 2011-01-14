@@ -24,38 +24,32 @@
 
 -- Identify the script.
 function ident (self)
-    local t      = {}
-    t.domain     = "academicearth.org"
-    t.formats    = "default"
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
-    t.categories = C.proto_http
-    t.handles    =
-        (self.page_url ~= nil and self.page_url:find (t.domain) ~= nil)
-    return t
+    local r      = {}
+    r.domain     = "academicearth.org"
+    r.formats    = "default"
+    r.categories = C.proto_http
+    r.handles    =
+        (self.page_url ~= nil and self.page_url:find (r.domain) ~= nil)
+    return r
 end
 
 -- Parse video URL.
 function parse (self)
-
     self.host_id = "academicearth"
-    local page    = quvi.fetch (self.page_url)
+    local page   = quvi.fetch (self.page_url)
 
-    local _,_,s = page:find ('flashVars.flvURL = "(.-)"')
-
+    local _,_,s  = page:find ('flashVars.flvURL = "(.-)"')
     if (s ~= nil) then
-
         self.url = {s}
 
-        -- Hackish. Could not find a better ID scheme.
         local _,_,s = s:find ('%-(.-)%.')
-        self.id    = s or error ("no match: video id")
+        self.id     = s or error ("no match: video id")
 
         local _,_,s = page:find ('<title>(.-)%s+%|')
-        self.title = s or error ("no match: video title")
-
+        self.title  = s or error ("no match: video title")
     else
-
         local _,_,s = page:find ('flashVars.ytID = "(.-)"')
 
         if (s ~= nil) then
@@ -64,7 +58,6 @@ function parse (self)
         else
             error ("no match: flv: no clip available for this lecture")
         end
-
     end
 
     return self
