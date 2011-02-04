@@ -142,10 +142,6 @@ AC_CHECK_FUNCS([vasprintf], [
 ])
 AM_CONDITIONAL([NO_ASPRINTF], [test x"$have_asprintf" != "xyes"])
 
-have_strupr=no
-AC_CHECK_FUNCS([strupr], [have_strupr=yes])
-AM_CONDITIONAL([NO_STRUPR], [test x"$have_strupr" != "xyes"])
-
 # --enable-quvi
 AC_ARG_ENABLE([quvi],
     [AS_HELP_STRING([--enable-quvi],

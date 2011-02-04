@@ -631,8 +631,6 @@ ENABLE_EXAMPLES_FALSE
 ENABLE_EXAMPLES_TRUE
 ENABLE_QUVI_FALSE
 ENABLE_QUVI_TRUE
-NO_STRUPR_FALSE
-NO_STRUPR_TRUE
 NO_ASPRINTF_FALSE
 NO_ASPRINTF_TRUE
 POW_LIB
@@ -19153,27 +19151,6 @@ else
 fi
 
 
-have_strupr=no
-for ac_func in strupr
-do :
-  ac_fn_c_check_func "$LINENO" "strupr" "ac_cv_func_strupr"
-if test "x$ac_cv_func_strupr" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_STRUPR 1
-_ACEOF
- have_strupr=yes
-fi
-done
-
- if test x"$have_strupr" != "xyes"; then
-  NO_STRUPR_TRUE=
-  NO_STRUPR_FALSE='#'
-else
-  NO_STRUPR_TRUE='#'
-  NO_STRUPR_FALSE=
-fi
-
-
 # --enable-quvi
 # Check whether --enable-quvi was given.
 if test "${enable_quvi+set}" = set; then :
@@ -19475,10 +19452,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${NO_ASPRINTF_TRUE}" && test -z "${NO_ASPRINTF_FALSE}"; then
   as_fn_error $? "conditional \"NO_ASPRINTF\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${NO_STRUPR_TRUE}" && test -z "${NO_STRUPR_FALSE}"; then
-  as_fn_error $? "conditional \"NO_STRUPR\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_QUVI_TRUE}" && test -z "${ENABLE_QUVI_FALSE}"; then
