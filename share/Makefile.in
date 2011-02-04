@@ -72,9 +72,10 @@ am__nobase_dist_pkgdata_DATA_DIST = lua/README \
 	lua/website/cbsnews.lua lua/website/collegehumor.lua \
 	lua/website/charlierose.lua lua/website/clipfish.lua \
 	lua/website/dailymotion.lua lua/website/gaskrank.lua \
-	lua/website/funnyhub.lua lua/website/funnyordie.lua \
-	lua/website/globo.lua lua/website/golem.lua \
-	lua/website/google.lua lua/website/liveleak.lua \
+	lua/website/francetelevisions.lua lua/website/funnyhub.lua \
+	lua/website/funnyordie.lua lua/website/globo.lua \
+	lua/website/golem.lua lua/website/google.lua \
+	lua/website/liveleak.lua lua/website/pluzz.lua \
 	lua/website/publicsenat.lua lua/website/sapo.lua \
 	lua/website/sevenload.lua lua/website/spiegel.lua \
 	lua/website/theonion.lua lua/website/vimeo.lua \
@@ -256,9 +257,10 @@ DIST_lua = lua/README lua/util/content_type.lua lua/util/charset.lua \
 	lua/website/cbsnews.lua lua/website/collegehumor.lua \
 	lua/website/charlierose.lua lua/website/clipfish.lua \
 	lua/website/dailymotion.lua lua/website/gaskrank.lua \
-	lua/website/funnyhub.lua lua/website/funnyordie.lua \
-	lua/website/globo.lua lua/website/golem.lua \
-	lua/website/google.lua lua/website/liveleak.lua \
+	lua/website/francetelevisions.lua lua/website/funnyhub.lua \
+	lua/website/funnyordie.lua lua/website/globo.lua \
+	lua/website/golem.lua lua/website/google.lua \
+	lua/website/liveleak.lua lua/website/pluzz.lua \
 	lua/website/publicsenat.lua lua/website/sapo.lua \
 	lua/website/sevenload.lua lua/website/spiegel.lua \
 	lua/website/theonion.lua lua/website/vimeo.lua \
