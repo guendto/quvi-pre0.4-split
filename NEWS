@@ -1,4 +1,12 @@
 
+0.2.13  Mon Feb 07 2011     Toni Gundogdu
+Changes:
+        - Add tmunderground.lua
+        - Add pluzz.lua (#13)
+        - Add francetelevisions.lua (#13)
+        - Remove unused strupr implementation
+
+
 0.2.12  Wed Jan 19 2011     Toni Gundogdu
 Changes:
         - Add quvi/const.lua, quvi/bit.lua, quvi/util.lua (to lua/website/)
