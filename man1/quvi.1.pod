@@ -141,8 +141,7 @@ Match I<arg> to built-in (category QUVIPROTO_HTTP) test URLs, e.g.:
 
 =item B<-f, --format> I<arg>
 
-Query for video format I<arg>. Run quvi with C<--support> to get a list
-of the supported formats.
+Query for I<arg> video format. I<arg> can also be C<help>.
 
 =item B<--agent> I<arg>
 
@@ -202,6 +201,10 @@ Query YOUTUBE_URL for "best" format of the video.
 
 Run quvi with C<--support> to get a list of the websites
 and which formats they support.
+
+=item quvi -f list dailym
+
+Print available video formats for dailym(otion).
 
 =back
 

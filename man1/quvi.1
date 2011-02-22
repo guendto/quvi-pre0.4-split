@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2010-12-29" "0.2.12" "quvi manual"
+.TH quvi 1 "2011-02-22" "0.2.14" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -245,8 +245,7 @@ Match \fIarg\fR to built-in (category \s-1QUVIPROTO_HTTP\s0) test URLs, e.g.:
 .Ve
 .IP "\fB\-f, \-\-format\fR \fIarg\fR" 4
 .IX Item "-f, --format arg"
-Query for video format \fIarg\fR. Run quvi with \f(CW\*(C`\-\-support\*(C'\fR to get a list
-of the supported formats.
+Query for \fIarg\fR video format. \fIarg\fR can also be \f(CW\*(C`help\*(C'\fR.
 .IP "\fB\-\-agent\fR \fIarg\fR" 4
 .IX Item "--agent arg"
 Identify quvi as \fIarg\fR to servers. Default is \*(L"Mozilla/5.0\*(R".
@@ -291,6 +290,9 @@ Query \s-1YOUTUBE_URL\s0 for \*(L"best\*(R" format of the video.
 .Sp
 Run quvi with \f(CW\*(C`\-\-support\*(C'\fR to get a list of the websites
 and which formats they support.
+.IP "quvi \-f list dailym" 4
+.IX Item "quvi -f list dailym"
+Print available video formats for dailym(otion).
 .SH "FILES"
 .IX Header "FILES"
 .IP "\fB~/.quvirc\fR" 4
