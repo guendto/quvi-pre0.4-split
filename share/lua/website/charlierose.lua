@@ -46,7 +46,7 @@ function parse (self)
 
     local _,_,s = page:find('url":"(.-)"')
     s           = s or error ("no match: flv url")
-    self.url    = {quvi.unescape (s)}
+    self.url    = {s}
 
     return self
 end
