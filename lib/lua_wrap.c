@@ -121,6 +121,7 @@ static int l_quvi_fetch(lua_State * l)
   return (1);
 }
 
+#ifdef _0 /* Replaced by quvi/util:unescape in 0.2.14 */
 static int l_quvi_unescape(lua_State * l)
 {
   luaL_Buffer b;
@@ -139,6 +140,7 @@ static int l_quvi_unescape(lua_State * l)
 
   return (1);
 }
+#endif
 
 /* wrapper. */
 
@@ -256,7 +258,9 @@ scan_known_dirs(llst_node_t * dst, const char *spath,
 static const luaL_Reg reg_meth[] =
 {
   {"fetch", l_quvi_fetch},
+#ifdef _0
   {"unescape", l_quvi_unescape},
+#endif
   {NULL, NULL}
 };
 
