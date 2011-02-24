@@ -85,7 +85,18 @@ function get_url(self, page, U)
     seq = U.unescape(seq)
 
     local _,_,vpp = seq:find('"videoPluginParameters":{(.-)}')
-    if not vpp then error("no match: video plugin params") end
+    if not vpp then
+        local _,_,s = page:find('"video", "(.-)"')
+        if not s then
+            error("no match: video plugin params")
+        else
+            -- some videos (that require setting family_filter cookie)
+            -- may list only one link which is not found under
+            -- "videoPluginParameters". See also:
+            -- http://sourceforge.net/apps/trac/clive/ticket/4
+            return {s}
+        end
+    end
 
     -- "sd" is our "default".
     local req_fmt = self.requested_format
