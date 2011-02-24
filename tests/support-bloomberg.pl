@@ -3,9 +3,9 @@ exit quviTest::run_t(
 "--page-title",
     "Bloomberg Game Changers: Steve Jobs",
 "--video-id",
-    "63723194",
+    "66626118",
 "--file-length",
-    "227782432",
+    "203586089",
 "--file-suffix",
     "flv"
 );
