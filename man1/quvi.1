@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-02-22" "0.2.14" "quvi manual"
+.TH quvi 1 "2011-03-08" "0.2.14" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -136,11 +136,22 @@ quvi \- query video tool
 quvi [options] [url...]
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-quvi is a command line tool for parsing video download links.
-It supports Youtube and other similar video websites.
+quvi is a command line tool for parsing Adobe Flash media stream URLs. It
+supports many websites including YouTube and Dailymotion.
 .PP
-The video details are printed to standard output (in \s-1JSON\s0),
-everything else is printed to standard error.
+The video details are printed to standard output (in \s-1JSON\s0), everything else
+is printed to standard error.
+.SH "MOTIVATION"
+.IX Header "MOTIVATION"
+quvi parses Adobe Flash media stream URLs for third party applications. It
+originates from the idea of allowing users to view the videos without having
+to install or use Adobe Flash Player. quvi is not an \*(L"alternative\*(R" but rather
+a \*(L"workaround\*(R" to Adobe Flash Player.
+.PP
+Read also:
+  * <http://en.wikipedia.org/wiki/Adobe_Flash#Performance>
+  * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
+  * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 .IP "\fB\-h, \-\-help\fR" 4
@@ -177,7 +188,7 @@ Invoke \fIarg\fR for each (successfully) parsed video. You can use the following
 specifiers in \fIarg\fR:
 .Sp
 .Vb 1
-\&    %u  Video download URL
+\&    %u  Media URL
 .Ve
 .Sp
 Note that \fIall\fR occurences of the specifier will be replaced,
@@ -366,13 +377,23 @@ They may prove invaluable.
 .SH "WWW"
 .IX Header "WWW"
 <http://quvi.sourceforge.net/>
+.PP
+<http://repo.or.cz/w/quvi.git>
 .SH "CONTRIBUTE"
 .IX Header "CONTRIBUTE"
 <http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
+.SH "BACKGROUND"
+.IX Header "BACKGROUND"
+quvi was inspired by cclive. Embeddable \s-1LUA\s0 scripting was introduced in the
+0.2.0 release.
+.SH "LICENSE"
+.IX Header "LICENSE"
+quvi and libquvi are free software, licensed under the LGPLv2.1+.
+The \s-1LUA\s0 scripts that quvi uses are considered as programs and using
+the \s-1LUA\s0 scripts is \fBlinking\fR.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
-Toni Gundogdu <legatvs at sign gmail com>.
+Toni Gundogdu <legatvs at sign gmail com>
 .PP
-Thanks to all those who have contributed to the project
-by sending patches, reporting bugs and writing feedback.
-You know who you are.
+Thanks to all those who have contributed to the project by sending patches,
+reporting bugs and writing feedback. You know who you are.
