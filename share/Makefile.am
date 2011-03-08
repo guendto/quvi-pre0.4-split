@@ -9,6 +9,7 @@ lua/website/quvi/bit.lua \
 lua/website/quvi/const.lua \
 lua/website/quvi/util.lua \
 lua/website/academicearth.lua \
+lua/website/arte.lua \
 lua/website/bloomberg.lua \
 lua/website/break.lua \
 lua/website/buzzhumor.lua \
