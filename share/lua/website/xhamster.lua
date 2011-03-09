@@ -38,7 +38,7 @@ function parse (self)
     self.host_id = "xhamster"
     local page   = quvi.fetch(self.page_url)
 
-    local _,_,s = page:find("<title>(.-)</title>")
+    local _,_,s = page:find('class="mTitle">.+<h1>(.-)<')
     self.title  = s or error ("no match: video title")
 
     local _,_,s = self.page_url:find("/movies/(.-)/")
