@@ -31,6 +31,7 @@ lua/website/publicsenat.lua \
 lua/website/sapo.lua \
 lua/website/sevenload.lua \
 lua/website/spiegel.lua \
+lua/website/tagtele.lua \
 lua/website/tmunderground.lua \
 lua/website/theonion.lua \
 lua/website/vimeo.lua \
@@ -38,7 +39,9 @@ lua/website/youtube.lua
 
 if ENABLE_NSFW
 DIST_lua += \
+lua/website/keezmovies.lua \
 lua/website/tube8.lua \
+lua/website/xhamster.lua \
 lua/website/xvideos.lua \
 lua/website/youjizz.lua
 endif
