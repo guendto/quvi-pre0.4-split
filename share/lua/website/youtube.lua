@@ -92,8 +92,9 @@ end
 
 -- Youtubify the URL.
 function youtubify (url)
-    url = url:gsub("-nocookie", "")    -- youtube-nocookie.com
-    url = url:gsub("/v/", "/watch?v=") -- embedded
+    url = url:gsub("-nocookie", "")        -- youtube-nocookie.com
+    url = url:gsub("/v/", "/watch?v=")     -- embedded
+    url = url:gsub("/embed/", "/watch?v=") -- embedded
     return url
 end
 
