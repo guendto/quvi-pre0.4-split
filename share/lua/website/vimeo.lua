@@ -54,6 +54,11 @@ function parse (self)
     local config_url = "http://vimeo.com/moogaloop/load/clip:" .. self.id
     local config = quvi.fetch (config_url, {fetch_type = 'config'})
 
+    if config:find('<error>') then
+        local _,_,s = config:find('<message>(.-)\n')
+        error( (s == nil) and "no match: error message" or s )
+    end
+
     local _,_,s = config:find("<caption>(.-)</")
     self.title  = s or error ("no match: video title")
 
