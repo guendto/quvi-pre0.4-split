@@ -592,6 +592,7 @@ static int check_values(quvi_video_t video, opts_s opts)
 
 static const char *tests[] =
 {
+  "http://www.tvlux.be/joomla/index.php/component/content/article/188/5469",
   "http://www.tagtele.com/videos/voir/64096",
   "http://www.tmunderground.com/watch/4f88b3a8e3d44c636cbd/The-Intermediate",
   "http://www.publicsenat.fr/vod/un-monde-de-bulles/speciale-journal-de-spirou/67141",

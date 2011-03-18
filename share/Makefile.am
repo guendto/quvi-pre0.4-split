@@ -34,6 +34,7 @@ lua/website/spiegel.lua \
 lua/website/tagtele.lua \
 lua/website/tmunderground.lua \
 lua/website/theonion.lua \
+lua/website/tvlux.lua \
 lua/website/vimeo.lua \
 lua/website/youtube.lua
 

@@ -31,6 +31,7 @@ support-spiegel.pl \
 support-tagtele.pl\
 support-tmunderground.pl\
 support-theonion.pl\
+support-tvlux.pl\
 support-youtube.pl \
 support-vimeo.pl
 
