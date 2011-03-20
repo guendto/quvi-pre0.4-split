@@ -259,6 +259,24 @@ Or you can use the project default:
 -   r.domain  = 'buzzhumor.com"
 +   r.domain  = 'foo.bar'
 
+    A word about r.handles: when the `ident' function gets called, quvi
+    checks whether the script can handle the user defined page URL. To
+    do this, we define at least one domain signature and one path
+    signature to compare against the URL. For the sake of brewity, let's
+    assume that:
+
+- r.handles    = U.handles(self.page_url, {r.domain}, {"/videos/"})
++ r.handles    = U.handles(self.page_url, {r.domain}, {"/watch/"})
+
+    Is enough. It may be easier to understand if we take a look at
+    the example URLs:
+        http://www.buzzhumor.com/videos/32561/Girl_Feels_Shotgun_Power
+        http://foo.bar/watch/1234/
+
+    The `handles' function (of quvi/util.lua) that we call confirms that:
+        * the domain pattern (e.g. "buzzhumor.com") is found in the URL
+        * the path pattern (e.g. "/videos/") is found in the URL
+
     You can leave r.formats untouched, unless you know that the website
     supports more than one ("default") video format and you know how to
     access those. If you are not sure, that's OK too, we can always add
