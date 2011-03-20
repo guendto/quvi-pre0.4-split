@@ -21,15 +21,15 @@
 
 -- Identify the script.
 function ident(self)
-    local t      = {}
-    t.domain     = "arte.tv"
-    t.formats    = "default|hd|de|hd-de|best"
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
-    t.categories = C.proto_rtmp
-    t.handles    =
-        (self.page_url ~= nil and self.page_url:find(t.domain) ~= nil)
-    return t
+    local r      = {}
+    r.domain     = "videos.arte.tv"
+    r.formats    = "default|hd|de|hd-de|best"
+    r.categories = C.proto_rtmp
+    local U      = require 'quvi/util'
+    r.handles    = U.handles(self.page_url, {r.domain}, {"/%w+/videos/"})
+    return r
 end
 
 -- Parse video URL.

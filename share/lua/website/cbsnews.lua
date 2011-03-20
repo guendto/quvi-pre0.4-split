@@ -28,8 +28,8 @@ function ident (self)
     r.domain     = "cbsnews.com"
     r.formats    = "default|best|1100k|598k|386k"
     r.categories = C.proto_http
-    r.handles    =
-        (self.page_url ~= nil and self.page_url:find(r.domain) ~= nil)
+    local U      = require 'quvi/util'
+    r.handles    = U.handles(self.page_url, {r.domain}, {"/video/watch/"})
     return r
 end
 

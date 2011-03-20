@@ -31,6 +31,7 @@ function ident (self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     t.categories = C.proto_mms
+    -- TODO: Use quvi/util:handles instead
     t.handles    =
         (self.page_url ~= nil and self.page_url:find (t.domain) ~= nil)
     return t
