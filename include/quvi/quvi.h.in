@@ -549,29 +549,21 @@ void quvi_parse_close(quvi_video_t *video);
  */
 
 /**
-* @brief Checks whether the URL would be supported by one of the scripts
+* @brief Check whether the URL can be handled by the library
 *
-* This function does not require an Internet connection. Note that this
-* function will return QUVI_NOSUPPORT for nearly all shortened (or
-* "compressed") URLs as they require querying a redirection over the
-* Internet. See the "Exceptions" below.
+* This URL checking is done without an internet connection. Please note
+* that many shortened URLs will fail (QUVI_NOSUPPORT) with this function.
+* Most shortened URLs would have to be queried for a redirection over
+* the internet connection. There are only a few exceptions to this rule
+* (see below).
 *
 * @param quvi Handle to session
 * @param url Null-terminated string to an URL
 *
 * @note
-*   - Most shorteners require retrieving the redirection from the
-*     services before
-*   - Returns QUVI_NOSUPPORT for most shortened URLs
-*   - Examples:
-*     - is.gd
-*     - goo.gl
-*     - ...
-*   - Exceptions:
-*     - youtu.be (script: youtube.lua)
-*     - dai.y (script: dailymotion.lua)
-*     - These services do not "compress" the video ID which can be used
-*     in the above scripts to reconstruct the original URL
+*   - Fails (QUVI_NOSUPPORT) with most shortened URLs (e.g. is.gd, goo.gl)
+*   - Works OK with youtu.be, dai.ly (see youtube.lua, dailymotion.lua scripts for these)
+*
 * @return Non-zero if an error occurred
 */
 QUVIcode quvi_supported(quvi_t quvi, char *url);
