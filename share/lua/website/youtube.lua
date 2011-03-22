@@ -67,7 +67,7 @@ function parse(self)
     local _,_,s = page_url:find("v=([%w-_]+)")
     self.id    = s or error("no match: video id")
 
-    local _,_,s = page_url:find('#t=(.+)')
+    local _,_,s = page_url:find('#a?t=(.+)')
     self.starttime = s or ''
 
     return get_video_info(self)
