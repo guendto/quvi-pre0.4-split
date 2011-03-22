@@ -549,20 +549,29 @@ void quvi_parse_close(quvi_video_t *video);
  */
 
 /**
-* @brief Check whether the URL can be handled by the library
+* @brief Check whether the library could parse the URL
 *
-* This URL checking is done without an internet connection. Please note
-* that many shortened URLs will fail (QUVI_NOSUPPORT) with this function.
-* Most shortened URLs would have to be queried for a redirection over
-* the internet connection. There are only a few exceptions to this rule
-* (see below).
+* The library checks the URL with each website script to see whether it
+* could parse the URL.
+*
+* This function is designed to work without an Internet connection.
+* This design has a drawback: most shortened URLs (e.g. is.gd, bit.ly,
+* goo.gl, etc.) will fail with this function (QUVI_NOSUPPORTED).
+* Such URLs would normally have to be resolved over an Internet
+* connection. See also the notes.
 *
 * @param quvi Handle to session
 * @param url Null-terminated string to an URL
 *
 * @note
 *   - Fails (QUVI_NOSUPPORT) with most shortened URLs (e.g. is.gd, goo.gl)
-*   - Works OK with youtu.be, dai.ly (see youtube.lua, dailymotion.lua scripts for these)
+*   - Works with a limited number of URL shorteners (youtu.be, dai.ly)
+*
+* @since 0.2.9
+*
+* @remarks
+*   - 0.2.9 - 0.2.14: Limited to basic domain name comparison
+*   - 0.2.15: Improved heuristics: Additional checks for different URL parts
 *
 * @return Non-zero if an error occurred
 */
