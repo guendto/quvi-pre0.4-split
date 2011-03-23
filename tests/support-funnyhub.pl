@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "funnyhub",
 "--page-title",
     "Crazy Hole in One",
-"--video-id",
+"--media-id",
     "5182",
 "--file-length",
     "3034397",

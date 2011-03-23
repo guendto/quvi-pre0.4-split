@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "cbsnews",
 "--page-title",
     "48 Hours Live to Tell: Full Moon",
-"--video-id",
+"--media-id",
     "50096912",
 "--file-length",
     "105048222",

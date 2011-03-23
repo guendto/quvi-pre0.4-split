@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "tagtele",
 "--page-title",
     "La maison revisitée",
-"--video-id",
+"--media-id",
     "64096",
 "--file-length",
     "46030240",

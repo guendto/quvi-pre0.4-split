@@ -73,7 +73,7 @@ static void dump_lua_stack(lua_State * L)
 }
 #endif
 
-static _quvi_video_t qv = NULL;
+static _quvi_media_t qv = NULL;
 
 /* c functions for lua. */
 
@@ -391,7 +391,7 @@ static long get_field_n(lua_State * l, _quvi_lua_script_t qls,
 static QUVIcode
 iter_video_url(lua_State * l,
                _quvi_lua_script_t qls, const char *key,
-               _quvi_video_t qv)
+               _quvi_media_t qv)
 {
   QUVIcode rc = QUVI_OK;
 
@@ -523,7 +523,7 @@ QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_video_link_t qvl)
 
 /* Executes the `trim_fields' lua function. */
 
-static QUVIcode run_lua_trim_fields_func(_quvi_video_t video, int ref)
+static QUVIcode run_lua_trim_fields_func(_quvi_media_t video, int ref)
 {
   const static char script_fname[] = "trim.lua";
   const static char func_name[] = "trim_fields";
@@ -561,7 +561,7 @@ static QUVIcode run_lua_trim_fields_func(_quvi_video_t video, int ref)
 
 /* Executes the `charset_from_data' lua function. */
 
-QUVIcode run_lua_charset_func(_quvi_video_t video, const char *data)
+QUVIcode run_lua_charset_func(_quvi_media_t video, const char *data)
 {
   const static char script_fname[] = "charset.lua";
   const static char func_name[] = "charset_from_data";
@@ -689,7 +689,7 @@ QUVIcode run_ident_func(lua_ident_t ident, llst_node_t node)
 /* Executes the host script's "parse" function. */
 
 static QUVIcode
-run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
+run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
 {
   static const char func_name[] = "parse";
   _quvi_lua_script_t qls;
@@ -768,7 +768,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_video_t video)
 
 /* Match host script to the url. */
 
-static llst_node_t find_host_script_node(_quvi_video_t video,
+static llst_node_t find_host_script_node(_quvi_media_t video,
     QUVIcode * rc)
 {
   llst_node_t curr;
@@ -816,7 +816,7 @@ static llst_node_t find_host_script_node(_quvi_video_t video,
 }
 
 /* Match host script to the url */
-QUVIcode find_host_script(_quvi_video_t video)
+QUVIcode find_host_script(_quvi_media_t video)
 {
   QUVIcode rc;
   find_host_script_node(video, &rc);
@@ -824,7 +824,7 @@ QUVIcode find_host_script(_quvi_video_t video)
 }
 
 /* Match host script to the url and run parse func */
-QUVIcode find_host_script_and_parse(_quvi_video_t video)
+QUVIcode find_host_script_and_parse(_quvi_media_t video)
 {
   llst_node_t script;
   _quvi_t quvi;

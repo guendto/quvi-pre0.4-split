@@ -50,7 +50,7 @@ char *freprintf(char **dst, const char *fmt, ...)
 }
 
 #ifdef HAVE_ICONV
-QUVIcode to_utf8(_quvi_video_t video)
+QUVIcode to_utf8(_quvi_media_t video)
 {
   static const char to[] = "UTF-8";
   size_t insize, avail, iconv_code;
@@ -166,6 +166,7 @@ char *from_html_entities(char *src)
     {"&amp;", "&"},
     {"&#38;", "&"},
     {"&#038;", "&"},
+    {"\\u0026amp;", "&"},
     {"&apos;", "'"},
     {"&#39;", "'"},
     {"&#039;", "'"},

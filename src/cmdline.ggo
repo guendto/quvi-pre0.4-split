@@ -33,7 +33,7 @@ option "no-shortened"
     s "Do not decompress shortened URLs"
     optional
 option "no-verify"
-    n "Do not verify video link"
+    n "Do not verify media URL"
     optional
 option "category-http"
     - "Category HTTP website scripts"
@@ -55,16 +55,16 @@ option "page-title"
     - "Check that parsed page title matches arg"
     string typestr="arg"
     optional
-option "video-id"
-    - "Check that parsed video ID matches arg"
+option "media-id"
+    - "Check that parsed media ID matches arg"
     string typestr="arg"
     optional
 option "file-length"
-    - "Check that parsed video length matches arg"
+    - "Check that parsed media content length matches arg"
     double typestr="arg"
     optional
 option "file-suffix"
-    - "Check that parsed video suffix matches arg"
+    - "Check that parsed media suffix matches arg"
     string typestr="arg"
     optional
 
@@ -72,7 +72,7 @@ option "test-all"
     - "Run all built-in tests of category QUVIPROTO_HTTP"
     optional
 option "dump"
-    - "Dump video details with --test-all"
+    - "Dump media details with --test-all"
     dependon="test-all"
     optional
 option "test"

@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "dailymotion",
 "--page-title",
     "CITY OF SCARS",
-"--video-id",
+"--media-id",
     "xdpig1",
 "--file-suffix",
     "mp4"

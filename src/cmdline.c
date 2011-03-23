@@ -43,18 +43,18 @@ const char *gengetopt_args_info_help[] =
   "      --verbose-libcurl      Turn on libcurl verbose mode",
   "      --exec=arg             Invoke arg after parsing",
   "  -s, --no-shortened         Do not decompress shortened URLs",
-  "  -n, --no-verify            Do not verify video link",
+  "  -n, --no-verify            Do not verify media URL",
   "      --category-http        Category HTTP website scripts",
   "      --category-mms         Category MMS website scripts",
   "      --category-rtsp        Category RTSP website scripts",
   "      --category-rtmp        Category RTMP website scripts",
   "  -a, --category-all         All website script categories",
   "      --page-title=arg       Check that parsed page title matches arg",
-  "      --video-id=arg         Check that parsed video ID matches arg",
-  "      --file-length=arg      Check that parsed video length matches arg",
-  "      --file-suffix=arg      Check that parsed video suffix matches arg",
+  "      --media-id=arg         Check that parsed media ID matches arg",
+  "      --file-length=arg      Check that parsed media content length matches arg",
+  "      --file-suffix=arg      Check that parsed media suffix matches arg",
   "      --test-all             Run all built-in tests of category QUVIPROTO_HTTP",
-  "      --dump                 Dump video details with --test-all",
+  "      --dump                 Dump media details with --test-all",
   "  -t, --test=arg             Pattern to match to built-in test URLs",
   "  -f, --format=arg           Video format to query  (default=`default')",
   "      --agent=arg            Identify as arg  (default=`Mozilla/5.0')",
@@ -131,7 +131,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->category_rtmp_given = 0 ;
   args_info->category_all_given = 0 ;
   args_info->page_title_given = 0 ;
-  args_info->video_id_given = 0 ;
+  args_info->media_id_given = 0 ;
   args_info->file_length_given = 0 ;
   args_info->file_suffix_given = 0 ;
   args_info->test_all_given = 0 ;
@@ -152,8 +152,8 @@ void clear_args (struct gengetopt_args_info *args_info)
   args_info->exec_orig = NULL;
   args_info->page_title_arg = NULL;
   args_info->page_title_orig = NULL;
-  args_info->video_id_arg = NULL;
-  args_info->video_id_orig = NULL;
+  args_info->media_id_arg = NULL;
+  args_info->media_id_orig = NULL;
   args_info->file_length_orig = NULL;
   args_info->file_suffix_arg = NULL;
   args_info->file_suffix_orig = NULL;
@@ -192,7 +192,7 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->category_rtmp_help = gengetopt_args_info_help[14] ;
   args_info->category_all_help = gengetopt_args_info_help[15] ;
   args_info->page_title_help = gengetopt_args_info_help[16] ;
-  args_info->video_id_help = gengetopt_args_info_help[17] ;
+  args_info->media_id_help = gengetopt_args_info_help[17] ;
   args_info->file_length_help = gengetopt_args_info_help[18] ;
   args_info->file_suffix_help = gengetopt_args_info_help[19] ;
   args_info->test_all_help = gengetopt_args_info_help[20] ;
@@ -291,8 +291,8 @@ cmdline_parser_release (struct gengetopt_args_info *args_info)
   free_string_field (&(args_info->exec_orig));
   free_string_field (&(args_info->page_title_arg));
   free_string_field (&(args_info->page_title_orig));
-  free_string_field (&(args_info->video_id_arg));
-  free_string_field (&(args_info->video_id_orig));
+  free_string_field (&(args_info->media_id_arg));
+  free_string_field (&(args_info->media_id_orig));
   free_string_field (&(args_info->file_length_orig));
   free_string_field (&(args_info->file_suffix_arg));
   free_string_field (&(args_info->file_suffix_orig));
@@ -377,8 +377,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "category-all", 0, 0 );
   if (args_info->page_title_given)
     write_into_file(outfile, "page-title", args_info->page_title_orig, 0);
-  if (args_info->video_id_given)
-    write_into_file(outfile, "video-id", args_info->video_id_orig, 0);
+  if (args_info->media_id_given)
+    write_into_file(outfile, "media-id", args_info->media_id_orig, 0);
   if (args_info->file_length_given)
     write_into_file(outfile, "file-length", args_info->file_length_orig, 0);
   if (args_info->file_suffix_given)
@@ -707,7 +707,7 @@ cmdline_parser_internal (
         { "category-rtmp",  0, NULL, 0 },
         { "category-all", 0, NULL, 'a' },
         { "page-title", 1, NULL, 0 },
-        { "video-id", 1, NULL, 0 },
+        { "media-id", 1, NULL, 0 },
         { "file-length",  1, NULL, 0 },
         { "file-suffix",  1, NULL, 0 },
         { "test-all", 0, NULL, 0 },
@@ -756,7 +756,7 @@ cmdline_parser_internal (
             goto failure;
 
           break;
-        case 'n': /* Do not verify video link.  */
+        case 'n': /* Do not verify media URL.  */
 
 
           if (update_arg( 0 ,
@@ -974,21 +974,21 @@ cmdline_parser_internal (
                 goto failure;
 
             }
-          /* Check that parsed video ID matches arg.  */
-          else if (strcmp (long_options[option_index].name, "video-id") == 0)
+          /* Check that parsed media ID matches arg.  */
+          else if (strcmp (long_options[option_index].name, "media-id") == 0)
             {
 
 
-              if (update_arg( (void *)&(args_info->video_id_arg),
-                              &(args_info->video_id_orig), &(args_info->video_id_given),
-                              &(local_args_info.video_id_given), optarg, 0, 0, ARG_STRING,
+              if (update_arg( (void *)&(args_info->media_id_arg),
+                              &(args_info->media_id_orig), &(args_info->media_id_given),
+                              &(local_args_info.media_id_given), optarg, 0, 0, ARG_STRING,
                               check_ambiguity, override, 0, 0,
-                              "video-id", '-',
+                              "media-id", '-',
                               additional_error))
                 goto failure;
 
             }
-          /* Check that parsed video length matches arg.  */
+          /* Check that parsed media content length matches arg.  */
           else if (strcmp (long_options[option_index].name, "file-length") == 0)
             {
 
@@ -1002,7 +1002,7 @@ cmdline_parser_internal (
                 goto failure;
 
             }
-          /* Check that parsed video suffix matches arg.  */
+          /* Check that parsed media suffix matches arg.  */
           else if (strcmp (long_options[option_index].name, "file-suffix") == 0)
             {
 
@@ -1030,7 +1030,7 @@ cmdline_parser_internal (
                 goto failure;
 
             }
-          /* Dump video details with --test-all.  */
+          /* Dump media details with --test-all.  */
           else if (strcmp (long_options[option_index].name, "dump") == 0)
             {
 

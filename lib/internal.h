@@ -82,7 +82,7 @@ struct _quvi_video_s
   char *redirect;
 };
 
-typedef struct _quvi_video_s *_quvi_video_t;
+typedef struct _quvi_video_s *_quvi_media_t;
 
 struct _quvi_lua_script_s
 {

@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "sapo",
 "--page-title",
     "Nova Abordagem",
-"--video-id",
+"--media-id",
     "hd4ZBIHG80zFviLc5YEa",
 "--file-length",
     "8754462",

@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "break",
 "--page-title",
     "Beach Tackle Whiplash",
-"--video-id",
+"--media-id",
     "546999",
 "--file-length",
     "955923",

@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "charlierose",
 "--page-title",
     "Creativity",
-"--video-id",
+"--media-id",
     "11125",
 "--file-length",
     "105769973",

@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "golem",
 "--page-title",
     "Firefox 3.5 - Test",
-"--video-id",
+"--media-id",
     "2174",
 "--file-length",
     "17758720",

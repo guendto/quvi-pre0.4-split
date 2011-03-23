@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "xhamster",
 "--page-title",
     "Dancing",
-"--video-id",
+"--media-id",
     "391958",
 "--file-length",
     "891584",

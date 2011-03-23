@@ -106,7 +106,7 @@ void quvi_close(quvi_t * handle)
 
 QUVIcode quvi_supported(quvi_t quvi, char *url)
 {
-  _quvi_video_t video;
+  _quvi_media_t video;
   QUVIcode rc;
 
   is_invarg(url);
@@ -122,16 +122,16 @@ QUVIcode quvi_supported(quvi_t quvi, char *url)
 
   rc = find_host_script(video);
 
-  quvi_parse_close((quvi_video_t) & video);
+  quvi_parse_close((quvi_media_t) & video);
 
   return (rc);
 }
 
 /* quvi_parse */
 
-QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t * dst)
+QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
 {
-  _quvi_video_t video;
+  _quvi_media_t video;
   QUVIcode rc;
 
   is_invarg(dst);
@@ -200,11 +200,11 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_video_t * dst)
 
 /* quvi_parse_close */
 
-void quvi_parse_close(quvi_video_t * handle)
+void quvi_parse_close(quvi_media_t * handle)
 {
-  _quvi_video_t *video;
+  _quvi_media_t *video;
 
-  video = (_quvi_video_t *) handle;
+  video = (_quvi_media_t *) handle;
 
   if (video && *video)
     {
@@ -286,7 +286,7 @@ QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...)
 
 static const char empty[] = "";
 
-static QUVIcode _getprop(_quvi_video_t video, QUVIproperty prop, ...)
+static QUVIcode _getprop(_quvi_media_t video, QUVIproperty prop, ...)
 {
   _quvi_video_link_t qvl;
   QUVIcode rc;
@@ -444,7 +444,7 @@ QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...)
 
 /* quvi_getprop */
 
-QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...)
+QUVIcode quvi_getprop(quvi_media_t video, QUVIproperty prop, ...)
 {
   va_list arg;
   void *p;
@@ -458,15 +458,15 @@ QUVIcode quvi_getprop(quvi_video_t video, QUVIproperty prop, ...)
   return (_getprop(video, prop, p));
 }
 
-/* quvi_next_videolink */
+/* quvi_next_media_url */
 
-QUVIcode quvi_next_videolink(quvi_video_t handle)
+QUVIcode quvi_next_media_url(quvi_video_t handle)
 {
-  _quvi_video_t video;
+  _quvi_media_t video;
 
   is_badhandle(handle);
 
-  video = (_quvi_video_t) handle;
+  video = (_quvi_media_t) handle;
 
   /* start from the first */
   if (!video->curr)
@@ -546,14 +546,6 @@ quvi_next_supported_website(quvi_t handle, char **domain,
   return (rc);
 }
 
-/* quvi_next_host, NOTE: deprecated. */
-
-QUVIcode quvi_next_host(char **domain, char **formats)
-{
-  *domain = *formats = NULL;
-  return (QUVI_LAST);
-}
-
 #undef is_badhandle
 #undef is_invarg
 
@@ -629,6 +621,24 @@ void quvi_free(void *ptr)
 {
   if (ptr != NULL)
     free(ptr);
+}
+
+/* Deprecated API functions.
+ * See include/quvi/quvi.h.in for notes. */
+
+/* quvi_next_videolink */
+
+QUVIcode quvi_next_videolink(quvi_video_t handle)
+{
+  return (quvi_next_media_url(handle));
+}
+
+/* quvi_next_host */
+
+QUVIcode quvi_next_host(char **domain, char **formats)
+{
+  *domain = *formats = NULL;
+  return (QUVI_LAST);
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

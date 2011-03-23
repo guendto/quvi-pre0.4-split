@@ -2,7 +2,7 @@ exit quviTest::run_t(
 "sevenload",
 "--page-title",
     "Funny Football Clips",
-"--video-id",
+"--media-id",
     "IUL3gda",
 "--file-length",
     "15964295",

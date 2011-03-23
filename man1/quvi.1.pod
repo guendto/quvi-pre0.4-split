@@ -2,7 +2,7 @@
 
 =head1 NAME
 
-quvi - query video tool
+quvi - query media tool
 
 =head1 SYNOPSIS
 
@@ -13,7 +13,7 @@ quvi [options] [url...]
 quvi is a command line tool for parsing Adobe Flash media stream URLs. It
 supports many websites including YouTube and Dailymotion.
 
-The video details are printed to standard output (in JSON), everything else
+The parsed details are printed to standard output (in JSON), everything else
 is printed to standard error.
 
 =head1 MOTIVATION
@@ -70,7 +70,7 @@ Turn on libcurl verbose mode.
 
 =item B<--exec> I<arg>
 
-Invoke I<arg> for each (successfully) parsed video. You can use the following
+Invoke I<arg> for each (successfully) parsed media. You can use the following
 specifiers in I<arg>:
 
     %u  Media URL
@@ -84,13 +84,17 @@ Do not "decompress" shortened URLs before using them.
 
 =item B<-n, --no-verify>
 
-Do not verify video link after parsing it. Normally this serves two
-purposes: check that the link actually works, and get content-length
-as well as content-type for the video.
+Do not verify media URL after parsing it. Normally this serves two
+purposes:
+
+ * Check that the URL works
+ * Get content-length and content-type
 
 If this switch used, the program will report invalid values for those
-video details (e.g. 0 file length, empty string for content-type, etc.)
-but saves some bandwidth if those details are not obligatory.
+details (e.g. 0 content length, empty string for content-type, etc.) but
+may save some bandwidth if those details are not needed.
+
+Note that the URL is verified for HTTP only.
 
 =item B<--category-http>
 
@@ -114,22 +118,22 @@ Enable all categories of website scripts.
 
 =item B<--page-title> I<arg>
 
-Check that the parsed video title matches the I<arg>.
+Check that the parsed page title matches the I<arg>.
 The libquvi tests typically make use of this option.
 
-=item B<--video-id> I<arg>
+=item B<--media-id> I<arg>
 
-Check that the parsed video ID matches the I<arg>.
+Check that the parsed media ID matches the I<arg>.
 The libquvi tests typically make use of this option.
 
 =item B<--file-length> I<length>
 
-Check that the parsed video file length matches the I<arg>.
+Check that the parsed media content length matches the I<arg>.
 The libquvi tests typically make use of this option.
 
 =item B<--file-suffix> I<arg>
 
-Check that the parsed video file suffix matches the I<arg>.
+Check that the parsed media file suffix matches the I<arg>.
 The libquvi tests typically make use of this option.
 
 =item B<--test-all>
@@ -138,7 +142,7 @@ Test all of the built-in (category QUVIPROTO_HTTP) URLs.
 
 =item B<--dump>
 
-Dump video details while with C<--test-all>.
+Dump media details with C<--test-all>.
 
 =item B<-t, --test> I<arg>
 
@@ -153,7 +157,7 @@ Match I<arg> to built-in (category QUVIPROTO_HTTP) test URLs, e.g.:
 
 =item B<-f, --format> I<arg>
 
-Query for I<arg> video format. I<arg> can also be C<help>.
+Query for I<arg> format. I<arg> can also be C<help>.
 
 =item B<--agent> I<arg>
 
@@ -201,22 +205,22 @@ Run all built-in host tests.
 
 =item quvi -aqd --xml
 
-Same but run in quiet mode. Print video details in XML (to stdout).
+Same but run in quiet mode. Print details in XML (to stdout).
 
 =item quvi -t youtube
 
-Match pattern "youtube" to a built-in video URL and test it.
+Match pattern "youtube" to a built-in media URL and test it.
 
 =item quvi YOUTUBE_URL -f best
 
-Query YOUTUBE_URL for "best" format of the video.
+Query YOUTUBE_URL for "best" format.
 
 Run quvi with C<--support> to get a list of the websites
 and which formats they support.
 
 =item quvi -f list dailym
 
-Print available video formats for dailym(otion).
+Print available formats for dailym(otion).
 
 =back
 
@@ -281,7 +285,7 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
   QUVI_NOLUAWEBSITE     = 0x08, Failed to find lua website scripts
   --
   QUVI_PCRE             = 0x40, libpcre error occurred, deprecated 0.2.9+
-  QUVI_NOSUPPORT        = 0x41, libquvi does not support the video host
+  QUVI_NOSUPPORT        = 0x41, libquvi does not support the host
   QUVI_CURL             = 0x42, libcurl error occurred
   QUVI_ICONV            = 0x43, libiconv error occurred
   QUVI_LUA              = 0x44, lua error occurred
@@ -318,8 +322,11 @@ E<lt>http://repo.or.cz/w/quvi.git/tree/HEAD:/docE<gt>
 
 =head1 BACKGROUND
 
-quvi was inspired by cclive. Embeddable LUA scripting was introduced in the
-0.2.0 release.
+quvi or "(qu)ery (vi)deo" for historical reasons. As of 0.2.15
+a more suitable name would be qume or "(qu)ery (me)dia".
+
+quvi was inspired by cclive. Embeddable LUA scripting was introduced
+in 0.2.0.
 
 =head1 LICENSE
 

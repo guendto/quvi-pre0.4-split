@@ -124,13 +124,13 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-03-08" "0.2.14" "quvi manual"
+.TH quvi 1 "2011-03-23" "0.2.15" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
 .SH "NAME"
-quvi \- query video tool
+quvi \- query media tool
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 quvi [options] [url...]
@@ -139,7 +139,7 @@ quvi [options] [url...]
 quvi is a command line tool for parsing Adobe Flash media stream URLs. It
 supports many websites including YouTube and Dailymotion.
 .PP
-The video details are printed to standard output (in \s-1JSON\s0), everything else
+The parsed details are printed to standard output (in \s-1JSON\s0), everything else
 is printed to standard error.
 .SH "MOTIVATION"
 .IX Header "MOTIVATION"
@@ -184,7 +184,7 @@ be printed to stdout as they would be normally.
 Turn on libcurl verbose mode.
 .IP "\fB\-\-exec\fR \fIarg\fR" 4
 .IX Item "--exec arg"
-Invoke \fIarg\fR for each (successfully) parsed video. You can use the following
+Invoke \fIarg\fR for each (successfully) parsed media. You can use the following
 specifiers in \fIarg\fR:
 .Sp
 .Vb 1
@@ -198,13 +198,19 @@ and each new value will be quoted ("").
 Do not \*(L"decompress\*(R" shortened URLs before using them.
 .IP "\fB\-n, \-\-no\-verify\fR" 4
 .IX Item "-n, --no-verify"
-Do not verify video link after parsing it. Normally this serves two
-purposes: check that the link actually works, and get content-length
-as well as content-type for the video.
+Do not verify media \s-1URL\s0 after parsing it. Normally this serves two
+purposes:
+.Sp
+.Vb 2
+\& * Check that the URL works
+\& * Get content\-length and content\-type
+.Ve
 .Sp
 If this switch used, the program will report invalid values for those
-video details (e.g. 0 file length, empty string for content-type, etc.)
-but saves some bandwidth if those details are not obligatory.
+details (e.g. 0 content length, empty string for content-type, etc.) but
+may save some bandwidth if those details are not needed.
+.Sp
+Note that the \s-1URL\s0 is verified for \s-1HTTP\s0 only.
 .IP "\fB\-\-category\-http\fR" 4
 .IX Item "--category-http"
 Enable category \s-1HTTP\s0 website scripts. This is the default category.
@@ -222,26 +228,26 @@ Enable category \s-1RTMP\s0 website scripts.
 Enable all categories of website scripts.
 .IP "\fB\-\-page\-title\fR \fIarg\fR" 4
 .IX Item "--page-title arg"
-Check that the parsed video title matches the \fIarg\fR.
+Check that the parsed page title matches the \fIarg\fR.
 The libquvi tests typically make use of this option.
-.IP "\fB\-\-video\-id\fR \fIarg\fR" 4
-.IX Item "--video-id arg"
-Check that the parsed video \s-1ID\s0 matches the \fIarg\fR.
+.IP "\fB\-\-media\-id\fR \fIarg\fR" 4
+.IX Item "--media-id arg"
+Check that the parsed media \s-1ID\s0 matches the \fIarg\fR.
 The libquvi tests typically make use of this option.
 .IP "\fB\-\-file\-length\fR \fIlength\fR" 4
 .IX Item "--file-length length"
-Check that the parsed video file length matches the \fIarg\fR.
+Check that the parsed media content length matches the \fIarg\fR.
 The libquvi tests typically make use of this option.
 .IP "\fB\-\-file\-suffix\fR \fIarg\fR" 4
 .IX Item "--file-suffix arg"
-Check that the parsed video file suffix matches the \fIarg\fR.
+Check that the parsed media file suffix matches the \fIarg\fR.
 The libquvi tests typically make use of this option.
 .IP "\fB\-\-test\-all\fR" 4
 .IX Item "--test-all"
 Test all of the built-in (category \s-1QUVIPROTO_HTTP\s0) URLs.
 .IP "\fB\-\-dump\fR" 4
 .IX Item "--dump"
-Dump video details while with \f(CW\*(C`\-\-test\-all\*(C'\fR.
+Dump media details with \f(CW\*(C`\-\-test\-all\*(C'\fR.
 .IP "\fB\-t, \-\-test\fR \fIarg\fR" 4
 .IX Item "-t, --test arg"
 Match \fIarg\fR to built-in (category \s-1QUVIPROTO_HTTP\s0) test URLs, e.g.:
@@ -256,7 +262,7 @@ Match \fIarg\fR to built-in (category \s-1QUVIPROTO_HTTP\s0) test URLs, e.g.:
 .Ve
 .IP "\fB\-f, \-\-format\fR \fIarg\fR" 4
 .IX Item "-f, --format arg"
-Query for \fIarg\fR video format. \fIarg\fR can also be \f(CW\*(C`help\*(C'\fR.
+Query for \fIarg\fR format. \fIarg\fR can also be \f(CW\*(C`help\*(C'\fR.
 .IP "\fB\-\-agent\fR \fIarg\fR" 4
 .IX Item "--agent arg"
 Identify quvi as \fIarg\fR to servers. Default is \*(L"Mozilla/5.0\*(R".
@@ -291,19 +297,19 @@ last checked \s-1URL\s0. See also \*(L"\s-1EXIT\s0 \s-1STATUS\s0\*(R".
 Run all built-in host tests.
 .IP "quvi \-aqd \-\-xml" 4
 .IX Item "quvi -aqd --xml"
-Same but run in quiet mode. Print video details in \s-1XML\s0 (to stdout).
+Same but run in quiet mode. Print details in \s-1XML\s0 (to stdout).
 .IP "quvi \-t youtube" 4
 .IX Item "quvi -t youtube"
-Match pattern \*(L"youtube\*(R" to a built-in video \s-1URL\s0 and test it.
+Match pattern \*(L"youtube\*(R" to a built-in media \s-1URL\s0 and test it.
 .IP "quvi \s-1YOUTUBE_URL\s0 \-f best" 4
 .IX Item "quvi YOUTUBE_URL -f best"
-Query \s-1YOUTUBE_URL\s0 for \*(L"best\*(R" format of the video.
+Query \s-1YOUTUBE_URL\s0 for \*(L"best\*(R" format.
 .Sp
 Run quvi with \f(CW\*(C`\-\-support\*(C'\fR to get a list of the websites
 and which formats they support.
 .IP "quvi \-f list dailym" 4
 .IX Item "quvi -f list dailym"
-Print available video formats for dailym(otion).
+Print available formats for dailym(otion).
 .SH "FILES"
 .IX Header "FILES"
 .IP "\fB~/.quvirc\fR" 4
@@ -356,7 +362,7 @@ quvi exits with 0 on success and >0 if an error occurred.
 \&  QUVI_NOLUAWEBSITE     = 0x08, Failed to find lua website scripts
 \&  \-\-
 \&  QUVI_PCRE             = 0x40, libpcre error occurred, deprecated 0.2.9+
-\&  QUVI_NOSUPPORT        = 0x41, libquvi does not support the video host
+\&  QUVI_NOSUPPORT        = 0x41, libquvi does not support the host
 \&  QUVI_CURL             = 0x42, libcurl error occurred
 \&  QUVI_ICONV            = 0x43, libiconv error occurred
 \&  QUVI_LUA              = 0x44, lua error occurred
@@ -384,8 +390,11 @@ They may prove invaluable.
 <http://repo.or.cz/w/quvi.git/tree/HEAD:/doc>
 .SH "BACKGROUND"
 .IX Header "BACKGROUND"
-quvi was inspired by cclive. Embeddable \s-1LUA\s0 scripting was introduced in the
-0.2.0 release.
+quvi or \*(L"(qu)ery (vi)deo\*(R" for historical reasons. As of 0.2.15
+a more suitable name would be qume or \*(L"(qu)ery (me)dia\*(R".
+.PP
+quvi was inspired by cclive. Embeddable \s-1LUA\s0 scripting was introduced
+in 0.2.0.
 .SH "LICENSE"
 .IX Header "LICENSE"
 quvi and libquvi are free software, licensed under the LGPLv2.1+.

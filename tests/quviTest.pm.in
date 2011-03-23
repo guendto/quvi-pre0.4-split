@@ -50,7 +50,7 @@ sub remove_checks {
     my (@args) = @_;
 
     my @remove =
-      qw(--page-title --video-id --file-length --file-suffix);
+      qw(--page-title --media-id --file-length --file-suffix);
 
     my @tmp;
     my $skip = 0;
