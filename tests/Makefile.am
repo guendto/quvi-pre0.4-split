@@ -27,6 +27,7 @@ support-liveleak.pl \
 support-publicsenat.pl \
 support-sapo.pl \
 support-sevenload.pl \
+support-soundcloud.pl \
 support-spiegel.pl \
 support-tagtele.pl\
 support-tmunderground.pl\
