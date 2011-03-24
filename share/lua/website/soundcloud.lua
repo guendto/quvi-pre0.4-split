@@ -49,12 +49,10 @@ function parse(self)
     local title  = s or error("no match: video title")
     -- Unescape the Unicode strings if any
     -- the HTML will be unescaped by quvi itself
-    self.title = string.gsub(title, "\\u(%d+)", function (h)
-                                                    return string.char(tonumber(h, 16))
-                                                end)
-
-    print (title)
-    print (self.title)
+    self.title = string.gsub(title, "\\u(%d+)",
+        function (h)
+            return string.char(tonumber(h, 16))
+        end)
 
     local _,_,s = page:find ('content=\"([:/%w\?\.-]-)\" property="og:image"')
     self.media_thumbnail_url = s or ""
