@@ -79,6 +79,7 @@ function youtubify(url)
     url = url:gsub("-nocookie", "")        -- youtube-nocookie.com
     url = url:gsub("/v/", "/watch?v=")     -- embedded
     url = url:gsub("/embed/", "/watch?v=") -- embedded
+    url = url:gsub("/e/", "/watch?v=") -- embedded
     url = url:gsub("youtu%.be/","youtube.com/watch?v=") -- youtu.be
     return url
 end
