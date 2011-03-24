@@ -34,6 +34,7 @@ lua/website/sevenload.lua \
 lua/website/soundcloud.lua \
 lua/website/spiegel.lua \
 lua/website/tagtele.lua \
+lua/website/ted.lua \
 lua/website/tmunderground.lua \
 lua/website/theonion.lua \
 lua/website/tvlux.lua \
