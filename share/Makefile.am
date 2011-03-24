@@ -31,6 +31,7 @@ lua/website/pluzz.lua \
 lua/website/publicsenat.lua \
 lua/website/sapo.lua \
 lua/website/sevenload.lua \
+lua/website/soundcloud.lua \
 lua/website/spiegel.lua \
 lua/website/tagtele.lua \
 lua/website/tmunderground.lua \
