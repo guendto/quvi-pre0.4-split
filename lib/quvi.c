@@ -359,6 +359,10 @@ static QUVIcode _getprop(_quvi_media_t video, QUVIproperty prop, ...)
       _sets(video->quvi->format);
     case QUVIPROP_STARTTIME:
       _sets(video->starttime);
+    case QUVIPROP_MEDIATHUMBNAILURL:
+      _sets(video->media_thumbnail_url);
+    case QUVIPROP_MEDIADURATION:
+      _sets(video->duration);
     default:
       rc = QUVI_INVARG;
     }

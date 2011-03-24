@@ -177,6 +177,8 @@ QUVIPROP_FILESUFFIX    = QUVIPROPERTY_STRING + 8, /**< Parsed file suffix */
 QUVIPROP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP code */
 QUVIPROP_FORMAT        = QUVIPROPERTY_STRING + 10, /**< Requested format, set using QUVIOPT_FORMAT */
 QUVIPROP_STARTTIME     = QUVIPROPERTY_STRING + 11, /**< Start time for media */
+QUVIPROP_MEDIATHUMBNAILURL     = QUVIPROPERTY_STRING + 12, /**< Media cover URL, if any */
+QUVIPROP_MEDIADURATION         = QUVIPROPERTY_STRING + 13, /**< Media duration */
 /* -- Deprecated as of 0.2.15. Note that these exist only for
  * backward-compatibility. This may change in the future. New
  * applications should use the appropriate QUVIPROP_MEDIA* enums
@@ -196,7 +198,7 @@ QUVIPROP_VIDEOFORMAT     = QUVIPROPERTY_STRING + 10, /**< Requested
 video format, set using QUVIOPT_FORMAT @deprecated Since 0.2.15, use
 QUVIPROP_FORMAT instead */
 /* Add new ones below. */
-_QUVIPROP_LAST          = 11 /**< Placeholder */
+_QUVIPROP_LAST          = 13 /**< Placeholder */
 } QUVIproperty;
 
 /** @brief libquvi session handle */
