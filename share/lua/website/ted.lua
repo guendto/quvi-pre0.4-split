@@ -26,7 +26,7 @@ function ident(self)
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "ted.com"
-    r.formats    = "default|best"
+    r.formats    = "default|best|hd"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain}, {"/talks/.+$"})
@@ -49,20 +49,21 @@ function parse(self)
     local _,_,s = page:find('<h3>Video</h3>.-dl class="downloads"(.-)</dl>')
     local metadata = s or error("no match: metadata")
 
-    local r = self.requested_format or "default"
+    local _,_,s =
+        metadata:find('<a href="([^ .]-)">Download video to desktop')
 
-    local path
-    if r == "default" then
-        local _,_,s = metadata:find('<a href="([^ .]-)">Download video to desktop')
-        path = s or error("no match: standard src")
-    else
-        local _,_,s = metadata:find('<a href="([^ .]-)">Watch high%-res video')
-        path = s or error("no match: high-res src")
+    local path  = s or error("no match: standard src") -- our 'default'
+
+    local r = self.requested_format
+    r = (r == 'best') and 'hd' or r -- 'best' is an alias for 'hd'
+
+    if r == 'hd' then
+        local _,_,s =
+            metadata:find('<a href="([^ .]-)">Watch high%-res video')
+        path = s or path -- fallback to 'default'
     end
 
-    self.url  = {
-        string.format("http://www.ted.com%s", path)
-    }
+    self.url = {"http://www.ted.com" .. path}
 
     local _,_,s = path:find("talk/(.+)$")
     self.id = s or error("no match: video id")
