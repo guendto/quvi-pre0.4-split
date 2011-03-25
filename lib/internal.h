@@ -75,7 +75,7 @@ struct _quvi_video_s
   char *title;
   char *starttime;
   char *media_thumbnail_url;
-  char *duration;
+  double duration;
   char *charset;
   char *page_link;
   llst_node_t link;             /* holds all essential to video links */

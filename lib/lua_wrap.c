@@ -423,6 +423,13 @@ static void set_field(lua_State * l, const char *key, const char *value)
   lua_settable(l, -3);
 }
 
+static void set_field_n(lua_State * l, const char *key, double value)
+{
+  lua_pushstring(l, key);
+  lua_pushnumber(l, value);
+  lua_settable(l, -3);
+}
+
 /* Util scripts. */
 
 /* Finds the specified util script from the list. */
@@ -720,8 +727,8 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
   set_field(l, "redirect", "");
   set_field(l, "starttime", "");
   set_field(l, "media_thumbnail_url", "");
-  set_field(l, "duration", "");
   set_field(l, "script_dir", script_dir);
+  set_field_n(l, "duration", 0);
 
   _free(script_dir);
 
@@ -760,8 +767,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
                     get_field_req_s(l, qls, "starttime"));
           freprintf(&video->media_thumbnail_url, "%s",
                     get_field_req_s(l, qls, "media_thumbnail_url"));
-          freprintf(&video->duration, "%s",
-                    get_field_req_s(l, qls, "duration"));
+          video->duration = get_field_n(l, qls, "duration");
 
           rc = iter_video_url(l, qls, "url", video);
         }

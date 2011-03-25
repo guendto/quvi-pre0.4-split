@@ -58,7 +58,7 @@ function parse(self)
     self.media_thumbnail_url = s or ""
 
     local _,_,s = metadata:find('"duration":(%d-),')
-    self.duration = s or ""
+    self.duration = tonumber(s) or 0
 
     local _,_,s = metadata:find('"streamUrl":"(.-)"')
     self.url  = { s }  or error("no match: stream URL")

@@ -178,7 +178,7 @@ QUVIPROP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTT
 QUVIPROP_FORMAT        = QUVIPROPERTY_STRING + 10, /**< Requested format, set using QUVIOPT_FORMAT */
 QUVIPROP_STARTTIME     = QUVIPROPERTY_STRING + 11, /**< Start time for media */
 QUVIPROP_MEDIATHUMBNAILURL     = QUVIPROPERTY_STRING + 12, /**< Media cover URL, if any */
-QUVIPROP_MEDIADURATION         = QUVIPROPERTY_STRING + 13, /**< Media duration */
+QUVIPROP_MEDIADURATION         = QUVIPROPERTY_DOUBLE + 13, /**< Media duration in msecs */
 /* -- Deprecated as of 0.2.15. Note that these exist only for
  * backward-compatibility. This may change in the future. New
  * applications should use the appropriate QUVIPROP_MEDIA* enums
