@@ -620,6 +620,7 @@ static int check_values(quvi_media_t media, opts_s opts)
 
 static const char *tests[] =
 {
+  "http://www.ted.com/talks/eythor_bender_demos_human_exoskeletons.html",
   "http://soundcloud.com/martinsolveig/martin-solveig-dragonette-hello-bassjackers-remix",
   "http://www.tvlux.be/joomla/index.php/component/content/article/188/5469",
   "http://www.tagtele.com/videos/voir/64096",

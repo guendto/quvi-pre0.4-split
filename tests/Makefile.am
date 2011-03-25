@@ -30,6 +30,7 @@ support-sevenload.pl \
 support-soundcloud.pl \
 support-spiegel.pl \
 support-tagtele.pl\
+support-ted.pl\
 support-tmunderground.pl\
 support-theonion.pl\
 support-tvlux.pl\
