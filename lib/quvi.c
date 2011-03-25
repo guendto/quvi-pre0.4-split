@@ -81,7 +81,6 @@ void quvi_close(quvi_t * handle)
 
   if (quvi && *quvi)
     {
-
       free_lua(quvi);
       assert((*quvi)->util_scripts == NULL);
       assert((*quvi)->website_scripts == NULL);
@@ -227,6 +226,7 @@ void quvi_parse_close(quvi_media_t * handle)
       _free((*video)->host_id);
       _free((*video)->redirect);
       _free((*video)->starttime);
+      _free((*video)->media_thumbnail_url);
 
       _free(*video);
     }
