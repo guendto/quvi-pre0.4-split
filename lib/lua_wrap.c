@@ -171,13 +171,15 @@ scan_dir(llst_node_t * dst, const char *path, filter_func filter)
   show_script = getenv("QUVI_SHOW_SCRIPT");
 
   dir = opendir(path);
-  if (!dir) {
-    if (show_scandir) {
-      fprintf(stderr, "quvi: %s: %s: %s\n",
-        __PRETTY_FUNCTION__, path, strerror(errno));
+  if (!dir)
+    {
+      if (show_scandir)
+        {
+          fprintf(stderr, "quvi: %s: %s: %s\n",
+                  __PRETTY_FUNCTION__, path, strerror(errno));
+        }
+      return (QUVI_OK);
     }
-    return (QUVI_OK);
-  }
 
   if (show_scandir)
     fprintf(stderr, "quvi: %s: %s\n", __PRETTY_FUNCTION__, path);
@@ -196,10 +198,11 @@ scan_dir(llst_node_t * dst, const char *path, filter_func filter)
           asprintf((char **)&qls->basename, "%s", de->d_name);
           asprintf((char **)&qls->path, "%s/%s", path, de->d_name);
 
-          if (show_script) {
-            fprintf(stderr, "quvi: %s: found script: %s\n",
-              __PRETTY_FUNCTION__, qls->path);
-          }
+          if (show_script)
+            {
+              fprintf(stderr, "quvi: %s: found script: %s\n",
+                      __PRETTY_FUNCTION__, qls->path);
+            }
 
           llst_add(dst, qls);
         }
