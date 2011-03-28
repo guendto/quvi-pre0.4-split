@@ -562,11 +562,7 @@ expect_error_d(const char *what, const double expected,
 
 static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
 {
-  if (rc != QUVI_NOSUPPORT)
-    fprintf(stderr, "\n");
-
   fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
-
   quvi_close(&quvi);
   cmdline_parser_free(&opts);
   exit(rc);
