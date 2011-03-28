@@ -560,109 +560,6 @@ expect_error_d(const char *what, const double expected,
           expected, got);
 }
 
-static int check_values(quvi_media_t media, opts_s opts)
-{
-  char *title, *expect, *id, *suffix;
-  double length;
-  int rc;
-
-  rc = 0;
-
-  if (opts.page_title_given)
-    {
-
-      expect = opts.page_title_arg;
-
-      quvi_getprop(media, QUVIPROP_PAGETITLE, &title);
-
-      rc = strcmp(expect, title) != 0;
-      if (rc)
-        expect_error("page title", expect, title);
-    }
-
-  if (opts.media_id_given && !rc)
-    {
-      expect = opts.media_id_arg;
-
-      quvi_getprop(media, QUVIPROP_MEDIAID, &id);
-
-      rc = strcmp(expect, id) != 0;
-      if (rc)
-        expect_error("media id", expect, id);
-    }
-
-  if (opts.file_suffix_given && !rc)
-    {
-
-      expect = opts.file_suffix_arg;
-
-      quvi_getprop(media, QUVIPROP_FILESUFFIX, &suffix);
-
-      rc = strcmp(expect, suffix) != 0;
-      if (rc)
-        expect_error("file suffix", expect, suffix);
-    }
-
-  if (opts.file_length_given && !rc)
-    {
-
-      double expect_d = opts.file_length_arg;
-
-      quvi_getprop(media, QUVIPROP_MEDIACONTENTLENGTH, &length);
-
-      rc = expect_d != length;
-      if (rc)
-        expect_error_d("file length", expect_d, length);
-    }
-
-  return (rc);
-}
-
-static const char *tests[] =
-{
-  "http://www.ted.com/talks/eythor_bender_demos_human_exoskeletons.html",
-  "http://soundcloud.com/martinsolveig/martin-solveig-dragonette-hello-bassjackers-remix",
-  "http://www.tvlux.be/joomla/index.php/component/content/article/188/5469",
-  "http://www.tagtele.com/videos/voir/64096",
-  "http://www.tmunderground.com/watch/4f88b3a8e3d44c636cbd/The-Intermediate",
-  "http://www.publicsenat.fr/vod/un-monde-de-bulles/speciale-journal-de-spirou/67141",
-  "http://video.globo.com/Videos/Player/Noticias/0,,GIM1392245-7823-QUATRO+MEDICOS+SAO+PRESOS+POR+VENDER+E+USAR+PRODUTOS+FALSOS+NO+RIO,00.html",
-  "http://www.cbsnews.com/video/watch/?id=7118769n",
-  "http://videos.sapo.pt/hd4ZBIHG80zFviLc5YEa",
-  "http://www.dailymotion.com/video/xdpig1_city-of-scars_shortfilms",
-  "http://www.spiegel.de/video/video-1012582.html",
-  "http://vimeo.com/1485507",
-  "http://en.sevenload.com/videos/IUL3gda-Funny-Football-Clips",
-  "http://www.liveleak.com/view?i=704_1228511265",
-  "http://video.google.com/videoplay?docid=-6970952080219955808",
-  "http://video.golem.de/internet/2174/firefox-3.5-test.html",
-  "http://www.funnyhub.com/videos/pages/crazy-hole-in-one.html",
-  "http://www.clipfish.de/video/3100131/matratzendomino/",
-  "http://www.youtube.com/watch?v=9dgSa4wmMzk",
-  "http://break.com/index/beach-tackle-whip-lash.html",
-  "http://www.gaskrank.tv/tv/rennstrecken/1-runde-oschersleben-14082008--6985.htm",
-  "http://www.buzzhumor.com/videos/32561/Girl_Feels_Shotgun_Power",
-  "http://www.funnyordie.com/videos/776d200b1c/etiquette-ninjas-episode-5-dicks-on-elevators",
-  "http://www.charlierose.com/view/interview/11125",
-  "http://www.academicearth.org/lectures/building-dynamic-websites-http",
-  /* uses "redirect". */
-  "http://www.academicearth.org/lectures/intro-roman-architecture",
-  "http://www.collegehumor.com/video:1942317",
-  "http://www.theonion.com/video/time-announces-new-version-of-magazine-aimed-at-ad,17950/",
-  "http://www.bloomberg.com/video/63722844/",
-#ifdef ENABLE_NSFW
-  "http://xhamster.com/movies/391958/perfect_babe_dancing.html",
-  "http://www.keezmovies.com/video/evelyn-s",
-  "http://www.tube8.com/fetish/japanese-melon-gal-censored/186133/",
-  "http://www.xvideos.com/video243887/devi_emmerson_body_painting",
-  "http://www.youjizz.com/videos/glamour-girls---melissa-125602.html",
-#endif
-#ifdef ENABLE_BROKEN
-#endif
-
-  NULL
-};
-
 static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
 {
   if (rc != QUVI_NOSUPPORT)
@@ -670,90 +567,9 @@ static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
 
   fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
 
-  if (!opts.test_all_given)
-    {
-      quvi_close(&quvi);
-      cmdline_parser_free(&opts);
-      exit(rc);
-    }
-}
-
-static void match_test(quvi_t quvi, opts_s opts, CURL * curl)
-{
-  int i, no_match;
-  QUVIcode rc;
-
-  /* None of our tests (should) use shortened URLs. */
-  quvi_setopt(quvi, QUVIOPT_NOSHORTENED, 1L);
-
-  for (rc = QUVI_OK, no_match = 1, i = 0; tests[i]; ++i)
-    {
-      if (strstr(tests[i], opts.test_arg) != NULL)
-        {
-          quvi_media_t m;
-
-          no_match = 0;
-          rc = quvi_parse(quvi, (char *)tests[i], &m);
-          if (rc != QUVI_OK)
-            dump_error(quvi, rc, opts);
-
-          dump_media(m, opts, curl);
-          rc = check_values(m, opts);
-
-          if (opts.exec_given && rc == QUVI_OK)
-            {
-              char *media_url = NULL;
-              do
-                {
-                  quvi_getprop(m, QUVIPROP_MEDIAURL, &media_url);
-                  invoke_exec(m, media_url, opts);
-                }
-              while (quvi_next_media_url(m) == QUVI_OK);
-            }
-
-          quvi_parse_close(&m);
-        }
-    }
-
-  if (no_match)
-    {
-      fprintf(stderr, "error: nothing matched `%s'\n", opts.test_arg);
-      rc = QUVI_NOSUPPORT;
-    }
-
-  cmdline_parser_free(&opts);
   quvi_close(&quvi);
-
+  cmdline_parser_free(&opts);
   exit(rc);
-}
-
-static void test_all(quvi_t quvi, opts_s opts, CURL * curl)
-{
-  quvi_media_t media;
-  QUVIcode rc;
-  int i, m;
-
-  /* None of our tests (should) use shortened URLs. */
-  quvi_setopt(quvi, QUVIOPT_NOSHORTENED, 1L);
-
-  spew_qe(":: Run built-in media link tests.\n");
-  for (m = 0; tests[m]; ++m) ;
-
-  for (i = 0; i < m; ++i)
-    {
-      spew_qe(" > Test #%02d/%02d:\n", i + 1, m);
-
-      rc = quvi_parse(quvi, (char *)tests[i], &media);
-      if (rc != QUVI_OK)
-        dump_error(quvi, rc, opts);
-      else
-        {
-          if (opts.dump_given)
-            dump_media(media, opts, curl);
-        }
-      quvi_parse_close(&media);
-    }
-  spew_qe(":: Tests done.\n");
 }
 
 static quvi_t init_quvi(opts_s opts, CURL ** curl)
@@ -904,42 +720,32 @@ int main(int argc, char *argv[])
 
   /* User input */
 
-  if (opts.test_all_given)
-    test_all(quvi, opts, curl);
+  if (opts.inputs_num == 0)
+    fprintf(stderr, "error: no input links\n");
 
-  else if (opts.test_given)
-    match_test(quvi, opts, curl);
-
-  else
+  for (i = 0; i < opts.inputs_num; ++i)
     {
-      if (opts.inputs_num == 0)
-        fprintf(stderr, "error: no input links\n");
+      rc = quvi_parse(quvi, (char *)opts.inputs[i], &media);
 
-      for (i = 0; i < opts.inputs_num; ++i)
+      if (rc != QUVI_OK)
+        dump_error(quvi, rc, opts);
+
+      assert(media != 0);
+      dump_media(media, opts, curl);
+
+      if (opts.exec_given)
         {
-
-          rc = quvi_parse(quvi, (char *)opts.inputs[i], &media);
-
-          if (rc != QUVI_OK)
-            dump_error(quvi, rc, opts);
-
-          assert(media != 0);
-          dump_media(media, opts, curl);
-
-          if (opts.exec_given)
+          char *media_url = NULL;
+          do
             {
-              char *media_url = NULL;
-              do
-                {
-                  quvi_getprop(media, QUVIPROP_MEDIAURL, &media_url);
-                  invoke_exec(media, media_url, opts);
-                }
-              while (quvi_next_media_url(media) == QUVI_OK);
+              quvi_getprop(media, QUVIPROP_MEDIAURL, &media_url);
+              invoke_exec(media, media_url, opts);
             }
-
-          quvi_parse_close(&media);
-          assert(media == 0);
+          while (quvi_next_media_url(media) == QUVI_OK);
         }
+
+      quvi_parse_close(&media);
+      assert(media == 0);
     }
 
   /* Cleanup. */

@@ -55,23 +55,6 @@ extern "C" {
     const char *category_rtsp_help; /**< @brief Category RTSP website scripts help description.  */
     const char *category_rtmp_help; /**< @brief Category RTMP website scripts help description.  */
     const char *category_all_help; /**< @brief All website script categories help description.  */
-    char * page_title_arg;  /**< @brief Check that parsed page title matches arg.  */
-    char * page_title_orig; /**< @brief Check that parsed page title matches arg original value given at command line.  */
-    const char *page_title_help; /**< @brief Check that parsed page title matches arg help description.  */
-    char * media_id_arg;  /**< @brief Check that parsed media ID matches arg.  */
-    char * media_id_orig; /**< @brief Check that parsed media ID matches arg original value given at command line.  */
-    const char *media_id_help; /**< @brief Check that parsed media ID matches arg help description.  */
-    double file_length_arg; /**< @brief Check that parsed media content length matches arg.  */
-    char * file_length_orig;  /**< @brief Check that parsed media content length matches arg original value given at command line.  */
-    const char *file_length_help; /**< @brief Check that parsed media content length matches arg help description.  */
-    char * file_suffix_arg; /**< @brief Check that parsed media suffix matches arg.  */
-    char * file_suffix_orig;  /**< @brief Check that parsed media suffix matches arg original value given at command line.  */
-    const char *file_suffix_help; /**< @brief Check that parsed media suffix matches arg help description.  */
-    const char *test_all_help; /**< @brief Run all built-in tests of category QUVIPROTO_HTTP help description.  */
-    const char *dump_help; /**< @brief Dump media details with --test-all help description.  */
-    char * test_arg;  /**< @brief Pattern to match to built-in test URLs.  */
-    char * test_orig; /**< @brief Pattern to match to built-in test URLs original value given at command line.  */
-    const char *test_help; /**< @brief Pattern to match to built-in test URLs help description.  */
     char * format_arg;  /**< @brief Video format to query (default='default').  */
     char * format_orig; /**< @brief Video format to query original value given at command line.  */
     const char *format_help; /**< @brief Video format to query help description.  */
@@ -102,13 +85,6 @@ extern "C" {
     unsigned int category_rtsp_given ;  /**< @brief Whether category-rtsp was given.  */
     unsigned int category_rtmp_given ;  /**< @brief Whether category-rtmp was given.  */
     unsigned int category_all_given ; /**< @brief Whether category-all was given.  */
-    unsigned int page_title_given ; /**< @brief Whether page-title was given.  */
-    unsigned int media_id_given ; /**< @brief Whether media-id was given.  */
-    unsigned int file_length_given ;  /**< @brief Whether file-length was given.  */
-    unsigned int file_suffix_given ;  /**< @brief Whether file-suffix was given.  */
-    unsigned int test_all_given ; /**< @brief Whether test-all was given.  */
-    unsigned int dump_given ; /**< @brief Whether dump was given.  */
-    unsigned int test_given ; /**< @brief Whether test was given.  */
     unsigned int format_given ; /**< @brief Whether format was given.  */
     unsigned int agent_given ;  /**< @brief Whether agent was given.  */
     unsigned int proxy_given ;  /**< @brief Whether proxy was given.  */
