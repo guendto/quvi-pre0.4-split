@@ -66,17 +66,17 @@ AC_PATH_PROG(DOXYGEN, doxygen, no)
 AM_CONDITIONAL([HAVE_DOXYGEN], [test x"$DOXYGEN" != "xno"])
 AC_SUBST(DOXYGEN)
 
-AC_PATH_PROG(PERL, perl, no)
-AM_CONDITIONAL([HAVE_PERL], [test x"$PERL" != "xno"])
-AC_SUBST(PERL)
+AC_PATH_PROG(PROVE, prove, no)
+AM_CONDITIONAL([HAVE_PROVE], [test x"$PROVE" != "xno"])
+AC_SUBST(PROVE)
 
-have_pod_checker=no
-AC_MSG_CHECKING([for Pod::Checker])
-if [ $PERL -mPod::Checker >/dev/null 2>&1 ]; then
-    AC_MSG_RESULT([yes])
-    have_pod_checker=yes
-fi
-AM_CONDITIONAL([HAVE_PERL_POD_CHECKER], [test x"$have_pod_checker" = "xyes"])
+AC_PATH_PROG(VALGRIND, valgrind, no)
+AM_CONDITIONAL([HAVE_VALGRIND], [test x"$VALGRIND" != "xno"])
+AC_SUBST(VALGRIND)
+
+AC_PATH_PROG(PODCHECKER, podchecker, no)
+AM_CONDITIONAL([HAVE_PODCHECKER], [test x"$PODCHECKER" != "xno"])
+AC_SUBST(PODCHECKER)
 
 AC_PATH_PROG(POD2MAN, pod2man, no)
 AM_CONDITIONAL([HAVE_POD2MAN], [test x"$POD2MAN" != "xno"])
@@ -178,16 +178,16 @@ AC_ARG_ENABLE([tests],
     [enable_tests=no])
 AM_CONDITIONAL([ENABLE_TESTS], [test x"$enable_tests" != "xno"])
 
-# --enable-broken
-AC_ARG_ENABLE([broken],
-    [AS_HELP_STRING([--enable-broken],
-        [build with broken website support @<:@default=no@:>@])],
+# --enable-todo
+AC_ARG_ENABLE([todo],
+    [AS_HELP_STRING([--enable-todo],
+        [with website scripts marked as "todo" @<:@default=no@:>@])],
     [],
-    [enable_broken=no])
-AM_CONDITIONAL([ENABLE_BROKEN], [test x"$enable_broken" != "xno"])
+    [enable_todo=no])
+AM_CONDITIONAL([ENABLE_TODO], [test x"$enable_todo" != "xno"])
 
-if [ test x"$enable_broken" != "xno" ]; then
-    AC_DEFINE([ENABLE_BROKEN], [1], [Define to enable broken support])
+if [ test x"$enable_todo" != "xno" ]; then
+    AC_DEFINE([ENABLE_TODO], [1], [Define to enable todo support])
 fi
 
 # --with-man
@@ -221,7 +221,6 @@ AC_CONFIG_FILES([
     src/Makefile
     examples/Makefile
     tests/Makefile
-    tests/quviTest.pm
     scripts/Makefile
     libquvi.pc
     doxygen.conf
@@ -243,7 +242,7 @@ Options:
     build examples: ${enable_examples}
     build quvi:     ${enable_quvi}
     --
-    enable broken:  ${enable_broken}
+    enable todo:    ${enable_todo}
     enable tests:   ${enable_tests}
     enable nsfw:    ${enable_nsfw}
     --
@@ -254,7 +253,7 @@ Options:
 #Other:
 #    gengetopt:      ${GENGETOPT}
 #    doxygen:        ${DOXYGEN}
-#    perl:           ${PERL}
+#    prove:          ${PROVE}
 #    Pod::Checker:   ${have_pod_checker}
 #    pod2man:        ${POD2MAN}
 #    pod2html:       ${POD2HTML}

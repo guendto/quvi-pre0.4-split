@@ -50,7 +50,7 @@ lua/website/xvideos.lua \
 lua/website/youjizz.lua
 endif
 
-if ENABLE_BROKEN
+if ENABLE_TODO
 DIST_lua +=
 endif
 

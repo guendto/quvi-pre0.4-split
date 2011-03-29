@@ -42,7 +42,7 @@ target_triplet = @target@
 @ENABLE_NSFW_TRUE@lua/website/xvideos.lua \
 @ENABLE_NSFW_TRUE@lua/website/youjizz.lua
 
-@ENABLE_BROKEN_TRUE@am__append_2 = 
+@ENABLE_TODO_TRUE@am__append_2 = 
 subdir = share
 DIST_COMMON = $(am__nobase_dist_pkgdata_DATA_DIST) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -179,13 +179,14 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PERL = @PERL@
 PKG_CONFIG = @PKG_CONFIG@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 POD2HTML = @POD2HTML@
 POD2MAN = @POD2MAN@
+PODCHECKER = @PODCHECKER@
 POW_LIB = @POW_LIB@
+PROVE = @PROVE@
 QUVI_AGE = @QUVI_AGE@
 QUVI_CURRENT = @QUVI_CURRENT@
 QUVI_REVISION = @QUVI_REVISION@
@@ -194,6 +195,7 @@ SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
 STRIP = @STRIP@
+VALGRIND = @VALGRIND@
 VERSION = @VERSION@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
