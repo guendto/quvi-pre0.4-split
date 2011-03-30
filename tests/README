@@ -1,5 +1,5 @@
 
-The quvi test suite
+The quvi test suite [IFHD]
 
 Requires:
     * Perl (and prove <http://search.cpan.org/perldoc?prove>)
@@ -46,8 +46,8 @@ Run: Tests ($top_srcdir/tests/t/*.t)
     the command line, e.g.:
         % prove -l t/nosupport.t :: -q ../tmp/src/quvi -b ../share
 
-    See also the prove manual. Consider using the script(1) command
-    if you need to log the output.
+    See also the prove manual. Use script(1) or something similar if you
+    need to produce log the output.
 
 Run: Tests ($top_srcdir/tests/t/d/*.t) -- Note the 'd'
 
@@ -69,12 +69,12 @@ Run: Tests ($top_srcdir/tests/t/d/*.t) -- Note the 'd'
     % mkdir t ; cp $top_srcdir/tests/t/d/url.t t/
     % prove -l :: -u $test_url
 
-    # Same but check against an quvi produced JSON.
+    # Same but check against a JSON.
     % quvi -q $test_url > foo.json
     % prove -l :: -u $test_url -j foo.json
 
-    See also the prove manual. Consider using the script(1) command
-    if you need to log the output.
+    See also the prove manual. Use script(1) or something similar if you
+    need to produce log the output.
 
 Arguments to tests
 
@@ -98,59 +98,33 @@ Arguments to tests
         -d,--data-root arg      Path to directory containing the (test) data/
         -v,--valgrind-path arg  Path to valgrind(1) command
 
-    Note that the test suite presumes that the quvi(1) command is found in
-    the $PATH if --quvi-path is not specified.
+    The test suite presumes that quvi is found in the $PATH, unless
+    --quvi-path is specified.
 
-    If the quvi(1) command cannot find the LUA scripts from the typical
-    search paths, use the --quvi-basedir option to specify the path to
-    the directory with lua/ (e.g. $top_srcdir/share/).
+    If quvi cannot find the LUA scripts, use the --quvi-basedir option,
+    e.g. -b $top_srcdir/share/.
 
-    This is generally the recommended way if you have a different version
-    of quvi installed onto your system or none at all (e.g. working with
-    VPATH builds). Some examples use the QUVI_BASEDIR environment setting
-    which is OK, --quvi-basedir just wraps that.
-
-    You can pass additional options to the quvi(1) command with
-    the --quvi-opts, e.g.:
+    You can pass additional options to quvi, e.g:
         % prove t/foo.t :: -o "-qs"
 
-    The data/ directory contains the current JSON files produced by quvi
-    for different tests. These are used to confirm that the returned
-    data matches the expected data. See also "Data: JSON" further below.
+    The test suite can check the returned against JSONs. Use the
+    --json-file if you need to do this.
 
-    When running your own tests (e.g. t/d/url.t), you may use the
-    --json-file option to tell it to test against a JSON of your own.
-    e.g.:
-        prove t/foo.t :: -j foo.json
-
-    Some websites may be inconsistent in providing static and reliable
-    information, e.g. content-length for dailymotion videos change
-    (by a few bytes) from time to time for a reason still unknown (to
-    us). The test suite therefore ignores (see $top_srcdir/tests/data/
-    for the path of dailymotion.json) those details -- content-length
-    (or length_bytes) in the of dailymotion -- in JSON comparison.
-
-    You can use --ignore if you need to specify any additional details
-    that the tests should ignore in JSON verification:
+    Use the --ignore option if you need to ignore any of the JSON
+    values. e.g.:
         % prove t/foo.t :: -i content_type
     or
         % prove t/foo.t :: -i content_type,page_title,host
 
     Use comma (,) to separate each field name that should be ignored.
 
-    The media URL is ignored by default in all JSON comparison as
-    many websites generate an unique URL making this kind of simple
-    verification process pointless.
-
-    See $top_srcdir/Makefile.am and above for examples.
+    NOTE: The test suite ignores some of the values (e.g. media URL,
+    thumbnail URL) by default.
 
 Data: JSON
 
-    The test suite checks the quvi returned data against the stored JSON
-    files found in the $top_srcdir/tests/data/ directory. These files
-    serve another purpose which is to withold the data that can be
-    reused, e.g. "page_url" and "format_requested" values are typically
-    reused to initiate the test.
+    The JSON data exist for confirming that quvi returns the expected
+    results. See the $top_srcdir/tests/data/ directory.
 
      $top_srcdir/tests/data/resolve/
         Resolve shortened, redirect etc. For example, shortened.t and
