@@ -606,8 +606,8 @@ char *quvi_version(QUVIversion type)
 #ifdef HAVE_ICONV
     "i"
 #endif
-#ifdef ENABLE_BROKEN
-    "b"
+#ifdef ENABLE_TODO
+    "t"
 #endif
 #ifdef ENABLE_NSFW
     "n"
