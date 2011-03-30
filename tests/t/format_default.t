@@ -14,12 +14,16 @@ use Test::Quvi;
 
 my $q = Test::Quvi->new;
 
-my @files = $q->find_json(
+my @dirs =
     qw(
       data/format/default
       data/format/default/ignore/length_bytes
-      )
-);
+      );
+
+my $c = $q->get_config;
+push @dirs, "data/format/default/todo" if $c->{todo};
+
+my @files = $q->find_json(@dirs);
 
 plan skip_all => "Nothing to test" if scalar @files == 0;
 plan tests => scalar @files * 2;
