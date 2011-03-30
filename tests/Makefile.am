@@ -10,20 +10,15 @@ t/shortened.t
 
 TESTS_NSFW_T = t/format_default_nsfw.t
 TESTS_D_T = t/d/url.t
-TESTS_TODO_T =
 TESTS_POD_T = t/pod.t
 
 if ENABLE_NSFW
 TESTS_T += $(TESTS_NSFW_T)
 endif
 
-if ENABLE_TODO
-TESTS_T += $(TESTS_TODO_T)
-endif
-
 TESTS_LIB = lib/Test/Quvi.pm
 
-TESTS_JSON = \
+JSON = \
 data/resolve/inscript_redirect.json \
 data/resolve/shortened.json \
 data/format/default/charlierose.json \
@@ -41,8 +36,6 @@ data/format/default/nsfw/keezmovies.json \
 data/format/default/nsfw/xhamster.json \
 data/format/default/nsfw/youjizz.json \
 data/format/default/academicearth.json \
-data/format/default/ignore/length_bytes/dailymotion.json \
-data/format/default/collegehumor.json \
 data/format/default/theonion.json \
 data/format/default/ted.json \
 data/format/default/tagtele.json \
@@ -73,9 +66,6 @@ data/format/other/cbsnews_m4v_360p.json \
 data/format/other/spiegel_576k.json \
 data/format/other/golem_ipod.json \
 data/format/other/ted_hd.json \
-data/format/other/ignore/length_bytes/dailymotion_hq.json \
-data/format/other/ignore/length_bytes/dailymotion_hd.json \
-data/format/other/ignore/length_bytes/dailymotion_best.json \
 data/format/other/cbsnews_best.json \
 data/format/other/cbsnews_mp4_180p.json \
 data/format/other/cbsnews_m4v_480p.json \
@@ -89,14 +79,26 @@ data/format/other/golem_best.json \
 data/format/other/youtube_flv_360p.json \
 data/format/other/vimeo_hd.json
 
-README = README \
+JSON_IGNORE = \
+data/format/default/ignore/length_bytes/dailymotion.json \
+data/format/other/ignore/length_bytes/dailymotion_hq.json \
+data/format/other/ignore/length_bytes/dailymotion_hd.json \
+data/format/other/ignore/length_bytes/dailymotion_best.json
+
+JSON_TODO = \
+data/format/default/todo/collegehumor.json
+
+README = \
+README \
 data/format/default/ignore/README \
+data/format/default/todo/README \
 data/format/default/non-http/README \
 data/format/other/ignore/README
 
-EXTRA_DIST = $(README) \
+EXTRA_DIST = \
+ $(README) $(TESTS_LIB) \
  $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_D_T) $(TESTS_POD_T) \
- $(TESTS_TODO_T) $(TESTS_LIB) $(TESTS_JSON)
+ $(JSON) $(JSON_IGNORE) $(JSON_TODO)
 
 
 PROVE_OPTS_COMMON = --nocolor
@@ -113,6 +115,10 @@ TESTQUVI_OPTS = \
 
 if HAVE_VALGRIND
 TESTQUVI_OPTS += -v $(VALGRIND)
+endif
+
+if ENABLE_TODO
+TESTQUVI_OPTS += --todo
 endif
 
 # Options for those tests that *do not* use Test::Quvi.
