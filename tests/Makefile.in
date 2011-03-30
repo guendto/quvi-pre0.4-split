@@ -488,11 +488,11 @@ uninstall-am:
 test: all
 	@ for t in $(TESTS_T) ; do \
 		( $(PROVE) $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
-		:: $(TESTQUVI_OPTS) ) ; \
+		:: $(TESTQUVI_OPTS) ) || exit $$? ; \
 	done
 	@ for t in $(TESTS_POD_T) ; do \
 		( $(PROVE) $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
-		:: $(TESTQUVI_OPTS_POD) ) ; \
+		:: $(TESTQUVI_OPTS_POD) ) || exit $$? ; \
 	done
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

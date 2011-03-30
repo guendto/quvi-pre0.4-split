@@ -126,9 +126,9 @@ TESTQUVI_OPTS_POD = -p $(top_srcdir)/man1
 test: all
 	@ for t in $(TESTS_T) ; do \
 		( $(PROVE) $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
-		:: $(TESTQUVI_OPTS) ) ; \
+		:: $(TESTQUVI_OPTS) ) || exit $$? ; \
 	done
 	@ for t in $(TESTS_POD_T) ; do \
 		( $(PROVE) $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
-		:: $(TESTQUVI_OPTS_POD) ) ; \
+		:: $(TESTQUVI_OPTS_POD) ) || exit $$? ; \
 	done
