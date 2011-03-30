@@ -59,6 +59,7 @@ sub new
                'data_root|data-root|dataroot|d=s',
                'ignore|i=s',
                'valgrind_path|valgrind-path|valgrindpath|v=s',
+               'todo|t',
               );
     $config{quvi_path} ||= 'quvi';   # Presume it is found in the $PATH.
     $config{data_root} ||= cwd;
@@ -107,10 +108,10 @@ sub find_json
 }
 
 =for comment
-Read the specified JSON file. Set media URL to be ignored in deep
-comparison. Prepend $config{data_root} to the file path if requested,
-this is needed typically if read_json is called without a preceeding
-call to find_json (e.g. t/redirect.t and t/shortened.t skip find_json).
+Read the specified JSON file. Prepend $config{data_root} to the file
+path if requested, this is needed typically if read_json is called
+without a preceeding call to find_json (e.g. t/redirect.t and
+t/shortened.t skip find_json).
 =cut
 
 sub read_json
@@ -128,9 +129,8 @@ sub read_json
     my $e = $self->{jobj}->decode(join '', <$fh>);
     close $fh;
 
-    # Ignore media URL in JSON by default as this is bound to be an
-    # unique URL.
-    my @ignore = qw(url);
+    # Ignore these by default.
+    my @ignore = qw(url thumbnail_url);
 
     # Any aditional JSON keys to be ignored.
     if ($self->{config}{ignore})
