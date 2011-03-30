@@ -37,6 +37,7 @@ target_triplet = @target@
 @ENABLE_NSFW_TRUE@am__append_1 = $(TESTS_NSFW_T)
 @HAVE_VALGRIND_TRUE@am__append_2 = -v $(VALGRIND)
 @ENABLE_TODO_TRUE@am__append_3 = --todo
+@ENABLE_NLFY_TRUE@am__append_4 = --nlfy
 subdir = tests
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -281,6 +282,10 @@ data/format/other/ignore/length_bytes/dailymotion_best.json
 JSON_TODO = \
 data/format/default/todo/collegehumor.json
 
+JSON_NLFY = \
+data/format/default/nlfy/sevenload.json \
+data/format/default/nlfy/clipfish.json
+
 README = \
 README \
 data/format/default/ignore/README \
@@ -291,14 +296,15 @@ data/format/other/ignore/README
 EXTRA_DIST = \
  $(README) $(TESTS_LIB) \
  $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_D_T) $(TESTS_POD_T) \
- $(JSON) $(JSON_IGNORE) $(JSON_TODO)
+ $(JSON) $(JSON_IGNORE) $(JSON_TODO) $(JSON_NLFY)
 
 PROVE_OPTS_COMMON = --nocolor
 
 # Options for those tests that use Test::Quvi.
-PROVE_OPTS = -I $(top_srcdir)/tests/lib/ $(PROVE_OPTS_COMMON)
+PROVE_OPTS = -I $(top_srcdir)/tests/lib/ -v $(PROVE_OPTS_COMMON)
 TESTQUVI_OPTS = -q $(top_builddir)/src/quvi -d $(top_srcdir)/tests -b \
-	$(top_srcdir)/share $(am__append_2) $(am__append_3)
+	$(top_srcdir)/share $(am__append_2) $(am__append_3) \
+	$(am__append_4)
 
 # Options for those tests that *do not* use Test::Quvi.
 

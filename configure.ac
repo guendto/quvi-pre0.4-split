@@ -186,6 +186,14 @@ if [ test x"$enable_todo" != "xno" ]; then
     AC_DEFINE([ENABLE_TODO], [1], [Define to enable todo support])
 fi
 
+# --enable-nlfy
+AC_ARG_ENABLE([nlfy],
+    [AS_HELP_STRING([--enable-nlfy],
+        [test scripts marked as "nlfy" @<:@default=no@:>@])],
+    [],
+    [enable_nlfy=no])
+AM_CONDITIONAL([ENABLE_NLFY], [test x"$enable_nlfy" != "xno"])
+
 # --with-man
 AC_ARG_WITH([man],
     [AS_HELP_STRING([--with-man],
@@ -238,9 +246,10 @@ Options:
     build examples: ${enable_examples}
     build quvi:     ${enable_quvi}
     --
-    enable todo:    ${enable_todo}
     enable tests:   ${enable_tests}
+    enable todo:    ${enable_todo}
     enable nsfw:    ${enable_nsfw}
+    enable nlfy:    ${enable_nlfy}
     --
     install manual: ${with_man}
     install docs:   ${with_doc}

@@ -88,6 +88,10 @@ data/format/other/ignore/length_bytes/dailymotion_best.json
 JSON_TODO = \
 data/format/default/todo/collegehumor.json
 
+JSON_NLFY = \
+data/format/default/nlfy/sevenload.json \
+data/format/default/nlfy/clipfish.json
+
 README = \
 README \
 data/format/default/ignore/README \
@@ -98,14 +102,14 @@ data/format/other/ignore/README
 EXTRA_DIST = \
  $(README) $(TESTS_LIB) \
  $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_D_T) $(TESTS_POD_T) \
- $(JSON) $(JSON_IGNORE) $(JSON_TODO)
+ $(JSON) $(JSON_IGNORE) $(JSON_TODO) $(JSON_NLFY)
 
 
 PROVE_OPTS_COMMON = --nocolor
 
 # Options for those tests that use Test::Quvi.
 
-PROVE_OPTS = -I $(top_srcdir)/tests/lib/
+PROVE_OPTS = -I $(top_srcdir)/tests/lib/ -v
 PROVE_OPTS += $(PROVE_OPTS_COMMON)
 
 TESTQUVI_OPTS = \
@@ -119,6 +123,10 @@ endif
 
 if ENABLE_TODO
 TESTQUVI_OPTS += --todo
+endif
+
+if ENABLE_NLFY
+TESTQUVI_OPTS += --nlfy
 endif
 
 # Options for those tests that *do not* use Test::Quvi.

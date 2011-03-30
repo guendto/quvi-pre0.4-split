@@ -59,7 +59,8 @@ sub new
                'data_root|data-root|dataroot|d=s',
                'ignore|i=s',
                'valgrind_path|valgrind-path|valgrindpath|v=s',
-               'todo|t',
+               'todo',
+               'nlfy',
               );
     $config{quvi_path} ||= 'quvi';   # Presume it is found in the $PATH.
     $config{data_root} ||= cwd;

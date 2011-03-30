@@ -621,6 +621,8 @@ WITH_DOC_FALSE
 WITH_DOC_TRUE
 WITH_MAN_FALSE
 WITH_MAN_TRUE
+ENABLE_NLFY_FALSE
+ENABLE_NLFY_TRUE
 ENABLE_TODO_FALSE
 ENABLE_TODO_TRUE
 ENABLE_TESTS_FALSE
@@ -807,6 +809,7 @@ enable_examples
 enable_nsfw
 enable_tests
 enable_todo
+enable_nlfy
 with_man
 with_doc
 '
@@ -1466,6 +1469,7 @@ Optional Features:
   --enable-nsfw           build with adult website support [default=no]
   --enable-tests          enable tests [default=no]
   --enable-todo           with website scripts marked as "todo" [default=no]
+  --enable-nlfy           test scripts marked as "nlfy" [default=no]
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -19283,6 +19287,23 @@ $as_echo "#define ENABLE_TODO 1" >>confdefs.h
 
 fi
 
+# --enable-nlfy
+# Check whether --enable-nlfy was given.
+if test "${enable_nlfy+set}" = set; then :
+  enableval=$enable_nlfy;
+else
+  enable_nlfy=no
+fi
+
+ if test x"$enable_nlfy" != "xno"; then
+  ENABLE_NLFY_TRUE=
+  ENABLE_NLFY_FALSE='#'
+else
+  ENABLE_NLFY_TRUE='#'
+  ENABLE_NLFY_FALSE=
+fi
+
+
 # --with-man
 
 # Check whether --with-man was given.
@@ -19507,6 +19528,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_TODO_TRUE}" && test -z "${ENABLE_TODO_FALSE}"; then
   as_fn_error $? "conditional \"ENABLE_TODO\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_NLFY_TRUE}" && test -z "${ENABLE_NLFY_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_NLFY\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${WITH_MAN_TRUE}" && test -z "${WITH_MAN_FALSE}"; then
@@ -22065,9 +22090,10 @@ Options:
     build examples: ${enable_examples}
     build quvi:     ${enable_quvi}
     --
-    enable todo:    ${enable_todo}
     enable tests:   ${enable_tests}
+    enable todo:    ${enable_todo}
     enable nsfw:    ${enable_nsfw}
+    enable nlfy:    ${enable_nlfy}
     --
     install manual: ${with_man}
     install docs:   ${with_doc}
@@ -22086,9 +22112,10 @@ Options:
     build examples: ${enable_examples}
     build quvi:     ${enable_quvi}
     --
-    enable todo:    ${enable_todo}
     enable tests:   ${enable_tests}
+    enable todo:    ${enable_todo}
     enable nsfw:    ${enable_nsfw}
+    enable nlfy:    ${enable_nlfy}
     --
     install manual: ${with_man}
     install docs:   ${with_doc}
