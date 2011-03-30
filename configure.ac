@@ -74,10 +74,6 @@ AC_PATH_PROG(VALGRIND, valgrind, no)
 AM_CONDITIONAL([HAVE_VALGRIND], [test x"$VALGRIND" != "xno"])
 AC_SUBST(VALGRIND)
 
-AC_PATH_PROG(PODCHECKER, podchecker, no)
-AM_CONDITIONAL([HAVE_PODCHECKER], [test x"$PODCHECKER" != "xno"])
-AC_SUBST(PODCHECKER)
-
 AC_PATH_PROG(POD2MAN, pod2man, no)
 AM_CONDITIONAL([HAVE_POD2MAN], [test x"$POD2MAN" != "xno"])
 AC_SUBST(POD2MAN)
@@ -254,7 +250,6 @@ Options:
 #    gengetopt:      ${GENGETOPT}
 #    doxygen:        ${DOXYGEN}
 #    prove:          ${PROVE}
-#    Pod::Checker:   ${have_pod_checker}
 #    pod2man:        ${POD2MAN}
 #    pod2html:       ${POD2HTML}
 

@@ -9,8 +9,9 @@ t/format_other.t \
 t/shortened.t
 
 TESTS_NSFW_T = t/format_default_nsfw.t
-TESTS_M_T = t/d/url.t
+TESTS_D_T = t/d/url.t
 TESTS_TODO_T =
+TESTS_POD_T = t/pod.t
 
 if ENABLE_NSFW
 TESTS_T += $(TESTS_NSFW_T)
@@ -94,10 +95,16 @@ data/format/default/non-http/README \
 data/format/other/ignore/README
 
 EXTRA_DIST = $(README) \
- $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_M_T) \
+ $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_D_T) $(TESTS_POD_T) \
  $(TESTS_TODO_T) $(TESTS_LIB) $(TESTS_JSON)
 
-PROVE_OPTS = --nocolor -I $(top_srcdir)/tests/lib/
+
+PROVE_OPTS_COMMON = --nocolor
+
+# Options for those tests that use Test::Quvi.
+
+PROVE_OPTS = -I $(top_srcdir)/tests/lib/
+PROVE_OPTS += $(PROVE_OPTS_COMMON)
 
 TESTQUVI_OPTS = \
  -q $(top_builddir)/src/quvi \
@@ -108,8 +115,20 @@ if HAVE_VALGRIND
 TESTQUVI_OPTS += -v $(VALGRIND)
 endif
 
+# Options for those tests that *do not* use Test::Quvi.
+
+# t/pod.t: GetOptions accepts a different (from those used in
+# Test::Quvi) set of options.
+PROVE_OPTS_POD = $(PROVE_OPTS_COMMON)
+
+TESTQUVI_OPTS_POD = -p $(top_srcdir)/man1
+
 test: all
 	@ for t in $(TESTS_T) ; do \
 		( $(PROVE) $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
 		:: $(TESTQUVI_OPTS) ) ; \
+	done
+	@ for t in $(TESTS_POD_T) ; do \
+		( $(PROVE) $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
+		:: $(TESTQUVI_OPTS_POD) ) ; \
 	done
