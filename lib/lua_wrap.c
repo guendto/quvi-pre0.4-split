@@ -20,6 +20,7 @@
 #include "config.h"
 
 #include <string.h>
+#include <errno.h>
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
@@ -166,15 +167,22 @@ scan_dir(llst_node_t * dst, const char *path, filter_func filter)
   struct dirent *de;
   DIR *dir;
 
-  dir = opendir(path);
-  if (!dir)
-    return (QUVI_OK);
-
   show_scandir = getenv("QUVI_SHOW_SCANDIR");
   show_script = getenv("QUVI_SHOW_SCRIPT");
 
+  dir = opendir(path);
+  if (!dir)
+    {
+      if (show_scandir)
+        {
+          fprintf(stderr, "quvi: %s: %s: %s\n",
+                  __PRETTY_FUNCTION__, path, strerror(errno));
+        }
+      return (QUVI_OK);
+    }
+
   if (show_scandir)
-    fprintf(stderr, "%s: %s\n", __PRETTY_FUNCTION__, path);
+    fprintf(stderr, "quvi: %s: %s\n", __PRETTY_FUNCTION__, path);
 
   while ((de = readdir(dir)))
     {
@@ -191,7 +199,10 @@ scan_dir(llst_node_t * dst, const char *path, filter_func filter)
           asprintf((char **)&qls->path, "%s/%s", path, de->d_name);
 
           if (show_script)
-            fprintf(stderr, "%s: %s\n", __PRETTY_FUNCTION__, qls->path);
+            {
+              fprintf(stderr, "quvi: %s: found script: %s\n",
+                      __PRETTY_FUNCTION__, qls->path);
+            }
 
           llst_add(dst, qls);
         }

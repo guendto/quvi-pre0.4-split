@@ -116,45 +116,6 @@ Enable category RTMP website scripts.
 
 Enable all categories of website scripts.
 
-=item B<--page-title> I<arg>
-
-Check that the parsed page title matches the I<arg>.
-The libquvi tests typically make use of this option.
-
-=item B<--media-id> I<arg>
-
-Check that the parsed media ID matches the I<arg>.
-The libquvi tests typically make use of this option.
-
-=item B<--file-length> I<length>
-
-Check that the parsed media content length matches the I<arg>.
-The libquvi tests typically make use of this option.
-
-=item B<--file-suffix> I<arg>
-
-Check that the parsed media file suffix matches the I<arg>.
-The libquvi tests typically make use of this option.
-
-=item B<--test-all>
-
-Test all of the built-in (category QUVIPROTO_HTTP) URLs.
-
-=item B<--dump>
-
-Dump media details with C<--test-all>.
-
-=item B<-t, --test> I<arg>
-
-Match I<arg> to built-in (category QUVIPROTO_HTTP) test URLs, e.g.:
-
-    % quvi -t youtube
-    % quvi -t yout
-    % quvi -t livel
-    % quvi -t liveleak
-    % quvi -t col
-    % quvi -t collegehumor
-
 =item B<-f, --format> I<arg>
 
 Query for I<arg> format. I<arg> can also be C<help>.
@@ -199,24 +160,27 @@ Check if URL is supported. Note that some of the shortened URLs will
 fail with this. quvi exit status will be the last exit status of the
 last checked URL. See also L</EXIT STATUS>.
 
-=item quvi -a
+=item quvi YOUTUBE_URL
 
-Run all built-in host tests.
+Query for YouTube media URL.
 
-=item quvi -aqd --xml
-
-Same but run in quiet mode. Print details in XML (to stdout).
-
-=item quvi -t youtube
-
-Match pattern "youtube" to a built-in media URL and test it.
+=item quvi YOUTUBE_URL 
 
 =item quvi YOUTUBE_URL -f best
 
-Query YOUTUBE_URL for "best" format.
+Query for "best" (available format) YouTube media URL.
 
-Run quvi with C<--support> to get a list of the websites
-and which formats they support.
+=item quvi YOUTUBE_URL -f best --xml
+
+Same but print details in XML.
+
+=item quvi -f list youtube
+
+Print available formats for YouTube.
+
+=item quvi -f list yout
+
+Same.
 
 =item quvi -f list dailym
 

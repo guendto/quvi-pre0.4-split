@@ -13,7 +13,11 @@ pkgconfig_DATA = libquvi.pc
 SUBDIRS = include lib man1 src examples share doc scripts
 
 if ENABLE_TESTS
+check: test
+
 SUBDIRS += tests
+test:
+	@(cd tests; $(MAKE) all test)
 endif
 
 .PHONY: pod2man pod2html dox cmdline

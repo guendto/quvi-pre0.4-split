@@ -235,8 +235,26 @@ Make sure that you have at least 0.2.0 installed to your system:
 
 Use buzzhumor.lua as a template script.
     % mkdir -p foo/lua/website/ ; cd foo
-    % cp $prefix/share/lua/website/buzzhumor.lua lua/website/foo.lua
+    % cp -r $prefix/share/lua/util/ lua/
     % cp -r $prefix/share/lua/website/quvi/ lua/website/
+    % cp $prefix/share/lua/website/buzzhumor.lua lua/website/foo.lua
+
+    So the foo/ dir should look like:
+    % find .
+    .
+    ./lua
+    ./lua/website
+    ./lua/website/foo.lua
+    ./lua/website/quvi
+    ./lua/website/quvi/const.lua
+    ./lua/website/quvi/url.lua
+    ./lua/website/quvi/util.lua
+    ./lua/website/quvi/bit.lua
+    ./lua/util
+    ./lua/util/content_type.lua
+    ./lua/util/charset.lua
+    ./lua/util/trim.lua
+
     (open foo.lua in an editor)
 
 Jump to 2.3.3 to continue.
@@ -338,6 +356,9 @@ You will most likely spend most of the time tweaking the patterns in
 in your script. It often helps to "isolate the problem", e.g. copy
 page data to a local file and write an additional script to perfect
 the LUA patterns. See "1. General tips" for "Isolate the problem".
+
+Read also $top_srcdir/tests/README for tips on how you can use the
+existing test suite files to test your script.
 
 
 2.4. Generate the patch

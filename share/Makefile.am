@@ -15,7 +15,6 @@ lua/website/bloomberg.lua \
 lua/website/break.lua \
 lua/website/buzzhumor.lua \
 lua/website/cbsnews.lua \
-lua/website/collegehumor.lua \
 lua/website/charlierose.lua \
 lua/website/clipfish.lua \
 lua/website/dailymotion.lua \
@@ -50,8 +49,9 @@ lua/website/xvideos.lua \
 lua/website/youjizz.lua
 endif
 
-if ENABLE_BROKEN
-DIST_lua +=
+if ENABLE_TODO
+DIST_lua += \
+lua/website/collegehumor.lua
 endif
 
 EXTRA_DIST = $(DIST_lua)
