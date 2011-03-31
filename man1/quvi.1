@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-03-26" "0.2.15" "quvi manual"
+.TH quvi 1 "2011-03-31" "0.2.15" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -152,6 +152,23 @@ Read also:
   * <http://en.wikipedia.org/wiki/Adobe_Flash#Performance>
   * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
   * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
+.SH "NOTES \- PROTOCOL CATEGORIES"
+.IX Header "NOTES - PROTOCOL CATEGORIES"
+As of 0.2.12, quvi supports different \*(L"protocol categories\*(R". For
+historical reasons, it defaults to the \s-1HTTP\s0 category. This means
+that any website scripts that parse and return \s-1RTMP/MMS/RTSP\s0 media
+URLs are not considered unless an appropriate category switch is used.
+For example:
+    % quvi \-\-support                 # \s-1HTTP\s0 websites only (default)
+    % quvi \-\-support \-\-category\-rtmp # \s-1RTMP\s0 websites only
+    % quvi \-\-support \-a              # Websites of all categories
+.PP
+With this in mind:
+    % quvi \s-1RTMP_URL\s0
+    error: no support: \s-1RTMP_URL\s0
+    % quvi \-a \s-1RTMP_URL\s0 # \s-1OK\s0
+.PP
+The default behaviour is planned to change to \*(L"all\*(R" in 0.2.20.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
 .IP "\fB\-h, \-\-help\fR" 4
@@ -252,21 +269,29 @@ Default is 30.
 Test \s-1URL\s0.
 .IP "quvi \-\-support" 4
 .IX Item "quvi --support"
-Dump all supported websites.
+Dump supported websites (of \s-1HTTP\s0 category).
+.IP "quvi \-\-support \-\-category\-rtmp" 4
+.IX Item "quvi --support --category-rtmp"
+Same but dump supported websites of \s-1RTMP\s0 category.
+See also \*(L"\s-1NOTES\s0 \- \s-1PROTOCOL\s0 \s-1CATEGORIES\s0\*(R"
+.IP "quvi \-\-support \-\-category\-all" 4
+.IX Item "quvi --support --category-all"
+Dump \fBall\fR supported websites.
+See also \*(L"\s-1NOTES\s0 \- \s-1PROTOCOL\s0 \s-1CATEGORIES\s0\*(R"
 .IP "quvi \-\-support \s-1URL\s0" 4
 .IX Item "quvi --support URL"
 Check if \s-1URL\s0 is supported. Note that some of the shortened URLs will
 fail with this. quvi exit status will be the last exit status of the
 last checked \s-1URL\s0. See also \*(L"\s-1EXIT\s0 \s-1STATUS\s0\*(R".
+.IP "quvi \-\-support \-\-category\-all \s-1URL\s0" 4
+.IX Item "quvi --support --category-all URL"
+Same but check against all protocol categories.
+See also \*(L"\s-1NOTES\s0 \- \s-1PROTOCOL\s0 \s-1CATEGORIES\s0\*(R"
 .IP "quvi \s-1YOUTUBE_URL\s0" 4
 .IX Item "quvi YOUTUBE_URL"
 Query for YouTube media \s-1URL\s0.
-.IP "quvi \s-1YOUTUBE_URL\s0" 4
-.IX Item "quvi YOUTUBE_URL"
-.PD 0
 .IP "quvi \s-1YOUTUBE_URL\s0 \-f best" 4
 .IX Item "quvi YOUTUBE_URL -f best"
-.PD
 Query for \*(L"best\*(R" (available format) YouTube media \s-1URL\s0.
 .IP "quvi \s-1YOUTUBE_URL\s0 \-f best \-\-xml" 4
 .IX Item "quvi YOUTUBE_URL -f best --xml"

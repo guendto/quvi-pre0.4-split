@@ -28,6 +28,24 @@ Read also:
   * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
   * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
 
+=head1 NOTES - PROTOCOL CATEGORIES
+
+As of 0.2.12, quvi supports different "protocol categories". For
+historical reasons, it defaults to the HTTP category. This means
+that any website scripts that parse and return RTMP/MMS/RTSP media
+URLs are not considered unless an appropriate category switch is used.
+For example:
+    % quvi --support                 # HTTP websites only (default)
+    % quvi --support --category-rtmp # RTMP websites only
+    % quvi --support -a              # Websites of all categories
+
+With this in mind:
+    % quvi RTMP_URL
+    error: no support: RTMP_URL
+    % quvi -a RTMP_URL # OK
+
+The default behaviour is planned to change to "all" in 0.2.20.
+
 =head1 OPTIONS
 
 =over 4
@@ -152,7 +170,17 @@ Test URL.
 
 =item quvi --support
 
-Dump all supported websites.
+Dump supported websites (of HTTP category).
+
+=item quvi --support --category-rtmp
+
+Same but dump supported websites of RTMP category.
+See also L</NOTES - PROTOCOL CATEGORIES>
+
+=item quvi --support --category-all
+
+Dump B<all> supported websites.
+See also L</NOTES - PROTOCOL CATEGORIES>
 
 =item quvi --support URL
 
@@ -160,11 +188,14 @@ Check if URL is supported. Note that some of the shortened URLs will
 fail with this. quvi exit status will be the last exit status of the
 last checked URL. See also L</EXIT STATUS>.
 
+=item quvi --support --category-all URL
+
+Same but check against all protocol categories.
+See also L</NOTES - PROTOCOL CATEGORIES>
+
 =item quvi YOUTUBE_URL
 
 Query for YouTube media URL.
-
-=item quvi YOUTUBE_URL 
 
 =item quvi YOUTUBE_URL -f best
 
