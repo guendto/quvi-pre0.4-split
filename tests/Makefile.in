@@ -506,14 +506,16 @@ uninstall-am:
 
 
 test: all
+	@ ok=yes ;
 	@ for t in $(TESTS_T) ; do \
 		( $(PROVE) $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
-		:: $(TESTQUVI_OPTS) ) || exit $$? ; \
+		:: $(TESTQUVI_OPTS) ) || ok=no ; \
 	done
 	@ for t in $(TESTS_POD_T) ; do \
 		( $(PROVE) $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
-		:: $(TESTQUVI_OPTS_POD) ) || exit $$? ; \
+		:: $(TESTQUVI_OPTS_POD) ) || ok=no ; \
 	done
+	@ if test x$$ok != "xyes" ; then exit 1 ; fi
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
