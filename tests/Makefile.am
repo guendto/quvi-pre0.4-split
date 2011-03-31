@@ -17,7 +17,6 @@ JSON = \
 data/resolve/inscript_redirect.json \
 data/resolve/shortened.json \
 data/format/default/charlierose.json \
-data/format/default/clipfish.json \
 data/format/default/liveleak.json \
 data/format/default/publicsenat.json \
 data/format/default/tmunderground.json \
@@ -40,7 +39,6 @@ data/format/default/sapo.json \
 data/format/default/tvlux.json \
 data/format/default/bloomberg.json \
 data/format/default/buzzhumor.json \
-data/format/default/sevenload.json \
 data/format/default/vimeo.json \
 data/format/other/cbsnews_mp4_240p.json \
 data/format/other/cbsnews_m4v_216p.json \
