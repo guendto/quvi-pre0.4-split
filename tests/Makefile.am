@@ -104,9 +104,13 @@ EXTRA_DIST = \
 
 PROVE_OPTS_COMMON = --nocolor
 
+if ENABLE_VERBOSE_TESTS
+PROVE_OPTS_COMMON += -v
+endif
+
 # Options for those tests that use Test::Quvi.
 
-PROVE_OPTS = -I $(top_srcdir)/tests/lib/ -v
+PROVE_OPTS = -I $(top_srcdir)/tests/lib/
 PROVE_OPTS += $(PROVE_OPTS_COMMON)
 
 TESTQUVI_OPTS = \

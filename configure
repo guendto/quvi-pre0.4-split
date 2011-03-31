@@ -625,10 +625,12 @@ ENABLE_NLFY_FALSE
 ENABLE_NLFY_TRUE
 ENABLE_TODO_FALSE
 ENABLE_TODO_TRUE
-ENABLE_TESTS_FALSE
-ENABLE_TESTS_TRUE
 ENABLE_NSFW_FALSE
 ENABLE_NSFW_TRUE
+ENABLE_VERBOSE_TESTS_FALSE
+ENABLE_VERBOSE_TESTS_TRUE
+ENABLE_TESTS_FALSE
+ENABLE_TESTS_TRUE
 ENABLE_EXAMPLES_FALSE
 ENABLE_EXAMPLES_TRUE
 ENABLE_QUVI_FALSE
@@ -806,8 +808,9 @@ with_libiconv_prefix
 enable_silent_rules
 enable_quvi
 enable_examples
-enable_nsfw
 enable_tests
+enable_verbose_tests
+enable_nsfw
 enable_todo
 enable_nlfy
 with_man
@@ -1466,8 +1469,9 @@ Optional Features:
   --disable-silent-rules         verbose build output (undo: `make V=0')
   --enable-quvi           build quvi command line tool[default=yes]
   --enable-examples       build examples [default=no]
-  --enable-nsfw           build with adult website support [default=no]
   --enable-tests          enable tests [default=no]
+  --enable-verbose-tests  enable verbose tests [default=no]
+  --enable-nsfw           build with adult website support [default=no]
   --enable-todo           with website scripts marked as "todo" [default=no]
   --enable-nlfy           test scripts marked as "nlfy" [default=no]
 
@@ -19224,6 +19228,40 @@ else
 fi
 
 
+# --enable-tests
+# Check whether --enable-tests was given.
+if test "${enable_tests+set}" = set; then :
+  enableval=$enable_tests;
+else
+  enable_tests=no
+fi
+
+ if test x"$enable_tests" != "xno"; then
+  ENABLE_TESTS_TRUE=
+  ENABLE_TESTS_FALSE='#'
+else
+  ENABLE_TESTS_TRUE='#'
+  ENABLE_TESTS_FALSE=
+fi
+
+
+# --enable-verbose-tests
+# Check whether --enable-verbose-tests was given.
+if test "${enable_verbose_tests+set}" = set; then :
+  enableval=$enable_verbose_tests;
+else
+  enable_verbose_tests=no
+fi
+
+ if test x"$enable_verbose_tests" != "xno"; then
+  ENABLE_VERBOSE_TESTS_TRUE=
+  ENABLE_VERBOSE_TESTS_FALSE='#'
+else
+  ENABLE_VERBOSE_TESTS_TRUE='#'
+  ENABLE_VERBOSE_TESTS_FALSE=
+fi
+
+
 # --enable-nsfw
 # Check whether --enable-nsfw was given.
 if test "${enable_nsfw+set}" = set; then :
@@ -19246,23 +19284,6 @@ if  test x"$enable_nsfw" != "xno" ; then
 $as_echo "#define ENABLE_NSFW 1" >>confdefs.h
 
 fi
-
-# --enable-tests
-# Check whether --enable-tests was given.
-if test "${enable_tests+set}" = set; then :
-  enableval=$enable_tests;
-else
-  enable_tests=no
-fi
-
- if test x"$enable_tests" != "xno"; then
-  ENABLE_TESTS_TRUE=
-  ENABLE_TESTS_FALSE='#'
-else
-  ENABLE_TESTS_TRUE='#'
-  ENABLE_TESTS_FALSE=
-fi
-
 
 # --enable-todo
 # Check whether --enable-todo was given.
@@ -19518,12 +19539,16 @@ if test -z "${ENABLE_EXAMPLES_TRUE}" && test -z "${ENABLE_EXAMPLES_FALSE}"; then
   as_fn_error $? "conditional \"ENABLE_EXAMPLES\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
-if test -z "${ENABLE_NSFW_TRUE}" && test -z "${ENABLE_NSFW_FALSE}"; then
-  as_fn_error $? "conditional \"ENABLE_NSFW\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
 if test -z "${ENABLE_TESTS_TRUE}" && test -z "${ENABLE_TESTS_FALSE}"; then
   as_fn_error $? "conditional \"ENABLE_TESTS\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_VERBOSE_TESTS_TRUE}" && test -z "${ENABLE_VERBOSE_TESTS_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_VERBOSE_TESTS\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${ENABLE_NSFW_TRUE}" && test -z "${ENABLE_NSFW_FALSE}"; then
+  as_fn_error $? "conditional \"ENABLE_NSFW\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${ENABLE_TODO_TRUE}" && test -z "${ENABLE_TODO_FALSE}"; then

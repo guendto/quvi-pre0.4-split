@@ -34,10 +34,11 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@HAVE_VALGRIND_TRUE@am__append_1 = -v $(VALGRIND)
-@ENABLE_TODO_TRUE@am__append_2 = --todo
-@ENABLE_NLFY_TRUE@am__append_3 = --nlfy
-@ENABLE_NSFW_TRUE@am__append_4 = --nsfw
+@ENABLE_VERBOSE_TESTS_TRUE@am__append_1 = -v
+@HAVE_VALGRIND_TRUE@am__append_2 = -v $(VALGRIND)
+@ENABLE_TODO_TRUE@am__append_3 = --todo
+@ENABLE_NLFY_TRUE@am__append_4 = --nlfy
+@ENABLE_NSFW_TRUE@am__append_5 = --nsfw
 subdir = tests
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -305,13 +306,13 @@ EXTRA_DIST = \
  $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_D_T) $(TESTS_POD_T) \
  $(JSON) $(JSON_IGNORE) $(JSON_TODO) $(JSON_NLFY) $(JSON_NSFW)
 
-PROVE_OPTS_COMMON = --nocolor
+PROVE_OPTS_COMMON = --nocolor $(am__append_1)
 
 # Options for those tests that use Test::Quvi.
-PROVE_OPTS = -I $(top_srcdir)/tests/lib/ -v $(PROVE_OPTS_COMMON)
+PROVE_OPTS = -I $(top_srcdir)/tests/lib/ $(PROVE_OPTS_COMMON)
 TESTQUVI_OPTS = -q $(top_builddir)/src/quvi -d $(top_srcdir)/tests -b \
-	$(top_srcdir)/share $(am__append_1) $(am__append_2) \
-	$(am__append_3) $(am__append_4)
+	$(top_srcdir)/share $(am__append_2) $(am__append_3) \
+	$(am__append_4) $(am__append_5)
 
 # Options for those tests that *do not* use Test::Quvi.
 

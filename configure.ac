@@ -154,6 +154,23 @@ AC_ARG_ENABLE([examples],
     [enable_examples=no])
 AM_CONDITIONAL([ENABLE_EXAMPLES], [test x"$enable_examples" != "xno"])
 
+# --enable-tests
+AC_ARG_ENABLE([tests],
+    [AS_HELP_STRING([--enable-tests],
+        [enable tests @<:@default=no@:>@])],
+    [],
+    [enable_tests=no])
+AM_CONDITIONAL([ENABLE_TESTS], [test x"$enable_tests" != "xno"])
+
+# --enable-verbose-tests
+AC_ARG_ENABLE([verbose-tests],
+    [AS_HELP_STRING([--enable-verbose-tests],
+        [enable verbose tests @<:@default=no@:>@])],
+    [],
+    [enable_verbose_tests=no])
+AM_CONDITIONAL([ENABLE_VERBOSE_TESTS],
+    [test x"$enable_verbose_tests" != "xno"])
+
 # --enable-nsfw
 AC_ARG_ENABLE([nsfw],
     [AS_HELP_STRING([--enable-nsfw],
@@ -165,14 +182,6 @@ AM_CONDITIONAL([ENABLE_NSFW], [test x"$enable_nsfw" != "xno"])
 if [ test x"$enable_nsfw" != "xno" ]; then
     AC_DEFINE([ENABLE_NSFW], [1], [Define to enable nsfw])
 fi
-
-# --enable-tests
-AC_ARG_ENABLE([tests],
-    [AS_HELP_STRING([--enable-tests],
-        [enable tests @<:@default=no@:>@])],
-    [],
-    [enable_tests=no])
-AM_CONDITIONAL([ENABLE_TESTS], [test x"$enable_tests" != "xno"])
 
 # --enable-todo
 AC_ARG_ENABLE([todo],
