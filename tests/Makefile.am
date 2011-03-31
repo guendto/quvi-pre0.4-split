@@ -8,13 +8,8 @@ t/format_default.t \
 t/format_other.t \
 t/shortened.t
 
-TESTS_NSFW_T = t/format_default_nsfw.t
 TESTS_D_T = t/d/url.t
 TESTS_POD_T = t/pod.t
-
-if ENABLE_NSFW
-TESTS_T += $(TESTS_NSFW_T)
-endif
 
 TESTS_LIB = lib/Test/Quvi.pm
 
@@ -30,11 +25,6 @@ data/format/default/gaskrank.json \
 data/format/default/spiegel.json \
 data/format/default/funnyordie.json \
 data/format/default/funnyhub.json \
-data/format/default/nsfw/xvideos.json \
-data/format/default/nsfw/tube8.json \
-data/format/default/nsfw/keezmovies.json \
-data/format/default/nsfw/xhamster.json \
-data/format/default/nsfw/youjizz.json \
 data/format/default/academicearth.json \
 data/format/default/theonion.json \
 data/format/default/ted.json \
@@ -92,6 +82,13 @@ JSON_NLFY = \
 data/format/default/nlfy/sevenload.json \
 data/format/default/nlfy/clipfish.json
 
+JSON_NSFW = \
+data/format/default/nsfw/xvideos.json \
+data/format/default/nsfw/tube8.json \
+data/format/default/nsfw/keezmovies.json \
+data/format/default/nsfw/xhamster.json \
+data/format/default/nsfw/youjizz.json
+
 README = \
 README \
 data/format/default/ignore/README \
@@ -102,7 +99,7 @@ data/format/other/ignore/README
 EXTRA_DIST = \
  $(README) $(TESTS_LIB) \
  $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_D_T) $(TESTS_POD_T) \
- $(JSON) $(JSON_IGNORE) $(JSON_TODO) $(JSON_NLFY)
+ $(JSON) $(JSON_IGNORE) $(JSON_TODO) $(JSON_NLFY) $(JSON_NSFW)
 
 
 PROVE_OPTS_COMMON = --nocolor
@@ -127,6 +124,10 @@ endif
 
 if ENABLE_NLFY
 TESTQUVI_OPTS += --nlfy
+endif
+
+if ENABLE_NSFW
+TESTQUVI_OPTS += --nsfw
 endif
 
 # Options for those tests that *do not* use Test::Quvi.

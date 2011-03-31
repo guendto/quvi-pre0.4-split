@@ -61,6 +61,7 @@ sub new
                'valgrind_path|valgrind-path|valgrindpath|v=s',
                'todo',
                'nlfy',
+               'nsfw',
               );
     $config{quvi_path} ||= 'quvi';   # Presume it is found in the $PATH.
     $config{data_root} ||= cwd;

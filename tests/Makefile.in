@@ -34,10 +34,10 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@ENABLE_NSFW_TRUE@am__append_1 = $(TESTS_NSFW_T)
-@HAVE_VALGRIND_TRUE@am__append_2 = -v $(VALGRIND)
-@ENABLE_TODO_TRUE@am__append_3 = --todo
-@ENABLE_NLFY_TRUE@am__append_4 = --nlfy
+@HAVE_VALGRIND_TRUE@am__append_1 = -v $(VALGRIND)
+@ENABLE_TODO_TRUE@am__append_2 = --todo
+@ENABLE_NLFY_TRUE@am__append_3 = --nlfy
+@ENABLE_NSFW_TRUE@am__append_4 = --nsfw
 subdir = tests
 DIST_COMMON = README $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -205,10 +205,15 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-TESTS_T = t/format_default_nonhttp.t t/mem.t t/nosupport.t \
-	t/redirect.t t/format_default.t t/format_other.t t/shortened.t \
-	$(am__append_1)
-TESTS_NSFW_T = t/format_default_nsfw.t
+TESTS_T = \
+t/format_default_nonhttp.t \
+t/mem.t \
+t/nosupport.t \
+t/redirect.t \
+t/format_default.t \
+t/format_other.t \
+t/shortened.t
+
 TESTS_D_T = t/d/url.t
 TESTS_POD_T = t/pod.t
 TESTS_LIB = lib/Test/Quvi.pm
@@ -224,11 +229,6 @@ data/format/default/gaskrank.json \
 data/format/default/spiegel.json \
 data/format/default/funnyordie.json \
 data/format/default/funnyhub.json \
-data/format/default/nsfw/xvideos.json \
-data/format/default/nsfw/tube8.json \
-data/format/default/nsfw/keezmovies.json \
-data/format/default/nsfw/xhamster.json \
-data/format/default/nsfw/youjizz.json \
 data/format/default/academicearth.json \
 data/format/default/theonion.json \
 data/format/default/ted.json \
@@ -286,6 +286,13 @@ JSON_NLFY = \
 data/format/default/nlfy/sevenload.json \
 data/format/default/nlfy/clipfish.json
 
+JSON_NSFW = \
+data/format/default/nsfw/xvideos.json \
+data/format/default/nsfw/tube8.json \
+data/format/default/nsfw/keezmovies.json \
+data/format/default/nsfw/xhamster.json \
+data/format/default/nsfw/youjizz.json
+
 README = \
 README \
 data/format/default/ignore/README \
@@ -296,15 +303,15 @@ data/format/other/ignore/README
 EXTRA_DIST = \
  $(README) $(TESTS_LIB) \
  $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_D_T) $(TESTS_POD_T) \
- $(JSON) $(JSON_IGNORE) $(JSON_TODO) $(JSON_NLFY)
+ $(JSON) $(JSON_IGNORE) $(JSON_TODO) $(JSON_NLFY) $(JSON_NSFW)
 
 PROVE_OPTS_COMMON = --nocolor
 
 # Options for those tests that use Test::Quvi.
 PROVE_OPTS = -I $(top_srcdir)/tests/lib/ -v $(PROVE_OPTS_COMMON)
 TESTQUVI_OPTS = -q $(top_builddir)/src/quvi -d $(top_srcdir)/tests -b \
-	$(top_srcdir)/share $(am__append_2) $(am__append_3) \
-	$(am__append_4)
+	$(top_srcdir)/share $(am__append_1) $(am__append_2) \
+	$(am__append_3) $(am__append_4)
 
 # Options for those tests that *do not* use Test::Quvi.
 

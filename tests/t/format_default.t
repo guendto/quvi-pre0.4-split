@@ -23,6 +23,7 @@ my @dirs =
 my $c = $q->get_config;
 push @dirs, "data/format/default/todo" if $c->{todo};
 push @dirs, "data/format/default/nlfy" if $c->{nlfy};
+push @dirs, "data/format/default/nsfw" if $c->{nfsw};
 
 my @files = $q->find_json(@dirs);
 
