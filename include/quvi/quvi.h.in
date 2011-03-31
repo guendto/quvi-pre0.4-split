@@ -115,11 +115,14 @@ QUVIOPT_CATEGORY        /**< Bit pattern of (OR'd) website script categories */
 
 /** @enum QUVIcategory Website script category
 *
-* Used (together with QUVIOPT_CATEGORY) to specify which of the website
-* script categories the application  wants to use. The library defaults
-* to QUVIPROTO_HTTP.
+* Specify which of the website script categories the application wants
+* to use. The library defaults to QUVIPROTO_HTTP for historical reasons.
 *
-* @sa: QUVIOPT_CATEGORY
+* @note Consider setting the appropriate category in your application,
+* the default behaviour is planned to change to "QUVIPROTO_ALL" in 0.2.20
+*
+* @sa quvi_setopt
+* @sa QUVIOPT_CATEGORY
 */
 typedef enum {
 QUVIPROTO_HTTP = 0x1, /**< Protocol category HTTP */
