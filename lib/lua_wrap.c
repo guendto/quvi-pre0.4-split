@@ -217,8 +217,7 @@ static QUVIcode
 scan_known_dirs(llst_node_t * dst, const char *spath,
                 filter_func filter)
 {
-  char *homedir, *path, *basedir;
-  char buf[PATH_MAX];
+  char *homedir, *path, *basedir, *buf;
 
 #define _scan \
     do { \
@@ -238,7 +237,12 @@ scan_known_dirs(llst_node_t * dst, const char *spath,
     }
 
   /* Current working directory. */
-  asprintf(&path, "%s/%s", getcwd(buf, sizeof(buf)), spath);
+  buf = getcwd(NULL,0);
+  if (!buf)
+    return(QUVI_MEM);
+
+  asprintf(&path, "%s/%s", buf, spath);
+  _free(buf);
   _scan;
 
   /* Home directory. */
