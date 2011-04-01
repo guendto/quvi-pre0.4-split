@@ -4,7 +4,6 @@ EXTRA_DIST = \
 libquvi.pc.in \
 libquvi.ver \
 doxygen.conf.in \
-KNOWN_ISSUES \
 ChangeLog.pre-gitlog
 
 pkgconfigdir = $(libdir)/pkgconfig
