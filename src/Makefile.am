@@ -17,15 +17,23 @@ endif
 bin_PROGRAMS = quvi
 quvi_SOURCES = $(src) $(hdr)
 
-quvi_CFLAGS = \
+quvi_CPPFLAGS = \
     -I$(top_builddir)/include \
     -I$(top_srcdir)/lib \
-    $(libcurl_CFLAGS)
+    $(libcurl_CFLAGS) \
+    $(AM_CPPFLAGS)
+
+quvi_CFLAGS = \
+    $(AM_CFLAGS)
+
+quvi_LDFLAGS = \
+    $(AM_LDFLAGS)
 
 quvi_LDADD =  \
     $(top_builddir)/lib/libquvi.la \
     $(libcurl_LIBS) \
     $(LIBICONV) \
     $(LTLIBICONV)
+
 endif
 
