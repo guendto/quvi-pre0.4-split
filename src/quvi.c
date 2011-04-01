@@ -544,22 +544,6 @@ static void dump_media(quvi_media_t media, opts_s opts, CURL * curl)
     spew("  ]\n}\n");
 }
 
-static void
-expect_error(const char *what, const char *expected, const char *got)
-{
-  fprintf(stderr, "error: %s:\n  expected: \"%s\"\n  got: \"%s\"\n\n",
-          what, expected, got);
-}
-
-static void
-expect_error_d(const char *what, const double expected,
-               const double got)
-{
-  fprintf(stderr,
-          "error: %s:\n  expected: \"%.0f\"\n  got: \"%.0f\"\n\n", what,
-          expected, got);
-}
-
 static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
 {
   fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
