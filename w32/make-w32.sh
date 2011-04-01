@@ -14,7 +14,7 @@ export liblua_LIBS="-L$MINGW/lib -llua51"
 pack_it()
 {
     version=`awk '/PACKAGE_VERSION = / {print $3}' Makefile`
-    archive="quvi-$version-win32-i686-bin.7z"
+    archive="quvi-$version-win32-i686-bin.zip"
     distdir="quvi-$version"
 
     rm -rf dist quvi-$version $archive \
@@ -33,7 +33,7 @@ pack_it()
     && cp -v ../NEWS dist/NEWS.txt \
     && cp -v man1/quvi.1.html dist/share/doc/quvi \
     && mv dist $distdir \
-    && 7za a $archive $distdir
+    && zip -r $archive $distdir
     exit $?
 }
 
