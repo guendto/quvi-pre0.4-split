@@ -54,7 +54,7 @@ function parse(self)
             return string.char(tonumber(h, 16))
         end)
 
-    local _,_,s = page:find ('content=\"([:/%w\?\.-]-)\" property="og:image"')
+    local _,_,s = page:find('content="([:/%w%?%.-]-)" property="og:image"')
     self.media_thumbnail_url = s or ""
 
     local _,_,s = metadata:find('"duration":(%d-),')
