@@ -45,10 +45,6 @@ function hexchar2decimal (s)
     return n
 end
 
-function binstr2bin (s)
-    print("haha")
-end
-
 function decimal2hex (s)
     return string.format("%x", s)
 end
@@ -126,8 +122,11 @@ function parse (self)
     local _,_,s = self.page_url:find('?v=([^&]+)')
     self.id     = s or error ("no match: video id")
 
-    local videolink_url         = "http://www.megavideo.com/xml/videolink.php?v="..self.id
-    local videolink_url_page    = quvi.fetch(videolink_url)
+    local videolink_url =
+        "http://www.megavideo.com/xml/videolink.php?v=" .. self.id
+
+    local videolink_url_page =
+        quvi.fetch(videolink_url, {fetch_type = 'config'})
 
     local _,_,s = videolink_url_page:find(' title="([^"]+)"')
     self.title  = s or error ("no match: video title")
@@ -165,7 +164,8 @@ function parse (self)
 
     for loc3 = 1,string.len(str)
     do
-        local s = "000" .. decimal2binary(hexchar2decimal(string.sub(str, loc3, loc3)))
+        local s = "000"
+          .. decimal2binary(hexchar2decimal(string.sub(str,loc3,loc3)))
         table.insert(loc1, string.sub(s, string.len(s)-3))
     end
 
@@ -192,7 +192,8 @@ function parse (self)
 
     for loc3=0, 128-1
     do
-        loc1[loc3+1] = binaryxor(loc1[loc3 + 1], loc6[loc3 + 1 + 256]) % 2
+        loc1[loc3+1] =
+          binaryxor(loc1[loc3 + 1], loc6[loc3 + 1 + 256]) % 2
     end
 
     loc12 = table.concat(loc1)
@@ -207,10 +208,14 @@ function parse (self)
 
     for loc3 = 0,table.getn(loc7)-1
     do
-        table.insert(loc2, decimal2hex(binary2decimal(tonumber(loc7[loc3+1]))) )
+        table.insert(loc2,
+            decimal2hex(binary2decimal(tonumber(loc7[loc3+1]))) )
     end
 
-    self.url    = { "http://www"..ser..".megavideo.com/files/"..table.concat(loc2).."/video.flv" }
+    self.url = {
+        string.format("http://www%s.megavideo.com/files/%s/video.flv",
+            ser, table.concat(loc2))
+    }
 
     return self
 end
