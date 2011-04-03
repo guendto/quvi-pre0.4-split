@@ -16,9 +16,9 @@ my $q = Test::Quvi->new;
 my $c = $q->get_config;
 
 plan skip_all =>
-  "URL required for testing, use ':: --url URL' or ('--json FILE')"
+  "URL required for testing, use ':: --url URL' or ('--json-file FILE')"
   unless $c->{url}
-      or $c->{json_file};    # --url or --json (read URL from json)
+      or $c->{json_file};    # --url or --json-file (read URL from json)
 
 my $e;
 my $u = $c->{url};
