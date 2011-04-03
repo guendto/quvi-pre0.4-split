@@ -16,6 +16,7 @@ TESTS_LIB = lib/Test/Quvi.pm
 JSON = \
 data/resolve/inscript_redirect.json \
 data/resolve/shortened.json \
+data/format/default/megavideo.json \
 data/format/default/charlierose.json \
 data/format/default/liveleak.json \
 data/format/default/publicsenat.json \

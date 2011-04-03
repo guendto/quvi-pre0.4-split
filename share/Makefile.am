@@ -26,6 +26,7 @@ lua/website/globo.lua \
 lua/website/golem.lua \
 lua/website/google.lua \
 lua/website/liveleak.lua \
+lua/website/megavideo.lua \
 lua/website/pluzz.lua \
 lua/website/publicsenat.lua \
 lua/website/sapo.lua \
