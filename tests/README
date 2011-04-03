@@ -94,6 +94,7 @@ Arguments to tests
         -b,--quvi-basedir arg   Path to dir containing the (quvi) LUA scripts
         -o,--quvi-opts arg      Additional options to quvi(1) command
         -j,--json-file arg      Verify received data against local JSON file
+        -J,--dump-json          Print quvi generated JSON to stderr
         -i,--ignore arg         Ignore arg in JSON comparison
         -d,--data-root arg      Path to directory containing the (test) data/
         -v,--valgrind-path arg  Path to valgrind(1) command

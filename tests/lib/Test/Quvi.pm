@@ -30,8 +30,8 @@ use vars qw(@ISA @EXPORT @EXPORT_OK);
 our @ISA    = qw(Exporter);
 our @EXPORT = ();
 
+use Getopt::Long qw(:config bundling);
 use Carp qw(croak);
-use Getopt::Long;
 use Test::More;
 use Test::Deep;
 use File::Spec;
@@ -56,6 +56,7 @@ sub new
                'quvi_basedir|quvi-basedir|quvibasedir|b=s',
                'quvi_opts|quvi-opts|quviopts|o=s',
                'json_file|json-file|jsonfile|j=s',
+               'dump_json|dump-json|dumpjson|J',
                'data_root|data-root|dataroot|d=s',
                'ignore|i=s',
                'valgrind_path|valgrind-path|valgrindpath|v=s',
@@ -211,6 +212,9 @@ sub _run_cmd
 
     my $o = join '', qx/$cmd/;
     my $r = $? >> 8;
+
+    print STDERR "\n$o"
+        if $r == 0 and $self->{config}{dump_json};
 
     ($r, $o);
 }
