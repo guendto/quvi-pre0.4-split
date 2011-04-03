@@ -28,7 +28,7 @@ function ident (self)
     r.formats    = "default"
     r.categories = C.proto_mms
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url, {r.domain}, {}, {"id%-video"})
+    r.handles    = U.handles(self.page_url, {r.domain}, nil, {"id%-video"})
     return r
 end
 
