@@ -110,6 +110,10 @@ Arguments to tests
     The test suite can check the returned against JSONs. Use the
     --json-file if you need to do this.
 
+    Note about the t/d/url.t:  you can tell the test to use the
+    (page) URL from the JSON instead of specifying it in the command
+    line with --url.
+
     Use the --ignore option if you need to ignore any of the JSON
     values. e.g.:
         % prove t/foo.t :: -i content_type
