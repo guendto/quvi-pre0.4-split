@@ -134,6 +134,17 @@ function get_video_info(self, result)
         end
     end
 
+    if url and #self.starttime > 0 then
+        local msec
+        local min, sec = self.starttime:match("^(%d+)m(%d+)s$");
+        min = tonumber(min) or 0;
+        sec = tonumber(sec) or 0;
+        msec = (min * 60000) + (sec * 1000)
+        if msec > 0 then
+            url = url .. "&begin=" .. msec
+        end
+    end
+
     self.url = {url or error("no match: video url")}
 
     return self
