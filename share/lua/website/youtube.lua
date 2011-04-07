@@ -113,8 +113,8 @@ function get_video_info(self, result)
     fmt_url_map = U.unescape(fmt_url_map) .. ','
 
     -- Assume first found URL to be the 'best'.
-    local best  = nil
-    local t     = {}
+    local best
+    local t = {}
 
     for fmt,url in fmt_url_map:gfind('(%d+)%|(.-),') do
         if not best then best = url end
@@ -122,13 +122,13 @@ function get_video_info(self, result)
     end
 
     -- Choose URL.
-    local url = nil
+    local url
 
     if self.requested_format == 'best' then
         url = best
     else
         url = to_url(self.requested_format, t)
-        if url == nil and self.requested_format ~= 'default' then
+        if not url and self.requested_format ~= 'default' then
             -- Fallback to our 'default'.
             url = to_url('default', t)
         end
@@ -155,13 +155,13 @@ function to_url(fmt, t)
     fmt = (fmt == 'default') and 'flv_240p' or fmt
 
     -- Match format ID alias to YouTube fmt ID.
-    local id = nil
+    local id
 
     table.foreach(fmt_id_lookup,
         function (k,v) if(k == fmt) then id = v end end)
 
     -- Match fmt ID to available fmt IDs.
-    local url = nil
+    local url
 
     table.foreach(t,
         function (k,v) if(id == k) then url = v end end)
