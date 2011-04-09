@@ -182,7 +182,7 @@ QUVIPROP_FORMAT        = QUVIPROPERTY_STRING + 10, /**< Requested format, set us
 QUVIPROP_STARTTIME     = QUVIPROPERTY_STRING + 11, /**< Start time for media */
 QUVIPROP_MEDIATHUMBNAILURL     = QUVIPROPERTY_STRING + 12, /**< Media cover URL, if any */
 QUVIPROP_MEDIADURATION         = QUVIPROPERTY_DOUBLE + 13, /**< Media duration in msecs */
-QUVIPROP_SWFPLAYERURL = 14, /**< SWF Player URL, a.k.a. swfVfy */
+QUVIPROP_SWFPLAYERURL =  QUVIPROPERTY_STRING + 14, /**< SWF Player URL, a.k.a. swfVfy */
 /* Add new ones below. Bump _QUVIPROP_LAST accordingly. */
 
 /* -- Deprecated as of 0.2.15. Note that these exist only for
