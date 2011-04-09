@@ -34,6 +34,11 @@
 #include "quvi/quvi.h"
 #include "cmdline.h"
 
+#define _free(p) \
+    do { \
+        if (p) { free(p); p=0; } \
+    } while(0)
+
 /* strepl.c */
 extern char *strepl(const char *s, const char *what, const char *with);
 
@@ -330,11 +335,8 @@ static void invoke_exec(quvi_media_t media, opts_s opts)
   cmd = strepl(cmd, "%u", q_media_url);
   cmd = strepl(cmd, "%s", q_swf_player_url);
 
-  free(q_media_url);
-  q_media_url = NULL;
-
-  free(q_swf_player_url);
-  q_swf_player_url = NULL;
+  _free(q_media_url);
+  _free(q_swf_player_url);
 
   rc = system(cmd);
 
@@ -350,8 +352,7 @@ static void invoke_exec(quvi_media_t media, opts_s opts)
       break;
     }
 
-  free(cmd);
-  cmd = NULL;
+  _free(cmd);
 }
 
 static void
@@ -373,11 +374,7 @@ dump_media_link_xml(CURL * curl,
        "   </link>\n",
        i, file_length, file_ct, file_suffix, url ? url : media_url);
 
-  if (url)
-    {
-      curl_free(url);
-      url = NULL;
-    }
+  _free(url);
 }
 
 static void
@@ -544,8 +541,7 @@ dump_media_json(char *media_id, char *host, char *format,
 
   spew("  \"link\": [\n");
 
-  free(t);
-  t = NULL;
+  _free(t);
 }
 
 static void dump_media(quvi_media_t media, opts_s opts, CURL * curl)
@@ -713,12 +709,10 @@ int main(int argc, char *argv[])
               if (cmdline_parser_ext(argc, argv, &opts, pp) == 0)
                 no_config_flag = 0;
             }
-          free(pp);
-          pp = NULL;
+          _free(pp);
         }
 
-      free(path);
-      path = NULL;
+      _free(path);
     }
 
   if (no_config_flag)
