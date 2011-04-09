@@ -314,36 +314,44 @@ static void support(quvi_t quvi, opts_s opts)
   exit(0);
 }
 
-static void invoke_exec(quvi_media_t media, const char *media_url,
-                        opts_s opts)
+static void invoke_exec(quvi_media_t media, opts_s opts)
 {
-  char *quoted_url, *arg;
+  char *cmd, *media_url, *swf_player_url;
+  char *q_media_url, *q_swf_player_url;
   int rc;
 
-  asprintf(&quoted_url, "\"%s\"", media_url);
+  quvi_getprop(media, QUVIPROP_MEDIAURL, &media_url);
+  quvi_getprop(media, QUVIPROP_SWFPLAYERURL, &swf_player_url);
 
-  arg = strdup(opts.exec_arg);
-  arg = strepl(arg, "%u", quoted_url);
+  asprintf(&q_media_url, "\"%s\"", media_url);
+  asprintf(&q_swf_player_url, "\"%s\"", swf_player_url);
 
-  free(quoted_url);
-  quoted_url = NULL;
+  cmd = strdup(opts.exec_arg);
+  cmd = strepl(cmd, "%u", q_media_url);
+  cmd = strepl(cmd, "%s", q_swf_player_url);
 
-  rc = system(arg);
+  free(q_media_url);
+  q_media_url = NULL;
+
+  free(q_swf_player_url);
+  q_swf_player_url = NULL;
+
+  rc = system(cmd);
 
   switch (rc)
     {
     case 0:
       break;
     case -1:
-      spew_e("error: failed to execute `%s'\n", arg);
+      spew_e("error: failed to execute `%s'\n", cmd);
       break;
     default:
       spew_e("error: child exited with: %d\n", rc >> 8);
       break;
     }
 
-  free(arg);
-  arg = NULL;
+  free(cmd);
+  cmd = NULL;
 }
 
 static void
@@ -434,11 +442,14 @@ static void
 dump_media_xml(CURL * curl,
                char *media_id, char *host, char *format,
                char *page_title, char *page_link, char *start_time,
-               char *thumb_url, double duration)
+               char *thumb_url, double duration,
+               char *swf_player_url)
 {
-  char *url;
+  char *e_page_url, *e_thumb_url, *e_swf_player_url;
 
-  url = curl_easy_escape(curl, page_link, 0);
+  e_page_url = curl_easy_escape(curl, page_link, 0);
+  e_thumb_url = curl_easy_escape(curl, thumb_url, 0);
+  e_swf_player_url = curl_easy_escape(curl, swf_player_url, 0);
 
   spew("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
        "<media id=\"%s\" host=\"%s\">\n"
@@ -446,26 +457,44 @@ dump_media_xml(CURL * curl,
        "   <page_title>%s</page_title>\n"
        "   <page_url>%s</page_url>\n"
        "   <start_time>%s</start_time>\n"
-       "   <thumbnail_url>%s</thumbnail_url>\n",
-       media_id, host, format, page_title, url ? url : page_link,
+       "   <thumbnail_url>%s</thumbnail_url>\n"
+       "   <swf_player_url>%s</swf_player_url>\n",
+       media_id,
+       host,
+       format,
+       page_title,
+       e_page_url ? e_page_url : "",
        start_time ? start_time : "",
-       thumb_url ? thumb_url : "");
+       e_thumb_url ? e_thumb_url : "",
+       e_swf_player_url ? e_swf_player_url : "");
 
   if (duration)
     spew("   <duration>%.0f</duration>\n", duration);
 
-  if (url)
+  if (e_page_url)
     {
-      curl_free(url);
-      url = NULL;
+      curl_free(e_page_url);
+      e_page_url = NULL;
     }
 
+  if (e_thumb_url)
+    {
+      curl_free(e_thumb_url);
+      e_thumb_url = NULL;
+    }
+
+  if (e_swf_player_url)
+    {
+      curl_free(e_swf_player_url);
+      e_swf_player_url = NULL;
+    }
 }
 
 static void
 dump_media_old(char *media_id, char *host, char *format,
                char *page_title, char *page_link, char *start_time,
-               char *thumb_url, double duration)
+               char *thumb_url, double duration,
+               char *swf_player_url)
 {
   spew(" > Dump media:\n"
        "host    : %s\n"
@@ -474,10 +503,12 @@ dump_media_old(char *media_id, char *host, char *format,
        "id      : %s\n"
        "format  : %s (requested)\n"
        "start time: %s\n"
-       "thumbnail url: %s\n",
+       "thumbnail url: %s\n"
+       "swf player url: %s\n",
        host, page_link, page_title, media_id, format,
        start_time ? start_time : "",
-       thumb_url ? thumb_url : "");
+       thumb_url ? thumb_url : "",
+       swf_player_url ? swf_player_url : "");
 
   if (duration)
     spew("duration: %.0f\n", duration);
@@ -486,7 +517,8 @@ dump_media_old(char *media_id, char *host, char *format,
 static void
 dump_media_json(char *media_id, char *host, char *format,
                 char *page_title, char *page_link, char *start_time,
-                char *thumb_url, double duration)
+                char *thumb_url, double duration,
+                char *swf_player_url)
 {
   char *t;
 
@@ -500,10 +532,12 @@ dump_media_json(char *media_id, char *host, char *format,
        "  \"id\": \"%s\",\n"
        "  \"format_requested\": \"%s\",\n"
        "  \"start_time\": \"%s\",\n"
-       "  \"thumbnail_url\": \"%s\",\n",
+       "  \"thumbnail_url\": \"%s\",\n"
+       "  \"swf_player_url\": \"%s\",\n",
        host, t, page_link, media_id, format,
        start_time ? start_time : "",
-       thumb_url ? thumb_url : "");
+       thumb_url ? thumb_url : "",
+       swf_player_url ? swf_player_url : "");
 
   if (duration)
     spew("  \"duration\": \"%.0f\",\n", duration);
@@ -517,6 +551,7 @@ dump_media_json(char *media_id, char *host, char *format,
 static void dump_media(quvi_media_t media, opts_s opts, CURL * curl)
 {
   char *page_link, *page_title, *media_id, *format, *host, *start_time, *thumb_url;
+  char *swf_player_url;
   double duration;
 
   quvi_getprop(media, QUVIPROP_HOSTID, &host);
@@ -527,13 +562,23 @@ static void dump_media(quvi_media_t media, opts_s opts, CURL * curl)
   quvi_getprop(media, QUVIPROP_STARTTIME, &start_time);
   quvi_getprop(media, QUVIPROP_MEDIATHUMBNAILURL, &thumb_url);
   quvi_getprop(media, QUVIPROP_MEDIADURATION, &duration);
+  quvi_getprop(media, QUVIPROP_SWFPLAYERURL, &swf_player_url);
 
   if (opts.xml_given)
-    dump_media_xml(curl, media_id, host, format, page_title, page_link, start_time, thumb_url, duration);
+    {
+      dump_media_xml(curl, media_id, host, format, page_title, page_link,
+                     start_time, thumb_url, duration, swf_player_url);
+    }
   else if (opts.old_given)
-    dump_media_old(media_id, host, format, page_title, page_link, start_time, thumb_url, duration);
+    {
+      dump_media_old(media_id, host, format, page_title, page_link,
+                     start_time, thumb_url, duration, swf_player_url);
+    }
   else
-    dump_media_json(media_id, host, format, page_title, page_link, start_time, thumb_url, duration);
+    {
+      dump_media_json(media_id, host, format, page_title, page_link,
+                      start_time, thumb_url, duration, swf_player_url);
+    }
 
   dump_media_links(media, opts, curl);
 
@@ -715,11 +760,9 @@ int main(int argc, char *argv[])
 
       if (opts.exec_given)
         {
-          char *media_url = NULL;
           do
             {
-              quvi_getprop(media, QUVIPROP_MEDIAURL, &media_url);
-              invoke_exec(media, media_url, opts);
+              invoke_exec(media, opts);
             }
           while (quvi_next_media_url(media) == QUVI_OK);
         }

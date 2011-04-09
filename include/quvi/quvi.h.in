@@ -182,10 +182,14 @@ QUVIPROP_FORMAT        = QUVIPROPERTY_STRING + 10, /**< Requested format, set us
 QUVIPROP_STARTTIME     = QUVIPROPERTY_STRING + 11, /**< Start time for media */
 QUVIPROP_MEDIATHUMBNAILURL     = QUVIPROPERTY_STRING + 12, /**< Media cover URL, if any */
 QUVIPROP_MEDIADURATION         = QUVIPROPERTY_DOUBLE + 13, /**< Media duration in msecs */
+QUVIPROP_SWFPLAYERURL =  QUVIPROPERTY_STRING + 14, /**< SWF Player URL, a.k.a. swfVfy */
+/* Add new ones below. Bump _QUVIPROP_LAST accordingly. */
+
 /* -- Deprecated as of 0.2.15. Note that these exist only for
  * backward-compatibility. This may change in the future. New
  * applications should use the appropriate QUVIPROP_MEDIA* enums
  * instead. */
+
 QUVIPROP_VIDEOID         = QUVIPROPERTY_STRING + 4, /**< Video ID
 @deprecated Since 0.2.15, use QUVIPROP_MEDIAID instead */
 QUVIPROP_VIDEOURL        = QUVIPROPERTY_STRING + 5, /**< Video URL
@@ -200,8 +204,7 @@ suffix @deprecated Since 0.2.15, use QUVIPROP_FILESUFFIX instead */
 QUVIPROP_VIDEOFORMAT     = QUVIPROPERTY_STRING + 10, /**< Requested
 video format, set using QUVIOPT_FORMAT @deprecated Since 0.2.15, use
 QUVIPROP_FORMAT instead */
-/* Add new ones below. */
-_QUVIPROP_LAST          = 13 /**< Placeholder */
+_QUVIPROP_LAST          = 14 /**< Placeholder */
 } QUVIproperty;
 
 /** @brief libquvi session handle */
