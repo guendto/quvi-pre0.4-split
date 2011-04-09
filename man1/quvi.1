@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-03-31" "0.2.15" "quvi manual"
+.TH quvi 1 "2011-04-10" "0.2.15" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -204,8 +204,9 @@ Turn on libcurl verbose mode.
 Invoke \fIarg\fR for each (successfully) parsed media. You can use the following
 specifiers in \fIarg\fR:
 .Sp
-.Vb 1
+.Vb 2
 \&    %u  Media URL
+\&    %s  SWF Player URL (if any)
 .Ve
 .Sp
 Note that \fIall\fR occurences of the specifier will be replaced,
