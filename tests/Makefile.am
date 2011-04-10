@@ -142,13 +142,12 @@ PROVE_OPTS_POD = $(PROVE_OPTS_COMMON)
 TESTQUVI_OPTS_POD = -p $(top_srcdir)/man1
 
 test: all
-	@ ok=yes ;
-	@ for t in $(TESTS_T) ; do \
+	@ ok=1; for t in $(TESTS_T); do \
 		( $(PROVE) $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
-		:: $(TESTQUVI_OPTS) ) || ok=no ; \
-	done
-	@ for t in $(TESTS_POD_T) ; do \
+		:: $(TESTQUVI_OPTS) ) || ok=; \
+	done; \
+	for t in $(TESTS_POD_T); do \
 		( $(PROVE) $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
-		:: $(TESTQUVI_OPTS_POD) ) || ok=no ; \
-	done
-	@ if test x$$ok != "xyes" ; then exit 1 ; fi
+		:: $(TESTQUVI_OPTS_POD) ) || ok=; \
+	done; \
+	if test -z "$$ok"; then exit 1; fi
