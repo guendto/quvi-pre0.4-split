@@ -493,8 +493,7 @@ dump_media_old(parsed_t p)
        "id      : %s\n"
        "format  : %s (requested)\n"
        "start time: %s\n"
-       "thumbnail url: %s\n"
-       "swf player url: %s\n",
+       "thumbnail url: %s\n",
        p->host,
        p->page_url,
        p->page_title,
