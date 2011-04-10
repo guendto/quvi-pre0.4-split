@@ -42,10 +42,6 @@ function parse(self)
     self.host_id = 'arte'
     local page   = quvi.fetch(self.page_url)
 
-    -- a.k.a. swfVfy
-    local _,_,s = page:find('var url_player = "(.-)"')
-    self.swf_player_url = s or ''
-
     -- local _,_,_,s,t =
     --    page:find('addToPlaylistOpen(.-)/videos/([%w_]+)%-(%d+)%.html')
 

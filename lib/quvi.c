@@ -227,7 +227,6 @@ void quvi_parse_close(quvi_media_t * handle)
       _free((*video)->redirect);
       _free((*video)->starttime);
       _free((*video)->media_thumbnail_url);
-      _free((*video)->swf_player_url);
 
       _free(*video);
     }
@@ -364,8 +363,6 @@ static QUVIcode _getprop(_quvi_media_t video, QUVIproperty prop, ...)
       _sets(video->media_thumbnail_url);
     case QUVIPROP_MEDIADURATION:
       _setn(dp, video->duration);
-    case QUVIPROP_SWFPLAYERURL:
-      _sets(video->swf_player_url);
     default:
       rc = QUVI_INVARG;
     }

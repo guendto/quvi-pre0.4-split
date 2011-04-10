@@ -742,7 +742,6 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
   set_field(l, "redirect", "");
   set_field(l, "starttime", "");
   set_field(l, "media_thumbnail_url", "");
-  set_field(l, "swf_player_url", "");
   set_field(l, "script_dir", script_dir);
   set_field_n(l, "duration", 0);
 
@@ -788,9 +787,6 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
 
           freprintf(&video->media_thumbnail_url, "%s",
                     get_field_req_s(l, qls, "media_thumbnail_url"));
-
-          freprintf(&video->swf_player_url, "%s",
-                    get_field_req_s(l, qls, "swf_player_url"));
 
           video->duration = get_field_n(l, qls, "duration");
 

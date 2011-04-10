@@ -190,7 +190,6 @@ typedef enum
   QUVIPROP_STARTTIME     = QUVIPROPERTY_STRING + 11, /**< Start time for media */
   QUVIPROP_MEDIATHUMBNAILURL     = QUVIPROPERTY_STRING + 12, /**< Media cover URL, if any */
   QUVIPROP_MEDIADURATION         = QUVIPROPERTY_DOUBLE + 13, /**< Media duration in msecs */
-  QUVIPROP_SWFPLAYERURL =  QUVIPROPERTY_STRING + 14, /**< SWF Player URL, a.k.a. swfVfy */
   /* Add new ones below. Bump _QUVIPROP_LAST accordingly. */
 
   /* -- Deprecated as of 0.2.15. Note that these exist only for
@@ -213,7 +212,7 @@ suffix @deprecated Since 0.2.15, use QUVIPROP_FILESUFFIX instead */
 video format, set using QUVIOPT_FORMAT @deprecated Since 0.2.15, use
 QUVIPROP_FORMAT instead */
 
-  _QUVIPROP_LAST          = 14 /**< Placeholder */
+  _QUVIPROP_LAST          = 13 /**< Placeholder */
 } QUVIproperty;
 
 /** @brief libquvi session handle */
