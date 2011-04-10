@@ -133,7 +133,7 @@ sub read_json
     close $fh;
 
     # Ignore these by default.
-    my @ignore = qw(url thumbnail_url swf_player_url);
+    my @ignore = qw(url thumbnail_url);
 
     # Any aditional JSON keys to be ignored.
     if ($self->{config}{ignore})
