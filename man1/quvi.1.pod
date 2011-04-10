@@ -92,7 +92,6 @@ Invoke I<arg> for each (successfully) parsed media. You can use the following
 specifiers in I<arg>:
 
     %u  Media URL
-    %s  SWF Player URL (if any)
 
 Note that I<all> occurences of the specifier will be replaced,
 and each new value will be quoted ("").
