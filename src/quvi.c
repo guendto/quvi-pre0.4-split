@@ -350,16 +350,19 @@ static void invoke_exec(quvi_media_t media, opts_s opts)
   _free(cmd);
 }
 
-static void
-dump_media_link_xml(CURL * curl,
-                    int i,
-                    char *media_url,
-                    double file_length, char *file_ct,
-                    char *file_suffix)
+struct parsed_link_s
 {
-  char *url;
+  char *media_url;
+  char *content_type;
+  double content_length;
+  char *file_suffix;
+};
 
-  url = curl_easy_escape(curl, media_url, 0);
+typedef struct parsed_link_s *parsed_link_t;
+
+static void dump_media_link_xml(CURL * curl, parsed_link_t p, int i)
+{
+  char *media_url = curl_easy_escape(curl, p->media_url, 0);
 
   spew("   <link id=\"%d\">\n"
        "       <length_bytes>%.0f</length_bytes>\n"
@@ -367,27 +370,20 @@ dump_media_link_xml(CURL * curl,
        "       <file_suffix>%s</file_suffix>\n"
        "       <url>%s</url>\n"
        "   </link>\n",
-       i, file_length, file_ct, file_suffix, url ? url : media_url);
+       i, p->content_length, p->content_type, p->file_suffix,
+       media_url ? media_url : p->media_url);
 
-  _free(url);
+  _free(media_url);
 }
 
-static void
-dump_media_link_old(int i,
-                    char *media_url,
-                    double file_length, char *file_suffix,
-                    char *file_ct)
+static void dump_media_link_old(parsed_link_t p, int i)
 {
   spew("link %02d  : %s\n"
        ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
-       i, media_url, file_length, file_suffix, file_ct);
+       i, p->media_url, p->content_length, p->file_suffix, p->content_type);
 }
 
-static void
-dump_media_link_json(int i,
-                     char *media_url,
-                     double file_length, char *file_suffix,
-                     char *file_ct)
+static void dump_media_link_json(parsed_link_t p, int i)
 {
   spew("    {\n"
        "      \"id\": \"%d\",\n"
@@ -396,7 +392,7 @@ dump_media_link_json(int i,
        "      \"file_suffix\": \"%s\",\n"
        "      \"url\": \"%s\"\n"
        "    }%s\n",
-       i, file_length, file_ct, file_suffix, media_url,
+       i, p->content_length, p->content_type, p->file_suffix, p->media_url,
        i > 1 ? "," : "");
 }
 
@@ -406,26 +402,23 @@ static void dump_media_links(quvi_media_t media, opts_s opts,
   int i = 0;
   do
     {
-      char *media_url, *file_suffix, *file_ct;
-      double file_length;
+      struct parsed_link_s p;
 
-      quvi_getprop(media, QUVIPROP_MEDIAURL, &media_url);
-      quvi_getprop(media, QUVIPROP_MEDIACONTENTTYPE, &file_ct);
-      quvi_getprop(media, QUVIPROP_MEDIACONTENTLENGTH, &file_length);
-      quvi_getprop(media, QUVIPROP_FILESUFFIX, &file_suffix);
+      memset(&p, 0, sizeof(&p));
+
+      quvi_getprop(media, QUVIPROP_MEDIAURL, &p.media_url);
+      quvi_getprop(media, QUVIPROP_MEDIACONTENTTYPE, &p.content_type);
+      quvi_getprop(media, QUVIPROP_MEDIACONTENTLENGTH, &p.content_length);
+      quvi_getprop(media, QUVIPROP_FILESUFFIX, &p.file_suffix);
 
       ++i;
 
       if (opts.xml_given)
-        dump_media_link_xml(curl, i, media_url, file_length,
-                            file_ct, file_suffix);
-
+        dump_media_link_xml(curl, &p,i);
       else if (opts.old_given)
-        dump_media_link_old(i, media_url, file_length, file_suffix,
-                            file_ct);
+        dump_media_link_old(&p,i);
       else
-        dump_media_link_json(i, media_url, file_length, file_suffix,
-                             file_ct);
+        dump_media_link_json(&p,i);
     }
   while (quvi_next_media_url(media) == QUVI_OK);
 }
