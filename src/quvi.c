@@ -565,9 +565,6 @@ static void dump_media(quvi_media_t media, opts_s opts, CURL * curl)
 static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
 {
   fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
-  quvi_close(&quvi);
-  cmdline_parser_free(&opts);
-  exit(rc);
 }
 
 static quvi_t init_quvi(opts_s opts, CURL ** curl)
@@ -576,7 +573,12 @@ static quvi_t init_quvi(opts_s opts, CURL ** curl)
   quvi_t quvi;
 
   if ((rc = quvi_init(&quvi)) != QUVI_OK)
-    dump_error(quvi, rc, opts);
+    {
+      dump_error(quvi, rc, opts);
+      quvi_close(&quvi);
+      cmdline_parser_free(&opts);
+      exit(rc);
+    }
   assert(quvi != 0);
 
   /* Set quvi options. */
@@ -632,11 +634,12 @@ static quvi_t init_quvi(opts_s opts, CURL ** curl)
 int main(int argc, char *argv[])
 {
   const char *url, *home, *no_config, *fname;
+  QUVIcode rc, last_failure;
   quvi_media_t media;
   int no_config_flag;
   opts_s opts;
-  QUVIcode rc;
   quvi_t quvi;
+  int errors;
   CURL *curl;
   int i;
 
@@ -717,14 +720,24 @@ int main(int argc, char *argv[])
   /* User input */
 
   if (opts.inputs_num == 0)
-    fprintf(stderr, "error: no input links\n");
+    {
+      spew_e("error: no input links\n");
+      return (QUVI_INVARG);
+    }
 
-  for (i = 0; i < opts.inputs_num; ++i)
+  errors = 0;
+
+  for (i=0; i<opts.inputs_num; ++i)
     {
       rc = quvi_parse(quvi, (char *)opts.inputs[i], &media);
 
       if (rc != QUVI_OK)
-        dump_error(quvi, rc, opts);
+        {
+          dump_error(quvi, rc, opts);
+          last_failure = rc;
+          ++errors;
+          continue;
+        }
 
       assert(media != 0);
       dump_media(media, opts, curl);
@@ -742,6 +755,12 @@ int main(int argc, char *argv[])
       assert(media == 0);
     }
 
+  if (errors && opts.inputs_num > 1)
+    {
+      spew_e("error: %d occurred (last 0x%02x), "
+             "exit with 0x%02x\n", errors, last_failure, rc);
+    }
+
   /* Cleanup. */
 
   quvi_close(&quvi);
@@ -749,7 +768,7 @@ int main(int argc, char *argv[])
 
   cmdline_parser_free(&opts);
 
-  return (QUVI_OK);
+  return (rc);
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */
