@@ -364,13 +364,19 @@ static void dump_media_link_xml(CURL * curl, parsed_link_t p, int i)
 {
   char *media_url = curl_easy_escape(curl, p->media_url, 0);
 
-  spew("   <link id=\"%d\">\n"
-       "       <length_bytes>%.0f</length_bytes>\n"
-       "       <content_type>%s</content_type>\n"
-       "       <file_suffix>%s</file_suffix>\n"
-       "       <url>%s</url>\n"
+  spew("   <link id=\"%d\">\n", i);
+
+  if (p->content_length)
+    spew("       <length_bytes>%.0f</length_bytes>\n", p->content_length);
+
+  if (strlen(p->content_type))
+    spew("       <content_type>%s</content_type>\n", p->content_type);
+
+  if (strlen(p->file_suffix))
+    spew("       <file_suffix>%s</file_suffix>\n", p->file_suffix);
+
+  spew("       <url>%s</url>\n"
        "   </link>\n",
-       i, p->content_length, p->content_type, p->file_suffix,
        media_url ? media_url : p->media_url);
 
   _free(media_url);
@@ -378,21 +384,35 @@ static void dump_media_link_xml(CURL * curl, parsed_link_t p, int i)
 
 static void dump_media_link_old(parsed_link_t p, int i)
 {
-  spew("link %02d  : %s\n"
-       ":: length: %.0f\n:: suffix: %s\n:: content-type: %s\n\n",
-       i, p->media_url, p->content_length, p->file_suffix, p->content_type);
+  spew("link %02d  : %s\n", i, p->media_url);
+
+  if (p->content_length)
+    spew(":: length: %.0f\n", p->content_length);
+
+  if (strlen(p->file_suffix))
+    spew(":: suffix: %s\n", p->file_suffix);
+
+  if (strlen(p->content_type))
+    spew(":: content-type: %s\n", p->content_type);
 }
 
 static void dump_media_link_json(parsed_link_t p, int i)
 {
   spew("    {\n"
-       "      \"id\": \"%d\",\n"
-       "      \"length_bytes\": \"%.0f\",\n"
-       "      \"content_type\": \"%s\",\n"
-       "      \"file_suffix\": \"%s\",\n"
-       "      \"url\": \"%s\"\n"
+       "      \"id\": \"%d\",\n", i);
+
+  if (p->content_length)
+    spew("      \"length_bytes\": \"%.0f\",\n", p->content_length);
+
+  if (strlen(p->content_type))
+    spew("      \"content_type\": \"%s\",\n", p->content_type);
+
+  if (strlen(p->file_suffix))
+    spew("      \"file_suffix\": \"%s\",\n", p->file_suffix);
+
+  spew("      \"url\": \"%s\"\n"
        "    }%s\n",
-       i, p->content_length, p->content_type, p->file_suffix, p->media_url,
+       p->media_url,
        i > 1 ? "," : "");
 }
 
@@ -449,16 +469,18 @@ dump_media_xml(CURL * curl, parsed_t p)
        "<media id=\"%s\" host=\"%s\">\n"
        "   <format_requested>%s</format_requested>\n"
        "   <page_title>%s</page_title>\n"
-       "   <page_url>%s</page_url>\n"
-       "   <start_time>%s</start_time>\n"
-       "   <thumbnail_url>%s</thumbnail_url>\n",
+       "   <page_url>%s</page_url>\n",
        p->media_id,
        p->host,
        p->format,
        p->page_title,
-       e_page_url ? e_page_url : "",
-       p->start_time ? p->start_time : "",
-       e_thumb_url ? e_thumb_url : "");
+       e_page_url ? e_page_url : "");
+
+  if (strlen(p->start_time))
+    spew("   <start_time>%s</start_time>\n", p->start_time);
+
+  if (e_thumb_url && strlen(e_thumb_url))
+    spew("   <thumbnail_url>%s</thumbnail_url>\n", e_thumb_url);
 
   if (p->duration)
     spew("   <duration>%.0f</duration>\n", p->duration);
@@ -484,16 +506,18 @@ dump_media_old(parsed_t p)
        "url     : %s\n"
        "title   : %s\n"
        "id      : %s\n"
-       "format  : %s (requested)\n"
-       "start time: %s\n"
-       "thumbnail url: %s\n",
+       "format  : %s (requested)\n",
        p->host,
        p->page_url,
        p->page_title,
        p->media_id,
-       p->format,
-       p->start_time ? p->start_time : "",
-       p->thumb_url ? p->thumb_url : "");
+       p->format);
+
+  if (strlen(p->start_time))
+    spew("start time: %s\n", p->start_time);
+
+  if (strlen(p->thumb_url))
+    spew("thumbnail url: %s\n", p->thumb_url);
 
   if (p->duration)
     spew("duration: %.0f\n", p->duration);
@@ -512,16 +536,18 @@ dump_media_json(parsed_t p)
        "  \"page_title\": \"%s\",\n"
        "  \"page_url\": \"%s\",\n"
        "  \"id\": \"%s\",\n"
-       "  \"format_requested\": \"%s\",\n"
-       "  \"start_time\": \"%s\",\n"
-       "  \"thumbnail_url\": \"%s\",\n",
+       "  \"format_requested\": \"%s\",\n",
        p->host,
        t,
        p->page_url,
        p->media_id,
-       p->format,
-       p->start_time ? p->start_time : "",
-       p->thumb_url ? p->thumb_url : "");
+       p->format);
+
+  if (strlen(p->start_time))
+    spew("  \"start_time\": \"%s\",\n", p->start_time);
+
+  if (strlen(p->thumb_url))
+    spew("  \"thumbnail_url\": \"%s\",\n", p->thumb_url);
 
   if (p->duration)
     spew("  \"duration\": \"%.0f\",\n", p->duration);
