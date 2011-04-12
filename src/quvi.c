@@ -725,6 +725,7 @@ int main(int argc, char *argv[])
       return (QUVI_INVARG);
     }
 
+  last_failure = QUVI_OK;
   errors = 0;
 
   for (i=0; i<opts.inputs_num; ++i)
@@ -755,10 +756,10 @@ int main(int argc, char *argv[])
       assert(media == 0);
     }
 
-  if (errors && opts.inputs_num > 1)
+  if (opts.inputs_num > 1)
     {
-      spew_e("error: %d occurred (last 0x%02x), "
-             "exit with 0x%02x\n", errors, last_failure, rc);
+      spew_qe("Results: %d OK, %d failed (last 0x%02x), exit with 0x%02x\n",
+              opts.inputs_num - errors, errors, last_failure, rc);
     }
 
   /* Cleanup. */
