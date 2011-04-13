@@ -271,6 +271,7 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
 
   QUVI_OK               = 0x00
   QUVI_MEM              = 0x01, Memory allocation failed
+                            (or invalid quvi command line option)
   QUVI_BADHANDLE        = 0x02, Bad session handle
   QUVI_INVARG           = 0x03, Invalid function (or command line) arg
   QUVI_CURLINIT         = 0x04, libcurl initialization failed

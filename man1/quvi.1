@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-04-11" "0.2.15" "quvi manual"
+.TH quvi 1 "2011-04-13" "0.2.15" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -348,6 +348,7 @@ quvi exits with 0 on success and >0 if an error occurred.
 .Vb 10
 \&  QUVI_OK               = 0x00
 \&  QUVI_MEM              = 0x01, Memory allocation failed
+\&                            (or invalid quvi command line option)
 \&  QUVI_BADHANDLE        = 0x02, Bad session handle
 \&  QUVI_INVARG           = 0x03, Invalid function (or command line) arg
 \&  QUVI_CURLINIT         = 0x04, libcurl initialization failed
