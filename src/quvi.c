@@ -43,6 +43,11 @@
 extern char *strepl(const char *s, const char *what, const char *with);
 
 static int verbose_flag = 1;
+static quvi_t quvi = NULL;
+static CURL *curl = NULL;
+
+typedef struct gengetopt_args_info *opts_t;
+static opts_t opts = NULL;
 
 /* prints to std(e)rr. */
 static void spew_e(const char *fmt, ...)
@@ -72,8 +77,6 @@ static void spew(const char *fmt, ...)
   vfprintf(stdout, fmt, ap);
   va_end(ap);
 }
-
-typedef struct gengetopt_args_info opts_s;
 
 static void handle_shortened_status(quvi_word type)
 {
@@ -177,11 +180,10 @@ static size_t write_callback(void *p, size_t size, size_t nmemb,
 " * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA\n" \
 " * 02110-1301  USA\n" " */"
 
-static void license(opts_s opts)
+static void license()
 {
-  printf("%s *\n%s *\n%s *\n%s\n", LICENSE_1, LICENSE_2, LICENSE_3,
-         LICENSE_4);
-  cmdline_parser_free(&opts);
+  printf("%s *\n%s *\n%s *\n%s\n",
+         LICENSE_1, LICENSE_2, LICENSE_3, LICENSE_4);
   exit(0);
 }
 
@@ -190,10 +192,9 @@ static void license(opts_s opts)
 #undef LICENSE_2
 #undef LICENSE_1
 
-static void version(opts_s opts)
+static void version()
 {
   printf("quvi version %s\n", quvi_version(QUVI_VERSION_LONG));
-  cmdline_parser_free(&opts);
   exit(0);
 }
 
@@ -205,31 +206,28 @@ static void dump_host(char *domain, char *formats)
 }
 
 /* Wraps quvi_supported. */
-static void supported(quvi_t quvi, opts_s opts)
+static void supported(quvi_t quvi)
 {
   QUVIcode rc;
   int i;
 
-  for (i = 0; i < opts.inputs_num; ++i)
+  for (i = 0; i < opts->inputs_num; ++i)
     {
-      rc = quvi_supported(quvi, (char *)opts.inputs[i]);
+      rc = quvi_supported(quvi, (char *)opts->inputs[i]);
       if (rc == QUVI_OK)
-        spew_qe("%s: OK\n", (char *)opts.inputs[i]);
+        spew_qe("%s: OK\n", (char *)opts->inputs[i]);
       else
         spew_qe("error: %s\n", quvi_strerror(quvi, rc));
     }
 
-  quvi_close(&quvi);
-  cmdline_parser_free(&opts);
-
   exit(rc);
 }
 
-static void format_help(quvi_t quvi, opts_s opts)
+static void format_help(quvi_t quvi)
 {
   int quit = 0;
 
-  if (strcmp(opts.format_arg, "help") == 0)
+  if (strcmp(opts->format_arg, "help") == 0)
     {
       printf("Usage:\n"
              "   --format arg            get format arg\n"
@@ -242,7 +240,7 @@ static void format_help(quvi_t quvi, opts_s opts)
             );
       quit = 1;
     }
-  else if (strcmp(opts.format_arg, "list") == 0)
+  else if (strcmp(opts->format_arg, "list") == 0)
     {
       int done = 0;
       char *d, *f;
@@ -256,8 +254,8 @@ static void format_help(quvi_t quvi, opts_s opts)
             {
               int print = 1;
               /* -f list <pattern> */
-              if (opts.inputs_num > 0)
-                print = strstr(d, (char *)opts.inputs[0]) != 0;
+              if (opts->inputs_num > 0)
+                print = strstr(d, (char *)opts->inputs[0]) != 0;
               /* -f list */
               if (print)
                 printf("%s:\n  %s\n\n", d, f);
@@ -277,20 +275,16 @@ static void format_help(quvi_t quvi, opts_s opts)
     }
 
   if (quit)
-    {
-      quvi_close(&quvi);
-      cmdline_parser_free(&opts);
-      exit(0);
-    }
+    exit(0);
 }
 
 /* dumps all supported hosts to stdout. */
-static void support(quvi_t quvi, opts_s opts)
+static void support(quvi_t quvi)
 {
   int done = 0;
 
-  if (opts.inputs_num > 0)
-    supported(quvi, opts);
+  if (opts->inputs_num > 0)
+    supported(quvi);
 
   while (!done)
     {
@@ -313,13 +307,10 @@ static void support(quvi_t quvi, opts_s opts)
         }
     }
 
-  quvi_close(&quvi);
-  cmdline_parser_free(&opts);
-
   exit(0);
 }
 
-static void invoke_exec(quvi_media_t media, opts_s opts)
+static void invoke_exec(quvi_media_t media)
 {
   char *cmd, *media_url,  *q_media_url;
   int rc;
@@ -328,7 +319,7 @@ static void invoke_exec(quvi_media_t media, opts_s opts)
 
   asprintf(&q_media_url, "\"%s\"", media_url);
 
-  cmd = strdup(opts.exec_arg);
+  cmd = strdup(opts->exec_arg);
   cmd = strepl(cmd, "%u", q_media_url);
 
   _free(q_media_url);
@@ -360,7 +351,7 @@ struct parsed_link_s
 
 typedef struct parsed_link_s *parsed_link_t;
 
-static void dump_media_link_xml(CURL * curl, parsed_link_t p, int i)
+static void dump_media_link_xml(parsed_link_t p, int i)
 {
   char *media_url = curl_easy_escape(curl, p->media_url, 0);
 
@@ -416,8 +407,7 @@ static void dump_media_link_json(parsed_link_t p, int i)
        i > 1 ? "," : "");
 }
 
-static void dump_media_links(quvi_media_t media, opts_s opts,
-                             CURL * curl)
+static void dump_media_links(quvi_media_t media)
 {
   int i = 0;
   do
@@ -433,9 +423,9 @@ static void dump_media_links(quvi_media_t media, opts_s opts,
 
       ++i;
 
-      if (opts.xml_given)
-        dump_media_link_xml(curl, &p,i);
-      else if (opts.old_given)
+      if (opts->xml_given)
+        dump_media_link_xml(&p,i);
+      else if (opts->old_given)
         dump_media_link_old(&p,i);
       else
         dump_media_link_json(&p,i);
@@ -457,8 +447,7 @@ struct parsed_s
 
 typedef struct parsed_s *parsed_t;
 
-static void
-dump_media_xml(CURL * curl, parsed_t p)
+static void dump_media_xml(parsed_t p)
 {
   char *e_page_url, *e_thumb_url;
 
@@ -498,8 +487,7 @@ dump_media_xml(CURL * curl, parsed_t p)
     }
 }
 
-static void
-dump_media_old(parsed_t p)
+static void dump_media_old(parsed_t p)
 {
   spew(" > Dump media:\n"
        "host    : %s\n"
@@ -523,8 +511,7 @@ dump_media_old(parsed_t p)
     spew("duration: %.0f\n", p->duration);
 }
 
-static void
-dump_media_json(parsed_t p)
+static void dump_media_json(parsed_t p)
 {
   char *t;
 
@@ -557,7 +544,7 @@ dump_media_json(parsed_t p)
   _free(t);
 }
 
-static void dump_media(quvi_media_t media, opts_s opts, CURL * curl)
+static void dump_media(quvi_media_t media)
 {
   struct parsed_s p;
 
@@ -572,61 +559,59 @@ static void dump_media(quvi_media_t media, opts_s opts, CURL * curl)
   quvi_getprop(media, QUVIPROP_MEDIATHUMBNAILURL, &p.thumb_url);
   quvi_getprop(media, QUVIPROP_MEDIADURATION, &p.duration);
 
-  if (opts.xml_given)
-    dump_media_xml(curl, &p);
-  else if (opts.old_given)
+  if (opts->xml_given)
+    dump_media_xml(&p);
+  else if (opts->old_given)
     dump_media_old(&p);
   else
     dump_media_json(&p);
 
-  dump_media_links(media, opts, curl);
+  dump_media_links(media);
 
-  if (opts.xml_given)
+  if (opts->xml_given)
     spew("</media>\n");
-  else if (opts.old_given) ;
+  else if (opts->old_given) ;
   else
     spew("  ]\n}\n");
 }
 
-static void dump_error(quvi_t quvi, QUVIcode rc, opts_s opts)
+static void dump_error(quvi_t quvi, QUVIcode rc)
 {
   fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
 }
 
-static quvi_t init_quvi(opts_s opts, CURL ** curl)
+static quvi_t init_quvi()
 {
   QUVIcode rc;
   quvi_t quvi;
 
   if ((rc = quvi_init(&quvi)) != QUVI_OK)
     {
-      dump_error(quvi, rc, opts);
-      quvi_close(&quvi);
-      cmdline_parser_free(&opts);
+      dump_error(quvi, rc);
       exit(rc);
     }
   assert(quvi != 0);
 
   /* Set quvi options. */
 
-  if (opts.format_given)
-    quvi_setopt(quvi, QUVIOPT_FORMAT, opts.format_arg);
+  if (opts->format_given)
+    quvi_setopt(quvi, QUVIOPT_FORMAT, opts->format_arg);
 
-  quvi_setopt(quvi, QUVIOPT_NOSHORTENED, opts.no_shortened_given);
-  quvi_setopt(quvi, QUVIOPT_NOVERIFY, opts.no_verify_given);
+  quvi_setopt(quvi, QUVIOPT_NOSHORTENED, opts->no_shortened_given);
+  quvi_setopt(quvi, QUVIOPT_NOVERIFY, opts->no_verify_given);
 
-  if (opts.category_all_given)
+  if (opts->category_all_given)
     quvi_setopt(quvi, QUVIOPT_CATEGORY, QUVIPROTO_ALL);
   else
     {
       long n = 0;
-      if (opts.category_http_given)
+      if (opts->category_http_given)
         n |= QUVIPROTO_HTTP;
-      if (opts.category_mms_given)
+      if (opts->category_mms_given)
         n |= QUVIPROTO_MMS;
-      if (opts.category_rtsp_given)
+      if (opts->category_rtsp_given)
         n |= QUVIPROTO_RTSP;
-      if (opts.category_rtmp_given)
+      if (opts->category_rtmp_given)
         n |= QUVIPROTO_RTMP;
       if (n > 0)
         quvi_setopt(quvi, QUVIOPT_CATEGORY, n);
@@ -637,24 +622,35 @@ static quvi_t init_quvi(opts_s opts, CURL ** curl)
 
   /* Use the quvi created cURL handle. */
 
-  quvi_getinfo(quvi, QUVIINFO_CURL, curl);
-  assert(*curl != 0);
+  quvi_getinfo(quvi, QUVIINFO_CURL, &curl);
+  assert(curl != 0);
 
-  if (opts.agent_given)
-    curl_easy_setopt(*curl, CURLOPT_USERAGENT, opts.agent_arg);
+  if (opts->agent_given)
+    curl_easy_setopt(curl, CURLOPT_USERAGENT, opts->agent_arg);
 
-  if (opts.proxy_given)
-    curl_easy_setopt(*curl, CURLOPT_PROXY, opts.proxy_arg);
+  if (opts->proxy_given)
+    curl_easy_setopt(curl, CURLOPT_PROXY, opts->proxy_arg);
 
-  if (opts.no_proxy_given)
-    curl_easy_setopt(*curl, CURLOPT_PROXY, "");
+  if (opts->no_proxy_given)
+    curl_easy_setopt(curl, CURLOPT_PROXY, "");
 
-  curl_easy_setopt(*curl, CURLOPT_VERBOSE, opts.verbose_libcurl_given);
+  curl_easy_setopt(curl, CURLOPT_VERBOSE, opts->verbose_libcurl_given);
 
-  curl_easy_setopt(*curl, CURLOPT_CONNECTTIMEOUT,
-                   opts.connect_timeout_arg);
+  curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT,
+                   opts->connect_timeout_arg);
 
   return (quvi);
+}
+
+static void cleanup()
+{
+  if (quvi)
+    quvi_close(&quvi);
+  if (opts)
+    {
+      cmdline_parser_free(opts);
+      _free(opts);
+    }
 }
 
 int main(int argc, char *argv[])
@@ -663,28 +659,32 @@ int main(int argc, char *argv[])
   QUVIcode rc, last_failure;
   quvi_media_t media;
   int no_config_flag;
-  opts_s opts;
-  quvi_t quvi;
   int errors;
-  CURL *curl;
   int i;
 
-  curl = NULL;
-  url = NULL;
+  assert(quvi == NULL);
+  assert(curl == NULL);
+  assert(opts == NULL);
 
   no_config = getenv("QUVI_NO_CONFIG");
+  no_config_flag = 1;
+  url = NULL;
 
   home = getenv("QUVI_HOME");
   if (!home)
     home = getenv("HOME");
-
-  no_config_flag = 1;
 
 #ifndef HOST_W32
   fname = "/.quvirc";
 #else
   fname = "\\quvirc";
 #endif
+
+  atexit(cleanup);
+
+  opts = calloc(1, sizeof(struct gengetopt_args_info));
+  if (!opts)
+    return(QUVI_MEM);
 
   /* Init cmdline parser. */
 
@@ -706,13 +706,13 @@ int main(int argc, char *argv[])
           pp = cmdline_parser_params_create();
           pp->check_required = 0;
 
-          if (cmdline_parser_config_file(path, &opts, pp) == 0)
+          if (cmdline_parser_config_file(path, opts, pp) == 0)
             {
               pp->initialize = 0;
               pp->override = 1;
               pp->check_required = 1;
 
-              if (cmdline_parser_ext(argc, argv, &opts, pp) == 0)
+              if (cmdline_parser_ext(argc, argv, opts, pp) == 0)
                 no_config_flag = 0;
             }
           _free(pp);
@@ -723,57 +723,59 @@ int main(int argc, char *argv[])
 
   if (no_config_flag)
     {
-      if (cmdline_parser(argc, argv, &opts) != 0)
+      if (cmdline_parser(argc, argv, opts) != 0)
         return (QUVI_INVARG);
     }
 
-  if (opts.version_given)
+  if (opts->version_given)
     version(opts);
 
-  if (opts.license_given)
+  if (opts->license_given)
     license(opts);
 
-  verbose_flag = !opts.quiet_given;
+  verbose_flag = !opts->quiet_given;
 
-  quvi = init_quvi(opts, &curl);
+  quvi = init_quvi();
 
-  if (opts.support_given)
-    support(quvi, opts);
+  if (opts->support_given)
+    support(quvi);
 
-  if (opts.format_given)
-    format_help(quvi, opts);
+  if (opts->format_given)
+    format_help(quvi);
 
   /* User input */
 
-  if (opts.inputs_num == 0)
+  if (opts->inputs_num == 0)
     {
-      spew_e("error: no input links\n");
+      spew_qe("error: no input links\n");
       return (QUVI_INVARG);
     }
 
   last_failure = QUVI_OK;
   errors = 0;
 
-  for (i=0; i<opts.inputs_num; ++i)
+  for (i=0; i<opts->inputs_num; ++i)
     {
-      rc = quvi_parse(quvi, (char *)opts.inputs[i], &media);
+      rc = quvi_parse(quvi, (char *)opts->inputs[i], &media);
 
       if (rc != QUVI_OK)
         {
-          dump_error(quvi, rc, opts);
+          dump_error(quvi, rc);
           last_failure = rc;
           ++errors;
+          quvi_parse_close(&media);
+          assert(media == 0);
           continue;
         }
 
       assert(media != 0);
-      dump_media(media, opts, curl);
+      dump_media(media);
 
-      if (opts.exec_given)
+      if (opts->exec_given)
         {
           do
             {
-              invoke_exec(media, opts);
+              invoke_exec(media);
             }
           while (quvi_next_media_url(media) == QUVI_OK);
         }
@@ -782,18 +784,11 @@ int main(int argc, char *argv[])
       assert(media == 0);
     }
 
-  if (opts.inputs_num > 1)
+  if (opts->inputs_num > 1)
     {
       spew_qe("Results: %d OK, %d failed (last 0x%02x), exit with 0x%02x\n",
-              opts.inputs_num - errors, errors, last_failure, rc);
+              opts->inputs_num - errors, errors, last_failure, rc);
     }
-
-  /* Cleanup. */
-
-  quvi_close(&quvi);
-  assert(quvi == 0);
-
-  cmdline_parser_free(&opts);
 
   return (rc);
 }
