@@ -81,6 +81,10 @@ function M.contains(s,t)
     return false
 end
 
+function M.ends(s,e) -- http://lua-users.org/wiki/StringRecipes
+    return e == '' or s:sub(-#e) == e
+end
+
 return M
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
