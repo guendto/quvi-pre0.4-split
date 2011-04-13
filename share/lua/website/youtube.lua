@@ -68,7 +68,7 @@ function parse(self)
     self.id    = s or error("no match: video id")
 
     local _,_,s = page_url:find('#a?t=(.+)')
-    self.starttime = s or ''
+    self.start_time = s or ''
 
     return get_video_info(self)
 end
@@ -134,9 +134,9 @@ function get_video_info(self, result)
         end
     end
 
-    if url and #self.starttime > 0 then
+    if url and #self.start_time > 0 then
         local msec
-        local min, sec = self.starttime:match("^(%d+)m(%d+)s$")
+        local min, sec = self.start_time:match("^(%d+)m(%d+)s$")
         min = tonumber(min) or 0
         sec = tonumber(sec) or 0
         msec = (min * 60000) + (sec * 1000)

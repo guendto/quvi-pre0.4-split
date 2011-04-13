@@ -73,7 +73,7 @@ struct _quvi_video_s
   _quvi_t quvi;
   char *id;
   char *title;
-  char *starttime;
+  char *start_time;
   char *thumbnail_url;
   double duration;
   char *charset;
