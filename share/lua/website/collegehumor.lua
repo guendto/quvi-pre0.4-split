@@ -65,7 +65,7 @@ function parse (self)
     self.title  = s or error("no match: video title")
 
     local _,_,s = page:find('<thumbnail><!%[%w+%[(.-)%]')
-    self.media_thumbnail_url = s or ""
+    self.thumbnail_url = s or ""
 
     return self
 end

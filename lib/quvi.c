@@ -226,7 +226,7 @@ void quvi_parse_close(quvi_media_t * handle)
       _free((*video)->host_id);
       _free((*video)->redirect);
       _free((*video)->starttime);
-      _free((*video)->media_thumbnail_url);
+      _free((*video)->thumbnail_url);
 
       _free(*video);
     }
@@ -360,7 +360,7 @@ static QUVIcode _getprop(_quvi_media_t video, QUVIproperty prop, ...)
     case QUVIPROP_STARTTIME:
       _sets(video->starttime);
     case QUVIPROP_MEDIATHUMBNAILURL:
-      _sets(video->media_thumbnail_url);
+      _sets(video->thumbnail_url);
     case QUVIPROP_MEDIADURATION:
       _setn(dp, video->duration);
     default:

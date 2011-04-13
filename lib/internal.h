@@ -74,7 +74,7 @@ struct _quvi_video_s
   char *id;
   char *title;
   char *starttime;
-  char *media_thumbnail_url;
+  char *thumbnail_url;
   double duration;
   char *charset;
   char *page_link;

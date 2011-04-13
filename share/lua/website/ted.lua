@@ -44,7 +44,7 @@ function parse(self)
     self.title  = U.unescape(s) or error("no match: video title")
 
     local _,_,s = page:find('&amp;su=(.-)&amp;')
-    self.media_thumbnail_url = s or ""
+    self.thumbnail_url = s or ""
 
     local _,_,s = page:find('<h3>Video</h3>.-dl class="downloads"(.-)</dl>')
     local metadata = s or error("no match: metadata")

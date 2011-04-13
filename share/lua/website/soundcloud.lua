@@ -55,7 +55,7 @@ function parse(self)
         end)
 
     local _,_,s = page:find('content="([:/%w%?%.-]-)" property="og:image"')
-    self.media_thumbnail_url = s or ""
+    self.thumbnail_url = s or ""
 
     local _,_,s = metadata:find('"duration":(%d-),')
     self.duration = tonumber(s) or 0
