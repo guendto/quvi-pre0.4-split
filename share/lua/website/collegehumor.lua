@@ -71,6 +71,7 @@ function parse (self)
 end
 
 function collegehumorify(url)
+    if not url then return url end
     local _,_,id = url:find('collegehumor%.com/video[/:](%d+)')
     if id then
         url = "http://www.collegehumor.com/video:" .. id
