@@ -79,8 +79,12 @@ Print the details in the previously used default output format
 
 =item B<-q, --quiet>
 
-Turn off output to stderr (excl. errors, libcurl). Video details will
-be printed to stdout as they would be normally.
+Turn off all output printed to stderr (excl. any errors). libcurl
+will continue to generate messages to stderr if the L</--verbose-libcurl>
+switch is used.
+
+This switch has no no effect on the the media details which are
+printed to stdout.
 
 =item B<--verbose-libcurl>
 

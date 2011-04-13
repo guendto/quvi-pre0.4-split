@@ -194,8 +194,12 @@ Print the details in the previously used default output format
 (0.2.3 and earlier).
 .IP "\fB\-q, \-\-quiet\fR" 4
 .IX Item "-q, --quiet"
-Turn off output to stderr (excl. errors, libcurl). Video details will
-be printed to stdout as they would be normally.
+Turn off all output printed to stderr (excl. any errors). libcurl
+will continue to generate messages to stderr if the \*(L"\-\-verbose\-libcurl\*(R"
+switch is used.
+.Sp
+This switch has no no effect on the the media details which are
+printed to stdout.
 .IP "\fB\-\-verbose\-libcurl\fR" 4
 .IX Item "--verbose-libcurl"
 Turn on libcurl verbose mode.
