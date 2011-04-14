@@ -724,6 +724,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
 
   quvi = video->quvi;           /* seterr macro needs this. */
   qls = (_quvi_lua_script_t) node->data;
+  rc = QUVI_OK;
 
   lua_getglobal(l, func_name);
 
