@@ -4,7 +4,7 @@ use strict;
 
 use Test::More;
 
-eval "use JSON";
+eval "use JSON::XS";
 plan skip_all => "JSON::XS required for testing" if $@;
 
 use Test::Quvi;
