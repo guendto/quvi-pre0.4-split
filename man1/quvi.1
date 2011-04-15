@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-04-13" "0.2.15" "quvi manual"
+.TH quvi 1 "2011-04-15" "0.2.15" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -171,6 +171,9 @@ With this in mind:
 The default behaviour is planned to change to \*(L"all\*(R" in 0.2.20.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
+quvi reads content from the standard input (stdin) by default unless
+an \s-1URL\s0 is specified in the command line. quvi expects each \s-1URL\s0 to be
+separated by a newline if they are read from the stdin.
 .IP "\fB\-h, \-\-help\fR" 4
 .IX Item "-h, --help"
 Print help and exit.
@@ -309,6 +312,18 @@ Same.
 .IP "quvi \-f list dailym" 4
 .IX Item "quvi -f list dailym"
 Print available formats for dailym(otion).
+.ie n .IP "echo ""\s-1URL\s0"" | quvi" 4
+.el .IP "echo ``\s-1URL\s0'' | quvi" 4
+.IX Item "echo URL | quvi"
+Read from stdin. Same but with multiple URLs (in this case from a file):
+.Sp
+.Vb 5
+\&  % cat >> URLs
+\&  URL1
+\&  URL2
+\&  (CTRL+D)
+\&  % quvi < URLs
+.Ve
 .SH "FILES"
 .IX Header "FILES"
 .IP "\fB~/.quvirc\fR" 4

@@ -48,6 +48,10 @@ The default behaviour is planned to change to "all" in 0.2.20.
 
 =head1 OPTIONS
 
+quvi reads content from the standard input (stdin) by default unless
+an URL is specified in the command line. quvi expects each URL to be
+separated by a newline if they are read from the stdin.
+
 =over 4
 
 =item B<-h, --help>
@@ -220,6 +224,16 @@ Same.
 =item quvi -f list dailym
 
 Print available formats for dailym(otion).
+
+=item echo "URL" | quvi
+
+Read from stdin. Same but with multiple URLs (in this case from a file):
+
+  % cat >> URLs
+  URL1
+  URL2
+  (CTRL+D)
+  % quvi < URLs
 
 =back
 
