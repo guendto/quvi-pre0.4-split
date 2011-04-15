@@ -53,7 +53,7 @@ function parse (self)
         local _,_,s = page:find ('flashVars.ytID = "(.-)"')
 
         if (s ~= nil) then
-            self.redirect = "http://youtube.com/watch?v=" .. s
+            self.redirect_url = "http://youtube.com/watch?v=" .. s
             return self
         else
             error ("no match: flv: no clip available for this lecture")

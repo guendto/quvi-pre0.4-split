@@ -81,7 +81,7 @@ struct _quvi_video_s
   llst_node_t link;             /* holds all essential to video links */
   llst_node_t curr;             /* current (link) node */
   char *host_id;
-  char *redirect;
+  char *redirect_url;
 };
 
 typedef struct _quvi_video_s *_quvi_media_t;

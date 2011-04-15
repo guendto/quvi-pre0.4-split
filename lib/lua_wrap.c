@@ -740,7 +740,7 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
   lua_newtable(l);
   set_field(l, "page_url", video->page_link);
   set_field(l, "requested_format", video->quvi->format);
-  set_field(l, "redirect", "");
+  set_field(l, "redirect_url", "");
   set_field(l, "start_time", "");
   set_field(l, "thumbnail_url", "");
   set_field(l, "script_dir", script_dir);
@@ -761,10 +761,10 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
       return (QUVI_LUA);
     }
 
-  freprintf(&video->redirect, "%s",
-            get_field_req_s(l, qls, "redirect"));
+  freprintf(&video->redirect_url, "%s",
+            get_field_req_s(l, qls, "redirect_url"));
 
-  if (strlen(video->redirect) == 0)
+  if (strlen(video->redirect_url) == 0)
     {
       const int r = luaL_ref(l, LUA_REGISTRYINDEX);
 

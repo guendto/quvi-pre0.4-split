@@ -48,7 +48,7 @@ function parse (self)
         "no match: video id (note: pluzz.fr videos expire 7 days after "
         .. "their original broadcast on France Televisions)"
 
-    self.redirect = s or error (errmsg)
+    self.redirect_url = s or error (errmsg)
 
     return self
 end

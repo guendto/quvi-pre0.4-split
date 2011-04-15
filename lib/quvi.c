@@ -161,9 +161,9 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
         return (rc);
       else
         {
-          if (strlen(video->redirect))      /* Found a redirect. */
+          if (strlen(video->redirect_url))      /* Found a redirect. */
             {
-              freprintf(&video->page_link, "%s", video->redirect);
+              freprintf(&video->page_link, "%s", video->redirect_url);
               continue;
             }
           else
@@ -224,7 +224,7 @@ void quvi_parse_close(quvi_media_t * handle)
       _free((*video)->charset);
       _free((*video)->page_link);
       _free((*video)->host_id);
-      _free((*video)->redirect);
+      _free((*video)->redirect_url);
       _free((*video)->start_time);
       _free((*video)->thumbnail_url);
 

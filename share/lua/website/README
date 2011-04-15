@@ -81,7 +81,7 @@ The "parse" function is expected set the following details:
   * title (string)
   * id (string)
   * url (array of strings)
-  * redirect (string) [see notes below]
+  * redirect_url (string) [see notes below]
 
 Optional details (set if available):
   * thumbnail_url (string)
@@ -100,9 +100,9 @@ Returns:
   * The updated `self' table
 
 Notes:
-  * "redirect", special field, if set (default:empty):
-    - Drop user specified URL and follow to the redirect URL instead
-    - This replaces the original user defined URL (set by quvi_parse)
+  * "redirect_url", special field, if set (default:empty):
+    - Follow to a new location (of redirect_url)
+    - Replaces the original user defined "page_url" (set by quvi_parse)
     - See academicearth.lua script for an example
 
 
