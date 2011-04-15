@@ -34,10 +34,10 @@
 #include "quvi/quvi.h"
 #include "cmdline.h"
 
+#include "llst.h"
+
 #define _free(p) \
-    do { \
-        if (p) { free(p); p=0; } \
-    } while(0)
+    do { if (p) { free(p); p=0; } } while (0)
 
 /* strepl.c */
 extern char *strepl(const char *s, const char *what, const char *with);
@@ -48,6 +48,8 @@ static CURL *curl = NULL;
 
 typedef struct gengetopt_args_info *opts_t;
 static opts_t opts = NULL;
+
+static llst_node_t inputs = NULL;
 
 /* prints to std(e)rr. */
 static void spew_e(const char *fmt, ...)
@@ -208,10 +210,10 @@ static void dump_host(char *domain, char *formats)
 /* Wraps quvi_supported. */
 static void supported(quvi_t quvi)
 {
-  QUVIcode rc;
+  QUVIcode rc = QUVI_NOSUPPORT;
   int i;
 
-  for (i = 0; i < opts->inputs_num; ++i)
+  for (i=0; i<opts->inputs_num; ++i)
     {
       rc = quvi_supported(quvi, (char *)opts->inputs[i]);
       if (rc == QUVI_OK)
@@ -240,6 +242,7 @@ static void format_help(quvi_t quvi)
             );
       quit = 1;
     }
+
   else if (strcmp(opts->format_arg, "list") == 0)
     {
       int done = 0;
@@ -247,25 +250,33 @@ static void format_help(quvi_t quvi)
 
       while(!done)
         {
-          const int rc = quvi_next_supported_website(quvi, &d, &f);
+          const int rc =
+            quvi_next_supported_website(quvi, &d, &f);
+
           switch (rc)
             {
+
             case QUVI_OK:
             {
               int print = 1;
+
               /* -f list <pattern> */
               if (opts->inputs_num > 0)
                 print = strstr(d, (char *)opts->inputs[0]) != 0;
+
               /* -f list */
               if (print)
                 printf("%s:\n  %s\n\n", d, f);
+
               quvi_free(d);
               quvi_free(f);
             }
             break;
+
             case QUVI_LAST:
               done = 1;
               break;
+
             default:
               spew_e("%s\n", quvi_strerror(quvi, rc));
               break;
@@ -644,13 +655,56 @@ static quvi_t init_quvi()
 
 static void cleanup()
 {
+  llst_node_t curr = inputs;
+
+  while (curr)
+    {
+      _free(curr->data);
+      curr = curr->next;
+    }
+  llst_free(&inputs);
+  assert(inputs == NULL);
+
   if (quvi)
     quvi_close(&quvi);
+  assert(quvi == NULL);
+
   if (opts)
     {
       cmdline_parser_free(opts);
       _free(opts);
     }
+  assert(opts == NULL);
+}
+
+static void read_stdin()
+{
+  char b[256];
+  while (fgets(b, sizeof(b), stdin))
+    {
+      if (strlen(b) > 16)
+        {
+          const size_t n = strlen(b)-1;
+
+          if (b[n] == '\n')
+            b[n] = '\0';
+
+          llst_add(&inputs, strdup(b));
+        }
+    }
+}
+
+static int read_input()
+{
+  if (opts->inputs_num == 0)
+    read_stdin();
+  else
+    {
+      int i;
+      for (i=0; i<opts->inputs_num; ++i)
+        llst_add(&inputs, strdup(opts->inputs[i]));
+    }
+  return (llst_size(inputs));
 }
 
 int main(int argc, char *argv[])
@@ -659,12 +713,14 @@ int main(int argc, char *argv[])
   QUVIcode rc, last_failure;
   quvi_media_t media;
   int no_config_flag;
+  int i, inputs_num;
+  llst_node_t curr;
   int errors;
-  int i;
 
   assert(quvi == NULL);
   assert(curl == NULL);
   assert(opts == NULL);
+  assert(inputs == NULL);
 
   no_config = getenv("QUVI_NO_CONFIG");
   no_config_flag = 1;
@@ -745,7 +801,9 @@ int main(int argc, char *argv[])
 
   /* User input */
 
-  if (opts->inputs_num == 0)
+  inputs_num = read_input();
+
+  if (inputs_num == 0)
     {
       spew_qe("error: no input links\n");
       return (QUVI_INVARG);
@@ -754,40 +812,38 @@ int main(int argc, char *argv[])
   last_failure = QUVI_OK;
   errors = 0;
 
-  for (i=0; i<opts->inputs_num; ++i)
+  for (i=0, curr=inputs; curr; ++i)
     {
-      rc = quvi_parse(quvi, (char *)opts->inputs[i], &media);
-
-      if (rc != QUVI_OK)
+      rc = quvi_parse(quvi, (char *)curr->data, &media);
+      if (rc == QUVI_OK)
         {
-          dump_error(quvi, rc);
+          assert(media != 0);
+          dump_media(media);
+
+          if (opts->exec_given)
+            {
+              do
+                {
+                  invoke_exec(media);
+                }
+              while (quvi_next_media_url(media) == QUVI_OK);
+            }
+        }
+      else
+        {
+          dump_error(quvi,rc);
           last_failure = rc;
           ++errors;
-          quvi_parse_close(&media);
-          assert(media == 0);
-          continue;
         }
-
-      assert(media != 0);
-      dump_media(media);
-
-      if (opts->exec_given)
-        {
-          do
-            {
-              invoke_exec(media);
-            }
-          while (quvi_next_media_url(media) == QUVI_OK);
-        }
-
       quvi_parse_close(&media);
       assert(media == 0);
+      curr = curr->next;
     }
 
-  if (opts->inputs_num > 1)
+  if (inputs_num > 1)
     {
       spew_qe("Results: %d OK, %d failed (last 0x%02x), exit with 0x%02x\n",
-              opts->inputs_num - errors, errors, last_failure, rc);
+              inputs_num - errors, errors, last_failure, rc);
     }
 
   return (rc);
