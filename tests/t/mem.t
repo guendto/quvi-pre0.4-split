@@ -16,15 +16,11 @@ plan skip_all =>
   'valgrind required for testing, specify with --valgrind-path'
   unless $c->{valgrind_path};
 
-plan tests => 12;
-
-# No input.
-my ($r) = $q->run_with_valgrind('-q');
-is($r, 0x3, "exit status == 0x3"); # 0x3 = QUVI_INVARG
+plan tests => 11;
 
 # invalid option, make an exception to redirect to /dev/null),
 # gengetopt produced code checks and exits if this error occurs.
-($r) = $q->run_with_valgrind('--invalid','2>/dev/null');
+my ($r) = $q->run_with_valgrind('--invalid','2>/dev/null');
 is($r, 0x1, "exit status == 0x1");
 
 # --version
