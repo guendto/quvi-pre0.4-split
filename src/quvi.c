@@ -80,12 +80,12 @@ static void spew(const char *fmt, ...)
   va_end(ap);
 }
 
-static void handle_shortened_status(quvi_word type)
+static void handle_resolve_status(quvi_word type)
 {
   if (type == QUVISTATUSTYPE_DONE)
     spew_qe("done.\n");
   else
-    spew_qe(":: Check for shortened URL ...");
+    spew_qe(":: Check for URL redirection ...");
 }
 
 static void handle_fetch_status(quvi_word type, void *p)
@@ -129,8 +129,8 @@ static int status_callback(long param, void *data)
 
   switch (status)
     {
-    case QUVISTATUS_SHORTENED:
-      handle_shortened_status(type);
+    case QUVISTATUS_RESOLVE:
+      handle_resolve_status(type);
       break;
 
     case QUVISTATUS_FETCH:
@@ -608,7 +608,7 @@ static quvi_t init_quvi()
   if (opts->format_given)
     quvi_setopt(quvi, QUVIOPT_FORMAT, opts->format_arg);
 
-  quvi_setopt(quvi, QUVIOPT_NOSHORTENED, opts->no_shortened_given);
+  quvi_setopt(quvi, QUVIOPT_NORESOLVE, opts->no_resolve_given);
   quvi_setopt(quvi, QUVIOPT_NOVERIFY, opts->no_verify_given);
 
   if (opts->category_all_given)

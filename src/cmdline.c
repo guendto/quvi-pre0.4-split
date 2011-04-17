@@ -42,7 +42,7 @@ const char *gengetopt_args_info_help[] =
   "  -q, --quiet                Turn off output to stderr",
   "      --verbose-libcurl      Turn on libcurl verbose mode",
   "      --exec=arg             Invoke arg after parsing",
-  "  -s, --no-shortened         Do not decompress shortened URLs",
+  "  -r, --no-resolve           Do not resolve redirections",
   "  -n, --no-verify            Do not verify media URL",
   "      --category-http        Category HTTP website scripts",
   "      --category-mms         Category MMS website scripts",
@@ -113,7 +113,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->quiet_given = 0 ;
   args_info->verbose_libcurl_given = 0 ;
   args_info->exec_given = 0 ;
-  args_info->no_shortened_given = 0 ;
+  args_info->no_resolve_given = 0 ;
   args_info->no_verify_given = 0 ;
   args_info->category_http_given = 0 ;
   args_info->category_mms_given = 0 ;
@@ -158,7 +158,7 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->quiet_help = gengetopt_args_info_help[6] ;
   args_info->verbose_libcurl_help = gengetopt_args_info_help[7] ;
   args_info->exec_help = gengetopt_args_info_help[8] ;
-  args_info->no_shortened_help = gengetopt_args_info_help[9] ;
+  args_info->no_resolve_help = gengetopt_args_info_help[9] ;
   args_info->no_verify_help = gengetopt_args_info_help[10] ;
   args_info->category_http_help = gengetopt_args_info_help[11] ;
   args_info->category_mms_help = gengetopt_args_info_help[12] ;
@@ -319,8 +319,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "verbose-libcurl", 0, 0 );
   if (args_info->exec_given)
     write_into_file(outfile, "exec", args_info->exec_orig, 0);
-  if (args_info->no_shortened_given)
-    write_into_file(outfile, "no-shortened", 0, 0 );
+  if (args_info->no_resolve_given)
+    write_into_file(outfile, "no-resolve", 0, 0 );
   if (args_info->no_verify_given)
     write_into_file(outfile, "no-verify", 0, 0 );
   if (args_info->category_http_given)
@@ -612,7 +612,7 @@ cmdline_parser_internal (
         { "quiet",  0, NULL, 'q' },
         { "verbose-libcurl",  0, NULL, 0 },
         { "exec", 1, NULL, 0 },
-        { "no-shortened", 0, NULL, 's' },
+        { "no-resolve", 0, NULL, 'r' },
         { "no-verify",  0, NULL, 'n' },
         { "category-http",  0, NULL, 0 },
         { "category-mms", 0, NULL, 0 },
@@ -627,7 +627,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hqsnaf:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hqrnaf:", long_options, &option_index);
 
       if (c == -1) break; /* Exit from `while (1)' loop.  */
 
@@ -650,14 +650,14 @@ cmdline_parser_internal (
             goto failure;
 
           break;
-        case 's': /* Do not decompress shortened URLs.  */
+        case 'r': /* Do not resolve redirections.  */
 
 
           if (update_arg( 0 ,
-                          0 , &(args_info->no_shortened_given),
-                          &(local_args_info.no_shortened_given), optarg, 0, 0, ARG_NO,
+                          0 , &(args_info->no_resolve_given),
+                          &(local_args_info.no_resolve_given), optarg, 0, 0, ARG_NO,
                           check_ambiguity, override, 0, 0,
-                          "no-shortened", 's',
+                          "no-resolve", 'r',
                           additional_error))
             goto failure;
 

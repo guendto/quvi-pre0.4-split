@@ -29,8 +29,8 @@ option "exec"
     string typestr="arg"
     optional
 
-option "no-shortened"
-    s "Do not decompress shortened URLs"
+option "no-resolve"
+    r "Do not resolve redirections"
     optional
 option "no-verify"
     n "Do not verify media URL"
