@@ -44,11 +44,13 @@ struct mem_s
   char *p;
 };
 
+typedef struct mem_s *mem_t;
+
 size_t
 quvi_write_callback_default(void *p, size_t size, size_t nmemb,
                             void *data)
 {
-  struct mem_s *m = (struct mem_s *)data;
+  mem_t m = (mem_t)data;
   const size_t rsize = size * nmemb;
   void *tmp = _realloc(m->p, m->size + rsize + 1);
   if (tmp)
@@ -300,83 +302,91 @@ QUVIcode query_file_length(_quvi_t quvi, llst_node_t lnk)
   return (rc);
 }
 
+static void set_redirect_opts(_quvi_t q, mem_t m, const char *url)
+{
+  curl_easy_setopt(q->curl, CURLOPT_WRITEDATA, m);
+
+  curl_easy_setopt(q->curl, CURLOPT_WRITEFUNCTION,
+                   (q->write_func)
+                   ? (curl_write_callback) q->write_func
+                   : (curl_write_callback) quvi_write_callback_default);
+
+  /* GET -> HEAD */
+  curl_easy_setopt(q->curl, CURLOPT_URL, url);
+  curl_easy_setopt(q->curl, CURLOPT_FOLLOWLOCATION, 0L);
+}
+
+static void restore_opts(_quvi_t q)
+{
+  curl_easy_setopt(q->curl, CURLOPT_FOLLOWLOCATION, 1L);
+  curl_easy_setopt(q->curl, CURLOPT_HTTPGET, 1L); /* HEAD -> GET */
+}
+
 /**
- * Check if URL is a shortened URL (e.g. dai.ly, goo.gl, etc.) and
- * replace the (shortened) video page URL with the redirect URL.
+ * Check if URL redirects to another location. For example, URL many
+ * shorteners (e.g. is.gd, goo.gl, dai.ly) do this. Replaces the URL
+ * with the new location URL (if any).
  */
-QUVIcode is_shortened_url(_quvi_media_t video)
+QUVIcode resolve_redirection(_quvi_t q, const char *url, char **redirect_url)
 {
   long respcode, conncode;
   CURLcode curlcode;
   struct mem_s mem;
   QUVIcode rc;
 
-  assert(video != NULL);
+  assert(redirect_url != NULL);
+  assert(url != NULL);
 
-  if (video->quvi->status_func)
+  *redirect_url = NULL;
+
+  if (q->status_func)
     {
-      if (video->quvi->status_func(QUVISTATUS_SHORTENED, 0) != QUVI_OK)
+      if (q->status_func(QUVISTATUS_RESOLVE, 0) != QUVI_OK)
         return (QUVI_ABORTEDBYCALLBACK);
     }
 
   memset(&mem, 0, sizeof(mem));
-  curl_easy_setopt(video->quvi->curl, CURLOPT_WRITEDATA, &mem);
-
-  curl_easy_setopt(video->quvi->curl, CURLOPT_WRITEFUNCTION,
-                   (video->quvi->write_func)
-                   ? (curl_write_callback) video->quvi->write_func
-                   : (curl_write_callback) quvi_write_callback_default);
-
-  curl_easy_setopt(video->quvi->curl, CURLOPT_URL, video->page_link);
-  curl_easy_setopt(video->quvi->curl, CURLOPT_FOLLOWLOCATION, 0L);
-  curl_easy_setopt(video->quvi->curl, CURLOPT_NOBODY, 1L);      /* get -> head */
-
-  curlcode = curl_easy_perform(video->quvi->curl);
-
-  curl_easy_setopt(video->quvi->curl, CURLOPT_FOLLOWLOCATION, 1L);      /* reset */
-
-  curl_easy_setopt(video->quvi->curl, CURLOPT_HTTPGET, 1L);     /* reset: head -> get */
+  set_redirect_opts(q, &mem, url);
+  curlcode = curl_easy_perform(q->curl);
+  restore_opts(q);
 
   respcode = 0;
   conncode = 0;
   rc = QUVI_OK;
 
-  curl_easy_getinfo(video->quvi->curl, CURLINFO_RESPONSE_CODE,
-                    &respcode);
-  curl_easy_getinfo(video->quvi->curl, CURLINFO_HTTP_CONNECTCODE,
-                    &conncode);
+  curl_easy_getinfo(q->curl, CURLINFO_RESPONSE_CODE, &respcode);
+  curl_easy_getinfo(q->curl, CURLINFO_HTTP_CONNECTCODE, &conncode);
 
   if (curlcode == CURLE_OK)
     {
-      if (respcode >= 301 && respcode <= 303)
+      if (respcode >= 301 && respcode <= 303) /* New location */
         {
-          /* A redirect. */
+          char *u = NULL;
 
-          char *url = NULL;
+          curl_easy_getinfo(q->curl, CURLINFO_REDIRECT_URL, &u);
+          assert(u != NULL);
 
-          curl_easy_getinfo(video->quvi->curl, CURLINFO_REDIRECT_URL, &url);
-          freprintf(&video->page_link, "%s", url);
+          freprintf(redirect_url, "%s", u);
 
           rc = QUVI_OK;
         }
-      /* respcode >= 301 && respcode <= 303 */
-      else
+      else /* respcode >= 301 && respcode <= 303 */
         {
-          /* Most likely not a shortened URL redirect. Let it pass. */
+          /* Most likely not a redirection. Pass. */
           rc = QUVI_OK;
         }
 
-      if (video->quvi->status_func)
+      if (q->status_func)
         {
           const long param =
-            makelong(QUVISTATUS_SHORTENED, QUVISTATUSTYPE_DONE);
+            makelong(QUVISTATUS_RESOLVE, QUVISTATUSTYPE_DONE);
 
-          rc = video->quvi->status_func(param, 0);
+          rc = q->status_func(param, 0);
         }
     }
-  else
+  else /* Error occurred in libcurl */
     {
-      freprintf(&video->quvi->errmsg, "%s (curlcode=%d, conncode=%ld)",
+      freprintf(&q->errmsg, "%s (curlcode=%d, conncode=%ld)",
                 curl_easy_strerror(curlcode), curlcode, conncode);
 
       rc = QUVI_CURL;
@@ -385,8 +395,8 @@ QUVIcode is_shortened_url(_quvi_media_t video)
   if (mem.p)
     _free(mem.p);
 
-  video->quvi->httpcode = respcode;
-  video->quvi->curlcode = curlcode;
+  q->httpcode = respcode;
+  q->curlcode = curlcode;
 
   return (rc);
 }
