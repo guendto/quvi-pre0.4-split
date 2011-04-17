@@ -15,8 +15,8 @@ plan tests => 2;
 use Test::Quvi;
 
 my $q = Test::Quvi->new;
-my ($r) = $q->run("http://nosupport.url", "--support -qs");
+my ($r) = $q->run("http://nosupport.url", "--support -qr");
 is($r, 0x41, "quvi exit status == QUVI_NOSUPPORT");
 
-($r) = $q->run("http://youtu.be/9dgSa4wmMzk", "--support -qs");
+($r) = $q->run("http://youtu.be/9dgSa4wmMzk", "--support -qr");
 is($r, 0x00, "quvi exit status == QUVI_OK");
