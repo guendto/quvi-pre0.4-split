@@ -107,7 +107,8 @@ and each new value will be quoted ("").
 =item B<-r, --no-resolve>
 
 Do not attempt to resolve URL redirections. If used, most of the
-URLs shortened will stop working with quvi.
+shortened URLs will stop working with quvi. Note that this switch
+has no effect on website scripts that use the quvi.resolve function.
 
 =item B<-n, --no-verify>
 
