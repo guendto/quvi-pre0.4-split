@@ -76,7 +76,7 @@ static void dump_lua_stack(lua_State * L)
 
 static _quvi_media_t qv = NULL;
 
-/* c functions for lua. */
+/* "quvi" object functions for LUA scripts. */
 
 static int l_quvi_fetch(lua_State * l)
 {
@@ -122,6 +122,33 @@ static int l_quvi_fetch(lua_State * l)
   return (1);
 }
 
+static int l_quvi_resolve(lua_State *l)
+{
+  char *redirect_url;
+  luaL_Buffer b;
+  QUVIcode rc;
+  _quvi_t q;
+
+  if (!lua_isstring(l,1))
+    luaL_error(l, "`quvi.resolve' expects `url' argument");
+
+  q = qv->quvi;
+  rc = resolve_redirection(q, lua_tostring(l,1), &redirect_url);
+
+  if (rc == QUVI_OK)
+    {
+      luaL_buffinit(l,&b);
+      luaL_addstring(&b, redirect_url ? redirect_url : "");
+      luaL_pushresult(&b);
+    }
+  else
+    luaL_error(l, q->errmsg);
+
+  _free(redirect_url);
+
+  return (1);
+}
+
 #ifdef _0 /* Replaced by quvi/util:unescape in 0.2.14 */
 static int l_quvi_unescape(lua_State * l)
 {
@@ -142,8 +169,6 @@ static int l_quvi_unescape(lua_State * l)
   return (1);
 }
 #endif
-
-/* wrapper. */
 
 static QUVIcode new_lua_script(_quvi_lua_script_t * dst)
 {
@@ -273,6 +298,7 @@ scan_known_dirs(llst_node_t * dst, const char *spath,
 static const luaL_Reg reg_meth[] =
 {
   {"fetch", l_quvi_fetch},
+  {"resolve", l_quvi_resolve},
 #ifdef _0
   {"unescape", l_quvi_unescape},
 #endif
@@ -285,7 +311,7 @@ static int lua_files_only(const struct dirent *de)
   return (de->d_name[0] != '.' && ext != 0 && strcmp(ext, ".lua") == 0);
 }
 
-/* init. */
+/* Init. */
 
 int init_lua(_quvi_t quvi)
 {

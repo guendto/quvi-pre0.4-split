@@ -75,41 +75,49 @@ typedef enum
 /** @enum QUVIstatus Status codes */
 typedef enum
 {
-  QUVISTATUS_FETCH  = 0x00,   /**< Status changed to fetch (page, config, etc.) */
-  QUVISTATUS_VERIFY,          /**< Status changed to verify media URL */
-  QUVISTATUS_SHORTENED        /**< Status changed to check for shortened URL */
+  QUVISTATUS_FETCH  = 0x00, /**< Status changed to fetch data from URL */
+  QUVISTATUS_VERIFY,        /**< Status changed to verify media URL */
+  QUVISTATUS_RESOLVE,       /**< Status changed to resolve redirection */
+
+  /* Deprecated as of 0.2.16. Note that these exist only for
+   * backward-compatibility. Destined to be removed in 0.2.20. */
+
+  QUVISTATUS_SHORTENED = 0x2 /**< Status changed to check for shortened URL
+@deprecated Since 0.2.16, use QUVISTATUS_RESOLVE instead */
+
 } QUVIstatus;
 
 /** @enum QUVIstatusType Status type codes */
 typedef enum
 {
-  /* QUVISTATUS_FETCH: */
+  /* QUVISTATUS_FETCH */
   QUVISTATUSTYPE_PAGE = 0x00,   /**< Fetching page */
   QUVISTATUSTYPE_CONFIG,        /**< Fetching config */
   QUVISTATUSTYPE_PLAYLIST,      /**< Fetching playlist */
-  /* Generic types: */
+  /* Common types */
   QUVISTATUSTYPE_DONE           /**< General purpose "done" status type */
+  /* Add new ones below */
 } QUVIstatusType;
 
-/** @enum QUVIoption Option codes to be used with quvi_setopt()
-*
-* If QUVIOPT_NOSHORTENED is set to >= 1, the library will not "decompress"
-* the shortened URLs before using them.  Unless shortened URLs are
-* "decompressed", the library will report them as "unsupported".
-*
-* If QUVIOPT_NOVERIFY is set to >= 1, the library will not verify the
-* media URL, and query the details (e.g. length in bytes, content type,
-* file suffix). Unless the download URLs are verified, the library will
-* report invalid values (0 or empty strings) for these details.
-*/
+/** @enum QUVIoption Option codes to be used with quvi_setopt() */
 typedef enum
 {
   QUVIOPT_FORMAT = 0x00,  /**< Requested format */
-  QUVIOPT_NOVERIFY,       /**< Do not verify URL */
+  QUVIOPT_NOVERIFY,       /**< Do not verify URL; content-type,
+  content-length (of HTTP), etc. will not be queried */
   QUVIOPT_STATUSFUNCTION, /**< Callback function for status updates */
   QUVIOPT_WRITEFUNCTION,  /**< Callback function for writing data */
-  QUVIOPT_NOSHORTENED,    /**< Do not "decompress" shortened URLs */
-  QUVIOPT_CATEGORY        /**< Bit pattern of (OR'd) website script categories */
+  QUVIOPT_NORESOLVE,      /**< Do not attempt to resolve URLs that may
+  be redirections, e.g. URL shortening services typically use
+  redirections */
+  QUVIOPT_CATEGORY,       /**< Bit pattern of (OR'd) website script categories */
+
+  /* Deprecated as of 0.2.16. Note that these exist only for
+   * backward-compatibility. Destined to be removed in 0.2.20. */
+
+  QUVIOPT_NOSHORTENED = 0x4    /**< Do not "decompress" shortened URLs,
+  @deprecated since 0.2.16, use QUVIOPT_NORESOLVE instead */
+
 } QUVIoption;
 
 #define QUVIINFO_VOID       0x100000 /**< void type */
@@ -192,10 +200,9 @@ typedef enum
   QUVIPROP_MEDIADURATION         = QUVIPROPERTY_DOUBLE + 13, /**< Media duration in msecs */
   /* Add new ones below. Bump _QUVIPROP_LAST accordingly. */
 
-  /* -- Deprecated as of 0.2.15. Note that these exist only for
-   * backward-compatibility. This may change in the future. New
-   * applications should use the appropriate QUVIPROP_MEDIA* enums
-   * instead. */
+  /* Deprecated as of 0.2.15. Note that these exist only for
+   * backward-compatibility. Destined to be removed in 0.2.20.
+   * New applications should use the QUVIPROP_MEDIA* values instead. */
 
   QUVIPROP_VIDEOID         = QUVIPROPERTY_STRING + 4, /**< Video ID
 @deprecated Since 0.2.15, use QUVIPROP_MEDIAID instead */
@@ -244,14 +251,14 @@ typedef void *quvi_video_t;
  *
  *   switch (status)
  *     {
- *     case QUVISTATUS_SHORTENED:
+ *     case QUVISTATUS_RESOLVE:
  *       switch (type)
  *       {
  *       case QUVISTATUSTYPE_DONE:
  *         puts("done.");
  *         break;
  *       default:
- *         printf (":: Check for shortened URL ...");
+ *         printf (":: Check for URL redirection ...");
  *         break;
  *       }
  *     break;
@@ -653,20 +660,21 @@ extern "C" {
   * @brief Check whether the library could parse the URL
   *
   * The library checks the URL with each website script to see whether it
-  * could parse the URL.
+  * could parse the URL. This function is designed to work without an
+  * Internet connection.
   *
-  * This function is designed to work without an Internet connection.
-  * This design has a drawback: most shortened URLs (e.g. is.gd, bit.ly,
-  * goo.gl, etc.) will fail with this function (QUVI_NOSUPPORTED).
-  * Such URLs would normally have to be resolved over an Internet
-  * connection. See also the notes.
+  * Most URL shortening services require that the URL is resolved over
+  * an Internet connection. This means that most "shortened" URLs will
+  * fail with this function (QUVI_NOSUPPORT).
   *
   * @param quvi Handle to session
   * @param url Null-terminated string to an URL
   *
   * @note
-  *   - Fails (QUVI_NOSUPPORT) with most shortened URLs (e.g. is.gd, goo.gl)
-  *   - Works with a limited number of URL shorteners (youtu.be, dai.ly)
+  *   - Fails (QUVI_NOSUPPORT) with most "shortened" URLs
+  *   - Works with a limited number of URL shorteners, e.g. youtu.be and
+  *   dai.ly, in which cases the LUA scripts can resolve to the
+  *   destination URL without an Internet connection
   *
   * @since 0.2.9
   *

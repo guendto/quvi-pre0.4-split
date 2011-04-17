@@ -40,48 +40,48 @@
 
 struct _quvi_s
 {
-  char *format;
-  long no_verify;
-  long no_shortened;
-  long category;
   quvi_callback_status status_func;
   quvi_callback_write write_func;
-  void *curl;
-  long httpcode;
-  long curlcode;
-  char *errmsg;
-  llst_node_t util_scripts;
   llst_node_t website_scripts;
   llst_node_t curr_next_host;
+  llst_node_t util_scripts;
+  long no_resolve;
+  long no_verify;
   lua_State *lua;
+  long category;
+  long httpcode;
+  long curlcode;
+  char *format;
+  char *errmsg;
+  void *curl;
 };
 
 typedef struct _quvi_s *_quvi_t;
 
 struct _quvi_video_link_s
 {
-  char *url;
-  char *suffix;
   char *content_type;
   double length;
+  char *suffix;
+  char *url;
 };
 
 typedef struct _quvi_video_link_s *_quvi_video_link_t;
 
 struct _quvi_video_s
 {
-  _quvi_t quvi;
-  char *id;
-  char *title;
-  char *start_time;
   char *thumbnail_url;
-  double duration;
-  char *charset;
-  char *page_link;
+  char *redirect_url;
+  char *start_time;
   llst_node_t link;             /* holds all essential to video links */
   llst_node_t curr;             /* current (link) node */
+  double duration;
+  char *page_link;
+  char *charset;
   char *host_id;
-  char *redirect_url;
+  _quvi_t quvi;
+  char *title;
+  char *id;
 };
 
 typedef struct _quvi_video_s *_quvi_media_t;

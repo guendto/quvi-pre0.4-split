@@ -142,16 +142,27 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
   if (!video)
     return (QUVI_MEM);
 
-  *dst = video;
   video->quvi = quvi;
+  *dst = video;
 
   freprintf(&video->page_link, "%s", url);
 
-  if (!video->quvi->no_shortened)
+  if (!video->quvi->no_resolve)
     {
-      rc = is_shortened_url(video);
+      char *redirect_url = NULL;
+
+      rc = resolve_redirection(quvi, video->page_link, &redirect_url);
+
       if (rc != QUVI_OK)
         return (rc);
+      else
+        {
+          if (redirect_url)
+            {
+              freprintf(&video->page_link, "%s", redirect_url);
+              _free(redirect_url);
+            }
+        }
     }
 
   while (1)
@@ -161,8 +172,10 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
         return (rc);
       else
         {
-          if (strlen(video->redirect_url))      /* Found a redirect. */
+          if (strlen(video->redirect_url))
             {
+              /* Found an "in-script redirection instruction", not be
+               * confused with "resolving redirection" */
               freprintf(&video->page_link, "%s", video->redirect_url);
               continue;
             }
@@ -256,8 +269,8 @@ static QUVIcode _setopt(_quvi_t quvi, QUVIoption opt, va_list arg)
     case QUVIOPT_WRITEFUNCTION:
       quvi->write_func = va_arg(arg, quvi_callback_write);
       break;
-    case QUVIOPT_NOSHORTENED:
-      _setn(quvi->no_shortened);
+    case QUVIOPT_NORESOLVE:
+      _setn(quvi->no_resolve);
     case QUVIOPT_CATEGORY:
       _setn(quvi->category);
     default:
