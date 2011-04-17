@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-04-15" "0.2.15" "quvi manual"
+.TH quvi 1 "2011-04-17" "0.2.16" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -217,9 +217,10 @@ specifiers in \fIarg\fR:
 .Sp
 Note that \fIall\fR occurences of the specifier will be replaced,
 and each new value will be quoted ("").
-.IP "\fB\-s, \-\-no\-shortened\fR" 4
-.IX Item "-s, --no-shortened"
-Do not \*(L"decompress\*(R" shortened URLs before using them.
+.IP "\fB\-r, \-\-no\-resolve\fR" 4
+.IX Item "-r, --no-resolve"
+Do not attempt to resolve \s-1URL\s0 redirections. If used, most of the
+URLs shortened will stop working with quvi.
 .IP "\fB\-n, \-\-no\-verify\fR" 4
 .IX Item "-n, --no-verify"
 Do not verify media \s-1URL\s0 after parsing it. Normally this serves two
@@ -287,8 +288,8 @@ Dump \fBall\fR supported websites.
 See also \*(L"\s-1NOTES\s0 \- \s-1PROTOCOL\s0 \s-1CATEGORIES\s0\*(R"
 .IP "quvi \-\-support \s-1URL\s0" 4
 .IX Item "quvi --support URL"
-Check if \s-1URL\s0 is supported. Note that some of the shortened URLs will
-fail with this. quvi exit status will be the last exit status of the
+Check if \s-1URL\s0 is supported. Note that most \*(L"shortened\*(R" URLs will fail
+with this. The exit status will be the last exit status of the
 last checked \s-1URL\s0. See also \*(L"\s-1EXIT\s0 \s-1STATUS\s0\*(R".
 .IP "quvi \-\-support \-\-category\-all \s-1URL\s0" 4
 .IX Item "quvi --support --category-all URL"

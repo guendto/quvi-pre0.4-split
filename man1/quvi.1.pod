@@ -104,9 +104,10 @@ specifiers in I<arg>:
 Note that I<all> occurences of the specifier will be replaced,
 and each new value will be quoted ("").
 
-=item B<-s, --no-shortened>
+=item B<-r, --no-resolve>
 
-Do not "decompress" shortened URLs before using them.
+Do not attempt to resolve URL redirections. If used, most of the
+URLs shortened will stop working with quvi.
 
 =item B<-n, --no-verify>
 
@@ -192,8 +193,8 @@ See also L</NOTES - PROTOCOL CATEGORIES>
 
 =item quvi --support URL
 
-Check if URL is supported. Note that some of the shortened URLs will
-fail with this. quvi exit status will be the last exit status of the
+Check if URL is supported. Note that most "shortened" URLs will fail
+with this. The exit status will be the last exit status of the
 last checked URL. See also L</EXIT STATUS>.
 
 =item quvi --support --category-all URL
