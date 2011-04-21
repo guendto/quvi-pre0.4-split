@@ -36,6 +36,7 @@
 #include "quvi/quvi.h"
 #include "internal.h"
 #include "util.h"
+#include "net.h"
 #include "curl_wrap.h"
 #include "lua_wrap.h"
 
@@ -80,44 +81,30 @@ static _quvi_media_t qv = NULL;
 
 static int l_quvi_fetch(lua_State * l)
 {
-  QUVIstatusType st;
-  luaL_Buffer b;
-  _quvi_t quvi;
+  _quvi_net_t n;
   QUVIcode rc;
-  char *data;
-
-  quvi = qv->quvi;
-  st = QUVISTATUSTYPE_PAGE;
 
   if (!lua_isstring(l, 1))
     luaL_error(l, "`quvi.fetch' expects `url' argument");
 
-  rc = fetch_to_mem(qv, lua_tostring(l, 1), l, &data);
+  rc = fetch_wrapper(qv->quvi, l, &n); /* net.c */
 
   if (rc == QUVI_OK)
     {
-      if (data != NULL)
-        {
-          luaL_buffinit(l, &b);
-          luaL_addstring(&b, data);
-          luaL_pushresult(&b);
-          _free(data);
-        }
-      else
-        {
-          /* Rare. Server returns an empty page (no content). Possibly related
-           * to a proxy software in use. cURL returns CURLE_OK so the only way
-           * we can tell this is by checking the data pointer (==NULL). */
+      luaL_Buffer b;
 
-          luaL_error(l, "server returned no data (quvicode=%d, curlcode=0)",
-                     rc);
-        }
+      if (!qv->charset)
+        run_lua_charset_func(qv, n->fetch.content);
+
+      luaL_buffinit(l, &b);
+      luaL_addstring(&b, n->fetch.content);
+      luaL_pushresult(&b);
     }
-  else
-    {
-      _free(data);
-      luaL_error(l, qv->quvi->errmsg);
-    }
+
+  free_net_handle(&n);
+
+  if (rc != QUVI_OK)
+    luaL_error(l, qv->quvi->errmsg);
 
   return (1);
 }
@@ -125,26 +112,25 @@ static int l_quvi_fetch(lua_State * l)
 static int l_quvi_resolve(lua_State *l)
 {
   char *redirect_url;
-  luaL_Buffer b;
   QUVIcode rc;
-  _quvi_t q;
 
   if (!lua_isstring(l,1))
     luaL_error(l, "`quvi.resolve' expects `url' argument");
 
-  q = qv->quvi;
-  rc = resolve_redirection(q, lua_tostring(l,1), &redirect_url);
+  rc = resolve_wrapper(qv->quvi, lua_tostring(l,1), &redirect_url); /* net.c */
 
   if (rc == QUVI_OK)
     {
+      luaL_Buffer b;
       luaL_buffinit(l,&b);
       luaL_addstring(&b, redirect_url ? redirect_url : "");
       luaL_pushresult(&b);
     }
-  else
-    luaL_error(l, q->errmsg);
 
   _free(redirect_url);
+
+  if (rc != QUVI_OK)
+    luaL_error(l, qv->quvi->errmsg);
 
   return (1);
 }
