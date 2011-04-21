@@ -36,15 +36,23 @@
 #include "curl_wrap.h"
 #include "util.h"
 
+char *vafreprintf(char **dst, const char *fmt, va_list args)
+{
+  _free(*dst);
+  assert(*dst == NULL);
+
+  vasprintf(dst, fmt, args);
+  va_end(args);
+
+  return (*dst);
+}
+
 char *freprintf(char **dst, const char *fmt, ...)
 {
   va_list args;
 
-  _free(*dst);
-
   va_start(args, fmt);
-  vasprintf(dst, fmt, args);
-  va_end(args);
+  vafreprintf(dst, fmt, args);
 
   return (*dst);
 }
