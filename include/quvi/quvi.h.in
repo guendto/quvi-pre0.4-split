@@ -597,6 +597,16 @@ extern "C" {
    * @{
    */
 
+  /** @brief Network handle
+  * @since 0.2.16
+  */
+  typedef void *quvi_net_t;
+
+  /** @brief Network property option handle
+  * @since 0.2.16
+  */
+  typedef void *quvi_net_propopt_t;
+
   /**
    * @brief Fetch callback function
    *
@@ -662,16 +672,6 @@ extern "C" {
     /* Add new ones below. Bump _QUVINETPROPOPT_LAST accordingly. */
     _QUVINETPROPOPT_LAST = 2 /**< Placeholder */
   } QUVInetPropertyOption;
-
-  /** @brief Network handle
-  * @since 0.2.16
-  */
-  typedef void *quvi_net_t;
-
-  /** @brief Network property option handle
-  * @since 0.2.16
-  */
-  typedef void *quvi_net_propopt_t;
 
   /** @brief TODO */
   QUVIcode quvi_net_getprop(quvi_net_t, QUVInetProperty, ...);
