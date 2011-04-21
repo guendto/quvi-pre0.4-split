@@ -52,7 +52,7 @@ typedef enum
 /** @enum QUVIcode Return codes */
 typedef enum
 {
-  /* Static errors */
+  /* Static error messages. */
   QUVI_OK  = 0x00,        /**< OK */
   QUVI_MEM,               /**< Memory allocation failed */
   QUVI_BADHANDLE,         /**< Bad session handle */
@@ -64,12 +64,24 @@ typedef enum
   QUVI_NOLUAWEBSITE,      /**< Failed to find lua website scripts */
   QUVI_NOLUAUTIL,         /**< Failed to find lua util scripts */
   _INTERNAL_QUVI_LAST,    /**< For library internal use only */
-  /* Dynamically generated errors */
+  /* Non-static error messages. */
   QUVI_PCRE = 0x40, /**< libpcre error occurred @deprecated Since 0.2.9 */
   QUVI_NOSUPPORT,   /**< libquvi does not support the website */
-  QUVI_CURL,        /**< libcurl error occurred */
+  QUVI_CALLBACK,
+  /**< Callback error occurred @since 0.2.16
+   * @sa quvi_callback_fetch
+   * @sa quvi_callback_resolve
+   * @sa quvi_callback_verify */
   QUVI_ICONV,       /**< libiconv error occurred */
-  QUVI_LUA          /**< lua error occurred */
+  QUVI_LUA,         /**< LUA error occurred */
+
+  /* Deprecated as of 0.2.16. Note that these exist only for
+   * backward-compatibility. Destined to be removed in 0.2.20. */
+
+  QUVI_CURL = 0x42
+  /**< libcurl error occurred
+   * @deprecated Since 0.2.16, use QUVI_CALLBACK instead */
+
 } QUVIcode;
 
 /** @enum QUVIstatus Status codes */
@@ -79,11 +91,14 @@ typedef enum
   QUVISTATUS_VERIFY,        /**< Status changed to verify media URL */
   QUVISTATUS_RESOLVE,       /**< Status changed to resolve redirection */
 
+  /* Add new ones below. */
+
   /* Deprecated as of 0.2.16. Note that these exist only for
    * backward-compatibility. Destined to be removed in 0.2.20. */
 
-  QUVISTATUS_SHORTENED = 0x2 /**< Status changed to check for shortened URL
-@deprecated Since 0.2.16, use QUVISTATUS_RESOLVE instead */
+  QUVISTATUS_SHORTENED = 0x2
+  /**< Status changed to check for shortened URL
+   * @deprecated Since 0.2.16, use QUVISTATUS_RESOLVE instead */
 
 } QUVIstatus;
 
@@ -91,32 +106,60 @@ typedef enum
 typedef enum
 {
   /* QUVISTATUS_FETCH */
+
   QUVISTATUSTYPE_PAGE = 0x00,   /**< Fetching page */
   QUVISTATUSTYPE_CONFIG,        /**< Fetching config */
   QUVISTATUSTYPE_PLAYLIST,      /**< Fetching playlist */
+
   /* Common types */
   QUVISTATUSTYPE_DONE           /**< General purpose "done" status type */
+
   /* Add new ones below */
 } QUVIstatusType;
 
 /** @enum QUVIoption Option codes to be used with quvi_setopt() */
 typedef enum
 {
-  QUVIOPT_FORMAT = 0x00,  /**< Requested format */
-  QUVIOPT_NOVERIFY,       /**< Do not verify URL; content-type,
-  content-length (of HTTP), etc. will not be queried */
-  QUVIOPT_STATUSFUNCTION, /**< Callback function for status updates */
-  QUVIOPT_WRITEFUNCTION,  /**< Callback function for writing data */
-  QUVIOPT_NORESOLVE,      /**< Do not attempt to resolve URLs that may
-  be redirections, e.g. URL shortening services typically use
-  redirections */
-  QUVIOPT_CATEGORY,       /**< Bit pattern of (OR'd) website script categories */
+  QUVIOPT_FORMAT = 0x00,
+  /**< Requested format */
+
+  QUVIOPT_NOVERIFY,
+  /**< Do not verify URL; content-type, content-length (of HTTP), etc.
+    will not be queried */
+
+  QUVIOPT_STATUSFUNCTION,
+  /**< Callback function for status updates
+   * @sa quvi_callback_status */
+
+  QUVIOPT_WRITEFUNCTION,
+  /**< Callback function for writing data
+   * @sa quvi_callback_write  */
+
+  QUVIOPT_NORESOLVE,
+  /**< Do not attempt to resolve URLs that may be redirections,
+   * e.g. URL shortening services typically use redirections */
+
+  QUVIOPT_CATEGORY,
+  /**< Bit pattern of (OR'd) website script categories */
+
+  QUVIOPT_FETCHFUNCTION,
+  /**< Callback function for fetching data
+   * @sa quvi_callback_fetch */
+
+  QUVIOPT_RESOLVEFUNCTION,
+  /**< Callback function for resolving URL redirections
+   * @sa quvi_callback_resolve */
+
+  QUVIOPT_VERIFYFUNCTION,
+  /**< Callback function for verifying media stream URL
+   * @sa quvi_callback_verify */
 
   /* Deprecated as of 0.2.16. Note that these exist only for
    * backward-compatibility. Destined to be removed in 0.2.20. */
 
-  QUVIOPT_NOSHORTENED = 0x4    /**< Do not "decompress" shortened URLs,
-  @deprecated since 0.2.16, use QUVIOPT_NORESOLVE instead */
+  QUVIOPT_NOSHORTENED = 0x4
+  /**< Do not "decompress" shortened URLs,
+   * @deprecated since 0.2.16, use QUVIOPT_NORESOLVE instead */
 
 } QUVIoption;
 
@@ -168,58 +211,108 @@ typedef enum
 */
 typedef enum
 {
-  QUVIINFO_NONE        = 0x00,             /**< Unused */
-  QUVIINFO_CURL        = QUVIINFO_VOID + 1,/**< Session libcurl handle */
-  QUVIINFO_CURLCODE    = QUVIINFO_LONG + 2,/**< Last libcurl returned code */
-  QUVIINFO_HTTPCODE    = QUVIINFO_LONG + 3,/**< Last libcurl returned HTTP code */
-  /* Add new ones below. */
-  _QUVIINFO_LAST        = 3                 /**< Placeholder */
+  QUVIINFO_NONE = 0x00,
+  /**< Placeholder */
+
+  QUVIINFO_CURL = QUVIINFO_VOID + 1,
+  /**< Session libcurl handle */
+
+  QUVIINFO_CURLCODE = QUVIINFO_LONG + 2,
+  /**< Last libcurl returned code
+   * @deprecated Since 0.2.16 */
+
+  QUVIINFO_HTTPCODE = QUVIINFO_LONG + 3,
+  /**< Last returned HTTP code by a server */
+
+  /* Add new ones below. Bump _QUVIINFO_LAST accordingly. */
+
+  _QUVIINFO_LAST = 3 /**< Placeholder */
 } QUVIinfo;
 
 #define QUVIPROPERTY_STRING     0x100000 /**< string type */
 #define QUVIPROPERTY_LONG       0x200000 /**< long type */
 #define QUVIPROPERTY_DOUBLE     0x300000 /**< double type */
+#define QUVIPROPERTY_VOID       0x400000 /**< void type */
 #define QUVIPROPERTY_TYPEMASK   0xf00000 /**< type mask */
 
-/** @enum QUVIproperty Video property codes to be used with quvi_getprop() */
+/** @enum QUVIproperty Media property codes to be used with quvi_getprop() */
 typedef enum
 {
-  QUVIPROP_NONE          = 0x00, /**< Unused */
-  QUVIPROP_HOSTID        = QUVIPROPERTY_STRING + 1, /**< Host ID */
-  QUVIPROP_PAGEURL       = QUVIPROPERTY_STRING + 2, /**< Page URL */
-  QUVIPROP_PAGETITLE     = QUVIPROPERTY_STRING + 3, /**< Page title */
-  QUVIPROP_MEDIAID       = QUVIPROPERTY_STRING + 4, /**< Media ID */
-  QUVIPROP_MEDIAURL      = QUVIPROPERTY_STRING + 5, /**< Media URL */
-  QUVIPROP_MEDIACONTENTLENGTH    = QUVIPROPERTY_DOUBLE + 6, /**< Media content length in bytes */
-  QUVIPROP_MEDIACONTENTTYPE      = QUVIPROPERTY_STRING + 7, /**< Media content-type */
-  QUVIPROP_FILESUFFIX    = QUVIPROPERTY_STRING + 8, /**< Parsed file suffix */
-  QUVIPROP_HTTPCODE      = QUVIPROPERTY_LONG   + 9, /**< Last libcurl returned HTTP code */
-  QUVIPROP_FORMAT        = QUVIPROPERTY_STRING + 10, /**< Requested format, set using QUVIOPT_FORMAT */
-  QUVIPROP_STARTTIME     = QUVIPROPERTY_STRING + 11, /**< Start time for media */
-  QUVIPROP_MEDIATHUMBNAILURL     = QUVIPROPERTY_STRING + 12, /**< Media cover URL, if any */
-  QUVIPROP_MEDIADURATION         = QUVIPROPERTY_DOUBLE + 13, /**< Media duration in msecs */
+  QUVIPROP_NONE = 0x00,
+  /**< Placeholder */
+
+  QUVIPROP_HOSTID = QUVIPROPERTY_STRING + 1,
+  /**< Host ID */
+
+  QUVIPROP_PAGEURL = QUVIPROPERTY_STRING + 2,
+  /**< Page URL */
+
+  QUVIPROP_PAGETITLE = QUVIPROPERTY_STRING + 3,
+  /**< Page title */
+
+  QUVIPROP_MEDIAID = QUVIPROPERTY_STRING + 4,
+  /**< Media ID */
+
+  QUVIPROP_MEDIAURL = QUVIPROPERTY_STRING + 5,
+  /**< Media URL */
+
+  QUVIPROP_MEDIACONTENTLENGTH = QUVIPROPERTY_DOUBLE + 6,
+  /**< Media content length in bytes */
+
+  QUVIPROP_MEDIACONTENTTYPE = QUVIPROPERTY_STRING + 7,
+  /**< Media content-type */
+
+  QUVIPROP_FILESUFFIX = QUVIPROPERTY_STRING + 8,
+  /**< Parsed file suffix */
+
+  QUVIPROP_HTTPCODE = QUVIPROPERTY_LONG   + 9,
+  /**< Last libcurl returned HTTP code */
+
+  QUVIPROP_FORMAT = QUVIPROPERTY_STRING + 10,
+  /**< Requested format, set using QUVIOPT_FORMAT */
+
+  QUVIPROP_STARTTIME = QUVIPROPERTY_STRING + 11,
+  /**< Start time for media */
+
+  QUVIPROP_MEDIATHUMBNAILURL = QUVIPROPERTY_STRING + 12,
+  /**< Media cover URL, if any */
+
+  QUVIPROP_MEDIADURATION = QUVIPROPERTY_DOUBLE + 13,
+  /**< Media duration in msecs */
+
   /* Add new ones below. Bump _QUVIPROP_LAST accordingly. */
 
   /* Deprecated as of 0.2.15. Note that these exist only for
    * backward-compatibility. Destined to be removed in 0.2.20.
    * New applications should use the QUVIPROP_MEDIA* values instead. */
 
-  QUVIPROP_VIDEOID         = QUVIPROPERTY_STRING + 4, /**< Video ID
-@deprecated Since 0.2.15, use QUVIPROP_MEDIAID instead */
-  QUVIPROP_VIDEOURL        = QUVIPROPERTY_STRING + 5, /**< Video URL
-@deprecated Since 0.2.15, use QUVIPROP_MEDIAURL instead */
-  QUVIPROP_VIDEOFILELENGTH = QUVIPROPERTY_DOUBLE + 6, /**< Video file
-length @deprecated Since 0.2.15, use QUVIPROP_MEDIACONTENTLENGTH instead */
-  QUVIPROP_VIDEOFILECONTENTTYPE = QUVIPROPERTY_STRING + 7, /**< Video file
-content-type @deprecated Since 0.2.15, use QUVIPROP_MEDIACONTENTTYPE
-instead */
-  QUVIPROP_VIDEOFILESUFFIX = QUVIPROPERTY_STRING + 8, /**< Video file
-suffix @deprecated Since 0.2.15, use QUVIPROP_FILESUFFIX instead */
-  QUVIPROP_VIDEOFORMAT     = QUVIPROPERTY_STRING + 10, /**< Requested
-video format, set using QUVIOPT_FORMAT @deprecated Since 0.2.15, use
-QUVIPROP_FORMAT instead */
+  QUVIPROP_VIDEOID = QUVIPROPERTY_STRING + 4,
+  /**< Video ID
+   * @deprecated Since 0.2.15, use QUVIPROP_MEDIAID instead */
 
-  _QUVIPROP_LAST          = 13 /**< Placeholder */
+  QUVIPROP_VIDEOURL = QUVIPROPERTY_STRING + 5,
+  /**< Video URL
+   * @deprecated Since 0.2.15, use QUVIPROP_MEDIAURL instead */
+
+  QUVIPROP_VIDEOFILELENGTH = QUVIPROPERTY_DOUBLE + 6,
+  /**< Video file length
+   * @deprecated Since 0.2.15, use QUVIPROP_MEDIACONTENTLENGTH instead */
+
+  QUVIPROP_VIDEOFILECONTENTTYPE = QUVIPROPERTY_STRING + 7,
+  /**< Video file content-type
+   * @deprecated Since 0.2.15, use QUVIPROP_MEDIACONTENTTYPE instead */
+
+  QUVIPROP_VIDEOFILESUFFIX = QUVIPROPERTY_STRING + 8,
+  /**< Video file suffix
+   * @deprecated Since 0.2.15, use QUVIPROP_FILESUFFIX instead */
+
+  QUVIPROP_VIDEOFORMAT = QUVIPROPERTY_STRING + 10,
+  /**< Requested video format, set using QUVIOPT_FORMAT
+   * @deprecated Since 0.2.15, use QUVIPROP_FORMAT instead */
+
+  _QUVIPROP_LAST = 13
+  /**< Placeholder */
+
 } QUVIproperty;
 
 /** @brief libquvi session handle */
@@ -232,6 +325,7 @@ typedef void *quvi_media_t;
 * @deprecated Since 0.2.15, use quvi_media_t instead
 */
 typedef void *quvi_video_t;
+
 
 /**
  * @brief Status callback function
@@ -350,12 +444,7 @@ typedef uint8_t  quvi_byte;
 extern "C" {
 #endif /* __cplusplus */
 
-  /** @defgroup libquvi_api Functions
-   * Describes the available C API functions.
-   * @{
-   */
-
-  /** @defgroup libquvi_init Initializing
+  /** @defgroup libquvi_init Initialize
    * @{
    */
 
@@ -405,7 +494,39 @@ extern "C" {
   QUVIcode quvi_init(quvi_t *quvi);
 
 
-  /** @defgroup libquvi_release Releasing
+  /** @defgroup libquvi_getinfo Session info
+   * @{
+   */
+
+  /**
+  * @brief Get information from a libquvi session handle
+  *
+  * @param quvi Handle to a libquvi session
+  * @param info Info ID
+  * @param ... Parameter
+  *
+  * @return Non-zero if an error occurred
+  *
+  * @warning Do not attempt to free the memory returned by this function
+  *
+  * @sa QUVIinfo
+  *
+  * Example:
+  * @code
+  * CURL curl;
+  * long last_httpcode;
+  * ...
+  * quvi_getinfo(quvi, QUVIINFO_CURL, &curl);
+  * quvi_getinfo(quvi, QUVIINFO_HTTPCODE, &last_httpcode);
+  * ...
+  * @endcode
+  */
+  QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
+
+  /** @} */ /* End of libquvi_getinfo group. */
+
+
+  /** @defgroup libquvi_release Release
    * @{
    */
 
@@ -430,7 +551,7 @@ extern "C" {
   /** @} */ /* End of libquvi_init group. */
 
 
-  /** @defgroup libquvi_setup Setting up
+  /** @defgroup libquvi_setup Configure
    * @{
    */
 
@@ -465,41 +586,111 @@ extern "C" {
    */
   size_t quvi_write_callback_default(void *ptr, size_t size, size_t nmemb, void *stream);
 
-  /** @} */ /* End of libquvi_setup group. */
-
-
-  /** @defgroup libquvi_getinfo Getting session information
+  /** @defgroup libquvi_net_if Network interface
+   *
+   * The network interface can be used to override the default use of
+   * libcurl which libquvi uses for various network related tasks, e.g.
+   * fetching, resolving (to HTTP redirections) and verifying media
+   * stream URLs.
+   *
+   * @since 0.2.16
    * @{
    */
 
   /**
-  * @brief Get information from a libquvi session handle
-  *
-  * @param quvi Handle to a libquvi session
-  * @param info Info ID
-  * @param ... Parameter
-  *
-  * @return Non-zero if an error occurred
-  *
-  * @warning Do not attempt to free the memory returned by this function
-  *
-  * @sa QUVIinfo
-  *
-  * Example:
-  * @code
-  * CURL curl;
-  * long last_httpcode;
-  * ...
-  * quvi_getinfo(quvi, QUVIINFO_CURL, &curl);
-  * quvi_getinfo(quvi, QUVIINFO_HTTPCODE, &last_httpcode);
-  * ...
-  * @endcode
+   * @brief Fetch callback function
+   *
+   * This function gets called by libquvi when the library (e.g. website
+   * script) attempts to fetch data from an URL.
+   *
+   * @since 0.2.16
+   */
+  typedef int (*quvi_callback_fetch) (quvi_net_t);
+
+  /**
+   * @brief Resolve callback function
+   *
+   * This function gets called by libquvi when the library (e.g. website
+   * script) attempts to resolve an URL. A typical example of this would be
+   * when the library checks if an URL is a redirection to a new URL.
+   *
+   * @since 0.2.16
+   */
+  typedef int (*quvi_callback_resolve) (quvi_net_t);
+
+  /**
+   * @brief Verify callback function
+   *
+   * This function gets called by libquvi when the library verifies
+   * that the media stream URL works.
+   *
+   * @since 0.2.16
+   */
+  typedef int (*quvi_callback_verify) (quvi_net_t);
+
+  /** @enum QUVInetProperty Network property codes to be used with
+   * quvi_net_getprop() */
+  typedef enum
+  {
+    QUVINETPROP_NONE = 0x00, /**< Unused */
+    QUVINETPROP_URL = QUVIPROPERTY_STRING + 1, /**< URL */
+    QUVINETPROP_REDIRECTURL = QUVIPROPERTY_STRING + 2, /**< Redirection URL */
+    QUVINETPROP_CONTENT = QUVIPROPERTY_STRING + 3, /**< Fetch content */
+    QUVINETPROP_CONTENTTYPE = QUVIPROPERTY_STRING + 4, /**< Content-type parsed
+  from the returned HTTP header */
+    QUVINETPROP_CONTENTLENGTH = QUVIPROPERTY_DOUBLE + 5, /**< Content-length
+  parsed from the returned HTTP header */
+    QUVINETPROP_RESPONSECODE = QUVIPROPERTY_DOUBLE + 6, /**< Response (or HTTP) code returned by the server */
+    QUVINETPROP_CONNECTCODE = QUVIPROPERTY_DOUBLE + 7,  /**< Connect code,
+  historically libquvi sets this to whatever libcurl returns as
+  CURLINFO_HTTP_CONNECTCODE */
+    QUVINETPROP_OPTIONS = QUVIPROPERTY_VOID + 8, /**< Network options,
+  e.g. arbitrary cookie, etc. */
+
+    /* Add new ones below. Bump _QUVINETPROP_LAST accordingly. */
+
+    _QUVINETPROP_LAST = 8 /**< Placeholder */
+  } QUVInetProperty;
+
+  /** enum QUVInetPropertyOption Network property option codes to be used
+   * with quvi_net_getpropopt() */
+  typedef enum
+  {
+    QUVINETPROPOPT_NONE = 0x00, /**< Unused */
+    QUVINETPROPOPT_NAME = QUVIPROPERTY_STRING + 1, /**< Name of the property option */
+    QUVINETPROPOPT_VALUE = QUVIPROPERTY_STRING + 2, /**< Value of the property option */
+    /* Add new ones below. Bump _QUVINETPROPOPT_LAST accordingly. */
+    _QUVINETPROPOPT_LAST = 2 /**< Placeholder */
+  } QUVInetPropertyOption;
+
+  /** @brief Network handle
+  * @since 0.2.16
   */
-  QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
+  typedef void *quvi_net_t;
 
-  /** @} */ /* End of libquvi_getinfo group. */
+  /** @brief Network property option handle
+  * @since 0.2.16
+  */
+  typedef void *quvi_net_propopt_t;
 
-  /** @defgroup libquvi_parse Parsing media URLs
+  /** @brief TODO */
+  QUVIcode quvi_net_getprop(quvi_net_t, QUVInetProperty, ...);
+
+  /** @brief TODO */
+  QUVIcode quvi_net_setprop(quvi_net_t, QUVInetProperty, ...);
+
+  /** @brief TODO */
+  QUVIcode quvi_net_getpropopt(quvi_net_propopt_t, QUVInetPropertyOption, ...);
+
+  /** @brief TODO */
+  QUVIcode quvi_net_seterr(quvi_net_t, const char *, ...);
+
+  /** @} */ /* End of libquvi_net_if Network interface */
+
+  /** @} */ /* End of libquvi_setup group. */
+
+
+  /** @defgroup libquvi_parse Parse
    * @{
    */
 
@@ -528,7 +719,7 @@ extern "C" {
   QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t *media);
 
 
-  /** @defgroup libquvi_getprop Getting parsed media properties
+  /** @defgroup libquvi_getprop Media properties
    * @{
    */
 
@@ -555,13 +746,6 @@ extern "C" {
   * @endcode
   */
   QUVIcode quvi_getprop(quvi_media_t media, QUVIproperty prop, ...);
-
-  /** @} */ /* End of libquvi_getprop group. */
-
-
-  /** @defgroup libquvi_parse_util Utility functions
-   * @{
-   */
 
   /**
   * @brief Move to the next media URL (if any)
@@ -621,13 +805,6 @@ extern "C" {
   */
   QUVIcode quvi_next_videolink(quvi_video_t video);
 
-  /** @} */ /* End of libquvi_parse_util group. */
-
-
-  /** @defgroup libquvi_parse_release Releasing
-   * @{
-   */
-
   /**
   * @brief End a media parsing session
   *
@@ -648,11 +825,12 @@ extern "C" {
   */
   void quvi_parse_close(quvi_media_t *media);
 
-  /** @} */ /* End of libquvi_parse_release group */
+  /** @} */ /* End of libquvi_getprop group. */
+
   /** @} */ /* End of libquvi_parse group */
 
 
-  /** @defgroup libquvi_misc Misc. utility functions
+  /** @defgroup libquvi_util Utility functions
    * @{
    */
 
@@ -781,8 +959,8 @@ extern "C" {
   */
   void quvi_free(void *ptr);
 
-  /** @} */ /* End of libquvi_misc group. */
-  /** @} */ /* End of libquvi_api group. */
+  /** @} */ /* End of libquvi_util group. */
+
 
 #ifdef __cplusplus
 }
