@@ -35,18 +35,49 @@ _quvi_net_t new_net_handle()
   return (calloc(1, sizeof(struct _quvi_net_s)));
 }
 
-#ifdef _0
-static _quvi_net_propopt_t new_option()
+static QUVIcode new_opt(_quvi_net_t n, const char *name, const char *value)
 {
-  return (calloc(1, sizeof(struct _quvi_net_propopt_s)));
+  _quvi_net_propopt_t opt;
+
+  if (!value) /* Set only if value is set */
+    return (QUVI_OK);
+
+  opt = calloc(1, sizeof(*opt));
+  if (!opt)
+    return (QUVI_MEM);
+
+  freprintf(&opt->name, "%s", name);
+  freprintf(&opt->value, "%s", value);
+
+  quvi_llst_append((quvi_llst_node_t*)&n->options, opt);
+
+  return (QUVI_OK);
 }
-#endif
+
+static void free_option(_quvi_net_propopt_t *o)
+{
+  if (*o && o)
+    {
+      _free((*o)->name);
+      _free((*o)->value);
+      _free(*o);
+    }
+}
 
 void free_net_handle(_quvi_net_t *n)
 {
   if (*n && n)
     {
-      /* TODO: free options llst */
+      _quvi_llst_node_t curr = (*n)->options;
+
+      while (curr)
+        {
+          _quvi_net_propopt_t o = (_quvi_net_propopt_t) curr->data;
+          free_option(&o);
+          assert(o == NULL);
+          curr = curr->next;
+        }
+
       _free((*n)->errmsg);
       _free((*n)->url);
       _free((*n)->fetch.content);
@@ -56,53 +87,36 @@ void free_net_handle(_quvi_net_t *n)
     }
 }
 
-#ifdef _0
-static void free_option(_quvi_net_propopt_t *n)
-{
-  if (*n && n)
-    {
-      _free((*n)->name);
-      _free((*n)->value);
-      _free(*n);
-    }
-}
-#endif
-
 /* lua_wrap.c */
 extern char *lua_get_field_s(lua_State *, const char *);
 
 QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
 {
-  char *fetch_type, *arbitrary_cookie, *user_agent;
-  QUVIstatusType status_type;
   QUVIcode rc;
   char *url;
 
-  arbitrary_cookie = NULL;
-  status_type = QUVISTATUSTYPE_PAGE;   /* default "page" */
-  url         = (char*)lua_tostring(l,1);
-  fetch_type  = NULL;
-  user_agent  = NULL;
-  rc          = QUVI_OK;
-
-  /* Options from LUA script. */
-  if (lua_istable(l, 2))
-    {
-      fetch_type = lua_get_field_s(l, "fetch_type");
-      if (fetch_type)
-        {
-          if (strcmp(fetch_type, "config") == 0)
-            status_type = QUVISTATUSTYPE_CONFIG;
-          else if (strcmp(fetch_type, "playlist") == 0)
-            status_type = QUVISTATUSTYPE_PLAYLIST;
-        }
-      arbitrary_cookie = lua_get_field_s(l, "arbitrary_cookie");
-      user_agent = lua_get_field_s(l, "user_agent");
-    }
+  url = (char*)lua_tostring(l,1);
+  rc  = QUVI_OK;
 
   if (q->status_func)
     {
-      if (q->status_func(makelong(QUVISTATUS_FETCH, status_type),
+      QUVIstatusType stat_type = QUVISTATUSTYPE_PAGE; /* Default */
+
+      if (lua_istable(l, 2))
+        {
+          char *s = lua_get_field_s(l, "fetch_type");
+
+          if (s)
+            {
+              if (strcmp(s, "config") == 0)
+                stat_type = QUVISTATUSTYPE_CONFIG;
+
+              else if (strcmp(s, "playlist") == 0)
+                stat_type = QUVISTATUSTYPE_PLAYLIST;
+            }
+        }
+
+      if (q->status_func(makelong(QUVISTATUS_FETCH, stat_type),
                          (void *)url) != QUVI_OK)
         {
           return (QUVI_ABORTEDBYCALLBACK);
@@ -114,7 +128,34 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
     return (QUVI_MEM);
 
   freprintf(&(*n)->url, "%s", url);
-  /* TODO: Set options */
+
+  /* Options from LUA script. */
+  if (lua_istable(l, 2))
+    {
+      struct lookup_s
+      {
+        char *name;
+      };
+
+      static const struct lookup_s opts[] =
+      {
+        {"arbitrary_cookie"},
+        {"user_agent"},
+        {NULL}
+      };
+
+      int i;
+
+      for (i=0; opts[i].name; ++i)
+        {
+          const char *v = lua_get_field_s(l, opts[i].name);
+
+          rc = new_opt(*n, opts[i].name, v);
+
+          if (rc != QUVI_OK)
+            return (rc);
+        }
+    }
 
   if (q->fetch_func)
     rc = q->fetch_func(*n);
