@@ -111,13 +111,13 @@ typedef struct _quvi_lua_script_s *_quvi_lua_script_t;
 /* quvi net handle */
 struct _quvi_net_s
 {
+  _quvi_llst_node_t options;
   long resp_code;
   long conn_code;
   char *errmsg;
   char *url;
   struct
   {
-    _quvi_llst_node_t options;
     char *content;
   } fetch;
   struct
