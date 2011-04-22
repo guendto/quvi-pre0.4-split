@@ -63,6 +63,32 @@ quvi_write_callback_default(void *p, size_t size, size_t nmemb,
   return (rsize);
 }
 
+static void set_opts_from_lua_script(_quvi_t q, _quvi_net_t n)
+{
+  quvi_llst_node_t opt;
+  quvi_net_getprop(n, QUVINETPROP_OPTIONS, &opt);
+
+  while (opt)
+    {
+      char *opt_name, *opt_value;
+      quvi_net_propopt_t popt;
+
+      popt = (quvi_net_propopt_t) quvi_llst_data(opt);
+
+      quvi_net_getpropopt(popt, QUVINETPROPOPT_NAME, &opt_name);
+      quvi_net_getpropopt(popt, QUVINETPROPOPT_VALUE, &opt_value);
+      fprintf(stderr, "%s=%s\n", opt_name, opt_value);
+
+      if (strcmp(opt_name, "arbitrary_cookie") == 0)
+        curl_easy_setopt(q->curl, CURLOPT_COOKIE, opt_value);
+
+      if (strcmp(opt_name, "user_agent") == 0)
+        curl_easy_setopt(q->curl, CURLOPT_USERAGENT, opt_value);
+
+      opt = quvi_llst_next(opt);
+    }
+}
+
 QUVIcode curl_fetch(_quvi_t q, _quvi_net_t n)
 {
   struct content_s content;
@@ -80,13 +106,7 @@ QUVIcode curl_fetch(_quvi_t q, _quvi_net_t n)
                    ? (curl_write_callback) q->write_func
                    : (curl_write_callback) quvi_write_callback_default);
 
-  /* TODO: Handle options */
-#ifdef _0
-  if (arbitrary_cookie)
-    curl_easy_setopt(q->curl, CURLOPT_COOKIE, arbitrary_cookie);
-  if (user_agent)
-    curl_easy_setopt(q->curl, CURLOPT_COOKIE, user_agent);
-#endif
+  set_opts_from_lua_script(q,n);
 
   curlcode = curl_easy_perform(q->curl);
 
@@ -146,12 +166,12 @@ QUVIcode curl_resolve(_quvi_t q, _quvi_net_t n)
   memset(&tmp, 0, sizeof(tmp));
 
   set_redirect_opts(q, &tmp, n->url);
+  set_opts_from_lua_script(q,n);
 
   curlcode = curl_easy_perform(q->curl);
+  rc       = QUVI_OK;
 
   restore_opts(q);
-
-  rc = QUVI_OK;
 
   curl_easy_getinfo(q->curl, CURLINFO_RESPONSE_CODE, &n->resp_code);
   curl_easy_getinfo(q->curl, CURLINFO_HTTP_CONNECTCODE, &n->conn_code);
@@ -203,6 +223,8 @@ QUVIcode curl_verify(_quvi_t q, _quvi_net_t n)
                    (q->write_func)
                    ? (curl_write_callback) q->write_func
                    : (curl_write_callback) quvi_write_callback_default);
+
+  set_opts_from_lua_script(q,n);
 
   curlcode = curl_easy_perform(q->curl);
 
