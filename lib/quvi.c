@@ -252,10 +252,7 @@ static QUVIcode _setopt(_quvi_t quvi, QUVIoption opt, va_list arg)
 {
 
 #define _sets(opt) \
-    do { \
-        _free(opt); \
-        asprintf(&opt, "%s", va_arg(arg,char *)); \
-    } while(0); break
+    do { freprintf(&opt, "%s", va_arg(arg,char*)); } while(0); break
 
 #define _setn(opt) \
     do { opt = va_arg(arg,long); } while(0); break
@@ -483,12 +480,14 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
   va_list arg;
   double *dp;
   char **sp;
+  void **vp;
   long *lp;
   int type;
 
   rc = QUVI_OK;
   dp = 0;
   sp = 0;
+  vp = 0;
   lp = 0;
 
   va_start(arg, p);
@@ -502,6 +501,8 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
       _initv(sp, char**);
     case QUVIPROPERTY_LONG:
       _initv(lp, long*);
+    case QUVIPROPERTY_VOID:
+      _initv(vp, void **);
     default:
       rc = QUVI_INVARG;
     }
@@ -526,6 +527,8 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
       _setn(lp, n->resp_code);
     case QUVINETPROP_CONNECTCODE:
       _setn(lp, n->conn_code);
+    case QUVINETPROP_OPTIONS:
+      _setv(n->options);
     default:
       rc = QUVI_INVARG;
     }
