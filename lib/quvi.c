@@ -194,7 +194,7 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
 
   if (!video->quvi->no_verify)
     {
-      llst_node_t curr = video->link;
+      _quvi_llst_node_t curr = video->link;
       while (curr)
         {
           rc = verify_wrapper(video->quvi, curr);
@@ -221,7 +221,7 @@ void quvi_parse_close(quvi_media_t * handle)
 
   if (video && *video)
     {
-      llst_node_t curr = (*video)->link;
+      _quvi_llst_node_t curr = (*video)->link;
 
       while (curr)
         {
@@ -231,7 +231,7 @@ void quvi_parse_close(quvi_media_t * handle)
           _free(l->url);
           curr = curr->next;
         }
-      llst_free(&(*video)->link);
+      quvi_llst_free((quvi_llst_node_t)&(*video)->link);
       assert((*video)->link == NULL);
 
       _free((*video)->id);
@@ -645,7 +645,7 @@ QUVIcode quvi_next_media_url(quvi_video_t handle)
   return (QUVI_OK);
 }
 
-static llst_node_t curr_host = NULL;
+static _quvi_llst_node_t curr_host = NULL;
 
 /* quvi_next_supported_website */
 
@@ -767,6 +767,96 @@ QUVIcode quvi_net_seterr(quvi_net_t handle, const char *fmt, ...)
   vafreprintf(&n->errmsg, fmt, args);
 
   return (QUVI_OK);
+}
+
+/* quvi_llst_append */
+
+QUVIcode quvi_llst_append(quvi_llst_node_t *l, void *data)
+{
+  _quvi_llst_node_t n;
+
+  is_badhandle(l);
+  is_invarg(data);
+
+  n = calloc(1, sizeof(*n));
+  if (!n)
+    return (QUVI_MEM);
+
+  if (*l) /* Insert after the last. */
+    {
+      _quvi_llst_node_t curr = *l;
+
+      while (curr->next)
+        curr = curr->next;
+
+      curr->next = n;
+    }
+  else /* Make the first in the list. */
+    {
+      n->next = *l;
+      *l = n;
+    }
+
+  n->data = data;
+
+  return (QUVI_OK);
+}
+
+/* quvi_llst_size */
+
+size_t quvi_llst_size(quvi_llst_node_t l)
+{
+  _quvi_llst_node_t curr = l;
+  size_t n = 0;
+
+  while (curr)
+    {
+      curr = curr->next;
+      ++n;
+    }
+
+  return (n);
+}
+
+/* quvi_llst_next */
+
+quvi_llst_node_t quvi_llst_next(quvi_llst_node_t l)
+{
+  _quvi_llst_node_t curr = l;
+
+  if (curr)
+    curr = curr->next;
+
+  return (curr);
+}
+
+/* quvi_llst_data */
+
+void *quvi_llst_data(quvi_llst_node_t l)
+{
+  _quvi_llst_node_t curr = l;
+
+  if (curr)
+    return (curr->data);
+
+  return (curr);
+}
+
+/* quvi_llst_free */
+
+void quvi_llst_free(quvi_llst_node_t *l)
+{
+  _quvi_llst_node_t curr = *l;
+
+  while (curr)
+    {
+      _quvi_llst_node_t next = curr->next;
+      _free(curr->data);
+      _free(curr);
+      curr = next;
+    }
+
+  *l = NULL;
 }
 
 #undef is_badhandle

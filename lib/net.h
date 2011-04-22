@@ -25,7 +25,7 @@ void free_net_handle(_quvi_net_t *n);
 
 QUVIcode fetch_wrapper(_quvi_t, lua_State*, _quvi_net_t*);
 QUVIcode resolve_wrapper(_quvi_t, const char*, char **);
-QUVIcode verify_wrapper(_quvi_t, llst_node_t);
+QUVIcode verify_wrapper(_quvi_t, _quvi_llst_node_t);
 
 #endif
 

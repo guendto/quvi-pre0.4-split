@@ -207,7 +207,7 @@ static int new_video_link(_quvi_video_link_t * dst)
   return (QUVI_OK);
 }
 
-int add_video_link(llst_node_t * lst, const char *fmt, ...)
+int add_video_link(_quvi_llst_node_t * lst, const char *fmt, ...)
 {
   _quvi_video_link_t qvl;
   va_list args;
@@ -227,7 +227,7 @@ int add_video_link(llst_node_t * lst, const char *fmt, ...)
       return (QUVI_MEM);
     }
 
-  return (llst_add(lst, qvl));
+  return (quvi_llst_append((quvi_llst_node_t*)lst, qvl));
 }
 
 char *dirname_from(const char *s)

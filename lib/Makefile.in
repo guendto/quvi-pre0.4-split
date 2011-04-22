@@ -75,14 +75,13 @@ am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libquvi_la_LIBADD =
 am__libquvi_la_SOURCES_DIST = quvi.c util.c curl_wrap.c lua_wrap.c \
-	strepl.c llst.c net.c vasprintf.c asprintf.c curl_wrap.h \
-	lua_wrap.h internal.h util.h platform.h llst.h net.h
+	strepl.c net.c vasprintf.c asprintf.c curl_wrap.h lua_wrap.h \
+	internal.h util.h platform.h net.h
 @NO_ASPRINTF_TRUE@am__objects_1 = libquvi_la-vasprintf.lo \
 @NO_ASPRINTF_TRUE@	libquvi_la-asprintf.lo
 am__objects_2 = libquvi_la-quvi.lo libquvi_la-util.lo \
 	libquvi_la-curl_wrap.lo libquvi_la-lua_wrap.lo \
-	libquvi_la-strepl.lo libquvi_la-llst.lo libquvi_la-net.lo \
-	$(am__objects_1)
+	libquvi_la-strepl.lo libquvi_la-net.lo $(am__objects_1)
 am__objects_3 =
 am_libquvi_la_OBJECTS = $(am__objects_2) $(am__objects_3)
 libquvi_la_OBJECTS = $(am_libquvi_la_OBJECTS)
@@ -268,7 +267,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-src = quvi.c util.c curl_wrap.c lua_wrap.c strepl.c llst.c net.c \
+src = quvi.c util.c curl_wrap.c lua_wrap.c strepl.c net.c \
 	$(am__append_2)
 hdr = \
     curl_wrap.h \
@@ -276,7 +275,6 @@ hdr = \
     internal.h \
     util.h \
     platform.h \
-    llst.h \
     net.h
 
 lib_LTLIBRARIES = libquvi.la
@@ -377,7 +375,6 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-asprintf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-curl_wrap.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-llst.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-lua_wrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-net.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-quvi.Plo@am__quote@
@@ -448,14 +445,6 @@ libquvi_la-strepl.lo: strepl.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strepl.c' object='libquvi_la-strepl.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-strepl.lo `test -f 'strepl.c' || echo '$(srcdir)/'`strepl.c
-
-libquvi_la-llst.lo: llst.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-llst.lo -MD -MP -MF $(DEPDIR)/libquvi_la-llst.Tpo -c -o libquvi_la-llst.lo `test -f 'llst.c' || echo '$(srcdir)/'`llst.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-llst.Tpo $(DEPDIR)/libquvi_la-llst.Plo
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='llst.c' object='libquvi_la-llst.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-llst.lo `test -f 'llst.c' || echo '$(srcdir)/'`llst.c
 
 libquvi_la-net.lo: net.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-net.lo -MD -MP -MF $(DEPDIR)/libquvi_la-net.Tpo -c -o libquvi_la-net.lo `test -f 'net.c' || echo '$(srcdir)/'`net.c

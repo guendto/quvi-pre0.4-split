@@ -172,7 +172,7 @@ static QUVIcode new_lua_script(_quvi_lua_script_t * dst)
 typedef int (*filter_func) (const struct dirent *);
 
 static QUVIcode
-scan_dir(llst_node_t * dst, const char *path, filter_func filter)
+scan_dir(_quvi_llst_node_t * dst, const char *path, filter_func filter)
 {
   char *show_scandir, *show_script;
   struct dirent *de;
@@ -215,7 +215,7 @@ scan_dir(llst_node_t * dst, const char *path, filter_func filter)
                       __PRETTY_FUNCTION__, qls->path);
             }
 
-          llst_add(dst, qls);
+          quvi_llst_append((quvi_llst_node_t*)dst, qls);
         }
     }
 
@@ -225,7 +225,7 @@ scan_dir(llst_node_t * dst, const char *path, filter_func filter)
 }
 
 static QUVIcode
-scan_known_dirs(llst_node_t * dst, const char *spath,
+scan_known_dirs(_quvi_llst_node_t * dst, const char *spath,
                 filter_func filter)
 {
   char *homedir, *path, *basedir, *buf;
@@ -315,7 +315,7 @@ int init_lua(_quvi_t quvi)
   if (rc != QUVI_OK)
     return (rc);
 
-  if (llst_size(quvi->util_scripts) == 0)
+  if (quvi_llst_size(quvi->util_scripts) == 0)
     return (QUVI_NOLUAUTIL);
 
   rc = scan_known_dirs(&quvi->website_scripts, "lua/website",
@@ -324,7 +324,7 @@ int init_lua(_quvi_t quvi)
   if (rc != QUVI_OK)
     return (rc);
 
-  return (llst_size(quvi->website_scripts)
+  return (quvi_llst_size(quvi->website_scripts)
           ? QUVI_OK : QUVI_NOLUAWEBSITE);
 }
 
@@ -333,7 +333,7 @@ void free_lua(_quvi_t * quvi)
 
 #define _rel(w) \
     do { \
-        llst_node_t curr = w; \
+        _quvi_llst_node_t curr = w; \
         while (curr) { \
             _quvi_lua_script_t s = (_quvi_lua_script_t) curr->data; \
             _free (s->basename); \
@@ -347,10 +347,10 @@ void free_lua(_quvi_t * quvi)
 
 #undef _rel
 
-  llst_free(&(*quvi)->util_scripts);
+  quvi_llst_free((quvi_llst_node_t*)&(*quvi)->util_scripts);
   assert((*quvi)->util_scripts == NULL);
 
-  llst_free(&(*quvi)->website_scripts);
+  quvi_llst_free((quvi_llst_node_t*)&(*quvi)->website_scripts);
   assert((*quvi)->website_scripts == NULL);
 
   lua_close((*quvi)->lua);
@@ -464,7 +464,7 @@ static void set_field_n(lua_State * l, const char *key, double value)
 static _quvi_lua_script_t find_util_script(_quvi_t quvi,
     const char *basename)
 {
-  llst_node_t curr = quvi->util_scripts;
+  _quvi_llst_node_t curr = quvi->util_scripts;
   while (curr)
     {
       _quvi_lua_script_t s = (_quvi_lua_script_t) curr->data;
@@ -639,7 +639,7 @@ QUVIcode run_lua_charset_func(_quvi_media_t video, const char *data)
 
 /* Executes the host script's "ident" function. */
 
-QUVIcode run_ident_func(lua_ident_t ident, llst_node_t node)
+QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 {
   _quvi_lua_script_t qls;
   char *script_dir;
@@ -723,7 +723,7 @@ QUVIcode run_ident_func(lua_ident_t ident, llst_node_t node)
 /* Executes the host script's "parse" function. */
 
 static QUVIcode
-run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
+run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t video)
 {
   static const char func_name[] = "parse";
   _quvi_lua_script_t qls;
@@ -814,10 +814,10 @@ run_parse_func(lua_State * l, llst_node_t node, _quvi_media_t video)
 
 /* Match host script to the url. */
 
-static llst_node_t find_host_script_node(_quvi_media_t video,
+static _quvi_llst_node_t find_host_script_node(_quvi_media_t video,
     QUVIcode * rc)
 {
-  llst_node_t curr;
+  _quvi_llst_node_t curr;
   _quvi_t quvi;
   lua_State *l;
 
@@ -872,7 +872,7 @@ QUVIcode find_host_script(_quvi_media_t video)
 /* Match host script to the url and run parse func */
 QUVIcode find_host_script_and_parse(_quvi_media_t video)
 {
-  llst_node_t script;
+  _quvi_llst_node_t script;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;

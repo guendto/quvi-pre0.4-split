@@ -959,6 +959,47 @@ extern "C" {
   */
   void quvi_free(void *ptr);
 
+  /** @defgroup libquvi_llst Linked list interface
+   * @{
+   */
+
+  /** @brief Linked list node handle
+   * @since 0.2.16
+   */
+  typedef void *quvi_llst_node_t;
+
+  /**
+   * TODO
+   * @since 0.2.16
+   */
+  QUVIcode quvi_llst_append(quvi_llst_node_t *llst, void *data);
+
+  /**
+   * TODO
+   * @since 0.2.16
+   */
+  size_t quvi_llst_size(quvi_llst_node_t llst);
+
+  /**
+   * TODO
+   * @since 0.2.16
+   */
+  quvi_llst_node_t quvi_llst_next(quvi_llst_node_t lst);
+
+  /**
+   * TODO
+   * @since 0.2.16
+   */
+  void *quvi_llst_data(quvi_llst_node_t node);
+
+  /**
+   * TODO
+   * @since 0.2.16
+   */
+  void quvi_llst_free(quvi_llst_node_t *lst);
+
+  /** @} */ /* End of libquvi_llst group. */
+
   /** @} */ /* End of libquvi_util group. */
 
 

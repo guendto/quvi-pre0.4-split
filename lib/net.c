@@ -200,7 +200,7 @@ QUVIcode resolve_wrapper(_quvi_t q, const char *url, char **dst)
   return (rc);
 }
 
-QUVIcode verify_wrapper(_quvi_t q, llst_node_t l)
+QUVIcode verify_wrapper(_quvi_t q, _quvi_llst_node_t l)
 {
   static const char *scheme = "http://";
   _quvi_video_link_t m;

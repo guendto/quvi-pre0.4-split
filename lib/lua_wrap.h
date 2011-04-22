@@ -39,7 +39,7 @@ QUVIcode run_lua_suffix_func(_quvi_t, _quvi_video_link_t);
 
 QUVIcode run_lua_charset_func(_quvi_media_t, const char *);
 
-QUVIcode run_ident_func(lua_ident_t, llst_node_t);
+QUVIcode run_ident_func(lua_ident_t, _quvi_llst_node_t);
 
 QUVIcode find_host_script_and_parse(_quvi_media_t);
 

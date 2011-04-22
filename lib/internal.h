@@ -23,7 +23,6 @@
 #include <lua.h>
 
 #include "platform.h"
-#include "llst.h"
 
 #define makelong(low,high) \
     ((long)   (((quvi_word)((uint64_t)(low)  & 0xffff)) | \
@@ -36,6 +35,16 @@
 #define _free(p) \
     do { if (p) free(p); p=0; } while(0)
 
+/* linked list handle */
+struct _quvi_llst_node_s
+{
+  struct _quvi_llst_node_s *next;
+  struct _quvi_llst_node_s *prev;
+  void *data;
+};
+
+typedef struct _quvi_llst_node_s *_quvi_llst_node_t;
+
 /* quvi handle */
 struct _quvi_s
 {
@@ -44,9 +53,9 @@ struct _quvi_s
   quvi_callback_verify verify_func;
   quvi_callback_write write_func;
   quvi_callback_fetch fetch_func;
-  llst_node_t website_scripts;
-  llst_node_t curr_next_host;
-  llst_node_t util_scripts;
+  _quvi_llst_node_t website_scripts;
+  _quvi_llst_node_t curr_next_host;
+  _quvi_llst_node_t util_scripts;
   long no_resolve;
   long no_verify;
   lua_State *lua;
@@ -74,8 +83,8 @@ typedef struct _quvi_video_link_s *_quvi_video_link_t;
 /* quvi media handle */
 struct _quvi_video_s
 {
-  llst_node_t link;             /* holds all essential to video links */
-  llst_node_t curr;             /* current (link) node */
+  _quvi_llst_node_t link;             /* holds all essential to video links */
+  _quvi_llst_node_t curr;             /* current (link) node */
   char *thumbnail_url;
   char *redirect_url;
   char *start_time;
@@ -102,13 +111,13 @@ typedef struct _quvi_lua_script_s *_quvi_lua_script_t;
 /* quvi net handle */
 struct _quvi_net_s
 {
-  /* TODO: add quvi_llst_node_t options */
   long resp_code;
   long conn_code;
   char *errmsg;
   char *url;
   struct
   {
+    _quvi_llst_node_t options;
     char *content;
   } fetch;
   struct

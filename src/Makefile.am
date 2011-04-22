@@ -3,13 +3,12 @@ EXTRA_DIST = \
     cmdline.ggo
 
 src = \
-quvi.c \
-cmdline.c \
-$(top_srcdir)/lib/strepl.c \
-$(top_srcdir)/lib/llst.c
+    quvi.c \
+    cmdline.c \
+    $(top_srcdir)/lib/strepl.c
 
 hdr = \
-cmdline.h
+    cmdline.h
 
 if NO_ASPRINTF
 src += $(top_srcdir)/lib/vasprintf.c $(top_srcdir)/lib/asprintf.c

@@ -9,7 +9,6 @@ src = \
     curl_wrap.c \
     lua_wrap.c \
     strepl.c \
-    llst.c \
     net.c
 
 if NO_ASPRINTF
@@ -22,7 +21,6 @@ hdr = \
     internal.h \
     util.h \
     platform.h \
-    llst.h \
     net.h
 
 lib_LTLIBRARIES = libquvi.la

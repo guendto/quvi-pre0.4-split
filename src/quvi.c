@@ -34,8 +34,6 @@
 #include "quvi/quvi.h"
 #include "cmdline.h"
 
-#include "llst.h"
-
 #define _free(p) \
     do { if (p) { free(p); p=0; } } while (0)
 
@@ -49,7 +47,7 @@ static CURL *curl = NULL;
 typedef struct gengetopt_args_info *opts_t;
 static opts_t opts = NULL;
 
-static llst_node_t inputs = NULL;
+static quvi_llst_node_t inputs = NULL;
 
 /* prints to std(e)rr. */
 static void spew_e(const char *fmt, ...)
@@ -655,14 +653,7 @@ static quvi_t init_quvi()
 
 static void cleanup()
 {
-  llst_node_t curr = inputs;
-
-  while (curr)
-    {
-      _free(curr->data);
-      curr = curr->next;
-    }
-  llst_free(&inputs);
+  quvi_llst_free(&inputs);
   assert(inputs == NULL);
 
   if (quvi)
@@ -689,7 +680,7 @@ static void read_stdin()
           if (b[n] == '\n')
             b[n] = '\0';
 
-          llst_add(&inputs, strdup(b));
+          quvi_llst_append(&inputs, strdup(b));
         }
     }
 }
@@ -702,19 +693,19 @@ static int read_input()
     {
       int i;
       for (i=0; i<opts->inputs_num; ++i)
-        llst_add(&inputs, strdup(opts->inputs[i]));
+        quvi_llst_append(&inputs, strdup(opts->inputs[i]));
     }
-  return (llst_size(inputs));
+  return (quvi_llst_size(inputs));
 }
 
 int main(int argc, char *argv[])
 {
   const char *url, *home, *no_config, *fname;
   QUVIcode rc, last_failure;
+  quvi_llst_node_t curr;
   quvi_media_t media;
   int no_config_flag;
   int i, inputs_num;
-  llst_node_t curr;
   int errors;
 
   assert(quvi == NULL);
@@ -814,7 +805,8 @@ int main(int argc, char *argv[])
 
   for (i=0, curr=inputs; curr; ++i)
     {
-      rc = quvi_parse(quvi, (char *)curr->data, &media);
+      char *url = quvi_llst_data(curr);
+      rc = quvi_parse(quvi, url, &media);
       if (rc == QUVI_OK)
         {
           assert(media != 0);
@@ -837,7 +829,7 @@ int main(int argc, char *argv[])
         }
       quvi_parse_close(&media);
       assert(media == 0);
-      curr = curr->next;
+      curr = quvi_llst_next(curr);
     }
 
   if (inputs_num > 1)
