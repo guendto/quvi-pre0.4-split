@@ -306,8 +306,6 @@ static QUVIcode _net_setprop(_quvi_net_t n, QUVInetProperty p, va_list arg)
       _setn(n->verify.content_length);
     case QUVINETPROP_RESPONSECODE:
       _setn(n->resp_code);
-    case QUVINETPROP_CONNECTCODE:
-      _setn(n->conn_code);
     default:
       return (QUVI_INVARG);
     }
@@ -392,19 +390,19 @@ static QUVIcode _getprop(_quvi_media_t video, QUVIproperty prop, ...)
       _sets(video->page_link);
     case QUVIPROP_PAGETITLE:
       _sets(video->title);
-    case QUVIPROP_VIDEOID:
+    case QUVIPROP_MEDIAID:
       _sets(video->id);
-    case QUVIPROP_VIDEOURL:
+    case QUVIPROP_MEDIAURL:
       _sets(qvl->url);
-    case QUVIPROP_VIDEOFILELENGTH:
+    case QUVIPROP_MEDIACONTENTLENGTH:
       _setn(dp, qvl->length);
-    case QUVIPROP_VIDEOFILECONTENTTYPE:
+    case QUVIPROP_MEDIACONTENTTYPE:
       _sets(qvl->content_type);
-    case QUVIPROP_VIDEOFILESUFFIX:
+    case QUVIPROP_FILESUFFIX:
       _sets(qvl->suffix);
-    case QUVIPROP_HTTPCODE:
-      _setn(lp, video->quvi->httpcode);
-    case QUVIPROP_VIDEOFORMAT:
+    case QUVIPROP_RESPONSECODE:
+      _setn(lp, video->quvi->resp_code);
+    case QUVIPROP_FORMAT:
       _sets(video->quvi->format);
     case QUVIPROP_STARTTIME:
       _sets(video->start_time);
@@ -465,8 +463,8 @@ static QUVIcode _getinfo(_quvi_t quvi, QUVIinfo info, ...)
       _setv(quvi->curl);
     case QUVIINFO_CURLCODE:
       _setn(lp, quvi->curlcode);
-    case QUVIINFO_HTTPCODE:
-      _setn(lp, quvi->httpcode);
+    case QUVIINFO_RESPONSECODE:
+      _setn(lp, quvi->resp_code);
     default:
       rc = QUVI_INVARG;
     }
@@ -525,8 +523,6 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
       _setn(dp, n->verify.content_length);
     case QUVINETPROP_RESPONSECODE:
       _setn(lp, n->resp_code);
-    case QUVINETPROP_CONNECTCODE:
-      _setn(lp, n->conn_code);
     case QUVINETPROP_OPTIONS:
       _setv(n->options);
     default:
