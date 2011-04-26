@@ -27,7 +27,7 @@
  * @version @VERSION@
  * @example quvi.c
  * @example simple.c
- * @example callback.c
+ * @example callback_libsoup.c
  */
 
 #ifndef quvi_h
