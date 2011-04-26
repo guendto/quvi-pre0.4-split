@@ -59,8 +59,8 @@ struct _quvi_s
   long no_resolve;
   long no_verify;
   lua_State *lua;
+  long resp_code;
   long category;
-  long httpcode;
   long curlcode;
   char *format;
   char *errmsg;
@@ -113,7 +113,6 @@ struct _quvi_net_s
 {
   _quvi_llst_node_t options;
   long resp_code;
-  long conn_code;
   char *errmsg;
   char *url;
   struct
