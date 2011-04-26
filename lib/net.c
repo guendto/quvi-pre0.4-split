@@ -181,7 +181,7 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
         freprintf(&q->errmsg, "%s", (*n)->errmsg);
     }
 
-  q->httpcode = (*n)->resp_code;
+  q->resp_code = (*n)->resp_code;
 
   return (rc);
 }
@@ -234,7 +234,7 @@ QUVIcode resolve_wrapper(_quvi_t q, const char *url, char **dst)
         freprintf(&q->errmsg, "%s", n->errmsg);
     }
 
-  q->httpcode = n->resp_code;
+  q->resp_code = n->resp_code;
 
   free_net_handle(&n);
 
@@ -298,7 +298,7 @@ QUVIcode verify_wrapper(_quvi_t q, _quvi_llst_node_t l)
         freprintf(&q->errmsg, "%s", n->errmsg);
     }
 
-  q->httpcode = n->resp_code;
+  q->resp_code = n->resp_code;
 
   free_net_handle(&n);
 
