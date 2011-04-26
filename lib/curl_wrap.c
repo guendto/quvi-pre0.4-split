@@ -93,6 +93,7 @@ QUVIcode curl_fetch(_quvi_t q, _quvi_net_t n)
 {
   struct content_s content;
   CURLcode curlcode;
+  long conncode;
   QUVIcode rc;
 
   curl_easy_setopt(q->curl, CURLOPT_URL, n->url);
@@ -111,7 +112,7 @@ QUVIcode curl_fetch(_quvi_t q, _quvi_net_t n)
   curlcode = curl_easy_perform(q->curl);
 
   curl_easy_getinfo(q->curl, CURLINFO_RESPONSE_CODE, &n->resp_code);
-  curl_easy_getinfo(q->curl, CURLINFO_HTTP_CONNECTCODE, &n->conn_code);
+  curl_easy_getinfo(q->curl, CURLINFO_HTTP_CONNECTCODE, &conncode);
 
   if (curlcode == CURLE_OK && n->resp_code == 200)
     rc = QUVI_OK;
@@ -120,13 +121,13 @@ QUVIcode curl_fetch(_quvi_t q, _quvi_net_t n)
       if (curlcode == CURLE_OK)
         {
           freprintf(&n->errmsg, "server response code %ld (conncode=%ld)",
-                    n->resp_code, n->conn_code);
+                    n->resp_code, conncode);
         }
       else
         {
           freprintf(&n->errmsg, "%s (http/%ld, conn/%ld, curl/%ld)",
                     curl_easy_strerror(curlcode), n->resp_code,
-                    n->conn_code, curlcode);
+                    conncode, curlcode);
         }
 
       rc = QUVI_CALLBACK;
@@ -161,6 +162,7 @@ QUVIcode curl_resolve(_quvi_t q, _quvi_net_t n)
 {
   struct content_s tmp;
   CURLcode curlcode;
+  long conncode;
   QUVIcode rc;
 
   memset(&tmp, 0, sizeof(tmp));
@@ -174,7 +176,7 @@ QUVIcode curl_resolve(_quvi_t q, _quvi_net_t n)
   restore_opts(q);
 
   curl_easy_getinfo(q->curl, CURLINFO_RESPONSE_CODE, &n->resp_code);
-  curl_easy_getinfo(q->curl, CURLINFO_HTTP_CONNECTCODE, &n->conn_code);
+  curl_easy_getinfo(q->curl, CURLINFO_HTTP_CONNECTCODE, &conncode);
 
   if (curlcode == CURLE_OK)
     {
@@ -192,12 +194,10 @@ QUVIcode curl_resolve(_quvi_t q, _quvi_net_t n)
     {
       freprintf(&n->errmsg, "%s (http/%ld, conn/%ld, curl/%ld)",
                 curl_easy_strerror(curlcode), n->resp_code,
-                n->conn_code, curlcode);
+                conncode, curlcode);
 
       rc = QUVI_CALLBACK;
     }
-
-  q->httpcode = n->resp_code;
 
   if (tmp.p)
     _free(tmp.p);
@@ -209,6 +209,7 @@ QUVIcode curl_verify(_quvi_t q, _quvi_net_t n)
 {
   struct content_s tmp;
   CURLcode curlcode;
+  long conncode;
   QUVIcode rc;
 
   rc = QUVI_OK;
@@ -231,7 +232,7 @@ QUVIcode curl_verify(_quvi_t q, _quvi_net_t n)
   curl_easy_setopt(q->curl, CURLOPT_HTTPGET, 1L);    /* reset: head -> get */
 
   curl_easy_getinfo(q->curl, CURLINFO_RESPONSE_CODE, &n->resp_code);
-  curl_easy_getinfo(q->curl, CURLINFO_HTTP_CONNECTCODE, &n->conn_code);
+  curl_easy_getinfo(q->curl, CURLINFO_HTTP_CONNECTCODE, &conncode);
 
   if (curlcode == CURLE_OK)
     {
@@ -250,7 +251,7 @@ QUVIcode curl_verify(_quvi_t q, _quvi_net_t n)
       else
         {
           freprintf(&n->errmsg, "server response code %ld (conncode=%ld)",
-                    n->resp_code, n->conn_code);
+                    n->resp_code, conncode);
 
           rc = QUVI_CALLBACK;
         }
@@ -258,12 +259,10 @@ QUVIcode curl_verify(_quvi_t q, _quvi_net_t n)
   else
     {
       freprintf(&n->errmsg, "%s (curlcode=%d, conncode=%ld)",
-                curl_easy_strerror(curlcode), curlcode, n->conn_code);
+                curl_easy_strerror(curlcode), curlcode, conncode);
 
       rc = QUVI_CALLBACK;
     }
-
-  q->httpcode = n->resp_code;
 
   if (tmp.p)
     _free(tmp.p);
