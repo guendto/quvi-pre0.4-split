@@ -631,6 +631,10 @@ ENABLE_VERBOSE_TESTS_FALSE
 ENABLE_VERBOSE_TESTS_TRUE
 ENABLE_TESTS_FALSE
 ENABLE_TESTS_TRUE
+libsoup_LIBS
+libsoup_CFLAGS
+libsoup_gnome_LIBS
+libsoup_gnome_CFLAGS
 ENABLE_EXAMPLES_FALSE
 ENABLE_EXAMPLES_TRUE
 ENABLE_QUVI_FALSE
@@ -639,8 +643,6 @@ NO_ASPRINTF_FALSE
 NO_ASPRINTF_TRUE
 POW_LIB
 LIBOBJS
-AM_BACKSLASH
-AM_DEFAULT_VERBOSITY
 liblua_LIBS
 liblua_CFLAGS
 libcurl_LIBS
@@ -697,6 +699,8 @@ LD
 FGREP
 SED
 LIBTOOL
+AM_BACKSLASH
+AM_DEFAULT_VERBOSITY
 am__fastdepCC_FALSE
 am__fastdepCC_TRUE
 CCDEPMODE
@@ -796,6 +800,7 @@ ac_subst_files=''
 ac_user_opts='
 enable_option_checking
 enable_dependency_tracking
+enable_silent_rules
 enable_shared
 enable_static
 with_pic
@@ -805,7 +810,6 @@ with_sysroot
 enable_libtool_lock
 enable_rpath
 with_libiconv_prefix
-enable_silent_rules
 enable_quvi
 enable_examples
 enable_tests
@@ -835,7 +839,11 @@ PKG_CONFIG_LIBDIR
 libcurl_CFLAGS
 libcurl_LIBS
 liblua_CFLAGS
-liblua_LIBS'
+liblua_LIBS
+libsoup_gnome_CFLAGS
+libsoup_gnome_LIBS
+libsoup_CFLAGS
+libsoup_LIBS'
 
 
 # Initialize some variables set by options.
@@ -1459,14 +1467,14 @@ Optional Features:
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
   --disable-dependency-tracking  speeds up one-time build
   --enable-dependency-tracking   do not reject slow dependency extractors
+  --enable-silent-rules          less verbose build output (undo: `make V=1')
+  --disable-silent-rules         verbose build output (undo: `make V=0')
   --enable-shared[=PKGS]  build shared libraries [default=yes]
   --enable-static[=PKGS]  build static libraries [default=yes]
   --enable-fast-install[=PKGS]
                           optimize for fast installation [default=yes]
   --disable-libtool-lock  avoid locking (might break parallel builds)
   --disable-rpath         do not hardcode runtime library paths
-  --enable-silent-rules          less verbose build output (undo: `make V=1')
-  --disable-silent-rules         verbose build output (undo: `make V=0')
   --enable-quvi           build quvi command line tool[default=yes]
   --enable-examples       build examples [default=no]
   --enable-tests          enable tests [default=no]
@@ -1513,6 +1521,14 @@ Some influential environment variables:
   liblua_CFLAGS
               C compiler flags for liblua, overriding pkg-config
   liblua_LIBS linker flags for liblua, overriding pkg-config
+  libsoup_gnome_CFLAGS
+              C compiler flags for libsoup_gnome, overriding pkg-config
+  libsoup_gnome_LIBS
+              linker flags for libsoup_gnome, overriding pkg-config
+  libsoup_CFLAGS
+              C compiler flags for libsoup, overriding pkg-config
+  libsoup_LIBS
+              linker flags for libsoup, overriding pkg-config
 
 Use these variables to override the choices made by `configure' or to help
 it to find libraries and programs with nonstandard names/locations.
@@ -4608,6 +4624,18 @@ else
 fi
 
 
+
+# Check whether --enable-silent-rules was given.
+if test "${enable_silent_rules+set}" = set; then :
+  enableval=$enable_silent_rules;
+fi
+
+case $enable_silent_rules in
+yes) AM_DEFAULT_VERBOSITY=0;;
+no)  AM_DEFAULT_VERBOSITY=1;;
+*)   AM_DEFAULT_VERBOSITY=0;;
+esac
+AM_BACKSLASH='\'
 
 
 case `pwd` in
@@ -18693,18 +18721,6 @@ else
 $as_echo "yes" >&6; }
 
 fi
-# Check whether --enable-silent-rules was given.
-if test "${enable_silent_rules+set}" = set; then :
-  enableval=$enable_silent_rules;
-fi
-
-case $enable_silent_rules in
-yes) AM_DEFAULT_VERBOSITY=0;;
-no)  AM_DEFAULT_VERBOSITY=1;;
-*)   AM_DEFAULT_VERBOSITY=0;;
-esac
-AM_BACKSLASH='\'
-
 
 # Checks for header files.
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for ANSI C header files" >&5
@@ -19227,6 +19243,265 @@ else
   ENABLE_EXAMPLES_FALSE=
 fi
 
+
+if  test x"$enable_examples" != "xno" ; then
+
+    # libsoup(-gnome)
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for libsoup_gnome" >&5
+$as_echo_n "checking for libsoup_gnome... " >&6; }
+
+if test -n "$libsoup_gnome_CFLAGS"; then
+    pkg_cv_libsoup_gnome_CFLAGS="$libsoup_gnome_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libsoup-gnome-2.4 >= 2.26\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libsoup-gnome-2.4 >= 2.26") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_libsoup_gnome_CFLAGS=`$PKG_CONFIG --cflags "libsoup-gnome-2.4 >= 2.26" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$libsoup_gnome_LIBS"; then
+    pkg_cv_libsoup_gnome_LIBS="$libsoup_gnome_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libsoup-gnome-2.4 >= 2.26\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libsoup-gnome-2.4 >= 2.26") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_libsoup_gnome_LIBS=`$PKG_CONFIG --libs "libsoup-gnome-2.4 >= 2.26" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        libsoup_gnome_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libsoup-gnome-2.4 >= 2.26" 2>&1`
+        else
+	        libsoup_gnome_PKG_ERRORS=`$PKG_CONFIG --print-errors "libsoup-gnome-2.4 >= 2.26" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$libsoup_gnome_PKG_ERRORS" >&5
+
+	# Fallback to libsoup.
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for libsoup" >&5
+$as_echo_n "checking for libsoup... " >&6; }
+
+if test -n "$libsoup_CFLAGS"; then
+    pkg_cv_libsoup_CFLAGS="$libsoup_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libsoup-2.4 >= 2.26\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libsoup-2.4 >= 2.26") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_libsoup_CFLAGS=`$PKG_CONFIG --cflags "libsoup-2.4 >= 2.26" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$libsoup_LIBS"; then
+    pkg_cv_libsoup_LIBS="$libsoup_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libsoup-2.4 >= 2.26\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libsoup-2.4 >= 2.26") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_libsoup_LIBS=`$PKG_CONFIG --libs "libsoup-2.4 >= 2.26" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        libsoup_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libsoup-2.4 >= 2.26" 2>&1`
+        else
+	        libsoup_PKG_ERRORS=`$PKG_CONFIG --print-errors "libsoup-2.4 >= 2.26" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$libsoup_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements (libsoup-2.4 >= 2.26) were not met:
+
+$libsoup_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables libsoup_CFLAGS
+and libsoup_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables libsoup_CFLAGS
+and libsoup_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	libsoup_CFLAGS=$pkg_cv_libsoup_CFLAGS
+	libsoup_LIBS=$pkg_cv_libsoup_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	# Fallback to libsoup.
+
+pkg_failed=no
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for libsoup" >&5
+$as_echo_n "checking for libsoup... " >&6; }
+
+if test -n "$libsoup_CFLAGS"; then
+    pkg_cv_libsoup_CFLAGS="$libsoup_CFLAGS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libsoup-2.4 >= 2.26\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libsoup-2.4 >= 2.26") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_libsoup_CFLAGS=`$PKG_CONFIG --cflags "libsoup-2.4 >= 2.26" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+if test -n "$libsoup_LIBS"; then
+    pkg_cv_libsoup_LIBS="$libsoup_LIBS"
+ elif test -n "$PKG_CONFIG"; then
+    if test -n "$PKG_CONFIG" && \
+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"libsoup-2.4 >= 2.26\""; } >&5
+  ($PKG_CONFIG --exists --print-errors "libsoup-2.4 >= 2.26") 2>&5
+  ac_status=$?
+  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+  test $ac_status = 0; }; then
+  pkg_cv_libsoup_LIBS=`$PKG_CONFIG --libs "libsoup-2.4 >= 2.26" 2>/dev/null`
+else
+  pkg_failed=yes
+fi
+ else
+    pkg_failed=untried
+fi
+
+
+
+if test $pkg_failed = yes; then
+   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+
+if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+        _pkg_short_errors_supported=yes
+else
+        _pkg_short_errors_supported=no
+fi
+        if test $_pkg_short_errors_supported = yes; then
+	        libsoup_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "libsoup-2.4 >= 2.26" 2>&1`
+        else
+	        libsoup_PKG_ERRORS=`$PKG_CONFIG --print-errors "libsoup-2.4 >= 2.26" 2>&1`
+        fi
+	# Put the nasty error message in config.log where it belongs
+	echo "$libsoup_PKG_ERRORS" >&5
+
+	as_fn_error $? "Package requirements (libsoup-2.4 >= 2.26) were not met:
+
+$libsoup_PKG_ERRORS
+
+Consider adjusting the PKG_CONFIG_PATH environment variable if you
+installed software in a non-standard prefix.
+
+Alternatively, you may set the environment variables libsoup_CFLAGS
+and libsoup_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details." "$LINENO" 5
+elif test $pkg_failed = untried; then
+     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+is in your PATH or set the PKG_CONFIG environment variable to the full
+path to pkg-config.
+
+Alternatively, you may set the environment variables libsoup_CFLAGS
+and libsoup_LIBS to avoid the need to call pkg-config.
+See the pkg-config man page for more details.
+
+To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+See \`config.log' for more details" "$LINENO" 5; }
+else
+	libsoup_CFLAGS=$pkg_cv_libsoup_CFLAGS
+	libsoup_LIBS=$pkg_cv_libsoup_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+
+fi
+else
+	libsoup_gnome_CFLAGS=$pkg_cv_libsoup_gnome_CFLAGS
+	libsoup_gnome_LIBS=$pkg_cv_libsoup_gnome_LIBS
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	libsoup_CFLAGS="$libsoup_gnome_CFLAGS"
+         libsoup_LIBS="$libsoup_gnome_LIBS"
+
+$as_echo "#define HAVE_LIBSOUP_GNOME 1" >>confdefs.h
+
+fi
+
+
+
+fi
 
 # --enable-tests
 # Check whether --enable-tests was given.

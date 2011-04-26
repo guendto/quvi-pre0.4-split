@@ -31,6 +31,7 @@ AC_DEFINE_UNQUOTED([CANONICAL_TARGET], "$target", [...])
 AC_DEFINE_UNQUOTED([CANONICAL_HOST], "$host", [...])
 
 AM_INIT_AUTOMAKE([-Wall -Werror foreign dist-bzip2 dist-xz])
+AM_SILENT_RULES([yes])
 
 LT_INIT()
 LT_PREREQ([2.2])
@@ -110,7 +111,6 @@ PKG_CHECK_MODULES(liblua, lua >= 5.1, [], [
         ])
     ])
 ])
-AM_SILENT_RULES([yes])
 
 # Checks for header files.
 AC_HEADER_STDC # `stdlib.h', `stdarg.h', `string.h', ...
@@ -153,6 +153,20 @@ AC_ARG_ENABLE([examples],
     [],
     [enable_examples=no])
 AM_CONDITIONAL([ENABLE_EXAMPLES], [test x"$enable_examples" != "xno"])
+
+if [ test x"$enable_examples" != "xno" ]; then
+
+    # libsoup(-gnome)
+    PKG_CHECK_MODULES([libsoup_gnome], [libsoup-gnome-2.4 >= 2.26],
+        [libsoup_CFLAGS="$libsoup_gnome_CFLAGS"
+         libsoup_LIBS="$libsoup_gnome_LIBS"
+         AC_DEFINE([HAVE_LIBSOUP_GNOME], [1], [Have libsoup-gnome])],
+        # Fallback to libsoup.
+        [PKG_CHECK_MODULES([libsoup], [libsoup-2.4 >= 2.26])])
+
+    AC_SUBST(libsoup_CFLAGS)
+    AC_SUBST(libsoup_LIBS)
+fi
 
 # --enable-tests
 AC_ARG_ENABLE([tests],
