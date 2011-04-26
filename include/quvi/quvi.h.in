@@ -27,6 +27,7 @@
  * @version @VERSION@
  * @example quvi.c
  * @example simple.c
+ * @example callback.c
  */
 
 #ifndef quvi_h
@@ -217,12 +218,19 @@ typedef enum
   QUVIINFO_CURL = QUVIINFO_VOID + 1,
   /**< Session libcurl handle */
 
+  QUVIINFO_RESPONSECODE = QUVIINFO_LONG + 3,
+  /** Last server returned HTTP code */
+
+  /* Deprecated as of 0.2.16. Note that these exist only for
+   * backward-compatibility. Destined to be removed in 0.2.20. */
+
   QUVIINFO_CURLCODE = QUVIINFO_LONG + 2,
   /**< Last libcurl returned code
    * @deprecated Since 0.2.16 */
 
   QUVIINFO_HTTPCODE = QUVIINFO_LONG + 3,
-  /**< Last returned HTTP code by a server */
+  /**< Last returned HTTP code by a server
+   * @deprecated Since 0.2.16, use QUVIINFO_RESPONSECODE instead */
 
   /* Add new ones below. Bump _QUVIINFO_LAST accordingly. */
 
@@ -265,8 +273,8 @@ typedef enum
   QUVIPROP_FILESUFFIX = QUVIPROPERTY_STRING + 8,
   /**< Parsed file suffix */
 
-  QUVIPROP_HTTPCODE = QUVIPROPERTY_LONG   + 9,
-  /**< Last libcurl returned HTTP code */
+  QUVIPROP_RESPONSECODE = QUVIPROPERTY_LONG   + 9,
+  /**< Last server returned HTTP code */
 
   QUVIPROP_FORMAT = QUVIPROPERTY_STRING + 10,
   /**< Requested format, set using QUVIOPT_FORMAT */
@@ -305,6 +313,10 @@ typedef enum
   QUVIPROP_VIDEOFILESUFFIX = QUVIPROPERTY_STRING + 8,
   /**< Video file suffix
    * @deprecated Since 0.2.15, use QUVIPROP_FILESUFFIX instead */
+
+  QUVIPROP_HTTPCODE = QUVIPROPERTY_LONG   + 9,
+  /**< Last libcurl returned HTTP code
+   * @deprecated Since 0.2.16, use QUVIPROP_RESPONSECODE instead */
 
   QUVIPROP_VIDEOFORMAT = QUVIPROPERTY_STRING + 10,
   /**< Requested video format, set using QUVIOPT_FORMAT
@@ -642,24 +654,26 @@ extern "C" {
    * quvi_net_getprop() */
   typedef enum
   {
-    QUVINETPROP_NONE = 0x00, /**< Unused */
-    QUVINETPROP_URL = QUVIPROPERTY_STRING + 1, /**< URL */
-    QUVINETPROP_REDIRECTURL = QUVIPROPERTY_STRING + 2, /**< Redirection URL */
-    QUVINETPROP_CONTENT = QUVIPROPERTY_STRING + 3, /**< Fetch content */
-    QUVINETPROP_CONTENTTYPE = QUVIPROPERTY_STRING + 4, /**< Content-type parsed
-  from the returned HTTP header */
-    QUVINETPROP_CONTENTLENGTH = QUVIPROPERTY_DOUBLE + 5, /**< Content-length
-  parsed from the returned HTTP header */
-    QUVINETPROP_RESPONSECODE = QUVIPROPERTY_DOUBLE + 6, /**< Response (or HTTP) code returned by the server */
-    QUVINETPROP_CONNECTCODE = QUVIPROPERTY_DOUBLE + 7,  /**< Connect code,
-  historically libquvi sets this to whatever libcurl returns as
-  CURLINFO_HTTP_CONNECTCODE */
-    QUVINETPROP_OPTIONS = QUVIPROPERTY_VOID + 8, /**< Network options,
-  e.g. arbitrary cookie, etc. */
+    QUVINETPROP_NONE = 0x00,
+    /**< Unused */
+    QUVINETPROP_URL = QUVIPROPERTY_STRING + 1,
+    /**< URL */
+    QUVINETPROP_REDIRECTURL = QUVIPROPERTY_STRING + 2,
+    /**< Redirection URL */
+    QUVINETPROP_CONTENT = QUVIPROPERTY_STRING + 3,
+    /**< Fetch content */
+    QUVINETPROP_CONTENTTYPE = QUVIPROPERTY_STRING + 4,
+    /**< Content-type parsed from the returned HTTP header */
+    QUVINETPROP_CONTENTLENGTH = QUVIPROPERTY_DOUBLE + 5,
+    /**< Content-length parsed from the returned HTTP header */
+    QUVINETPROP_RESPONSECODE = QUVIPROPERTY_LONG + 6,
+    /**< Network options, e.g. arbitrary cookie, etc. */
+    QUVINETPROP_OPTIONS = QUVIPROPERTY_VOID + 7,
+    /**< Network options, e.g. arbitrary cookie, etc. */
 
     /* Add new ones below. Bump _QUVINETPROP_LAST accordingly. */
 
-    _QUVINETPROP_LAST = 8 /**< Placeholder */
+    _QUVINETPROP_LAST = 7 /**< Placeholder */
   } QUVInetProperty;
 
   /** enum QUVInetPropertyOption Network property option codes to be used
