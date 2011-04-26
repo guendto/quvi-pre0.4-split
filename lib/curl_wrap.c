@@ -77,7 +77,6 @@ static void set_opts_from_lua_script(_quvi_t q, _quvi_net_t n)
 
       quvi_net_getpropopt(popt, QUVINETPROPOPT_NAME, &opt_name);
       quvi_net_getpropopt(popt, QUVINETPROPOPT_VALUE, &opt_value);
-      fprintf(stderr, "%s=%s\n", opt_name, opt_value);
 
       if (strcmp(opt_name, "arbitrary_cookie") == 0)
         curl_easy_setopt(q->curl, CURLOPT_COOKIE, opt_value);
