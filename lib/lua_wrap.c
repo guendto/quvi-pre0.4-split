@@ -819,12 +819,10 @@ static _quvi_llst_node_t find_host_script_node(_quvi_media_t video,
 {
   _quvi_llst_node_t curr;
   _quvi_t quvi;
-  lua_State *l;
 
   qv = video;
   quvi = video->quvi;           /* seterr macro uses this. */
   curr = quvi->website_scripts;
-  l = quvi->lua;
 
   while (curr)
     {

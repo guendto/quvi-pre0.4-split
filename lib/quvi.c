@@ -544,15 +544,19 @@ static QUVIcode _net_getpropopt(
   va_list arg;
   double *dp;
   char **sp;
+#ifdef UNUSED
   void **vp;
   long *lp;
+#endif
   int type;
 
   rc = QUVI_OK;
   dp = 0;
   sp = 0;
+#ifdef UNUSED
   vp = 0;
   lp = 0;
+#endif
 
   va_start(arg, opt);
   type = QUVIPROPERTY_TYPEMASK & (int)opt;

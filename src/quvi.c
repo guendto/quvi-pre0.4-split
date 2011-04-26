@@ -700,7 +700,7 @@ static int read_input()
 
 int main(int argc, char *argv[])
 {
-  const char *url, *home, *no_config, *fname;
+  const char *home, *no_config, *fname;
   QUVIcode rc, last_failure;
   quvi_llst_node_t curr;
   quvi_media_t media;
@@ -715,7 +715,6 @@ int main(int argc, char *argv[])
 
   no_config = getenv("QUVI_NO_CONFIG");
   no_config_flag = 1;
-  url = NULL;
 
   home = getenv("QUVI_HOME");
   if (!home)
