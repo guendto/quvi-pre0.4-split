@@ -28,7 +28,7 @@
 #include "curl_wrap.h"
 #include "lua_wrap.h"
 #include "util.h"
-#include "net.h"
+#include "net_wrap.h"
 
 _quvi_net_t new_net_handle()
 {

@@ -9,7 +9,7 @@ src = \
     curl_wrap.c \
     lua_wrap.c \
     strepl.c \
-    net.c
+    net_wrap.c
 
 if NO_ASPRINTF
 src += vasprintf.c asprintf.c
@@ -21,7 +21,7 @@ hdr = \
     internal.h \
     util.h \
     platform.h \
-    net.h
+    net_wrap.h
 
 lib_LTLIBRARIES = libquvi.la
 libquvi_la_SOURCES = $(src) $(hdr)

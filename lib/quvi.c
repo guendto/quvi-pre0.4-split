@@ -28,7 +28,7 @@
 #include "internal.h"
 #include "lua_wrap.h"
 #include "util.h"
-#include "net.h"
+#include "net_wrap.h"
 
 #define is_invarg(p) \
   do { if (p == NULL) return (QUVI_INVARG); } while (0)

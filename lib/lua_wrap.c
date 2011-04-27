@@ -36,7 +36,7 @@
 #include "quvi/quvi.h"
 #include "internal.h"
 #include "util.h"
-#include "net.h"
+#include "net_wrap.h"
 #include "curl_wrap.h"
 #include "lua_wrap.h"
 
@@ -87,7 +87,7 @@ static int l_quvi_fetch(lua_State * l)
   if (!lua_isstring(l, 1))
     luaL_error(l, "`quvi.fetch' expects `url' argument");
 
-  rc = fetch_wrapper(qv->quvi, l, &n); /* net.c */
+  rc = fetch_wrapper(qv->quvi, l, &n); /* net_wrap.c */
 
   if (rc == QUVI_OK)
     {
@@ -117,7 +117,8 @@ static int l_quvi_resolve(lua_State *l)
   if (!lua_isstring(l,1))
     luaL_error(l, "`quvi.resolve' expects `url' argument");
 
-  rc = resolve_wrapper(qv->quvi, lua_tostring(l,1), &redirect_url); /* net.c */
+  /* net_wrap.c */
+  rc = resolve_wrapper(qv->quvi, lua_tostring(l,1), &redirect_url);
 
   if (rc == QUVI_OK)
     {
