@@ -63,29 +63,18 @@ quvi_write_callback_default(void *p, size_t size, size_t nmemb,
   return (rsize);
 }
 
+static void set_opt(_quvi_t q, _quvi_net_t n, QUVInetPropertyOptionName qopt,
+                    CURLoption copt)
+{
+  char *s = quvi_net_get_one_prop_opt(n, qopt);
+  if (s)
+    curl_easy_setopt(q->curl, copt, s);
+}
+
 static void set_opts_from_lua_script(_quvi_t q, _quvi_net_t n)
 {
-  quvi_llst_node_t opt;
-  quvi_net_getprop(n, QUVI_NET_PROPERTY_OPTIONS, &opt);
-
-  while (opt)
-    {
-      char *opt_name, *opt_value;
-      quvi_net_propopt_t popt;
-
-      popt = (quvi_net_propopt_t) quvi_llst_data(opt);
-
-      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_NAME, &opt_name);
-      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_VALUE, &opt_value);
-
-      if (strcmp(opt_name, "arbitrary_cookie") == 0)
-        curl_easy_setopt(q->curl, CURLOPT_COOKIE, opt_value);
-
-      if (strcmp(opt_name, "user_agent") == 0)
-        curl_easy_setopt(q->curl, CURLOPT_USERAGENT, opt_value);
-
-      opt = quvi_llst_next(opt);
-    }
+  set_opt(q, n, QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE, CURLOPT_COOKIE);
+  set_opt(q, n, QUVI_NET_PROPERTY_OPTION_USERAGENT, CURLOPT_USERAGENT);
 }
 
 QUVIcode curl_fetch(_quvi_t q, _quvi_net_t n)
