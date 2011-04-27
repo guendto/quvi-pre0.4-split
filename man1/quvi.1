@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-04-17" "0.2.16" "quvi manual"
+.TH quvi 1 "2011-04-27" "0.2.16" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -133,7 +133,7 @@
 quvi \- query media tool
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
-quvi [options] [url...]
+quvi [options] [url|file ...]
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 quvi is a command line tool for parsing Adobe Flash media stream URLs. It
@@ -171,9 +171,10 @@ With this in mind:
 The default behaviour is planned to change to \*(L"all\*(R" in 0.2.20.
 .SH "OPTIONS"
 .IX Header "OPTIONS"
-quvi reads content from the standard input (stdin) by default unless
-an \s-1URL\s0 is specified in the command line. quvi expects each \s-1URL\s0 to be
-separated by a newline if they are read from the stdin.
+Unless an \s-1URL\s0 is specified in the command line, quvi reads from the stdin
+and expects each \s-1URL\s0 to be separated by a newline. The command line args
+may be either URLs or files to be read. As with reading from the stdin,
+each \s-1URL\s0 in the file is expected to be separated by a newline.
 .IP "\fB\-h, \-\-help\fR" 4
 .IX Item "-h, --help"
 Print help and exit.
@@ -317,15 +318,18 @@ Print available formats for dailym(otion).
 .ie n .IP "echo ""\s-1URL\s0"" | quvi" 4
 .el .IP "echo ``\s-1URL\s0'' | quvi" 4
 .IX Item "echo URL | quvi"
-Read from stdin. Same but with multiple URLs (in this case from a file):
+Read from stdin. Same but read multiple URLs (in this case from a file):
 .Sp
 .Vb 5
 \&  % cat >> URLs
 \&  URL1
 \&  URL2
-\&  (CTRL+D)
+\&  (^D)
 \&  % quvi < URLs
 .Ve
+.Sp
+Or specify the file in the command line, e.g.:
+  % quvi URLs
 .SH "FILES"
 .IX Header "FILES"
 .IP "\fB~/.quvirc\fR" 4
