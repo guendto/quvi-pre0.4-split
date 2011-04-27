@@ -20,9 +20,18 @@
 /* common.c -- Common functions etc. used by the examples */
 
 #include <stdio.h>
+#include <stdarg.h>
 #include <quvi/quvi.h>
 
 #include "common.h"
+
+void spew_e(const char *fmt, ...)
+{
+  va_list ap;
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
+  va_end(ap);
+}
 
 void check_error(quvi_t q, QUVIcode rc)
 {
@@ -35,6 +44,46 @@ void check_error(quvi_t q, QUVIcode rc)
     quvi_close(&q);
 
   exit(1);
+}
+
+void handle_resolve_status(quvi_word type)
+{
+  if (type == QUVISTATUSTYPE_DONE)
+    spew_e("done.\n");
+  else
+    spew_e(":: Check for URL redirection ...");
+}
+
+void handle_fetch_status(quvi_word type, void *p)
+{
+  switch (type)
+    {
+    default:
+      spew_e(":: Fetch %s ...", (char *)p);
+      break;
+    case QUVISTATUSTYPE_CONFIG:
+      spew_e(":: Fetch config ...");
+      break;
+    case QUVISTATUSTYPE_PLAYLIST:
+      spew_e(":: Fetch playlist ...");
+      break;
+    case QUVISTATUSTYPE_DONE:
+      spew_e("done.\n");
+      break;
+    }
+}
+
+void handle_verify_status(quvi_word type)
+{
+  switch (type)
+    {
+    default:
+      spew_e(":: Verify media URL ...");
+      break;
+    case QUVISTATUSTYPE_DONE:
+      spew_e("done.\n");
+      break;
+    }
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

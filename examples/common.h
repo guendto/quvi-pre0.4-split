@@ -17,6 +17,10 @@
  * 02110-1301  USA
  */
 
+void spew_e(const char *fmt, ...);
 void check_error(quvi_t, QUVIcode);
+void handle_resolve_status(quvi_word type);
+void handle_fetch_status(quvi_word type, void *p);
+void handle_verify_status(quvi_word type);
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

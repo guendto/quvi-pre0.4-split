@@ -22,62 +22,12 @@
 #include "config.h"
 
 #include <stdio.h>
-#include <stdarg.h>
 #include <string.h>
-#include <assert.h>
 
 #include <quvi/quvi.h>
 #include <libsoup/soup-gnome.h>
 
 #include "common.h"
-
-static void spew_e(const char *fmt, ...)
-{
-  va_list ap;
-  va_start(ap, fmt);
-  vfprintf(stderr, fmt, ap);
-  va_end(ap);
-}
-
-static void handle_resolve_status(quvi_word type)
-{
-  if (type == QUVISTATUSTYPE_DONE)
-    spew_e("done.\n");
-  else
-    spew_e(":: Check for URL redirection ...");
-}
-
-static void handle_fetch_status(quvi_word type, void *p)
-{
-  switch (type)
-    {
-    default:
-      spew_e(":: Fetch %s ...", (char *)p);
-      break;
-    case QUVISTATUSTYPE_CONFIG:
-      spew_e(":: Fetch config ...");
-      break;
-    case QUVISTATUSTYPE_PLAYLIST:
-      spew_e(":: Fetch playlist ...");
-      break;
-    case QUVISTATUSTYPE_DONE:
-      spew_e("done.\n");
-      break;
-    }
-}
-
-static void handle_verify_status(quvi_word type)
-{
-  switch (type)
-    {
-    default:
-      spew_e(":: Verify media URL ...");
-      break;
-    case QUVISTATUSTYPE_DONE:
-      spew_e("done.\n");
-      break;
-    }
-}
 
 static QUVIcode status_callback(long param, void *data)
 {
