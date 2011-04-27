@@ -66,7 +66,7 @@ quvi_write_callback_default(void *p, size_t size, size_t nmemb,
 static void set_opts_from_lua_script(_quvi_t q, _quvi_net_t n)
 {
   quvi_llst_node_t opt;
-  quvi_net_getprop(n, QUVINETPROP_OPTIONS, &opt);
+  quvi_net_getprop(n, QUVI_NET_PROPERTY_OPTIONS, &opt);
 
   while (opt)
     {
@@ -75,8 +75,8 @@ static void set_opts_from_lua_script(_quvi_t q, _quvi_net_t n)
 
       popt = (quvi_net_propopt_t) quvi_llst_data(opt);
 
-      quvi_net_getpropopt(popt, QUVINETPROPOPT_NAME, &opt_name);
-      quvi_net_getpropopt(popt, QUVINETPROPOPT_VALUE, &opt_value);
+      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_NAME, &opt_name);
+      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_VALUE, &opt_value);
 
       if (strcmp(opt_name, "arbitrary_cookie") == 0)
         curl_easy_setopt(q->curl, CURLOPT_COOKIE, opt_value);

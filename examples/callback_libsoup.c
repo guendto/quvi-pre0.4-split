@@ -106,15 +106,26 @@ static QUVIcode status_callback(long param, void *data)
   return (QUVI_OK);
 }
 
-static SoupSession *session = NULL;
-
-/* The current design (lib/net.c) passes these options to the fetch
- * callback only. Even if we call this function with each callback, the
- * QUVINETPROP_OPTIONS set only for QUVIOPT_FETCHFUNCTION. */
 static void set_opts_from_lua_script(quvi_net_t n, SoupMessage *m)
 {
+#define _wrap(opt,hdr) \
+  do \
+    { \
+      char *v = quvi_net_get_one_prop_opt(n, opt); \
+      if (v) \
+        soup_message_headers_append(m->request_headers, hdr, v); \
+    } \
+  while (0)
+
+  _wrap(QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE, "Cookie");
+  _wrap(QUVI_NET_PROPERTY_OPTION_USERAGENT, "User-Agent");
+
+#undef _wrap
+
+#ifdef _0
+  /* Same as above. */
   quvi_llst_node_t opt;
-  quvi_net_getprop(n, QUVINETPROP_OPTIONS, &opt);
+  quvi_net_getprop(n, QUVI_NET_PROPERTY_OPTIONS, &opt);
 
   while (opt)
     {
@@ -123,8 +134,8 @@ static void set_opts_from_lua_script(quvi_net_t n, SoupMessage *m)
 
       popt = (quvi_net_propopt_t) quvi_llst_data(opt);
 
-      quvi_net_getpropopt(popt, QUVINETPROPOPT_NAME, &opt_name);
-      quvi_net_getpropopt(popt, QUVINETPROPOPT_VALUE, &opt_value);
+      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_NAME, &opt_name);
+      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_VALUE, &opt_value);
 
       if (strcmp(opt_name, "arbitrary_cookie") == 0)
         {
@@ -140,26 +151,33 @@ static void set_opts_from_lua_script(quvi_net_t n, SoupMessage *m)
 
       opt = quvi_llst_next(opt);
     }
+#endif
 }
 
+static SoupSession *session = NULL;
+
 static void send_message(quvi_net_t n, SoupMessage **message,
-                         guint *status, SoupMessageFlags flags,
-                         const int head)
+                         guint *status, SoupMessageFlags msg_flags,
+                         const int head_flag, const int lua_opts)
 {
   char *url = NULL;
 
-  quvi_net_getprop(n, QUVINETPROP_URL, &url);
+  quvi_net_getprop(n, QUVI_NET_PROPERTY_URL, &url);
 
-  *message = soup_message_new(head ? "HEAD":"GET", url);
+  *message = soup_message_new(head_flag ? "HEAD":"GET", url);
 
-  if (flags)
-    soup_message_set_flags(*message, flags);
+  if (msg_flags)
+    soup_message_set_flags(*message, msg_flags);
 
-  set_opts_from_lua_script(n, *message);
+  /* Even if this is conditional here, the current library design sets
+   * these options (set in the LUA website scripts with quvi.fetch
+   * call) for fetch callback only. */
+  if (lua_opts)
+    set_opts_from_lua_script(n, *message);
 
   *status = soup_session_send_message(session, *message);
 
-  quvi_net_setprop(n, QUVINETPROP_RESPONSECODE, *status);
+  quvi_net_setprop(n, QUVI_NET_PROPERTY_RESPONSECODE, *status);
 }
 
 static QUVIcode fetch_callback(quvi_net_t n)
@@ -167,11 +185,11 @@ static QUVIcode fetch_callback(quvi_net_t n)
   SoupMessage *m;
   guint status;
 
-  send_message(n, &m, &status, 0, 0);
+  send_message(n, &m, &status, 0, 0, 1 /* Set LUA flags */);
 
   if (SOUP_STATUS_IS_SUCCESSFUL(status))
     {
-      quvi_net_setprop(n, QUVINETPROP_CONTENT, m->response_body->data);
+      quvi_net_setprop(n, QUVI_NET_PROPERTY_CONTENT, m->response_body->data);
       return (QUVI_OK);
     }
 
@@ -185,14 +203,14 @@ static QUVIcode resolve_callback(quvi_net_t n)
   SoupMessage *m;
   guint status;
 
-  send_message(n, &m, &status, SOUP_MESSAGE_NO_REDIRECT, 0);
+  send_message(n, &m, &status, SOUP_MESSAGE_NO_REDIRECT, 0, 0);
 
   if (SOUP_STATUS_IS_REDIRECTION(status))
     {
       const char *r_url =
         soup_message_headers_get_one(m->response_headers, "Location");
 
-      quvi_net_setprop(n, QUVINETPROP_REDIRECTURL, r_url);
+      quvi_net_setprop(n, QUVI_NET_PROPERTY_REDIRECTURL, r_url);
     }
   else if (!SOUP_STATUS_IS_SUCCESSFUL(status))
     {
@@ -208,7 +226,7 @@ static QUVIcode verify_callback(quvi_net_t n)
   SoupMessage *m;
   guint status;
 
-  send_message(n, &m, &status, 0, 1 /* HEAD */);
+  send_message(n, &m, &status, 0, 1 /* HEAD */, 0);
 
   if (SOUP_STATUS_IS_SUCCESSFUL(status))
     {
@@ -218,8 +236,8 @@ static QUVIcode verify_callback(quvi_net_t n)
       const char *ct =
         soup_message_headers_get_content_type(m->response_headers, NULL);
 
-      quvi_net_setprop(n, QUVINETPROP_CONTENTTYPE, ct);
-      quvi_net_setprop(n, QUVINETPROP_CONTENTLENGTH, cl);
+      quvi_net_setprop(n, QUVI_NET_PROPERTY_CONTENTTYPE, ct);
+      quvi_net_setprop(n, QUVI_NET_PROPERTY_CONTENTLENGTH, cl);
 
       return (QUVI_OK);
     }

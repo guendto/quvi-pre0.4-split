@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2009,2010  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2009,2010,2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -292,19 +292,19 @@ static QUVIcode _net_setprop(_quvi_net_t n, QUVInetProperty p, va_list arg)
 {
   switch (p)
     {
-    case QUVINETPROP_URL:
+    case QUVI_NET_PROPERTY_URL:
       _sets(n->url);
-    case QUVINETPROP_OPTIONS:
+    case QUVI_NET_PROPERTY_OPTIONS:
       break; /* Ignored: read-only */
-    case QUVINETPROP_REDIRECTURL:
+    case QUVI_NET_PROPERTY_REDIRECTURL:
       _sets(n->redirect.url);
-    case QUVINETPROP_CONTENT:
+    case QUVI_NET_PROPERTY_CONTENT:
       _sets(n->fetch.content);
-    case QUVINETPROP_CONTENTTYPE:
+    case QUVI_NET_PROPERTY_CONTENTTYPE:
       _sets(n->verify.content_type);
-    case QUVINETPROP_CONTENTLENGTH:
+    case QUVI_NET_PROPERTY_CONTENTLENGTH:
       _setn(n->verify.content_length);
-    case QUVINETPROP_RESPONSECODE:
+    case QUVI_NET_PROPERTY_RESPONSECODE:
       _setn(n->resp_code);
     default:
       return (QUVI_INVARG);
@@ -511,19 +511,19 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
 
   switch (p)
     {
-    case QUVINETPROP_URL:
+    case QUVI_NET_PROPERTY_URL:
       _sets(n->url);
-    case QUVINETPROP_REDIRECTURL:
+    case QUVI_NET_PROPERTY_REDIRECTURL:
       _sets(n->redirect.url);
-    case QUVINETPROP_CONTENT:
+    case QUVI_NET_PROPERTY_CONTENT:
       _sets(n->fetch.content);
-    case QUVINETPROP_CONTENTTYPE:
+    case QUVI_NET_PROPERTY_CONTENTTYPE:
       _sets(n->verify.content_type);
-    case QUVINETPROP_CONTENTLENGTH:
+    case QUVI_NET_PROPERTY_CONTENTLENGTH:
       _setn(dp, n->verify.content_length);
-    case QUVINETPROP_RESPONSECODE:
+    case QUVI_NET_PROPERTY_RESPONSECODE:
       _setn(lp, n->resp_code);
-    case QUVINETPROP_OPTIONS:
+    case QUVI_NET_PROPERTY_OPTIONS:
       _setv(n->options);
     default:
       rc = QUVI_INVARG;
@@ -531,10 +531,8 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
   return (rc);
 }
 
-static QUVIcode _net_getpropopt(
-  _quvi_net_propopt_t n,
-  QUVInetPropertyOption opt,
-  ...)
+static QUVIcode
+_net_getprop_opt(_quvi_net_propopt_t n, QUVInetPropertyOption opt, ...)
 {
   QUVIcode rc;
   va_list arg;
@@ -573,9 +571,9 @@ static QUVIcode _net_getpropopt(
 
   switch (opt)
     {
-    case QUVINETPROPOPT_NAME:
+    case QUVI_NET_PROPERTY_OPTION_NAME:
       _sets(n->name);
-    case QUVINETPROPOPT_VALUE:
+    case QUVI_NET_PROPERTY_OPTION_VALUE:
       _sets(n->value);
     default:
       rc = QUVI_INVARG;
@@ -740,9 +738,10 @@ QUVIcode quvi_net_getprop(quvi_net_propopt_t n, QUVInetProperty prop, ...)
   return (_net_getprop(n,prop,p));
 }
 
-/* quvi_net_getpropopt */
+/* quvi_net_getprop_opt */
 
-QUVIcode quvi_net_getpropopt(quvi_net_t n, QUVInetPropertyOption opt, ...)
+QUVIcode
+quvi_net_getprop_opt(quvi_net_propopt_t n, QUVInetPropertyOption opt, ...)
 {
   va_list arg;
   void *p;
@@ -753,7 +752,48 @@ QUVIcode quvi_net_getpropopt(quvi_net_t n, QUVInetPropertyOption opt, ...)
   p = va_arg(arg, void*);
   va_end(arg);
 
-  return (_net_getpropopt(n,opt,p));
+  return (_net_getprop_opt(n,opt,p));
+}
+
+/* quvi_net_get_one_prop_opt */
+
+char *
+quvi_net_get_one_prop_opt(quvi_net_t n, QUVInetPropertyOptionName on)
+{
+  quvi_llst_node_t opt;
+  quvi_net_getprop(n, QUVI_NET_PROPERTY_OPTIONS, &opt);
+
+  while (opt)
+    {
+      char *opt_name, *opt_value;
+      quvi_net_propopt_t popt;
+
+      popt = (quvi_net_propopt_t) quvi_llst_data(opt);
+
+      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_NAME, &opt_name);
+      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_VALUE, &opt_value);
+
+#define _cmp(s) \
+  do \
+    { \
+      if (strcmp(opt_name,s) == 0) \
+        return (opt_value); \
+    } \
+  while (0); break
+
+      switch (on)
+        {
+        case QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE:
+          _cmp("arbitrary_cookie");
+        case QUVI_NET_PROPERTY_OPTION_USERAGENT:
+          _cmp("user_agent");
+        default:
+          break;
+        }
+      opt = quvi_llst_next(opt);
+    }
+#undef _cmp
+  return (NULL);
 }
 
 /* quvi_net_seterr */

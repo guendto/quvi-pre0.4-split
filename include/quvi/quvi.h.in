@@ -601,9 +601,9 @@ extern "C" {
   /** @defgroup libquvi_net_if Network interface
    *
    * The network interface can be used to override the default use of
-   * libcurl which libquvi uses for various network related tasks, e.g.
-   * fetching, resolving (to HTTP redirections) and verifying media
-   * stream URLs.
+   * libcurl which libquvi uses by default for tasks requiring network
+   * access. Examples of this are fetching, resolving (HTTP
+   * redirections) and verifying media stream URLs.
    *
    * @since 0.2.16
    * @{
@@ -654,38 +654,63 @@ extern "C" {
    * quvi_net_getprop() */
   typedef enum
   {
-    QUVINETPROP_NONE = 0x00,
+    QUVI_NET_PROPERTY_NONE = 0x00,
     /**< Unused */
-    QUVINETPROP_URL = QUVIPROPERTY_STRING + 1,
+    QUVI_NET_PROPERTY_URL  = QUVIPROPERTY_STRING + 1,
     /**< URL */
-    QUVINETPROP_REDIRECTURL = QUVIPROPERTY_STRING + 2,
+    QUVI_NET_PROPERTY_REDIRECTURL = QUVIPROPERTY_STRING + 2,
     /**< Redirection URL */
-    QUVINETPROP_CONTENT = QUVIPROPERTY_STRING + 3,
+    QUVI_NET_PROPERTY_CONTENT = QUVIPROPERTY_STRING + 3,
     /**< Fetch content */
-    QUVINETPROP_CONTENTTYPE = QUVIPROPERTY_STRING + 4,
+    QUVI_NET_PROPERTY_CONTENTTYPE = QUVIPROPERTY_STRING + 4,
     /**< Content-type parsed from the returned HTTP header */
-    QUVINETPROP_CONTENTLENGTH = QUVIPROPERTY_DOUBLE + 5,
+    QUVI_NET_PROPERTY_CONTENTLENGTH = QUVIPROPERTY_DOUBLE + 5,
     /**< Content-length parsed from the returned HTTP header */
-    QUVINETPROP_RESPONSECODE = QUVIPROPERTY_LONG + 6,
+    QUVI_NET_PROPERTY_RESPONSECODE = QUVIPROPERTY_LONG + 6,
     /**< Network options, e.g. arbitrary cookie, etc. */
-    QUVINETPROP_OPTIONS = QUVIPROPERTY_VOID + 7,
+    QUVI_NET_PROPERTY_OPTIONS = QUVIPROPERTY_VOID + 7,
     /**< Network options, e.g. arbitrary cookie, etc. */
 
-    /* Add new ones below. Bump _QUVINETPROP_LAST accordingly. */
+    /* Add new ones below. Bump _QUVI_NET_PROPERTY_LAST accordingly. */
 
-    _QUVINETPROP_LAST = 7 /**< Placeholder */
+    _QUVI_NET_PROPERTY_LAST = 7 /**< Placeholder */
   } QUVInetProperty;
 
   /** enum QUVInetPropertyOption Network property option codes to be used
    * with quvi_net_getpropopt() */
   typedef enum
   {
-    QUVINETPROPOPT_NONE = 0x00, /**< Unused */
-    QUVINETPROPOPT_NAME = QUVIPROPERTY_STRING + 1, /**< Name of the property option */
-    QUVINETPROPOPT_VALUE = QUVIPROPERTY_STRING + 2, /**< Value of the property option */
-    /* Add new ones below. Bump _QUVINETPROPOPT_LAST accordingly. */
-    _QUVINETPROPOPT_LAST = 2 /**< Placeholder */
+    QUVI_NET_PROPERTY_OPTION_NONE = 0x00,
+    /**< Unused */
+    QUVI_NET_PROPERTY_OPTION_NAME = QUVIPROPERTY_STRING + 1,
+    /**< Name of the property option */
+    QUVI_NET_PROPERTY_OPTION_VALUE = QUVIPROPERTY_STRING + 2,
+    /**< Value of the property option */
+
+    /* Add new ones below. Bump _QUVI_NET_PROPERTY_OPTION_LAST accordingly. */
+
+    _QUVI_NET_PROPERTY_OPTION_LAST = 2
+    /**< Placeholder */
+
   } QUVInetPropertyOption;
+
+  /** enum QUVInetPropertyOptionName Network property option codes to be
+   * used with quvi_net_get_one_propopt() */
+  typedef enum
+  {
+    QUVI_NET_PROPERTY_OPTION_NAME_NONE = 0x00,
+    /**< Unused */
+    QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE = QUVIPROPERTY_STRING + 1,
+    /**< Arbitrary cookie */
+    QUVI_NET_PROPERTY_OPTION_USERAGENT = QUVIPROPERTY_STRING + 2,
+    /**< User-agent */
+
+    /* Add new ones below. Bump _QUVI_NET_PROPERTY_OPTION_NAME_LAST accordingly. */
+
+    _QUVI_NET_PROPERTY_OPTION_NAME_LAST = 2
+    /**< Placeholder */
+
+  } QUVInetPropertyOptionName;
 
   /** @brief TODO */
   QUVIcode quvi_net_getprop(quvi_net_t, QUVInetProperty, ...);
@@ -694,7 +719,11 @@ extern "C" {
   QUVIcode quvi_net_setprop(quvi_net_t, QUVInetProperty, ...);
 
   /** @brief TODO */
-  QUVIcode quvi_net_getpropopt(quvi_net_propopt_t, QUVInetPropertyOption, ...);
+  QUVIcode quvi_net_getprop_opt(quvi_net_propopt_t, QUVInetPropertyOption, ...);
+
+  /** @brief Convenience function that wraps the use of quvi_llst_* and
+   * quvi_net_getprop_opt. */
+  char *quvi_net_get_one_prop_opt(quvi_net_t, QUVInetPropertyOptionName);
 
   /** @brief TODO */
   QUVIcode quvi_net_seterr(quvi_net_t, const char *, ...);
