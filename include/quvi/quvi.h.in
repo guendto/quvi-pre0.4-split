@@ -700,14 +700,17 @@ extern "C" {
   {
     QUVI_NET_PROPERTY_OPTION_NAME_NONE = 0x00,
     /**< Unused */
-    QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE = QUVIPROPERTY_STRING + 1,
+
+    /* Unlike other properties, these do not specify "type". */
+
+    QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE,
     /**< Arbitrary cookie */
-    QUVI_NET_PROPERTY_OPTION_USERAGENT = QUVIPROPERTY_STRING + 2,
+    QUVI_NET_PROPERTY_OPTION_USERAGENT,
     /**< User-agent */
 
-    /* Add new ones below. Bump _QUVI_NET_PROPERTY_OPTION_NAME_LAST accordingly. */
+    /* Add new ones below. */
 
-    _QUVI_NET_PROPERTY_OPTION_NAME_LAST = 2
+    _QUVI_NET_PROPERTY_OPTION_NAME_LAST
     /**< Placeholder */
 
   } QUVInetPropertyOptionName;
