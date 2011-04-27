@@ -87,8 +87,15 @@ void free_net_handle(_quvi_net_t *n)
     }
 }
 
-/* lua_wrap.c */
-extern char *lua_get_field_s(lua_State *, const char *);
+const char *_net_property_options[] =
+{
+  NULL,
+  "arbitrary_cookie",
+  "user_agent",
+  NULL
+};
+
+extern char *lua_get_field_s(lua_State *, const char *); /* lua_wrap.c */
 
 QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
 {
@@ -132,25 +139,12 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
   /* Options from LUA script. */
   if (lua_istable(l, 2))
     {
-      struct lookup_s
-      {
-        char *name;
-      };
-
-      static const struct lookup_s opts[] =
-      {
-        {"arbitrary_cookie"},
-        {"user_agent"},
-        {NULL}
-      };
-
       int i;
-
-      for (i=0; opts[i].name; ++i)
+      for (i=1; _net_property_options[i]; ++i)
         {
-          const char *v = lua_get_field_s(l, opts[i].name);
+          const char *v = lua_get_field_s(l, _net_property_options[i]);
 
-          rc = new_opt(*n, opts[i].name, v);
+          rc = new_opt(*n, _net_property_options[i], v);
 
           if (rc != QUVI_OK)
             return (rc);
