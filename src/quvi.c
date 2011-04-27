@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <errno.h>
 #include <assert.h>
 
 #include <curl/curl.h>
@@ -668,10 +669,14 @@ static void cleanup()
   assert(opts == NULL);
 }
 
-static void read_stdin()
+static void read_from(FILE *f, int close)
 {
   char b[256];
-  while (fgets(b, sizeof(b), stdin))
+
+  if (!f)
+    return;
+
+  while (fgets(b, sizeof(b), f))
     {
       if (strlen(b) > 16)
         {
@@ -683,17 +688,64 @@ static void read_stdin()
           quvi_llst_append(&inputs, strdup(b));
         }
     }
+
+  if (close)
+    {
+      fclose(f);
+      f = NULL;
+    }
+}
+
+static char *parse_url_scheme(const char *url)
+{
+  char *p, *r;
+
+  p = strstr(url, ":/");
+  if (!p)
+    return (NULL);
+
+  asprintf(&r, "%.*s", (int)(p - url), url);
+
+  return (r);
+}
+
+static int is_url(const char *s)
+{
+  char *p = parse_url_scheme(s);
+  if (p)
+    {
+      _free(p);
+      return (1);
+    }
+  return (0);
+}
+
+static FILE* open_file(const char *path)
+{
+  FILE *f = fopen(path, "rt");
+  if (!f)
+#ifdef HAVE_STRERROR
+    spew_e("error: %s: %s\n", path, strerror(errno));
+#else
+    perror("fopen");
+#endif
+  return (f);
 }
 
 static int read_input()
 {
   if (opts->inputs_num == 0)
-    read_stdin();
+    read_from(stdin, 0);
   else
     {
       int i;
       for (i=0; i<opts->inputs_num; ++i)
-        quvi_llst_append(&inputs, strdup(opts->inputs[i]));
+        {
+          if (!is_url(opts->inputs[i]))
+            read_from(open_file(opts->inputs[i]), 1);
+          else /* Must be an URL. */
+            quvi_llst_append(&inputs, strdup(opts->inputs[i]));
+        }
     }
   return (quvi_llst_size(inputs));
 }
