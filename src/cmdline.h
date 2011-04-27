@@ -55,9 +55,9 @@ extern "C" {
     const char *category_rtsp_help; /**< @brief Category RTSP website scripts help description.  */
     const char *category_rtmp_help; /**< @brief Category RTMP website scripts help description.  */
     const char *category_all_help; /**< @brief All website script categories help description.  */
-    char * format_arg;  /**< @brief Video format to query (default='default').  */
-    char * format_orig; /**< @brief Video format to query original value given at command line.  */
-    const char *format_help; /**< @brief Video format to query help description.  */
+    char * format_arg;  /**< @brief Media format to query (default='default').  */
+    char * format_orig; /**< @brief Media format to query original value given at command line.  */
+    const char *format_help; /**< @brief Media format to query help description.  */
     char * agent_arg; /**< @brief Identify as arg (default='Mozilla/5.0').  */
     char * agent_orig;  /**< @brief Identify as arg original value given at command line.  */
     const char *agent_help; /**< @brief Identify as arg help description.  */

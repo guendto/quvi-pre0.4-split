@@ -49,7 +49,7 @@ const char *gengetopt_args_info_help[] =
   "      --category-rtsp        Category RTSP website scripts",
   "      --category-rtmp        Category RTMP website scripts",
   "  -a, --category-all         All website script categories",
-  "  -f, --format=arg           Video format to query  (default=`default')",
+  "  -f, --format=arg           Media format to query  (default=`default')",
   "      --agent=arg            Identify as arg  (default=`Mozilla/5.0')",
   "      --proxy=arg            Use proxy for HTTP connections",
   "      --no-proxy             Disable use of HTTP proxy",
@@ -577,14 +577,12 @@ cmdline_parser_internal (
 
   int override;
   int initialize;
-  int check_required;
   int check_ambiguity;
 
   package_name = argv[0];
 
   override = params->override;
   initialize = params->initialize;
-  check_required = params->check_required;
   check_ambiguity = params->check_ambiguity;
 
   if (initialize)
@@ -686,7 +684,7 @@ cmdline_parser_internal (
             goto failure;
 
           break;
-        case 'f': /* Video format to query.  */
+        case 'f': /* Media format to query.  */
 
 
           if (update_arg( (void *)&(args_info->format_arg),

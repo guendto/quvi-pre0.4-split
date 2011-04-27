@@ -417,7 +417,7 @@ static long get_field_n(lua_State * l, _quvi_lua_script_t qls,
 }
 
 static QUVIcode
-iter_video_url(lua_State * l,
+iter_media_url(lua_State * l,
                _quvi_lua_script_t qls, const char *key,
                _quvi_media_t qv)
 {
@@ -432,7 +432,7 @@ iter_video_url(lua_State * l,
       if (!lua_isstring(l, -1))
         luaL_error(l, "%s: expected an array of URL strings", qls->path);
 
-      rc = add_video_link(&qv->link, "%s", lua_tostring(l, -1));
+      rc = add_media_url(&qv->url, "%s", lua_tostring(l, -1));
 
       lua_pop(l, 1);
     }
@@ -519,7 +519,7 @@ prep_util_script(_quvi_t quvi,
 
 /* Executes the `suffix_from_contenttype' lua function. */
 
-QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_video_link_t qvl)
+QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_media_url_t qvl)
 {
   const static char script_fname[] = "content_type.lua";
   const static char func_name[] = "suffix_from_contenttype";
@@ -558,7 +558,7 @@ QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_video_link_t qvl)
 
 /* Executes the `trim_fields' lua function. */
 
-static QUVIcode run_lua_trim_fields_func(_quvi_media_t video, int ref)
+static QUVIcode run_lua_trim_fields_func(_quvi_media_t media, int ref)
 {
   const static char script_fname[] = "trim.lua";
   const static char func_name[] = "trim_fields";
@@ -567,9 +567,9 @@ static QUVIcode run_lua_trim_fields_func(_quvi_media_t video, int ref)
   lua_State *l;
   QUVIcode rc;
 
-  assert(video != NULL);
+  assert(media != NULL);
 
-  quvi = video->quvi;
+  quvi = media->quvi;
   assert(quvi != NULL);
 
   rc = prep_util_script(quvi, script_fname, func_name, &l, &qls);
@@ -596,7 +596,7 @@ static QUVIcode run_lua_trim_fields_func(_quvi_media_t video, int ref)
 
 /* Executes the `charset_from_data' lua function. */
 
-QUVIcode run_lua_charset_func(_quvi_media_t video, const char *data)
+QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
 {
   const static char script_fname[] = "charset.lua";
   const static char func_name[] = "charset_from_data";
@@ -605,8 +605,8 @@ QUVIcode run_lua_charset_func(_quvi_media_t video, const char *data)
   lua_State *l;
   QUVIcode rc;
 
-  assert(video != NULL);
-  quvi = video->quvi;
+  assert(media != NULL);
+  quvi = media->quvi;
   assert(quvi != NULL);
 
   rc = prep_util_script(quvi, script_fname, func_name, &l, &qls);
@@ -622,7 +622,7 @@ QUVIcode run_lua_charset_func(_quvi_media_t video, const char *data)
     luaL_error(l, "%s: %s", qls->path, lua_tostring(l, -1));
 
   if (lua_isstring(l, -1))
-    freprintf(&video->charset, "%s", lua_tostring(l, -1));
+    freprintf(&media->charset, "%s", lua_tostring(l, -1));
   else if (lua_isnil(l, -1)) ;  /* Charset was not found. We can live with that. */
   else
     {
@@ -724,7 +724,7 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 /* Executes the host script's "parse" function. */
 
 static QUVIcode
-run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t video)
+run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
 {
   static const char func_name[] = "parse";
   _quvi_lua_script_t qls;
@@ -733,9 +733,9 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t video)
   QUVIcode rc;
 
   assert(node != NULL);
-  assert(video != NULL);
+  assert(media != NULL);
 
-  quvi = video->quvi;           /* seterr macro needs this. */
+  quvi = media->quvi;           /* seterr macro needs this. */
   qls = (_quvi_lua_script_t) node->data;
   rc = QUVI_OK;
 
@@ -751,8 +751,8 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t video)
   script_dir = dirname_from(qls->path);
 
   lua_newtable(l);
-  set_field(l, "page_url", video->page_link);
-  set_field(l, "requested_format", video->quvi->format);
+  set_field(l, "page_url", media->page_url);
+  set_field(l, "requested_format", media->quvi->format);
   set_field(l, "redirect_url", "");
   set_field(l, "start_time", "");
   set_field(l, "thumbnail_url", "");
@@ -774,37 +774,37 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t video)
       return (QUVI_LUA);
     }
 
-  freprintf(&video->redirect_url, "%s",
+  freprintf(&media->redirect_url, "%s",
             get_field_req_s(l, qls, "redirect_url"));
 
-  if (strlen(video->redirect_url) == 0)
+  if (strlen(media->redirect_url) == 0)
     {
       const int r = luaL_ref(l, LUA_REGISTRYINDEX);
 
-      rc = run_lua_trim_fields_func(video, r);
+      rc = run_lua_trim_fields_func(media, r);
 
       luaL_unref(l, LUA_REGISTRYINDEX, r);
 
       if (rc == QUVI_OK)
         {
-          freprintf(&video->host_id, "%s",
+          freprintf(&media->host_id, "%s",
                     get_field_req_s(l, qls, "host_id"));
 
-          freprintf(&video->title, "%s",
+          freprintf(&media->title, "%s",
                     get_field_req_s(l, qls, "title"));
 
-          freprintf(&video->id, "%s",
+          freprintf(&media->id, "%s",
                     get_field_req_s(l, qls, "id"));
 
-          freprintf(&video->start_time, "%s",
+          freprintf(&media->start_time, "%s",
                     get_field_req_s(l, qls, "start_time"));
 
-          freprintf(&video->thumbnail_url, "%s",
+          freprintf(&media->thumbnail_url, "%s",
                     get_field_req_s(l, qls, "thumbnail_url"));
 
-          video->duration = get_field_n(l, qls, "duration");
+          media->duration = get_field_n(l, qls, "duration");
 
-          rc = iter_video_url(l, qls, "url", video);
+          rc = iter_media_url(l, qls, "url", media);
         }
     }
 
@@ -815,22 +815,22 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t video)
 
 /* Match host script to the url. */
 
-static _quvi_llst_node_t find_host_script_node(_quvi_media_t video,
+static _quvi_llst_node_t find_host_script_node(_quvi_media_t media,
     QUVIcode * rc)
 {
   _quvi_llst_node_t curr;
   _quvi_t quvi;
 
-  qv = video;
-  quvi = video->quvi;           /* seterr macro uses this. */
+  qv = media;
+  quvi = media->quvi;           /* seterr macro uses this. */
   curr = quvi->website_scripts;
 
   while (curr)
     {
       struct lua_ident_s ident;
 
-      ident.quvi = video->quvi;
-      ident.url = video->page_link;
+      ident.quvi = media->quvi;
+      ident.url = media->page_url;
       ident.domain = NULL;
       ident.formats = NULL;
 
@@ -855,37 +855,37 @@ static _quvi_llst_node_t find_host_script_node(_quvi_media_t video,
     }
 
   /* Trust that run_ident_func sets the rc. */
-  freprintf(&quvi->errmsg, "no support: %s", video->page_link);
+  freprintf(&quvi->errmsg, "no support: %s", media->page_url);
 
   return (NULL);
 }
 
 /* Match host script to the url */
-QUVIcode find_host_script(_quvi_media_t video)
+QUVIcode find_host_script(_quvi_media_t media)
 {
   QUVIcode rc;
-  find_host_script_node(video, &rc);
+  find_host_script_node(media, &rc);
   return (rc);
 }
 
 /* Match host script to the url and run parse func */
-QUVIcode find_host_script_and_parse(_quvi_media_t video)
+QUVIcode find_host_script_and_parse(_quvi_media_t media)
 {
   _quvi_llst_node_t script;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
 
-  qv = video;
-  quvi = video->quvi;           /* seterr macro uses this. */
+  qv = media;
+  quvi = media->quvi;           /* seterr macro uses this. */
   l = quvi->lua;
 
-  script = find_host_script_node(video, &rc);
+  script = find_host_script_node(media, &rc);
   if (script == NULL)
     return (rc);
 
   /* found a script. */
-  return (run_parse_func(l, script, video));
+  return (run_parse_func(l, script, media));
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

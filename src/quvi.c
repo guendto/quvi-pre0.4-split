@@ -350,7 +350,7 @@ static void invoke_exec(quvi_media_t media)
   _free(cmd);
 }
 
-struct parsed_link_s
+struct parsed_url_s
 {
   char *media_url;
   char *content_type;
@@ -358,9 +358,9 @@ struct parsed_link_s
   char *file_suffix;
 };
 
-typedef struct parsed_link_s *parsed_link_t;
+typedef struct parsed_url_s *parsed_url_t;
 
-static void dump_media_link_xml(parsed_link_t p, int i)
+static void dump_media_url_xml(parsed_url_t p, int i)
 {
   char *media_url = curl_easy_escape(curl, p->media_url, 0);
 
@@ -382,7 +382,7 @@ static void dump_media_link_xml(parsed_link_t p, int i)
   _free(media_url);
 }
 
-static void dump_media_link_old(parsed_link_t p, int i)
+static void dump_media_url_old(parsed_url_t p, int i)
 {
   spew("link %02d  : %s\n", i, p->media_url);
 
@@ -396,7 +396,7 @@ static void dump_media_link_old(parsed_link_t p, int i)
     spew(":: content-type: %s\n", p->content_type);
 }
 
-static void dump_media_link_json(parsed_link_t p, int i)
+static void dump_media_url_json(parsed_url_t p, int i)
 {
   spew("    {\n"
        "      \"id\": \"%d\",\n", i);
@@ -416,12 +416,12 @@ static void dump_media_link_json(parsed_link_t p, int i)
        i > 1 ? "," : "");
 }
 
-static void dump_media_links(quvi_media_t media)
+static void dump_media_urls(quvi_media_t media)
 {
   int i = 0;
   do
     {
-      struct parsed_link_s p;
+      struct parsed_url_s p;
 
       memset(&p, 0, sizeof(&p));
 
@@ -433,11 +433,11 @@ static void dump_media_links(quvi_media_t media)
       ++i;
 
       if (opts->xml_given)
-        dump_media_link_xml(&p,i);
+        dump_media_url_xml(&p,i);
       else if (opts->old_given)
-        dump_media_link_old(&p,i);
+        dump_media_url_old(&p,i);
       else
-        dump_media_link_json(&p,i);
+        dump_media_url_json(&p,i);
     }
   while (quvi_next_media_url(media) == QUVI_OK);
 }
@@ -575,7 +575,7 @@ static void dump_media(quvi_media_t media)
   else
     dump_media_json(&p);
 
-  dump_media_links(media);
+  dump_media_urls(media);
 
   if (opts->xml_given)
     spew("</media>\n");
@@ -795,7 +795,7 @@ int main(int argc, char *argv[])
 
   if (inputs_num == 0)
     {
-      spew_qe("error: no input links\n");
+      spew_qe("error: no input urls\n");
       return (QUVI_INVARG);
     }
 

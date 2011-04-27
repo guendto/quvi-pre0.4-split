@@ -52,7 +52,7 @@ option "category-all"
     optional
 
 option "format"
-    f "Video format to query"
+    f "Media format to query"
     string typestr="arg"
     default="default"
     optional

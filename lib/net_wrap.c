@@ -238,14 +238,14 @@ QUVIcode resolve_wrapper(_quvi_t q, const char *url, char **dst)
 QUVIcode verify_wrapper(_quvi_t q, _quvi_llst_node_t l)
 {
   static const char *scheme = "http://";
-  _quvi_video_link_t m;
+  _quvi_media_url_t m;
   _quvi_net_t n;
   QUVIcode rc;
   char b[8];
 
   rc = QUVI_OK;
 
-  m = (_quvi_video_link_t) l->data;
+  m = (_quvi_media_url_t) l->data;
   m->url = from_html_entities(m->url);
 
   memset(&b, 0, sizeof(b));

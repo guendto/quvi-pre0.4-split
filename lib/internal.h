@@ -69,8 +69,8 @@ struct _quvi_s
 
 typedef struct _quvi_s *_quvi_t;
 
-/* quvi link handle */
-struct _quvi_video_link_s
+/* quvi media url handle */
+struct _quvi_media_url_s
 {
   char *content_type;
   double length;
@@ -78,18 +78,18 @@ struct _quvi_video_link_s
   char *url;
 };
 
-typedef struct _quvi_video_link_s *_quvi_video_link_t;
+typedef struct _quvi_media_url_s *_quvi_media_url_t;
 
 /* quvi media handle */
-struct _quvi_video_s
+struct _quvi_media_s
 {
-  _quvi_llst_node_t link;             /* holds all essential to video links */
-  _quvi_llst_node_t curr;             /* current (link) node */
+  _quvi_llst_node_t curr;             /* current (url) node */
+  _quvi_llst_node_t url;             /* holds all essential to media urls */
   char *thumbnail_url;
   char *redirect_url;
   char *start_time;
   double duration;
-  char *page_link;
+  char *page_url;
   char *charset;
   char *host_id;
   _quvi_t quvi;
@@ -97,7 +97,7 @@ struct _quvi_video_s
   char *id;
 };
 
-typedef struct _quvi_video_s *_quvi_media_t;
+typedef struct _quvi_media_s *_quvi_media_t;
 
 /* lua script handle */
 struct _quvi_lua_script_s

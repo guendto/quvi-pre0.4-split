@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2010  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,33 +17,24 @@
  * 02110-1301  USA
  */
 
-#ifndef lua_wrap_h
-#define lua_wrap_h
+#include <quvi/quvi.h>
 
-int init_lua(_quvi_t);
+/* Deprecated API functions.
+ * See include/quvi/quvi.h.in for notes. */
 
-void free_lua(_quvi_t *);
+/* quvi_next_videolink */
 
-struct lua_ident_s
+QUVIcode quvi_next_videolink(quvi_video_t handle)
 {
-  _quvi_t quvi;
-  char *url;
-  char *domain;
-  char *formats;
-  long categories;
-};
+  return (quvi_next_media_url(handle));
+}
 
-typedef struct lua_ident_s *lua_ident_t;
+/* quvi_next_host */
 
-QUVIcode run_lua_suffix_func(_quvi_t, _quvi_media_url_t);
+QUVIcode quvi_next_host(char **domain, char **formats)
+{
+  *domain = *formats = NULL;
+  return (QUVI_LAST);
+}
 
-QUVIcode run_lua_charset_func(_quvi_media_t, const char *);
-
-QUVIcode run_ident_func(lua_ident_t, _quvi_llst_node_t);
-
-QUVIcode find_host_script_and_parse(_quvi_media_t);
-
-QUVIcode find_host_script(_quvi_media_t);
-
-#endif
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

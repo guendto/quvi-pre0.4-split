@@ -9,7 +9,8 @@ src = \
     curl_wrap.c \
     lua_wrap.c \
     strepl.c \
-    net_wrap.c
+    net_wrap.c \
+    depr.c
 
 if NO_ASPRINTF
 src += vasprintf.c asprintf.c
