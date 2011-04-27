@@ -757,15 +757,29 @@ quvi_net_getprop_opt(quvi_net_propopt_t n, QUVInetPropertyOption opt, ...)
 
 /* quvi_net_get_one_prop_opt */
 
+extern const char *_net_property_options[];
+
+static const char *_opt_to_str(QUVInetPropertyOptionName id)
+{
+  const char *s = NULL;
+  if (id > QUVI_NET_PROPERTY_OPTION_NAME_NONE
+      && id < _QUVI_NET_PROPERTY_OPTION_NAME_LAST)
+    {
+      s = _net_property_options[id];
+    }
+  return (s);
+}
+
 char *
-quvi_net_get_one_prop_opt(quvi_net_t n, QUVInetPropertyOptionName on)
+quvi_net_get_one_prop_opt(quvi_net_t n, QUVInetPropertyOptionName id)
 {
   quvi_llst_node_t opt;
+
   quvi_net_getprop(n, QUVI_NET_PROPERTY_OPTIONS, &opt);
 
   while (opt)
     {
-      char *opt_name, *opt_value;
+      const char *opt_name, *opt_value, *s;
       quvi_net_propopt_t popt;
 
       popt = (quvi_net_propopt_t) quvi_llst_data(opt);
@@ -773,26 +787,13 @@ quvi_net_get_one_prop_opt(quvi_net_t n, QUVInetPropertyOptionName on)
       quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_NAME, &opt_name);
       quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_VALUE, &opt_value);
 
-#define _cmp(s) \
-  do \
-    { \
-      if (strcmp(opt_name,s) == 0) \
-        return (opt_value); \
-    } \
-  while (0); break
+      s = _opt_to_str(id);
 
-      switch (on)
-        {
-        case QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE:
-          _cmp("arbitrary_cookie");
-        case QUVI_NET_PROPERTY_OPTION_USERAGENT:
-          _cmp("user_agent");
-        default:
-          break;
-        }
+      if (s && !strcmp(opt_name,s))
+        return ((char*)opt_value);
+
       opt = quvi_llst_next(opt);
     }
-#undef _cmp
   return (NULL);
 }
 
