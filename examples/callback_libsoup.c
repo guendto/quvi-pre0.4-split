@@ -56,22 +56,19 @@ static QUVIcode status_callback(long param, void *data)
   return (QUVI_OK);
 }
 
+static void set_opt(quvi_net_t n, SoupMessage *m,
+                    QUVInetPropertyOptionName opt,
+                    const char *hdr)
+{
+  char *s = quvi_net_get_one_prop_opt(n, opt);
+  if (s)
+    soup_message_headers_append(m->request_headers, hdr, s);
+}
+
 static void set_opts_from_lua_script(quvi_net_t n, SoupMessage *m)
 {
-#define _wrap(opt,hdr) \
-  do \
-    { \
-      char *v = quvi_net_get_one_prop_opt(n, opt); \
-      if (v) \
-        soup_message_headers_append(m->request_headers, hdr, v); \
-    } \
-  while (0)
-
-  _wrap(QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE, "Cookie");
-  _wrap(QUVI_NET_PROPERTY_OPTION_USERAGENT, "User-Agent");
-
-#undef _wrap
-
+  set_opt(n, m, QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE, "Cookie");
+  set_opt(n, m, QUVI_NET_PROPERTY_OPTION_USERAGENT, "User-Agent");
 #ifdef _0
   /* Same as above. */
   quvi_llst_node_t opt;
