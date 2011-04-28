@@ -25,7 +25,12 @@
 #include <string.h>
 
 #include <quvi/quvi.h>
+
+#ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>
+#else
+#include <libsoup/soup.h>
+#endif
 
 #include "common.h"
 
@@ -132,7 +137,7 @@ static QUVIcode fetch_callback(quvi_net_t n)
   SoupMessage *m;
   guint status;
 
-  send_message(n, &m, &status, 0, 0, 1 /* Set LUA flags */);
+  send_message(n, &m, &status, 0, 0, 1 /* Set LUA opts flag */);
 
   if (SOUP_STATUS_IS_SUCCESSFUL(status))
     {
