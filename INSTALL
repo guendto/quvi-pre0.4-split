@@ -23,6 +23,7 @@
     --enable-nlfy           Test website scripts marked as "NLFY" [2]
     --disable-quvi          Do not build (/install) quvi(1) command
     --disable-examples      Do not build examples
+    --with-soup             Build with libsoup(-gnome) [3]
     --without-man           Do not install manual pages
     --without-doc           Do not install doc/ contents
 
@@ -32,6 +33,10 @@
 [2] These may be scripts for websites that are known to block IPs from
     outside of their "world of view"; note that this switch affects
     the tests only -- these scripts are installed nonetheless
+
+[3] Needed by examples/callback_soup.c which is not compiled by default.
+    You have to specify both `--enable-examples' and `--with-soup' to
+    compile this example with quvi.
 
 
     C API documentation
@@ -43,13 +48,7 @@ are also made available at: <http://quvi.sourceforge.net/>
 
     Tests
 
-e.g. "make check", the following environment variables can be used:
-
-  NO_INTERNET         Disable all tests that require internet connection
-  TEST_RESTRICTED     Enable website rule tests known for country restrictions
-  QUVI_TEST_OPTIONS   Additional options to pass to quvi when the tests are run
-
-Note that only the HTTP tests are run.
-
-Examples:
-    QUVI_TEST_OPTIONS="--debug -n" make check     # See --enable-tests
+Run either "make check" or "make test". Please note that in order to
+enable tests, you must run `configure' with `--enable-tests'. Note also
+that the test suite is intended for developers and *will* use the
+Internet. See also $top_srcdir/tests/README.
