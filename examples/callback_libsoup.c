@@ -61,47 +61,50 @@ static QUVIcode status_callback(long param, void *data)
   return (QUVI_OK);
 }
 
-static void set_opt(quvi_net_t n, SoupMessage *m,
-                    QUVInetPropertyOptionName opt,
-                    const char *hdr)
+static void set_feat(quvi_net_t n, SoupMessage *m,
+                     QUVInetPropertyFeatureName feature,
+                     const char *hdr)
 {
-  char *s = quvi_net_get_one_prop_opt(n, opt);
+  char *s = quvi_net_get_one_prop_feat(n, feature);
   if (s)
     soup_message_headers_append(m->request_headers, hdr, s);
 }
 
-static void set_opts_from_lua_script(quvi_net_t n, SoupMessage *m)
+static void set_feats_from_lua_script(quvi_net_t n, SoupMessage *m)
 {
-  set_opt(n, m, QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE, "Cookie");
-  set_opt(n, m, QUVI_NET_PROPERTY_OPTION_USERAGENT, "User-Agent");
+  set_feat(n, m, QUVI_NET_PROPERTY_FEATURE_ARBITRARYCOOKIE, "Cookie");
+  set_feat(n, m, QUVI_NET_PROPERTY_FEATURE_USERAGENT, "User-Agent");
 #ifdef _0
   /* Same as above. */
-  quvi_llst_node_t opt;
-  quvi_net_getprop(n, QUVI_NET_PROPERTY_OPTIONS, &opt);
+  quvi_llst_node_t feature;
+  quvi_net_getprop(n, QUVI_NET_PROPERTY_FEATURES, &feature);
 
-  while (opt)
+  while (feature)
     {
-      char *opt_name, *opt_value;
-      quvi_net_propopt_t popt;
+      char *feature_name, *feature_value;
+      quvi_net_propfeat_t pfeat;
 
-      popt = (quvi_net_propopt_t) quvi_llst_data(opt);
+      pfeat = (quvi_net_propfeat_t) quvi_llst_data(feature);
 
-      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_NAME, &opt_name);
-      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_VALUE, &opt_value);
+      quvi_net_getprop_feat(pfeat,
+                            QUVI_NET_PROPERTY_FEATURE_NAME, &feature_name);
 
-      if (strcmp(opt_name, "arbitrary_cookie") == 0)
+      quvi_net_getprop_feat(pfeat,
+                            QUVI_NET_PROPERTY_FEATURE_VALUE, &feature_value);
+
+      if (strcmp(feature_name, "arbitrary_cookie") == 0)
         {
           soup_message_headers_append(
-            m->request_headers, "Cookie", opt_value);
+            m->request_headers, "Cookie", feature_value);
         }
 
-      if (strcmp(opt_name, "user_agent") == 0)
+      if (strcmp(feature_name, "user_agent") == 0)
         {
           soup_message_headers_append(
-            m->request_headers, "User-Agent", opt_value);
+            m->request_headers, "User-Agent", feature_value);
         }
 
-      opt = quvi_llst_next(opt);
+      feature = quvi_llst_next(feature);
     }
 #endif
 }
@@ -110,7 +113,7 @@ static SoupSession *session = NULL;
 
 static void send_message(quvi_net_t n, SoupMessage **message,
                          guint *status, SoupMessageFlags msg_flags,
-                         const int head_flag, const int lua_opts)
+                         const int head_flag, const int lua_feats)
 {
   char *url = NULL;
 
@@ -124,8 +127,8 @@ static void send_message(quvi_net_t n, SoupMessage **message,
   /* Even if this is conditional here, the current library design sets
    * these options (set in the LUA website scripts with quvi.fetch
    * call) for fetch callback only. */
-  if (lua_opts)
-    set_opts_from_lua_script(n, *message);
+  if (lua_feats)
+    set_feats_from_lua_script(n, *message);
 
   *status = soup_session_send_message(session, *message);
 

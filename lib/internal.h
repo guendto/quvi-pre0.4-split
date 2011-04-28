@@ -111,7 +111,7 @@ typedef struct _quvi_lua_script_s *_quvi_lua_script_t;
 /* quvi net handle */
 struct _quvi_net_s
 {
-  _quvi_llst_node_t options;
+  _quvi_llst_node_t features;
   long resp_code;
   char *errmsg;
   char *url;
@@ -133,13 +133,13 @@ struct _quvi_net_s
 typedef struct _quvi_net_s *_quvi_net_t;
 
 /* quvi net property option handle */
-struct _quvi_net_propopt_s
+struct _quvi_net_propfeat_s
 {
   char *name;
   char *value;
 };
 
-typedef struct _quvi_net_propopt_s *_quvi_net_propopt_t;
+typedef struct _quvi_net_propfeat_s *_quvi_net_propfeat_t;
 
 #endif
 

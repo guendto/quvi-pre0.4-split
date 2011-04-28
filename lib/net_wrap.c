@@ -35,26 +35,26 @@ _quvi_net_t new_net_handle()
   return (calloc(1, sizeof(struct _quvi_net_s)));
 }
 
-static QUVIcode new_opt(_quvi_net_t n, const char *name, const char *value)
+static QUVIcode new_feat(_quvi_net_t n, const char *name, const char *value)
 {
-  _quvi_net_propopt_t opt;
+  _quvi_net_propfeat_t feature;
 
   if (!value) /* Set only if value is set */
     return (QUVI_OK);
 
-  opt = calloc(1, sizeof(*opt));
-  if (!opt)
+  feature = calloc(1, sizeof(*feature));
+  if (!feature)
     return (QUVI_MEM);
 
-  freprintf(&opt->name, "%s", name);
-  freprintf(&opt->value, "%s", value);
+  freprintf(&feature->name, "%s", name);
+  freprintf(&feature->value, "%s", value);
 
-  quvi_llst_append((quvi_llst_node_t*)&n->options, opt);
+  quvi_llst_append((quvi_llst_node_t*)&n->features, feature);
 
   return (QUVI_OK);
 }
 
-static void free_option(_quvi_net_propopt_t *o)
+static void free_feature(_quvi_net_propfeat_t *o)
 {
   if (*o && o)
     {
@@ -68,12 +68,12 @@ void free_net_handle(_quvi_net_t *n)
 {
   if (*n && n)
     {
-      _quvi_llst_node_t curr = (*n)->options;
+      _quvi_llst_node_t curr = (*n)->features;
 
       while (curr)
         {
-          _quvi_net_propopt_t o = (_quvi_net_propopt_t) curr->data;
-          free_option(&o);
+          _quvi_net_propfeat_t o = (_quvi_net_propfeat_t) curr->data;
+          free_feature(&o);
           assert(o == NULL);
           curr = curr->next;
         }
@@ -87,7 +87,7 @@ void free_net_handle(_quvi_net_t *n)
     }
 }
 
-const char *_net_property_options[] =
+const char *_net_property_features[] =
 {
   NULL,
   "arbitrary_cookie",
@@ -140,11 +140,11 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
   if (lua_istable(l, 2))
     {
       int i;
-      for (i=1; _net_property_options[i]; ++i)
+      for (i=1; _net_property_features[i]; ++i)
         {
-          const char *v = lua_get_field_s(l, _net_property_options[i]);
+          const char *v = lua_get_field_s(l, _net_property_features[i]);
 
-          rc = new_opt(*n, _net_property_options[i], v);
+          rc = new_feat(*n, _net_property_features[i], v);
 
           if (rc != QUVI_OK)
             return (rc);

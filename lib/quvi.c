@@ -286,7 +286,7 @@ static QUVIcode _net_setprop(_quvi_net_t n, QUVInetProperty p, va_list arg)
     {
     case QUVI_NET_PROPERTY_URL:
       _sets(n->url);
-    case QUVI_NET_PROPERTY_OPTIONS:
+    case QUVI_NET_PROPERTY_FEATURES:
       break; /* Ignored: read-only */
     case QUVI_NET_PROPERTY_REDIRECTURL:
       _sets(n->redirect.url);
@@ -515,8 +515,8 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
       _setn(dp, n->verify.content_length);
     case QUVI_NET_PROPERTY_RESPONSECODE:
       _setn(lp, n->resp_code);
-    case QUVI_NET_PROPERTY_OPTIONS:
-      _setv(n->options);
+    case QUVI_NET_PROPERTY_FEATURES:
+      _setv(n->features);
     default:
       rc = QUVI_INVARG;
     }
@@ -524,7 +524,7 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
 }
 
 static QUVIcode
-_net_getprop_opt(_quvi_net_propopt_t n, QUVInetPropertyOption opt, ...)
+_net_getprop_feat(_quvi_net_propfeat_t n, QUVInetPropertyFeature feature, ...)
 {
   QUVIcode rc;
   va_list arg;
@@ -544,8 +544,8 @@ _net_getprop_opt(_quvi_net_propopt_t n, QUVInetPropertyOption opt, ...)
   lp = 0;
 #endif
 
-  va_start(arg, opt);
-  type = QUVIPROPERTY_TYPEMASK & (int)opt;
+  va_start(arg, feature);
+  type = QUVIPROPERTY_TYPEMASK & (int)feature;
 
   switch (type)
     {
@@ -561,11 +561,11 @@ _net_getprop_opt(_quvi_net_propopt_t n, QUVInetPropertyOption opt, ...)
   if (rc != QUVI_OK)
     return (rc);
 
-  switch (opt)
+  switch (feature)
     {
-    case QUVI_NET_PROPERTY_OPTION_NAME:
+    case QUVI_NET_PROPERTY_FEATURE_NAME:
       _sets(n->name);
-    case QUVI_NET_PROPERTY_OPTION_VALUE:
+    case QUVI_NET_PROPERTY_FEATURE_VALUE:
       _sets(n->value);
     default:
       rc = QUVI_INVARG;
@@ -716,7 +716,7 @@ QUVIcode quvi_net_setprop(quvi_net_t n, QUVInetProperty p, ...)
 
 /* quvi_net_getprop */
 
-QUVIcode quvi_net_getprop(quvi_net_propopt_t n, QUVInetProperty prop, ...)
+QUVIcode quvi_net_getprop(quvi_net_propfeat_t n, QUVInetProperty prop, ...)
 {
   va_list arg;
   void *p;
@@ -730,10 +730,10 @@ QUVIcode quvi_net_getprop(quvi_net_propopt_t n, QUVInetProperty prop, ...)
   return (_net_getprop(n,prop,p));
 }
 
-/* quvi_net_getprop_opt */
+/* quvi_net_getprop_feat */
 
 QUVIcode
-quvi_net_getprop_opt(quvi_net_propopt_t n, QUVInetPropertyOption opt, ...)
+quvi_net_getprop_feat(quvi_net_propfeat_t n, QUVInetPropertyFeature opt, ...)
 {
   va_list arg;
   void *p;
@@ -744,45 +744,45 @@ quvi_net_getprop_opt(quvi_net_propopt_t n, QUVInetPropertyOption opt, ...)
   p = va_arg(arg, void*);
   va_end(arg);
 
-  return (_net_getprop_opt(n,opt,p));
+  return (_net_getprop_feat(n,opt,p));
 }
 
-/* quvi_net_get_one_prop_opt */
+/* quvi_net_get_one_prop_feat */
 
-extern const char *_net_property_options[];
+extern const char *_net_property_features[];
 
-static const char *_opt_to_str(QUVInetPropertyOptionName id)
+static const char *_feat_to_str(QUVInetPropertyFeatureName id)
 {
   const char *s = NULL;
-  if (id > QUVI_NET_PROPERTY_OPTION_NAME_NONE
-      && id < _QUVI_NET_PROPERTY_OPTION_NAME_LAST)
+  if (id > QUVI_NET_PROPERTY_FEATURE_NAME_NONE
+      && id < _QUVI_NET_PROPERTY_FEATURE_NAME_LAST)
     {
-      s = _net_property_options[id];
+      s = _net_property_features[id];
     }
   return (s);
 }
 
 char *
-quvi_net_get_one_prop_opt(quvi_net_t n, QUVInetPropertyOptionName id)
+quvi_net_get_one_prop_feat(quvi_net_t n, QUVInetPropertyFeatureName id)
 {
   quvi_llst_node_t opt;
 
-  quvi_net_getprop(n, QUVI_NET_PROPERTY_OPTIONS, &opt);
+  quvi_net_getprop(n, QUVI_NET_PROPERTY_FEATURES, &opt);
 
   while (opt)
     {
-      const char *opt_name, *opt_value, *s;
-      quvi_net_propopt_t popt;
+      const char *feat_name, *feat_value, *s;
+      quvi_net_propfeat_t popt;
 
-      popt = (quvi_net_propopt_t) quvi_llst_data(opt);
+      popt = (quvi_net_propfeat_t) quvi_llst_data(opt);
 
-      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_NAME, &opt_name);
-      quvi_net_getprop_opt(popt, QUVI_NET_PROPERTY_OPTION_VALUE, &opt_value);
+      quvi_net_getprop_feat(popt, QUVI_NET_PROPERTY_FEATURE_NAME, &feat_name);
+      quvi_net_getprop_feat(popt, QUVI_NET_PROPERTY_FEATURE_VALUE, &feat_value);
 
-      s = _opt_to_str(id);
+      s = _feat_to_str(id);
 
-      if (s && !strcmp(opt_name,s))
-        return ((char*)opt_value);
+      if (s && !strcmp(feat_name,s))
+        return ((char*)feat_value);
 
       opt = quvi_llst_next(opt);
     }

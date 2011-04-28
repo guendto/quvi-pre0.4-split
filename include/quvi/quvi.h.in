@@ -171,16 +171,16 @@ typedef enum
 #define QUVIINFO_TYPEMASK   0xf00000 /**< type mask */
 
 /** @enum QUVIcategory Website script category
-*
-* Specify which of the website script categories the application wants
-* to use. The library defaults to QUVIPROTO_HTTP for historical reasons.
-*
-* @note Consider setting the appropriate category in your application,
-* the default behaviour is planned to change to "QUVIPROTO_ALL" in 0.2.20
-*
-* @sa quvi_setopt
-* @sa QUVIOPT_CATEGORY
-*/
+ *
+ * Specify which of the website script categories the application wants
+ * to use. The library defaults to QUVIPROTO_HTTP for historical reasons.
+ *
+ * @note Consider setting the appropriate category in your application,
+ * the default behaviour is planned to change to "QUVIPROTO_ALL" in 0.2.20
+ *
+ * @sa quvi_setopt
+ * @sa QUVIOPT_CATEGORY
+ */
 typedef enum
 {
   QUVIPROTO_HTTP = 0x1, /**< Protocol category HTTP */
@@ -193,23 +193,23 @@ typedef enum
 } QUVIcategory;
 
 /** @enum QUVIinfo Info codes to be used with quvi_getinfo()
-*
-* The library creates a cURL handle which is used to fetch and
-* verify parsed details. The cURL handle is initialized
-* with the following libcurl options:
-*   - CURLOPT_USERAGENT         ("Mozilla/5.0")
-*   - CURLOPT_FOLLOWLOCATION    (1)
-*   - CURLOPT_NOBODY            (0)
-*
-* You can, of course, override those settings in your program. You
-* can even use the cURL handle in your program until quvi_close()
-* is called which will release the handle. See the src/quvi.c for
-* an example of this. Note that libquvi uses the libcurl easy
-* interface and not the multi interface.
-*
-* @warning If you use the libquvi created cURL handle in your program,
-* leave the releasing of the handle for the library to do.
-*/
+ *
+ * The library creates a cURL handle which is used to fetch and
+ * verify parsed details. The cURL handle is initialized
+ * with the following libcurl options:
+ *   - CURLOPT_USERAGENT         ("Mozilla/5.0")
+ *   - CURLOPT_FOLLOWLOCATION    (1)
+ *   - CURLOPT_NOBODY            (0)
+ *
+ * You can, of course, override those settings in your program. You
+ * can even use the cURL handle in your program until quvi_close()
+ * is called which will release the handle. See the src/quvi.c for
+ * an example of this. Note that libquvi uses the libcurl easy
+ * interface and not the multi interface.
+ *
+ * @warning If you use the libquvi created cURL handle in your program,
+ * leave the releasing of the handle for the library to do.
+ */
 typedef enum
 {
   QUVIINFO_NONE = 0x00,
@@ -420,6 +420,7 @@ typedef int (*quvi_callback_status) (long param, void *data);
  * there is data received that needs to be saved.
  *
  * @note Returning QUVI_WRITEFUNC_ABORT from the callback function will stop write
+ * @note Ignored with QUVIOPT_FETCHFUNCTION, QUVIOPT_RESOLVEFUNCTION and QUVIOPT_VERIFYFUNCTION
  */
 typedef int (*quvi_callback_write) (char *buffer,
                                     size_t size,
@@ -461,48 +462,48 @@ extern "C" {
    */
 
   /**
-  * @brief Start a new libquvi session
-  *
-  * Initializes a new session handle and locates the website scripts
-  * used to parse the page URLs. The library searches the following
-  * paths in the following order:
-  *
-  *   - $QUVI_BASEDIR defined path (exclusive, overrides default search paths)
-  *   - Current working directory (./lua/website/)
-  *   - $HOME./quvi/
-  *   - $HOME/.config/quvi/
-  *   - $HOME/.local/share/quvi/
-  *   - --datadir=DIR (and pkgdatadir) specified with configure (script)
-  *     - These directories are typically $prefix/share/ and $prefix/share/quvi/
-  *
-  * Note that you can have libquvi dump (to stderr) the scanned directory paths
-  * by setting the QUVI_SHOW_SCANDIR environment variable.
-  *
-  * @param quvi Pointer to a new handle
-  *
-  * @note
-  *   - Close each created handle with quvi_close() when done using it
-  *   - libcurl will use the http_proxy environment setting if it is set
-  *   - See http://curl.haxx.se/libcurl/c/curl_easy_setopt.html on how to override that
-  *
-  * @return Non-zero if an error occurred
-  *
-  * @sa quvi_close
-  *
-  * Example:
-  * @code
-  * #include <quvi/quvi.h>
-  * ...
-  * quvi_t quvi;
-  * int rc;
-  * rc = quvi_init(&quvi);
-  * if (rc != QUVI_OK)
-  *   {
-  *     fprintf(stderr, "error: libquvi: %s\n", quvi_strerror(quvi,rc));
-  *     exit(1);
-  *   }
-  * @endcode
-  */
+   * @brief Start a new libquvi session
+   *
+   * Initializes a new session handle and locates the website scripts
+   * used to parse the page URLs. The library searches the following
+   * paths in the following order:
+   *
+   *   - $QUVI_BASEDIR defined path (exclusive, overrides default search paths)
+   *   - Current working directory (./lua/website/)
+   *   - $HOME./quvi/
+   *   - $HOME/.config/quvi/
+   *   - $HOME/.local/share/quvi/
+   *   - --datadir=DIR (and pkgdatadir) specified with configure (script)
+   *     - These directories are typically $prefix/share/ and $prefix/share/quvi/
+   *
+   * Note that you can have libquvi dump (to stderr) the scanned directory paths
+   * by setting the QUVI_SHOW_SCANDIR environment variable.
+   *
+   * @param quvi Pointer to a new handle
+   *
+   * @note
+   *   - Close each created handle with quvi_close() when done using it
+   *   - libcurl will use the http_proxy environment setting if it is set
+   *   - See http://curl.haxx.se/libcurl/c/curl_easy_setopt.html on how to override that
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @sa quvi_close
+   *
+   * Example:
+   * @code
+   * #include <quvi/quvi.h>
+   * ...
+   * quvi_t quvi;
+   * int rc;
+   * rc = quvi_init(&quvi);
+   * if (rc != QUVI_OK)
+   *   {
+   *     fprintf(stderr, "error: libquvi: %s\n", quvi_strerror(quvi,rc));
+   *     exit(1);
+   *   }
+   * @endcode
+   */
   QUVIcode quvi_init(quvi_t *quvi);
 
 
@@ -511,24 +512,24 @@ extern "C" {
    */
 
   /**
-  * @brief Get information from a libquvi session handle
-  *
-  * @param quvi Handle to a libquvi session
-  * @param info Info ID
-  * @param ... Parameter
-  *
-  * @return Non-zero if an error occurred
-  *
-  * @warning Do not attempt to free the memory returned by this function
-  *
-  * @sa QUVIinfo
-  *
-  * Example:
-  * @code
-  * long resp_code;
-  * quvi_getinfo(quvi, QUVIINFO_RESPONSECODE, &resp_code);
-  * @endcode
-  */
+   * @brief Get information from a libquvi session handle
+   *
+   * @param quvi Handle to a libquvi session
+   * @param info Info ID
+   * @param ... Parameter
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @warning Do not attempt to free the memory returned by this function
+   *
+   * @sa QUVIinfo
+   *
+   * Example:
+   * @code
+   * long resp_code;
+   * quvi_getinfo(quvi, QUVIINFO_RESPONSECODE, &resp_code);
+   * @endcode
+   */
   QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
 
   /** @} */ /* End of libquvi_getinfo group. */
@@ -539,20 +540,20 @@ extern "C" {
    */
 
   /**
-  * @brief End a libquvi session
-  *
-  * @param quvi Handle to a session
-  *
-  * @sa quvi_init
-  *
-  * Example:
-  * @code
-  * quvi_t quvi;
-  * quvi_init(&quvi);
-  * ...
-  * quvi_close(&quvi);
-  * @endcode
-  */
+   * @brief End a libquvi session
+   *
+   * @param quvi Handle to a session
+   *
+   * @sa quvi_init
+   *
+   * Example:
+   * @code
+   * quvi_t quvi;
+   * quvi_init(&quvi);
+   * ...
+   * quvi_close(&quvi);
+   * @endcode
+   */
   void quvi_close(quvi_t *quvi);
 
   /** @} */ /* End of libquvi_release group. */
@@ -564,24 +565,24 @@ extern "C" {
    */
 
   /**
-  * @brief Set options for a libquvi session handle
-  *
-  * @param quvi Handle to a libquvi session
-  * @param opt Option ID
-  * @param ... Parameter
-  *
-  * @return Non-zero if an error occurred
-  *
-  * @sa QUVIoption
-  *
-  * Example:
-  * @code
-  * quvi_t quvi;
-  * quvi_init(&quvi);
-  * quvi_setopt(quvi, QUVIOPT_FORMAT, "hd");
-  * ...
-  * @endcode
-  */
+   * @brief Set options for a libquvi session handle
+   *
+   * @param quvi Handle to a libquvi session
+   * @param opt Option ID
+   * @param ... Parameter
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @sa QUVIoption
+    *
+   * Example:
+   * @code
+   * quvi_t quvi;
+   * quvi_init(&quvi);
+   * quvi_setopt(quvi, QUVIOPT_FORMAT, "hd");
+   * ...
+   * @endcode
+   */
   QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...);
 
   /**
@@ -610,10 +611,10 @@ extern "C" {
   */
   typedef void *quvi_net_t;
 
-  /** @brief Network property option handle
+  /** @brief Network property feature handle
   * @since 0.2.16
   */
-  typedef void *quvi_net_propopt_t;
+  typedef void *quvi_net_propfeat_t;
 
   /**
    * @brief Fetch callback function
@@ -647,7 +648,10 @@ extern "C" {
   typedef int (*quvi_callback_verify) (quvi_net_t);
 
   /** @enum QUVInetProperty Network property codes to be used with
-   * quvi_net_getprop() */
+   * quvi_net_getprop()
+   *
+   * @since 0.2.16
+   */
   typedef enum
   {
     QUVI_NET_PROPERTY_NONE = 0x00,
@@ -663,69 +667,127 @@ extern "C" {
     QUVI_NET_PROPERTY_CONTENTLENGTH = QUVIPROPERTY_DOUBLE + 5,
     /**< Content-length parsed from the returned HTTP header */
     QUVI_NET_PROPERTY_RESPONSECODE = QUVIPROPERTY_LONG + 6,
-    /**< Network options, e.g. arbitrary cookie, etc. */
-    QUVI_NET_PROPERTY_OPTIONS = QUVIPROPERTY_VOID + 7,
-    /**< Network options, e.g. arbitrary cookie, etc. */
+    /**< Response code returned by the server */
+    QUVI_NET_PROPERTY_FEATURES = QUVIPROPERTY_VOID + 7,
+    /**< Network features, e.g. arbitrary cookie, etc. */
 
     /* Add new ones below. Bump _QUVI_NET_PROPERTY_LAST accordingly. */
 
     _QUVI_NET_PROPERTY_LAST = 7 /**< Placeholder */
   } QUVInetProperty;
 
-  /** enum QUVInetPropertyOption Network property option codes to be used
-   * with quvi_net_getpropopt() */
+  /** @enum QUVInetPropertyFeature Network property feature codes to be used
+   * with quvi_net_getprop_feat()
+   *
+   * @since 0.2.16
+   */
   typedef enum
   {
-    QUVI_NET_PROPERTY_OPTION_NONE = 0x00,
+    QUVI_NET_PROPERTY_FEATURE_NONE = 0x00,
     /**< Unused */
-    QUVI_NET_PROPERTY_OPTION_NAME = QUVIPROPERTY_STRING + 1,
-    /**< Name of the property option */
-    QUVI_NET_PROPERTY_OPTION_VALUE = QUVIPROPERTY_STRING + 2,
-    /**< Value of the property option */
+    QUVI_NET_PROPERTY_FEATURE_NAME = QUVIPROPERTY_STRING + 1,
+    /**< Name of the property feature */
+    QUVI_NET_PROPERTY_FEATURE_VALUE = QUVIPROPERTY_STRING + 2,
+    /**< Value of the property feature */
 
-    /* Add new ones below. Bump _QUVI_NET_PROPERTY_OPTION_LAST accordingly. */
+    /* Add new ones below. Bump _QUVI_NET_PROPERTY_FEATURE_LAST accordingly. */
 
-    _QUVI_NET_PROPERTY_OPTION_LAST = 2
+    _QUVI_NET_PROPERTY_FEATURE_LAST = 2
     /**< Placeholder */
 
-  } QUVInetPropertyOption;
+  } QUVInetPropertyFeature;
 
-  /** enum QUVInetPropertyOptionName Network property option codes to be
-   * used with quvi_net_get_one_propopt() */
+  /** enum QUVInetPropertyFeatureName Network property feature names
+   *
+   * @since 0.2.16
+   */
   typedef enum
   {
-    QUVI_NET_PROPERTY_OPTION_NAME_NONE = 0x00,
+    QUVI_NET_PROPERTY_FEATURE_NAME_NONE = 0x00,
     /**< Unused */
 
     /* Unlike other properties, these do not specify "type". */
 
-    QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE,
+    QUVI_NET_PROPERTY_FEATURE_ARBITRARYCOOKIE,
     /**< Arbitrary cookie */
-    QUVI_NET_PROPERTY_OPTION_USERAGENT,
+    QUVI_NET_PROPERTY_FEATURE_USERAGENT,
     /**< User-agent */
 
     /* Add new ones below. */
 
-    _QUVI_NET_PROPERTY_OPTION_NAME_LAST
+    _QUVI_NET_PROPERTY_FEATURE_NAME_LAST
     /**< Placeholder */
 
-  } QUVInetPropertyOptionName;
+  } QUVInetPropertyFeatureName;
 
-  /** @brief TODO */
-  QUVIcode quvi_net_getprop(quvi_net_t, QUVInetProperty, ...);
+  /** @brief Get network property
+   *
+   * @param handle Network handle
+   * @param property Property ID
+   * @param ... Parameter
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @warning Do not attempt to free the memory returned by this function
+   *
+   * @sa QUVInetProperty
+   *
+   * @since 0.2.16
+   */
+  QUVIcode quvi_net_getprop(quvi_net_t handle, QUVInetProperty property, ...);
 
-  /** @brief TODO */
-  QUVIcode quvi_net_setprop(quvi_net_t, QUVInetProperty, ...);
+  /** @brief Set network property
+   *
+   * @param handle Network handle
+   * @param property Property ID
+   * @param ... Parameter
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @sa QUVInetProperty
+   *
+   * @since 0.2.16
+   */
+  QUVIcode quvi_net_setprop(quvi_net_t handle, QUVInetProperty property, ...);
 
-  /** @brief TODO */
-  QUVIcode quvi_net_getprop_opt(quvi_net_propopt_t, QUVInetPropertyOption, ...);
+  /** @brief Get network property feature
+   *
+   * @param handle Network property feature handle
+   * @param feature Feature ID
+   * @param ... Parameter
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @sa QUVInetPropertyFeature
+   *
+   * @since 0.2.16
+   */
+  QUVIcode quvi_net_getprop_feat(quvi_net_propfeat_t handle, QUVInetPropertyFeature feature, ...);
 
   /** @brief Convenience function that wraps the use of quvi_llst_* and
-   * quvi_net_getprop_opt. */
-  char *quvi_net_get_one_prop_opt(quvi_net_t, QUVInetPropertyOptionName);
+   * quvi_net_getprop_feat().
+   *
+   * @param handle Network handle
+   * @param feature Feature name ID
+   *
+   * @return Null-terminated string (or NULL)
+   *
+   * @warning Do not attempt to free the memory returned by this function
+   *
+   * @since 0.2.16 */
+  char *quvi_net_get_one_prop_feat(quvi_net_t handle, QUVInetPropertyFeatureName feature);
 
-  /** @brief TODO */
-  QUVIcode quvi_net_seterr(quvi_net_t, const char *, ...);
+  /** @brief Set network error message
+   *
+   * @param handle Network handle
+   * @param fmt Format string
+   * @param ... Parameter
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @since 0.2.16
+   */
+  QUVIcode quvi_net_seterr(quvi_net_t handle, const char *fmt, ...);
 
   /** @} */ /* End of libquvi_net_if Network interface */
 
@@ -737,27 +799,27 @@ extern "C" {
    */
 
   /**
-  * @brief Start a new media parsing session
-  *
-  * @param quvi Handle to a session
-  * @param url Null-terminated string to an URL
-  * @param media Pointer to a new media session handle
-  *
-  * @note Close each created handle when done and/or before reusing it
-  *
-  * @return Non-zero if an error occurred
-  *
-  * @sa quvi_parse_close
-  *
-  * Example:
-  * @code
-  * quvi_t quvi;
-  * quvi_media_t media;
-  * quvi_init(&quvi);
-  * quvi_parse(quvi, "http://vimeo.com/1485507", &media);
-  * ...
-  * @endcode
-  */
+   * @brief Start a new media parsing session
+   *
+   * @param quvi Handle to a session
+   * @param url Null-terminated string to an URL
+   * @param media Pointer to a new media session handle
+   *
+   * @note Close each created handle when done and/or before reusing it
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @sa quvi_parse_close
+   *
+   * Example:
+   * @code
+   * quvi_t quvi;
+   * quvi_media_t media;
+   * quvi_init(&quvi);
+   * quvi_parse(quvi, "http://vimeo.com/1485507", &media);
+   * ...
+   * @endcode
+   */
   QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t *media);
 
 
@@ -766,105 +828,105 @@ extern "C" {
    */
 
   /**
-  * @brief Get media property information from a media session handle
-  *
-  * @param media Handle to a media session
-  * @param prop Property ID
-  * @param ... Parameter
-  *
-  * @return Non-zero if an error occurred
-  *
-  * @warning Do not attempt to free the memory returned by this function
-  *
-  * @sa QUVIproperty
-  *
-  * Example:
-  * @code
-  * char *url;
-  * ...
-  * quvi_getprop(media, QUVIPROP_MEDIAURL, &url);
-  * puts(url);
-  * ...
-  * @endcode
-  */
+   * @brief Get media property information from a media session handle
+   *
+   * @param media Handle to a media session
+   * @param prop Property ID
+   * @param ... Parameter
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @warning Do not attempt to free the memory returned by this function
+   *
+   * @sa QUVIproperty
+   *
+   * Example:
+   * @code
+   * char *url;
+   * ...
+   * quvi_getprop(media, QUVIPROP_MEDIAURL, &url);
+   * puts(url);
+   * ...
+   * @endcode
+   */
   QUVIcode quvi_getprop(quvi_media_t media, QUVIproperty prop, ...);
 
   /**
-  * @brief Move to the next media URL (if any)
-  *
-  * Used to iterate the parsed media URLs. Typically there is only one,
-  * although some websites have split the media into several segments.
-  *
-  * @param media Handle to a media session
-  *
-  * @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
-  *
-  * @remark Historically "cctv" website used segments
-  *
-  * @since 0.2.15
-  *
-  * @sa quvi_getprop
-  *
-  * Example:
-  * @code
-  * char *url;
-  * do
-  *   {
-  *     quvi_getprop(media, QUVIPROP_MEDIAURL, &url);
-  *     puts(url);
-  *   }
-  * while (quvi_next_media_url(media) == QUVI_OK);
-  * @endcode
-  */
+   * @brief Move to the next media URL (if any)
+   *
+   * Used to iterate the parsed media URLs. Typically there is only one,
+   * although some websites have split the media into several segments.
+   *
+   * @param media Handle to a media session
+   *
+   * @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
+   *
+   * @remark Historically "cctv" website used segments
+   *
+   * @since 0.2.15
+   *
+   * @sa quvi_getprop
+   *
+   * Example:
+   * @code
+   * char *url;
+   * do
+   *   {
+   *     quvi_getprop(media, QUVIPROP_MEDIAURL, &url);
+   *     puts(url);
+   *   }
+   * while (quvi_next_media_url(media) == QUVI_OK);
+   * @endcode
+   */
   QUVIcode quvi_next_media_url(quvi_media_t media);
 
   /**
-  * @brief Move to the next video URL (if any)
-  *
-  * Used to iterate the parsed video URLs. Typically there is only one,
-  * although some websites have split the videos into several segments.
-  *
-  * @param video Handle to a video session
-  *
-  * @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
-  *
-  * @remark Historically "cctv" website used segments
-  *
-  * @deprecated Since 0.2.15, use quvi_next_media_url() instead
-  *
-  * @sa quvi_getprop
-  *
-  * Example:
-  * @code
-  * char *url;
-  * do
-  *   {
-  *     quvi_getprop(media, QUVIPROP_MEDIAURL, &url);
-  *     puts(url);
-  *   }
-  * while (quvi_next_videolink(video) == QUVI_OK);
-  * @endcode
-  */
+   * @brief Move to the next video URL (if any)
+   *
+   * Used to iterate the parsed video URLs. Typically there is only one,
+   * although some websites have split the videos into several segments.
+   *
+   * @param video Handle to a video session
+   *
+   * @return Non-zero if end of list was reached (QUVI_LAST) or an error occurred
+   *
+   * @remark Historically "cctv" website used segments
+   *
+   * @deprecated Since 0.2.15, use quvi_next_media_url() instead
+   *
+   * @sa quvi_getprop
+   *
+   * Example:
+   * @code
+   * char *url;
+   * do
+   *   {
+   *     quvi_getprop(media, QUVIPROP_MEDIAURL, &url);
+   *     puts(url);
+   *   }
+   * while (quvi_next_videolink(video) == QUVI_OK);
+   * @endcode
+   */
   QUVIcode quvi_next_videolink(quvi_video_t video);
 
   /**
-  * @brief End a media parsing session
-  *
-  * @param media Pointer to a media session
-  *
-  * @sa quvi_parse
-  *
-  * Example:
-  * @code
-  * quvi_t quvi;
-  * quvi_media_t media;
-  * ...
-  * quvi_init(&quvi);
-  * quvi_parse(quvi, ..., &media);
-  * quvi_parse_close(&media);
-  * quvi_close(&quvi);
-  * @endcode
-  */
+   * @brief End a media parsing session
+   *
+   * @param media Pointer to a media session
+   *
+   * @sa quvi_parse
+   *
+   * Example:
+   * @code
+   * quvi_t quvi;
+   * quvi_media_t media;
+   * ...
+   * quvi_init(&quvi);
+   * quvi_parse(quvi, ..., &media);
+   * quvi_parse_close(&media);
+   * quvi_close(&quvi);
+   * @endcode
+   */
   void quvi_parse_close(quvi_media_t *media);
 
   /** @} */ /* End of libquvi_getprop group. */
@@ -877,128 +939,128 @@ extern "C" {
    */
 
   /**
-  * @brief Check whether the library could parse the URL
-  *
-  * The library checks the URL with each website script to see whether it
-  * could parse the URL. This function is designed to work without an
-  * Internet connection.
-  *
-  * Most URL shortening services require that the URL is resolved over
-  * an Internet connection. This means that most "shortened" URLs will
-  * fail with this function (QUVI_NOSUPPORT).
-  *
-  * @param quvi Handle to session
-  * @param url Null-terminated string to an URL
-  *
-  * @note
-  *   - Fails (QUVI_NOSUPPORT) with most "shortened" URLs
-  *   - Works with a limited number of URL shorteners, e.g. youtu.be and
-  *   dai.ly, in which cases the LUA scripts can resolve to the
-  *   destination URL without an Internet connection
-  *
-  * @since 0.2.9
-  *
-  * @remarks
-  *   - 0.2.9 - 0.2.14: Limited to basic domain name comparison
-  *   - 0.2.15: Improved heuristics: Additional checks for different URL parts
-  *
-  * @return Non-zero if an error occurred
-  */
+   * @brief Check whether the library could parse the URL
+   *
+   * The library checks the URL with each website script to see whether it
+   * could parse the URL. This function is designed to work without an
+   * Internet connection.
+   *
+   * Most URL shortening services require that the URL is resolved over
+   * an Internet connection. This means that most "shortened" URLs will
+   * fail with this function (QUVI_NOSUPPORT).
+   *
+   * @param quvi Handle to session
+   * @param url Null-terminated string to an URL
+   *
+   * @note
+   *   - Fails (QUVI_NOSUPPORT) with most "shortened" URLs
+   *   - Works with a limited number of URL shorteners, e.g. youtu.be and
+   *   dai.ly, in which cases the LUA scripts can resolve to the
+   *   destination URL without an Internet connection
+   *
+   * @since 0.2.9
+   *
+   * @remarks
+   *   - 0.2.9 - 0.2.14: Limited to basic domain name comparison
+   *   - 0.2.15: Improved heuristics: Additional checks for different URL parts
+   *
+   * @return Non-zero if an error occurred
+   */
   QUVIcode quvi_supported(quvi_t quvi, char *url);
 
   /**
-  * @brief Return next supported website
-  *
-  * This function can be used to iterate the supported websites.
-  *
-  * @param quvi Handle to a session
-  * @param domain Pointer to a null-terminated string (e.g. "youtube.com")
-  * @param formats Pointer to a null-terminated string (e.g. "default|best|hq|hd")
-  *
-  * @return QUVI_OK or a non-zero value if an error occurred
-  *   - QUVI_LAST indicates end of the list of the websites
-  *   - Any other returned non-zero value indicates an actual error and
-  *     should be handled accordingly (e.g. relaying the return code to
-  *     \a quvi_strerror)
-  *
-  * @note
-  *   - Both domain and formats string must be quvi_free()d after use
-  *   - Return value QUVI_LAST is a non-zero value and indicates the end iteration
-  *   - Consider handling errors
-  *
-  * @since 0.2.0
-  *
-  * Example:
-  * @code
-  * while (quvi_next_supported_website(quvi, &domain, &formats) == QUVI_OK)
-  *   {
-  *     printf("%s\t%s\n", domain, formats);
-  *     quvi_free(domain);
-  *     quvi_free(formats);
-  *   }
-  * @endcode
-  */
+   * @brief Return next supported website
+   *
+   * This function can be used to iterate the supported websites.
+   *
+   * @param quvi Handle to a session
+   * @param domain Pointer to a null-terminated string (e.g. "youtube.com")
+   * @param formats Pointer to a null-terminated string (e.g. "default|best|hq|hd")
+   *
+   * @return QUVI_OK or a non-zero value if an error occurred
+   *   - QUVI_LAST indicates end of the list of the websites
+   *   - Any other returned non-zero value indicates an actual error and
+   *     should be handled accordingly (e.g. relaying the return code to
+   *     \a quvi_strerror)
+   *
+   * @note
+   *   - Both domain and formats string must be quvi_free()d after use
+   *   - Return value QUVI_LAST is a non-zero value and indicates the end iteration
+   *   - Consider handling errors
+   *
+   * @since 0.2.0
+   *
+   * Example:
+   * @code
+   * while (quvi_next_supported_website(quvi, &domain, &formats) == QUVI_OK)
+   *   {
+   *     printf("%s\t%s\n", domain, formats);
+   *     quvi_free(domain);
+   *     quvi_free(formats);
+   *   }
+   * @endcode
+   */
   QUVIcode quvi_next_supported_website(quvi_t quvi, char **domain, char **formats);
 
   /**
-  * @brief Next supported host
-  *
-  * Iterate the list of the supported hosts.
-  *
-  * @param domain Pointer to a null-terminated string
-  * @param formats Pointer to a null-terminated string
-  *
-  * @return QUVI_LAST (always)
-  *
-  * @deprecated Since 0.2.0, use quvi_next_supported_website() instead
-  */
+   * @brief Next supported host
+   *
+   * Iterate the list of the supported hosts.
+   *
+   * @param domain Pointer to a null-terminated string
+   * @param formats Pointer to a null-terminated string
+   *
+   * @return QUVI_LAST (always)
+   *
+   * @deprecated Since 0.2.0, use quvi_next_supported_website() instead
+   */
   QUVIcode quvi_next_host(char **domain, char **formats);
 
   /**
-  * @brief Return a string describing the error code
-  *
-  * @param quvi Handle to a libquvi session
-  * @param code Error code
-  *
-  * @return Null-terminated string
-  *
-  * @warning Do not attempt to free the memory returned by this function
-  *
-  * Example:
-  * @code
-  * quvi_t quvi;
-  * QUVIcode rc = quvi_init(&quvi);
-  * if (rc != QUVI_OK)
-  *   {
-  *     fprintf(stderr, "error: %s\n", quvi_strerror(quvi,rc));
-  *     exit (rc);
-  *   }
-  * quvi_close(&quvi);
-  * @endcode
-  */
+   * @brief Return a string describing the error code
+   *
+   * @param quvi Handle to a libquvi session
+   * @param code Error code
+   *
+   * @return Null-terminated string
+   *
+   * @warning Do not attempt to free the memory returned by this function
+   *
+   * Example:
+   * @code
+   * quvi_t quvi;
+   * QUVIcode rc = quvi_init(&quvi);
+   * if (rc != QUVI_OK)
+   *   {
+   *     fprintf(stderr, "error: %s\n", quvi_strerror(quvi,rc));
+   *     exit (rc);
+   *   }
+   * quvi_close(&quvi);
+   * @endcode
+   */
   char *quvi_strerror(quvi_t quvi, QUVIcode code);
 
   /**
-  * @brief Return libquvi version
-  *
-  * @param type Version type
-  *
-  * @return Null-terminated string
-  *
-  * @warning Do not attempt to free the memory returned by this function
-  *
-  * Example:
-  * @code
-  * puts( quvi_version(QUVI_VERSION_LONG) );
-  * @endcode
-  */
+   * @brief Return libquvi version
+   *
+   * @param type Version type
+   *
+   * @return Null-terminated string
+   *
+   * @warning Do not attempt to free the memory returned by this function
+   *
+   * Example:
+   * @code
+   * puts( quvi_version(QUVI_VERSION_LONG) );
+   * @endcode
+   */
   char *quvi_version(QUVIversion type);
 
   /**
-  * @brief Free allocated memory
-  *
-  * @param ptr Pointer to data
-  */
+   * @brief Free allocated memory
+   *
+   * @param ptr Pointer to data
+   */
   void quvi_free(void *ptr);
 
   /** @defgroup libquvi_llst Linked list interface
@@ -1010,35 +1072,64 @@ extern "C" {
    */
   typedef void *quvi_llst_node_t;
 
-  /**
-   * TODO
+  /** @brief Append new node to a linked list
+   *
+   * @param llst Handle to a linked list node (if NULL, new linked list is created)
+   * @param data Data to be appended to the list
+   *
+   * @code
+   * quvi_llst_node_t l = NULL;
+   * quvi_llst_append(l, strdup("foo"));
+   * quvi_llst_append(l, strdup("bar"));
+   * @endcode
+   *
+   * @return Non-zero if an error occurred
+   *
    * @since 0.2.16
+   *
+   * @warning Make sure that the data is allocated dynamically
+   *
+   * @sa quvi_llst_free
    */
   QUVIcode quvi_llst_append(quvi_llst_node_t *llst, void *data);
 
-  /**
-   * TODO
+  /** @brief Return the size (number of nodes) in linked list
+   *
+   * @param llst Handle to a linked list node
+   *
+   * @return Number of nodes
+   *
    * @since 0.2.16
    */
   size_t quvi_llst_size(quvi_llst_node_t llst);
 
-  /**
-   * TODO
+  /** @brief Return next linked node
+   *
+   * @param llst Handle to a linked list node
+   *
+   * @return Handle to the next linked list (or NULL)
+   *
    * @since 0.2.16
    */
-  quvi_llst_node_t quvi_llst_next(quvi_llst_node_t lst);
+  quvi_llst_node_t quvi_llst_next(quvi_llst_node_t llst);
 
-  /**
-   * TODO
+  /** @brief Return data of the linked list node
+   *
+   * @param node Handle to a linked list node
+   *
+   * @return Pointer to the node data
+   *
    * @since 0.2.16
    */
   void *quvi_llst_data(quvi_llst_node_t node);
 
-  /**
-   * TODO
+  /** @brief Release memory allocated by the linked list
+   *
+   * @param llst Handle to a linked list node
+   *
    * @since 0.2.16
    */
-  void quvi_llst_free(quvi_llst_node_t *lst);
+  void quvi_llst_free(quvi_llst_node_t *llst);
 
   /** @} */ /* End of libquvi_llst group. */
 
