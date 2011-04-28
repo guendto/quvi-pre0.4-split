@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2009,2010  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2009,2010,2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,8 +33,7 @@
 
 static void *_realloc(void *p, const size_t size)
 {
-  if (p)
-    return realloc(p, size);
+  if (p) return realloc(p, size);
   return malloc(size);
 }
 
@@ -76,6 +75,8 @@ static void set_opts_from_lua_script(_quvi_t q, _quvi_net_t n)
   set_opt(q, n, QUVI_NET_PROPERTY_OPTION_ARBITRARYCOOKIE, CURLOPT_COOKIE);
   set_opt(q, n, QUVI_NET_PROPERTY_OPTION_USERAGENT, CURLOPT_USERAGENT);
 }
+
+/* curl_fetch */
 
 QUVIcode curl_fetch(_quvi_t q, _quvi_net_t n)
 {
@@ -146,6 +147,8 @@ static void restore_opts(_quvi_t q)
   curl_easy_setopt(q->curl, CURLOPT_HTTPGET, 1L); /* HEAD -> GET */
 }
 
+/* curl_resolve */
+
 QUVIcode curl_resolve(_quvi_t q, _quvi_net_t n)
 {
   struct content_s tmp;
@@ -192,6 +195,8 @@ QUVIcode curl_resolve(_quvi_t q, _quvi_net_t n)
 
   return (rc);
 }
+
+/* curl_verify */
 
 QUVIcode curl_verify(_quvi_t q, _quvi_net_t n)
 {
