@@ -525,12 +525,8 @@ extern "C" {
   *
   * Example:
   * @code
-  * CURL curl;
-  * long last_httpcode;
-  * ...
-  * quvi_getinfo(quvi, QUVIINFO_CURL, &curl);
-  * quvi_getinfo(quvi, QUVIINFO_HTTPCODE, &last_httpcode);
-  * ...
+  * long resp_code;
+  * quvi_getinfo(quvi, QUVIINFO_RESPONSECODE, &resp_code);
   * @endcode
   */
   QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...);
