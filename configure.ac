@@ -103,11 +103,11 @@ fi
 
 # Checks for libraries.
 AM_ICONV
-PKG_CHECK_MODULES(libcurl, libcurl >= 7.18.0)
-PKG_CHECK_MODULES(liblua, lua >= 5.1, [], [
-    PKG_CHECK_MODULES(liblua, lua51 >= 5.1, [], [
-        PKG_CHECK_MODULES(liblua, lua5.1 >= 5.1, [], [
-            PKG_CHECK_MODULES(liblua, lua-5.1 >= 5.1)
+PKG_CHECK_MODULES([libcurl], [libcurl >= 7.18.0])
+PKG_CHECK_MODULES([liblua], [lua >= 5.1], [], [
+    PKG_CHECK_MODULES([liblua], [lua51 >= 5.1], [], [
+        PKG_CHECK_MODULES([liblua], [lua5.1 >= 5.1], [], [
+            PKG_CHECK_MODULES(liblua, [lua-5.1 >= 5.1])
         ])
     ])
 ])
