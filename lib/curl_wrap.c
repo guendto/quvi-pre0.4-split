@@ -23,13 +23,39 @@
 #include <memory.h>
 #include <assert.h>
 
-#include <curl/curl.h>
-
 #include "quvi/quvi.h"
 #include "internal.h"
 #include "util.h"
 #include "lua_wrap.h"
 #include "curl_wrap.h"
+
+/* curl_init */
+
+QUVIcode curl_init(_quvi_t q)
+{
+  curl_global_init(CURL_GLOBAL_ALL);
+
+  q->curl = curl_easy_init();
+  if (!q->curl)
+    return (QUVI_CURLINIT);
+
+  /* Set quvi defaults with libcurl. */
+  curl_easy_setopt(q->curl, CURLOPT_USERAGENT, "Mozilla/5.0");
+  curl_easy_setopt(q->curl, CURLOPT_FOLLOWLOCATION, 1L);
+  curl_easy_setopt(q->curl, CURLOPT_NOBODY, 0L);
+
+  return (QUVI_OK);
+}
+
+/* curl_close */
+
+void curl_close(_quvi_t q)
+{
+  curl_easy_cleanup(q->curl);
+  q->curl = NULL;
+
+  curl_global_cleanup();
+}
 
 static void *_realloc(void *p, const size_t size)
 {
@@ -261,6 +287,23 @@ QUVIcode curl_verify(_quvi_t q, _quvi_net_t n)
     _free(tmp.p);
 
   return (rc);
+}
+
+char *curl_unescape_url(_quvi_t q, char *s)
+{
+  char *tmp, *r;
+
+  assert(q!= 0);
+  assert(q->curl != 0);
+
+  tmp = curl_easy_unescape(q->curl, s, 0, NULL);
+  assert(tmp != 0);
+
+  r = strdup(tmp);
+  curl_free(tmp);
+
+  _free(s);
+  return (r);
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

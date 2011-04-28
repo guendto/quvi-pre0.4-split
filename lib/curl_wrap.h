@@ -20,9 +20,14 @@
 #ifndef curl_wrap_h
 #define curl_wrap_h
 
+#include <curl/curl.h>
+
+QUVIcode curl_init(_quvi_t);
+void     curl_close(_quvi_t);
 QUVIcode curl_fetch(_quvi_t, _quvi_net_t);
 QUVIcode curl_resolve(_quvi_t, _quvi_net_t);
 QUVIcode curl_verify(_quvi_t, _quvi_net_t);
+char*    curl_unescape_url(_quvi_t, char*);
 
 #endif
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

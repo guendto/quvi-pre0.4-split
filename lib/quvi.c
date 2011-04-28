@@ -22,11 +22,10 @@
 #include <assert.h>
 #include <string.h>
 
-#include <curl/curl.h>
-
 #include "quvi/quvi.h"
 #include "internal.h"
 #include "lua_wrap.h"
+#include "curl_wrap.h"
 #include "util.h"
 #include "net_wrap.h"
 
@@ -41,6 +40,7 @@
 QUVIcode quvi_init(quvi_t * dst)
 {
   _quvi_t quvi;
+  QUVIcode rc;
 
   is_invarg(dst);
   *dst = 0;
@@ -51,22 +51,16 @@ QUVIcode quvi_init(quvi_t * dst)
 
   *dst = (quvi_t) quvi;
 
-  curl_global_init(CURL_GLOBAL_ALL);
-
-  quvi->curl = curl_easy_init();
-  if (!quvi->curl)
+  rc = curl_init(quvi);
+  if (rc != QUVI_OK)
     {
       _free(quvi);
-      return (QUVI_CURLINIT);
+      return (rc);
     }
 
-  /* Set library defaults. */
+  /* Set quvi defaults. */
   quvi_setopt(quvi, QUVIOPT_FORMAT, "default");
   quvi_setopt(quvi, QUVIOPT_CATEGORY, QUVIPROTO_HTTP);
-
-  curl_easy_setopt(quvi->curl, CURLOPT_USERAGENT, "Mozilla/5.0");
-  curl_easy_setopt(quvi->curl, CURLOPT_FOLLOWLOCATION, 1L);
-  curl_easy_setopt(quvi->curl, CURLOPT_NOBODY, 0L);
 
   return (init_lua(quvi));
 }
@@ -91,13 +85,11 @@ void quvi_close(quvi_t * handle)
       _free((*quvi)->errmsg);
       assert((*quvi)->errmsg == NULL);
 
-      curl_easy_cleanup((*quvi)->curl);
-      (*quvi)->curl = NULL;
+      curl_close(*quvi);
+      assert((*quvi)->curl == NULL);
 
       _free(*quvi);
       assert((*quvi) == NULL);
-
-      curl_global_cleanup();
     }
 }
 

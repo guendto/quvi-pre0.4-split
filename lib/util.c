@@ -25,8 +25,6 @@
 #include <libgen.h>
 #include <assert.h>
 
-#include <curl/curl.h>
-
 #ifdef HAVE_ICONV
 #include <iconv.h>
 #endif
@@ -139,23 +137,11 @@ QUVIcode to_utf8(_quvi_media_t media)
 
   return (QUVI_OK);
 }
-#endif
+#endif /* HAVE_ICONV */
 
 char *unescape(_quvi_t quvi, char *s)
 {
-  char *tmp, *ret;
-
-  assert(quvi != 0);
-  assert(quvi->curl != 0);
-
-  tmp = curl_easy_unescape(quvi->curl, s, 0, NULL);
-  assert(tmp != 0);
-  ret = strdup(tmp);
-  curl_free(tmp);
-
-  free(s);
-
-  return (ret);
+  return curl_unescape_url(quvi, s);
 }
 
 char *from_html_entities(char *src)
