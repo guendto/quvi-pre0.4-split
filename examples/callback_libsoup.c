@@ -249,13 +249,15 @@ int main (int argc, char *argv[])
 
   g_type_init();
 
-  session = soup_session_async_new_with_options(
 #ifdef HAVE_LIBSOUP_GNOME
+  session = soup_session_async_new_with_options(
               SOUP_SESSION_ADD_FEATURE_BY_TYPE,
               SOUP_TYPE_PROXY_RESOLVER_GNOME,
-#endif
               NULL
             );
+#else
+  session = soup_session_async_new();
+#endif
 
   if (flag_log)
     {
