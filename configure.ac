@@ -112,6 +112,22 @@ PKG_CHECK_MODULES([liblua], [lua >= 5.1], [], [
     ])
 ])
 
+AC_ARG_WITH([soup], AS_HELP_STRING([--with-soup], [Build with libsoup]))
+
+AS_IF([test "x$with_soup" = "xyes"], [
+    # Either libsoup-gnome or libsoup.
+    PKG_CHECK_MODULES( [libsoup_gnome], [libsoup-gnome-2.4 >= 2.26], [
+        AC_DEFINE([HAVE_LIBSOUP_GNOME], [1], [Have libsoup-gnome])
+        libsoup_CFLAGS="$libsoup_gnome_CFLAGS"
+        libsoup_LIBS="$libsoup_gnome_LIBS"
+        ], [PKG_CHECK_MODULES([libsoup], [libsoup-2.4 >= 2.26])]
+    )
+    AC_SUBST(libsoup_CFLAGS)
+    AC_SUBST(libsoup_LIBS)
+])
+
+AM_CONDITIONAL([WITH_SOUP], [test x"$with_soup" = "xyes"])
+
 # Checks for header files.
 AC_HEADER_STDC # `stdlib.h', `stdarg.h', `string.h', ...
 AC_CHECK_HEADERS([memory.h stdint.h stdlib.h limits.h stddef.h])
@@ -153,20 +169,6 @@ AC_ARG_ENABLE([examples],
     [],
     [enable_examples=no])
 AM_CONDITIONAL([ENABLE_EXAMPLES], [test x"$enable_examples" != "xno"])
-
-if [ test x"$enable_examples" != "xno" ]; then
-
-    # libsoup(-gnome)
-    PKG_CHECK_MODULES([libsoup_gnome], [libsoup-gnome-2.4 >= 2.26],
-        [libsoup_CFLAGS="$libsoup_gnome_CFLAGS"
-         libsoup_LIBS="$libsoup_gnome_LIBS"
-         AC_DEFINE([HAVE_LIBSOUP_GNOME], [1], [Have libsoup-gnome])],
-        # Fallback to libsoup.
-        [PKG_CHECK_MODULES([libsoup], [libsoup-2.4 >= 2.26])])
-
-    AC_SUBST(libsoup_CFLAGS)
-    AC_SUBST(libsoup_LIBS)
-fi
 
 # --enable-tests
 AC_ARG_ENABLE([tests],
