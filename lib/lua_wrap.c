@@ -250,13 +250,13 @@ static int l_quvi_unescape(lua_State * l)
 
 static QUVIcode new_lua_script(_quvi_lua_script_t * dst)
 {
-  _quvi_lua_script_t qls;
+  _quvi_lua_script_t s;
 
-  qls = calloc(1, sizeof(*qls));
-  if (!qls)
+  s = calloc(1, sizeof(*s));
+  if (!s)
     return (QUVI_MEM);
 
-  *dst = qls;
+  *dst = s;
 
   return (QUVI_OK);
 }
@@ -291,23 +291,23 @@ scan_dir(_quvi_llst_node_t * dst, const char *path, filter_func filter)
     {
       if (filter(de))
         {
-          _quvi_lua_script_t qls;
+          _quvi_lua_script_t s;
 
-          QUVIcode rc = new_lua_script(&qls);
+          QUVIcode rc = new_lua_script(&s);
 
           if (rc != QUVI_OK)
             return (rc);
 
-          asprintf((char **)&qls->basename, "%s", de->d_name);
-          asprintf((char **)&qls->path, "%s/%s", path, de->d_name);
+          asprintf((char **)&s->basename, "%s", de->d_name);
+          asprintf((char **)&s->path, "%s/%s", path, de->d_name);
 
           if (show_script)
             {
               fprintf(stderr, "quvi: %s: found script: %s\n",
-                      __PRETTY_FUNCTION__, qls->path);
+                      __PRETTY_FUNCTION__, s->path);
             }
 
-          quvi_llst_append((quvi_llst_node_t*)dst, qls);
+          quvi_llst_append((quvi_llst_node_t*)dst, s);
         }
     }
 
@@ -470,7 +470,7 @@ static QUVIcode
 prep_util_script(_quvi_t quvi,
                  const char *script_fname,
                  const char *func_name, lua_State ** pl,
-                 _quvi_lua_script_t *qls)
+                 _quvi_lua_script_t *s)
 {
   lua_State *l;
 
@@ -479,10 +479,10 @@ prep_util_script(_quvi_t quvi,
   assert(script_fname != NULL);
 
   *pl  = NULL;
-  *qls = NULL;
+  *s = NULL;
 
-  *qls = find_util_script(quvi, script_fname);
-  if (*qls == NULL)
+  *s = find_util_script(quvi, script_fname);
+  if (*s == NULL)
     return (QUVI_NOLUAUTIL);
 
   l = quvi->lua;
@@ -491,15 +491,15 @@ prep_util_script(_quvi_t quvi,
   lua_pushnil(l);
   lua_getglobal(l, func_name);
 
-  if (luaL_dofile(l, (*qls)->path))
-    luaL_error(l, "%s: %s", (*qls)->path, lua_tostring(l, -1));
+  if (luaL_dofile(l, (*s)->path))
+    luaL_error(l, "%s: %s", (*s)->path, lua_tostring(l, -1));
 
   lua_getglobal(l, func_name);
 
   if (!lua_isfunction(l, -1))
     {
       luaL_error(l,
-                 "%s: function `%s' not found", (*qls)->path, func_name);
+                 "%s: function `%s' not found", (*s)->path, func_name);
     }
 
   *pl = l;
@@ -509,36 +509,36 @@ prep_util_script(_quvi_t quvi,
 
 /* Executes the `suffix_from_contenttype' lua function. */
 
-QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_media_url_t qvl)
+QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_media_url_t mu)
 {
   const static char script_fname[] = "content_type.lua";
   const static char func_name[] = "suffix_from_contenttype";
-  _quvi_lua_script_t qls;
+  _quvi_lua_script_t s;
   lua_State *l;
   QUVIcode rc;
 
   assert(quvi != NULL);
-  assert(qvl != NULL);
+  assert(mu != NULL);
 
-  rc = prep_util_script(quvi, script_fname, func_name, &l, &qls);
+  rc = prep_util_script(quvi, script_fname, func_name, &l, &s);
   if (rc != QUVI_OK)
     return (rc);
 
   assert(l != NULL);
-  assert(qls != NULL);
+  assert(s != NULL);
 
-  lua_pushstring(l, qvl->content_type);
+  lua_pushstring(l, mu->content_type);
 
   if (lua_pcall(l, 1, 1, 0))
-    luaL_error(l, "%s: %s", qls->path, lua_tostring(l, -1));
+    luaL_error(l, "%s: %s", s->path, lua_tostring(l, -1));
 
   if (lua_isstring(l, -1))
-    freprintf(&qvl->suffix, "%s", lua_tostring(l, -1));
+    freprintf(&mu->suffix, "%s", lua_tostring(l, -1));
   else
     {
       luaL_error(l,
                  "%s: expected `%s' function to return a string",
-                 qls->path, func_name);
+                 s->path, func_name);
     }
 
   lua_pop(l, 1);
@@ -552,7 +552,7 @@ static QUVIcode run_lua_trim_fields_func(_quvi_media_t media, int ref)
 {
   const static char script_fname[] = "trim.lua";
   const static char func_name[] = "trim_fields";
-  _quvi_lua_script_t qls;
+  _quvi_lua_script_t s;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
@@ -562,23 +562,23 @@ static QUVIcode run_lua_trim_fields_func(_quvi_media_t media, int ref)
   quvi = media->quvi;
   assert(quvi != NULL);
 
-  rc = prep_util_script(quvi, script_fname, func_name, &l, &qls);
+  rc = prep_util_script(quvi, script_fname, func_name, &l, &s);
   if (rc != QUVI_OK)
     return (rc);
 
   assert(l != NULL);
-  assert(qls != NULL);
+  assert(s != NULL);
 
   lua_rawgeti(l, LUA_REGISTRYINDEX, ref);
 
   if (lua_pcall(l, 1, 1, 0))
-    luaL_error(l, "%s: %s", qls->path, lua_tostring(l, -1));
+    luaL_error(l, "%s: %s", s->path, lua_tostring(l, -1));
 
   if (!lua_istable(l, -1))
     {
       luaL_error(l,
                  "%s: expected `%s' function to return a table",
-                 qls->path, func_name);
+                 s->path, func_name);
     }
 
   return (QUVI_OK);
@@ -590,7 +590,7 @@ QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
 {
   const static char script_fname[] = "charset.lua";
   const static char func_name[] = "charset_from_data";
-  _quvi_lua_script_t qls;
+  _quvi_lua_script_t s;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
@@ -599,17 +599,17 @@ QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
   quvi = media->quvi;
   assert(quvi != NULL);
 
-  rc = prep_util_script(quvi, script_fname, func_name, &l, &qls);
+  rc = prep_util_script(quvi, script_fname, func_name, &l, &s);
   if (rc != QUVI_OK)
     return (rc);
 
   assert(l != NULL);
-  assert(qls != NULL);
+  assert(s != NULL);
 
   lua_pushstring(l, data);
 
   if (lua_pcall(l, 1, 1, 0))
-    luaL_error(l, "%s: %s", qls->path, lua_tostring(l, -1));
+    luaL_error(l, "%s: %s", s->path, lua_tostring(l, -1));
 
   if (lua_isstring(l, -1))
     freprintf(&media->charset, "%s", lua_tostring(l, -1));
@@ -618,7 +618,7 @@ QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
     {
       luaL_error(l,
                  "%s: expected `%s' function to return a string",
-                 qls->path, func_name);
+                 s->path, func_name);
     }
 
   lua_pop(l, 1);
@@ -632,7 +632,7 @@ QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
 
 QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 {
-  _quvi_lua_script_t qls;
+  _quvi_lua_script_t s;
   char *script_dir;
   _quvi_t quvi;
   lua_State *l;
@@ -648,7 +648,7 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
   assert(l != NULL);
 
   rc = QUVI_NOSUPPORT;
-  qls = (_quvi_lua_script_t) node->data;
+  s = (_quvi_lua_script_t) node->data;
 
   lua_pushnil(l);
   lua_pushnil(l);
@@ -656,7 +656,7 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
   lua_setglobal(l, "ident");
   lua_setglobal(l, "parse");
 
-  if (luaL_dofile(l, qls->path))
+  if (luaL_dofile(l, s->path))
     {
       freprintf(&quvi->errmsg, "%s", lua_tostring(l, -1));
       return (QUVI_LUA);
@@ -667,11 +667,11 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
   if (!lua_isfunction(l, -1))
     {
       freprintf(&quvi->errmsg, "%s: `ident' function not found",
-                qls->path);
+                s->path);
       return (QUVI_LUA);
     }
 
-  script_dir = dirname_from(qls->path);
+  script_dir = dirname_from(s->path);
 
   lua_newtable(l);
   setfield_s(l, "page_url", ident->url);
@@ -698,7 +698,7 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
         }
     }
   else
-    luaL_error(l, "%s: expected `ident' to return table", qls->path);
+    luaL_error(l, "%s: expected `ident' to return table", s->path);
 
   lua_pop(l, 1);
 
@@ -711,7 +711,7 @@ static QUVIcode
 run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
 {
   static const char func_name[] = "parse";
-  _quvi_lua_script_t qls;
+  _quvi_lua_script_t s;
   char *script_dir;
   _quvi_t quvi;
   QUVIcode rc;
@@ -720,7 +720,7 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
   assert(media != NULL);
 
   quvi = media->quvi;           /* seterr macro needs this. */
-  qls = (_quvi_lua_script_t) node->data;
+  s = (_quvi_lua_script_t) node->data;
   rc = QUVI_OK;
 
   lua_getglobal(l, func_name);
@@ -728,11 +728,11 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
   if (!lua_isfunction(l, -1))
     {
       freprintf(&quvi->errmsg,
-                "%s: `%s' function not found", qls->path, func_name);
+                "%s: `%s' function not found", s->path, func_name);
       return (QUVI_LUA);
     }
 
-  script_dir = dirname_from(qls->path);
+  script_dir = dirname_from(s->path);
 
   lua_newtable(l);
   setfield_s(l, "requested_format", media->quvi->format);
@@ -777,7 +777,7 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
           media->duration = getfield_n(l, "duration");
           freprintf(&media->thumbnail_url, "%s", getfield_s(l, "thumbnail_url"));
 
-          rc = getfield_iter_table_s(l, "url", media, qls);
+          rc = getfield_iter_table_s(l, "url", media, s);
         }
     }
 
