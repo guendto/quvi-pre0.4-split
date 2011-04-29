@@ -17,7 +17,7 @@
  * 02110-1301  USA
  */
 
-/* callback_libsoup.c -- Use libsoup instead of libcurl */
+/* callback_libsoup.c -- Use libsoup (async) instead of libcurl (easy) */
 
 #include "config.h"
 
@@ -74,8 +74,16 @@ static void set_feats_from_lua_script(quvi_net_t n, SoupMessage *m)
 {
   set_feat(n, m, QUVI_NET_PROPERTY_FEATURE_ARBITRARYCOOKIE, "Cookie");
   set_feat(n, m, QUVI_NET_PROPERTY_FEATURE_USERAGENT, "User-Agent");
+}
+
 #ifdef _0
-  /* Same as above. */
+/* Same as set_feats_from_lua_script above. quvi_net_get_one_prop_feat
+ * is a convinience function that can be used instead unless the
+ * application is expected handle >1 of the same features (e.g. multiple
+ * instances of QUVI_NET_PROPERTY_FEATURE_ARBITRARYCOOKIE in the
+ * features list. */
+static void set_feats_from_lua_script_alt(quvi_net_t n, SoupMessage *m)
+{
   quvi_llst_node_t feature;
   quvi_net_getprop(n, QUVI_NET_PROPERTY_FEATURES, &feature);
 
@@ -106,8 +114,8 @@ static void set_feats_from_lua_script(quvi_net_t n, SoupMessage *m)
 
       feature = quvi_llst_next(feature);
     }
-#endif
 }
+#endif
 
 static SoupSession *session = NULL;
 
@@ -124,9 +132,7 @@ static void send_message(quvi_net_t n, SoupMessage **message,
   if (msg_flags)
     soup_message_set_flags(*message, msg_flags);
 
-  /* Even if this is conditional here, the current library design sets
-   * these options (set in the LUA website scripts with quvi.fetch
-   * call) for fetch callback only. */
+  /* In reality, the library sets these only for quvi.fetch. */
   if (lua_feats)
     set_feats_from_lua_script(n, *message);
 
@@ -140,7 +146,10 @@ static QUVIcode fetch_callback(quvi_net_t n)
   SoupMessage *m;
   guint status;
 
-  send_message(n, &m, &status, 0, 0, 1 /* Set LUA opts flag */);
+  send_message(n, &m, &status,
+               0, /* Session flags */
+               0, /* 'HEAD' flag */
+               1); /* Set features from quvi.fetch */
 
   if (SOUP_STATUS_IS_SUCCESSFUL(status))
     {
@@ -158,7 +167,10 @@ static QUVIcode resolve_callback(quvi_net_t n)
   SoupMessage *m;
   guint status;
 
-  send_message(n, &m, &status, SOUP_MESSAGE_NO_REDIRECT, 0, 0);
+  send_message(n, &m, &status,
+               SOUP_MESSAGE_NO_REDIRECT, /* Session flags */
+               0, /* 'HEAD' flag */
+               0); /* Set features from quvi.fetch */
 
   if (SOUP_STATUS_IS_REDIRECTION(status))
     {
@@ -181,7 +193,10 @@ static QUVIcode verify_callback(quvi_net_t n)
   SoupMessage *m;
   guint status;
 
-  send_message(n, &m, &status, 0, 1 /* HEAD */, 0);
+  send_message(n, &m, &status,
+               0, /* Session flags */
+               1, /* 'HEAD' flag */
+               0); /* Set features from quvi.fetch */
 
   if (SOUP_STATUS_IS_SUCCESSFUL(status))
     {
@@ -202,6 +217,25 @@ static QUVIcode verify_callback(quvi_net_t n)
   return (QUVI_CALLBACK);
 }
 
+static void dump_media(quvi_media_t m)
+{
+  char *m_url, *m_ct, *m_suffix;
+  double m_cl;
+
+  quvi_getprop(m, QUVIPROP_MEDIAURL, &m_url);
+  quvi_getprop(m, QUVIPROP_MEDIACONTENTTYPE, &m_ct);
+  quvi_getprop(m, QUVIPROP_MEDIACONTENTLENGTH, &m_cl);
+  quvi_getprop(m, QUVIPROP_FILESUFFIX, &m_suffix);
+
+  spew_e(
+    "%s\n"
+    "url: %s\n"
+    "content-type: %s\n"
+    "content-length: %.0f\n"
+    "file suffix: %s\n",
+    __func__, m_url, m_ct, m_cl, m_suffix);
+}
+
 static void help()
 {
   printf(
@@ -216,11 +250,11 @@ int main (int argc, char *argv[])
 {
   char *url = "http://is.gd/yFNPMR";
   quvi_media_t m;
-  int flag_log;
+  int log_flag;
   QUVIcode rc;
   quvi_t q;
 
-  flag_log = 0;
+  log_flag = 0;
 
   if (argc > 1)
     {
@@ -230,7 +264,7 @@ int main (int argc, char *argv[])
           if (strcmp(argv[i], "-l") == 0
               || strcmp(argv[i], "--logger") == 0)
             {
-              flag_log = 1;
+              log_flag = 1;
             }
           else if (strcmp(argv[i], "-h") == 0
                    || strcmp(argv[i], "--help") == 0)
@@ -262,7 +296,7 @@ int main (int argc, char *argv[])
   session = soup_session_async_new();
 #endif
 
-  if (flag_log)
+  if (log_flag)
     {
       SoupLogger *log = soup_logger_new(SOUP_LOGGER_LOG_HEADERS, -1);
       soup_session_add_feature(session, SOUP_SESSION_FEATURE(log));
@@ -271,6 +305,8 @@ int main (int argc, char *argv[])
 
   rc = quvi_parse(q, url, &m);
   check_error(q, rc);
+
+  dump_media(m);
 
   quvi_parse_close(&m);
   quvi_close(&q);
