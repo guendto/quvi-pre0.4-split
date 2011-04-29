@@ -42,6 +42,132 @@
 
 static _quvi_media_t qv = NULL;
 
+/* Get field */
+
+#define _push(t,w,i) \
+  do \
+    { \
+      w v = i; \
+      lua_pushstring(l,k); \
+      lua_gettable(l,-2); \
+      v = luaL_check##t(l,-1); \
+      lua_pop(l,1); \
+      return (v); \
+    } \
+  while(0)
+
+static const char *getfield_s(lua_State *l, const char *k)
+{
+  _push(string, const char*, NULL);
+}
+
+const char *lua_getfield_s(lua_State *l, const char *k)
+{
+  return (getfield_s(l,k));
+}
+
+static long getfield_n(lua_State *l, const char *k)
+{
+  _push(number, long, 0);
+}
+
+static int getfield_b(lua_State *l, const char *k)
+{
+  int b = 0;
+  lua_pushstring(l,k);
+  lua_gettable(l,-2);
+  b = lua_toboolean(l,-1);
+  lua_pop(l,1);
+  return (b);
+}
+#undef _push
+
+#ifdef _0
+static void *getfield_reg_userdata(lua_State *l, const char *k,
+                                   _quvi_lua_script_t s)
+{
+  void *p = NULL;
+
+  lua_pushstring(l, k);
+  lua_gettable(l, LUA_REGISTRYINDEX);
+
+  if (lua_isuserdata(l,-1))
+    p = lua_touserdata(l,-1);
+  else
+    {
+      luaL_error(l, "%s: expected `%s' (userdata) in LUA_REGISTRYINDEX",
+                 s->path, k);
+    }
+  return (p);
+}
+#endif
+
+static QUVIcode getfield_iter_table_s(lua_State *l, const char *k,
+                                      _quvi_media_t m, _quvi_lua_script_t s)
+{
+  QUVIcode rc = QUVI_OK;
+
+  lua_pushstring(l,k);
+  lua_gettable(l,-2);
+
+  if (!lua_istable(l,-1))
+    luaL_error(l, "%s: expected table `%s`", s->path, k);
+
+  lua_pushnil(l);
+
+  while (lua_next(l,-2) && rc == QUVI_OK)
+    {
+      if (!lua_isstring(l,-1))
+        {
+          luaL_error(l, "%s: expected table `%s' contain strings",
+                     s->path, k);
+        }
+      rc = add_media_url(&qv->url, "%s", lua_tostring(l,-1));
+      lua_pop(l,1);
+    }
+  lua_pop(l,1);
+  return (rc);
+}
+
+/* Set field */
+
+#define _push(t,a) \
+  do \
+    { \
+      lua_pushstring(l,k); \
+      lua_push##t(l,a); \
+      lua_settable(l,-3); \
+    } \
+  while (0)
+
+static void setfield_s(lua_State *l, const char *k, const char *s)
+{
+  _push(string,s);
+}
+
+static void setfield_n(lua_State *l, const char *k, long n)
+{
+  _push(number,n);
+}
+
+#ifdef _0
+static void set_userdata(lua_State *l, const char *k, void *p)
+{
+  _push(lightuserdata,p);
+}
+#endif
+
+#ifdef _0
+static void set_reg_userdata(lua_State *l, const char *k, void *p)
+{
+  lua_pushstring(l, k);
+  lua_pushlightuserdata(l, p);
+  lua_settable(l, LUA_REGISTRYINDEX);
+}
+#endif
+
+#undef _push
+
 /* "quvi" object functions for LUA scripts. */
 
 static int l_quvi_fetch(lua_State * l)
@@ -124,7 +250,7 @@ static int l_quvi_unescape(lua_State * l)
 
 static QUVIcode new_lua_script(_quvi_lua_script_t * dst)
 {
-  struct _quvi_lua_script_s *qls;
+  _quvi_lua_script_t qls;
 
   qls = calloc(1, sizeof(*qls));
   if (!qls)
@@ -294,24 +420,22 @@ int init_lua(_quvi_t quvi)
           ? QUVI_OK : QUVI_NOLUAWEBSITE);
 }
 
+static void free_llst(_quvi_llst_node_t llst)
+{
+  _quvi_llst_node_t curr = llst;
+  while (curr)
+    {
+      _quvi_lua_script_t s = (_quvi_lua_script_t) curr->data;
+      _free (s->basename);
+      _free (s->path);
+      curr = curr->next;
+    }
+}
+
 void free_lua(_quvi_t * quvi)
 {
-
-#define _rel(w) \
-    do { \
-        _quvi_llst_node_t curr = w; \
-        while (curr) { \
-            _quvi_lua_script_t s = (_quvi_lua_script_t) curr->data; \
-            _free (s->basename); \
-            _free (s->path); \
-            curr = curr->next; \
-        } \
-    } while (0)
-
-  _rel((*quvi)->util_scripts);
-  _rel((*quvi)->website_scripts);
-
-#undef _rel
+  free_llst((*quvi)->util_scripts);
+  free_llst((*quvi)->website_scripts);
 
   quvi_llst_free((quvi_llst_node_t*)&(*quvi)->util_scripts);
   assert((*quvi)->util_scripts == NULL);
@@ -323,105 +447,6 @@ void free_lua(_quvi_t * quvi)
   (*quvi)->lua = NULL;
 }
 
-static void set_key(lua_State * l, const char *key)
-{
-  lua_pushstring(l, key);
-  lua_gettable(l, -2);
-}
-
-#define _istype(t) \
-    do { \
-        if (!lua_is##t(l, -1)) { \
-            luaL_error (l, \
-                "%s: undefined value for key `%s' in the returned table, " \
-                "expected `%s' type value", \
-                    qls->path, key, #t); \
-        } \
-    } while (0)
-
-static char *get_field_req_s(lua_State * l, _quvi_lua_script_t qls,
-                             const char *key)
-{
-  char *s;
-  set_key(l, key);
-  _istype(string);
-  s = (char *)lua_tostring(l, -1);
-  lua_pop(l, 1);
-  return (s);
-}
-
-char *lua_get_field_s(lua_State * l, const char *key)
-{
-  char *s;
-  set_key(l, key);
-  s = (char *)lua_tostring(l, -1);
-  lua_pop(l, 1);
-  return (s);
-}
-
-static int get_field_b(lua_State * l, _quvi_lua_script_t qls,
-                       const char *key)
-{
-  int b;
-  set_key(l, key);
-  _istype(boolean);
-  b = lua_toboolean(l, -1);
-  lua_pop(l, 1);
-  return (b);
-}
-
-static long get_field_n(lua_State * l, _quvi_lua_script_t qls,
-                        const char *key)
-{
-  long n;
-  set_key(l, key);
-  _istype(number);
-  n = lua_tonumber(l, -1);
-  lua_pop(l, 1);
-  return (n);
-}
-
-static QUVIcode
-iter_media_url(lua_State * l,
-               _quvi_lua_script_t qls, const char *key,
-               _quvi_media_t qv)
-{
-  QUVIcode rc = QUVI_OK;
-
-  set_key(l, key);
-  _istype(table);
-  lua_pushnil(l);
-
-  while (lua_next(l, -2) && rc == QUVI_OK)
-    {
-      if (!lua_isstring(l, -1))
-        luaL_error(l, "%s: expected an array of URL strings", qls->path);
-
-      rc = add_media_url(&qv->url, "%s", lua_tostring(l, -1));
-
-      lua_pop(l, 1);
-    }
-
-  lua_pop(l, 1);
-
-  return (rc);
-}
-
-#undef _istype
-
-static void set_field(lua_State * l, const char *key, const char *value)
-{
-  lua_pushstring(l, key);
-  lua_pushstring(l, value);
-  lua_settable(l, -3);
-}
-
-static void set_field_n(lua_State * l, const char *key, double value)
-{
-  lua_pushstring(l, key);
-  lua_pushnumber(l, value);
-  lua_settable(l, -3);
-}
 
 /* Util scripts. */
 
@@ -649,8 +674,8 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
   script_dir = dirname_from(qls->path);
 
   lua_newtable(l);
-  set_field(l, "page_url", ident->url);
-  set_field(l, "script_dir", script_dir);
+  setfield_s(l, "page_url", ident->url);
+  setfield_s(l, "script_dir", script_dir);
 
   _free(script_dir);
 
@@ -662,24 +687,18 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 
   if (lua_istable(l, -1))
     {
-      ident->domain = strdup(get_field_req_s(l, qls, "domain"));
-
-      ident->formats = strdup(get_field_req_s(l, qls, "formats"));
-
-      ident->categories = get_field_n(l, qls, "categories");
-
-      rc = get_field_b(l, qls, "handles")
-           ? QUVI_OK : QUVI_NOSUPPORT;
-
+      freprintf(&ident->domain, "%s", getfield_s(l, "domain"));
+      freprintf(&ident->formats, "%s", getfield_s(l, "formats"));
+      ident->categories = getfield_n(l, "categories");
+      rc = getfield_b(l, "handles") ? QUVI_OK : QUVI_NOSUPPORT;
       if (rc == QUVI_OK)
-        rc = ident->categories & quvi->
-             category ? QUVI_OK : QUVI_NOSUPPORT;
+        {
+          rc = (ident->categories & quvi->category)
+               ? QUVI_OK : QUVI_NOSUPPORT;
+        }
     }
   else
-    {
-      luaL_error(l,
-                 "%s: expected `ident' function to return a table", qls->path);
-    }
+    luaL_error(l, "%s: expected `ident' to return table", qls->path);
 
   lua_pop(l, 1);
 
@@ -716,13 +735,13 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
   script_dir = dirname_from(qls->path);
 
   lua_newtable(l);
-  set_field(l, "page_url", media->page_url);
-  set_field(l, "requested_format", media->quvi->format);
-  set_field(l, "redirect_url", "");
-  set_field(l, "start_time", "");
-  set_field(l, "thumbnail_url", "");
-  set_field(l, "script_dir", script_dir);
-  set_field_n(l, "duration", 0);
+  setfield_s(l, "requested_format", media->quvi->format);
+  setfield_s(l, "page_url", media->page_url);
+  setfield_s(l, "script_dir", script_dir);
+  setfield_s(l, "thumbnail_url", "");
+  setfield_s(l, "redirect_url", "");
+  setfield_s(l, "start_time", "");
+  setfield_n(l, "duration", 0);
 
   _free(script_dir);
 
@@ -739,8 +758,7 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
       return (QUVI_LUA);
     }
 
-  freprintf(&media->redirect_url, "%s",
-            get_field_req_s(l, qls, "redirect_url"));
+  freprintf(&media->redirect_url, "%s", getfield_s(l, "redirect_url"));
 
   if (strlen(media->redirect_url) == 0)
     {
@@ -752,24 +770,14 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
 
       if (rc == QUVI_OK)
         {
-          freprintf(&media->host_id, "%s",
-                    get_field_req_s(l, qls, "host_id"));
+          freprintf(&media->start_time, "%s", getfield_s(l, "start_time"));
+          freprintf(&media->host_id, "%s", getfield_s(l, "host_id"));
+          freprintf(&media->title, "%s", getfield_s(l, "title"));
+          freprintf(&media->id, "%s", getfield_s(l, "id"));
+          media->duration = getfield_n(l, "duration");
+          freprintf(&media->thumbnail_url, "%s", getfield_s(l, "thumbnail_url"));
 
-          freprintf(&media->title, "%s",
-                    get_field_req_s(l, qls, "title"));
-
-          freprintf(&media->id, "%s",
-                    get_field_req_s(l, qls, "id"));
-
-          freprintf(&media->start_time, "%s",
-                    get_field_req_s(l, qls, "start_time"));
-
-          freprintf(&media->thumbnail_url, "%s",
-                    get_field_req_s(l, qls, "thumbnail_url"));
-
-          media->duration = get_field_n(l, qls, "duration");
-
-          rc = iter_media_url(l, qls, "url", media);
+          rc = getfield_iter_table_s(l, "url", media, qls);
         }
     }
 

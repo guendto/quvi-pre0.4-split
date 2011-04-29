@@ -95,7 +95,7 @@ const char *_net_property_features[] =
   NULL
 };
 
-extern char *lua_get_field_s(lua_State *, const char *); /* lua_wrap.c */
+extern const char *lua_getfield_s(lua_State *, const char *); /* lua_wrap.c */
 
 QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
 {
@@ -111,7 +111,7 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
 
       if (lua_istable(l, 2))
         {
-          char *s = lua_get_field_s(l, "fetch_type");
+          const char *s = lua_getfield_s(l, "fetch_type");
 
           if (s)
             {
@@ -142,7 +142,7 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
       int i;
       for (i=1; _net_property_features[i]; ++i)
         {
-          const char *v = lua_get_field_s(l, _net_property_features[i]);
+          const char *v = lua_getfield_s(l, _net_property_features[i]);
 
           rc = new_feat(*n, _net_property_features[i], v);
 
