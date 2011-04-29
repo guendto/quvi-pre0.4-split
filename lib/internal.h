@@ -54,7 +54,7 @@ struct _quvi_s
   quvi_callback_write write_func;
   quvi_callback_fetch fetch_func;
   _quvi_llst_node_t website_scripts;
-  _quvi_llst_node_t curr_next_host;
+  _quvi_llst_node_t curr_website;
   _quvi_llst_node_t util_scripts;
   long no_resolve;
   long no_verify;

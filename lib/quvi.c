@@ -638,8 +638,6 @@ QUVIcode quvi_next_media_url(quvi_media_t handle)
   return (QUVI_OK);
 }
 
-static _quvi_llst_node_t curr_host = NULL;
-
 /* quvi_next_supported_website */
 
 QUVIcode
@@ -659,12 +657,12 @@ quvi_next_supported_website(quvi_t handle, char **domain,
   if (!quvi->website_scripts)
     return (QUVI_NOLUAWEBSITE);
 
-  if (!curr_host)
-    curr_host = quvi->website_scripts;
+  if (!quvi->curr_website)
+    quvi->curr_website = quvi->website_scripts;
   else
     {
-      curr_host = curr_host->next;
-      if (!curr_host)
+      quvi->curr_website = quvi->curr_website->next;
+      if (!quvi->curr_website)
         return (QUVI_LAST);
     }
 
@@ -673,7 +671,7 @@ quvi_next_supported_website(quvi_t handle, char **domain,
   ident.domain = NULL;
   ident.formats = NULL;
 
-  rc = run_ident_func(&ident, curr_host);
+  rc = run_ident_func(&ident, quvi->curr_website);
 
   if (rc == QUVI_NOSUPPORT)
     {
