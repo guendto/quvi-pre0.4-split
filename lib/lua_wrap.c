@@ -264,27 +264,6 @@ static int l_quvi_resolve(lua_State *l)
   return (1);
 }
 
-#ifdef _0 /* Replaced by quvi/util:unescape in 0.2.14 */
-static int l_quvi_unescape(lua_State * l)
-{
-  luaL_Buffer b;
-  char *tmp;
-
-  if (!lua_isstring(l, -1))
-    luaL_error(l, "expected a string");
-
-  tmp = unescape(qv->quvi, strdup((char *)lua_tostring(l, 1)));
-  lua_pop(l, 1);
-
-  luaL_buffinit(l, &b);
-  luaL_addstring(&b, tmp);
-  _free(tmp);
-  luaL_pushresult(&b);
-
-  return (1);
-}
-#endif
-
 static QUVIcode new_lua_script(_quvi_lua_script_t * dst)
 {
   _quvi_lua_script_t s;
@@ -414,9 +393,6 @@ static const luaL_Reg reg_meth[] =
 {
   {"fetch", l_quvi_fetch},
   {"resolve", l_quvi_resolve},
-#ifdef _0
-  {"unescape", l_quvi_unescape},
-#endif
   {NULL, NULL}
 };
 
