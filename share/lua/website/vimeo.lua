@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2010,2011  Toni Gundogdu <legatvs@gmail.com>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -58,14 +58,11 @@ function parse(self)
     local _,_,s = config:find("<request_signature_expires>(.-)</")
     local exp   = s or error("no match: request signature expires")
 
-    local _,_,s     = config:find("<hd_button>(%d)</")
-    local hd_button = s or error("no match: hd button")
-
     local r = self.requested_format
     r = (r == "best") and "hd" or r -- 'best' is an alias for 'hd'
 
     local q = -- 'sd' is the 'default'.
-        (r == "hd" and hd_button == "1") and "hd" or "sd"
+        (r == "hd") and "hd" or "sd"
 
     self.url = {
         string.format("http://vimeo.com/moogaloop/play/clip:%s/%s/%s/?q=%s",
