@@ -40,70 +40,110 @@
 #include "curl_wrap.h"
 #include "lua_wrap.h"
 
-static _quvi_media_t qv = NULL;
+#ifdef _0
+void dump_lua_stack(lua_State *l) /* http://www.lua.org/pil/24.2.3.html */
+{
+  int i, top = lua_gettop(l);
+
+  fprintf(stderr, "%s:\n", __func__);
+
+  for (i=1; i<=top; i++)    /* repeat for each level */
+    {
+      const int t = lua_type(l,i);
+      switch (t)
+        {
+        case LUA_TSTRING:          /* strings */
+          fprintf(stderr, "  %d: `%s'", i, lua_tostring(l,i));
+          break;
+
+        case LUA_TBOOLEAN:         /* booleans */
+          fprintf(stderr, "  %d: %s",
+                  i, lua_toboolean(l,i) ? "true":"false");
+          break;
+
+        case LUA_TNUMBER:          /* numbers */
+          fprintf(stderr, "  %d: %g", i, lua_tonumber(l,i));
+          break;
+
+        default:                   /* other values */
+          fprintf(stderr, "  %d: %s", i, lua_typename(l,t));
+          break;
+        }
+      fprintf(stderr, "\n");
+    }
+}
+#endif /* _0 */
+
+#define USERDATA_QUVI_MEDIA_T "_quvi_media_t"
 
 /* Get field */
 
-#define _push(t,w,i) \
+#define _push(ltype,ctype,init,err...) \
   do \
     { \
-      w v = i; \
+      ctype r = init; \
       lua_pushstring(l,k); \
       lua_gettable(l,-2); \
-      v = luaL_check##t(l,-1); \
+      if (!lua_is##ltype(l,-1)) \
+        luaL_error(l,##err); \
+      r = lua_to##ltype(l,-1); \
       lua_pop(l,1); \
-      return (v); \
+      return (r); \
     } \
   while(0)
 
-static const char *getfield_s(lua_State *l, const char *k)
+static const char *err_fmt =
+  "%s: %s: expected `%s' in returned table";
+
+static const char *getfield_s(lua_State *l, const char *k,
+                              _quvi_lua_script_t s, const char *f)
 {
-  _push(string, const char*, NULL);
+  _push(string, const char*, NULL, err_fmt, s->path, f, k);
 }
 
-const char *lua_getfield_s(lua_State *l, const char *k)
+static long getfield_n(lua_State *l, const char *k,
+                       _quvi_lua_script_t s, const char *f)
 {
-  return (getfield_s(l,k));
+  _push(number, long, 0, err_fmt, s->path, f, k);
 }
 
-static long getfield_n(lua_State *l, const char *k)
-{
-  _push(number, long, 0);
-}
-
-static int getfield_b(lua_State *l, const char *k)
-{
-  int b = 0;
-  lua_pushstring(l,k);
-  lua_gettable(l,-2);
-  b = lua_toboolean(l,-1);
-  lua_pop(l,1);
-  return (b);
-}
 #undef _push
 
-#ifdef _0
-static void *getfield_reg_userdata(lua_State *l, const char *k,
-                                   _quvi_lua_script_t s)
+static int getfield_b(lua_State *l, const char *k,
+                      _quvi_lua_script_t s, const char *f)
+{
+  int b = 0;
+
+  lua_pushstring(l,k);
+  lua_gettable(l,-2);
+
+  if (!lua_isboolean(l,-1))
+    luaL_error(l, err_fmt, s->path, f, k);
+
+  b = lua_toboolean(l,-1);
+  lua_pop(l,1);
+
+  return (b);
+}
+
+static void *getfield_reg_userdata(lua_State *l, const char *k)
 {
   void *p = NULL;
 
   lua_pushstring(l, k);
   lua_gettable(l, LUA_REGISTRYINDEX);
 
-  if (lua_isuserdata(l,-1))
-    p = lua_touserdata(l,-1);
-  else
-    {
-      luaL_error(l, "%s: expected `%s' (userdata) in LUA_REGISTRYINDEX",
-                 s->path, k);
-    }
+  if (!lua_isuserdata(l,-1))
+    luaL_error(l, "expected to find `%s' in LUA_REGISTRYINDEX", k);
+
+  p = lua_touserdata(l,-1);
+
   return (p);
 }
-#endif
 
 static QUVIcode getfield_iter_table_s(lua_State *l, const char *k,
-                                      _quvi_media_t m, _quvi_lua_script_t s)
+                                      _quvi_media_t m, _quvi_lua_script_t s,
+                                      const char *f)
 {
   QUVIcode rc = QUVI_OK;
 
@@ -111,18 +151,13 @@ static QUVIcode getfield_iter_table_s(lua_State *l, const char *k,
   lua_gettable(l,-2);
 
   if (!lua_istable(l,-1))
-    luaL_error(l, "%s: expected table `%s`", s->path, k);
+    luaL_error(l, "%s: %s: expected to find table `%s'", s->path, f, k);
 
   lua_pushnil(l);
 
   while (lua_next(l,-2) && rc == QUVI_OK)
     {
-      if (!lua_isstring(l,-1))
-        {
-          luaL_error(l, "%s: expected table `%s' contain strings",
-                     s->path, k);
-        }
-      rc = add_media_url(&qv->url, "%s", lua_tostring(l,-1));
+      rc = add_media_url(&m->url, "%s", lua_tostring(l,-1));
       lua_pop(l,1);
     }
   lua_pop(l,1);
@@ -157,14 +192,12 @@ static void set_userdata(lua_State *l, const char *k, void *p)
 }
 #endif
 
-#ifdef _0
-static void set_reg_userdata(lua_State *l, const char *k, void *p)
+static void setfield_reg_userdata(lua_State *l, const char *k, void *p)
 {
   lua_pushstring(l, k);
   lua_pushlightuserdata(l, p);
   lua_settable(l, LUA_REGISTRYINDEX);
 }
-#endif
 
 #undef _push
 
@@ -172,20 +205,20 @@ static void set_reg_userdata(lua_State *l, const char *k, void *p)
 
 static int l_quvi_fetch(lua_State * l)
 {
+  _quvi_media_t m;
   _quvi_net_t n;
   QUVIcode rc;
 
-  if (!lua_isstring(l, 1))
-    luaL_error(l, "`quvi.fetch' expects `url' argument");
+  m = (_quvi_media_t) getfield_reg_userdata(l, USERDATA_QUVI_MEDIA_T);
+  assert(m != NULL);
 
-  rc = fetch_wrapper(qv->quvi, l, &n); /* net_wrap.c */
-
+  rc = fetch_wrapper(m->quvi, l, &n); /* net_wrap.c */
   if (rc == QUVI_OK)
     {
       luaL_Buffer b;
 
-      if (!qv->charset)
-        run_lua_charset_func(qv, n->fetch.content);
+      if (!m->charset)
+        run_lua_charset_func(m, n->fetch.content);
 
       luaL_buffinit(l, &b);
       luaL_addstring(&b, n->fetch.content);
@@ -195,7 +228,7 @@ static int l_quvi_fetch(lua_State * l)
   free_net_handle(&n);
 
   if (rc != QUVI_OK)
-    luaL_error(l, qv->quvi->errmsg);
+    luaL_error(l, m->quvi->errmsg);
 
   return (1);
 }
@@ -203,13 +236,17 @@ static int l_quvi_fetch(lua_State * l)
 static int l_quvi_resolve(lua_State *l)
 {
   char *redirect_url;
+  _quvi_media_t m;
   QUVIcode rc;
+
+  m = (_quvi_media_t) getfield_reg_userdata(l, USERDATA_QUVI_MEDIA_T);
+  assert(m != NULL);
 
   if (!lua_isstring(l,1))
     luaL_error(l, "`quvi.resolve' expects `url' argument");
 
   /* net_wrap.c */
-  rc = resolve_wrapper(qv->quvi, lua_tostring(l,1), &redirect_url);
+  rc = resolve_wrapper(m->quvi, lua_tostring(l,1), &redirect_url);
 
   if (rc == QUVI_OK)
     {
@@ -222,7 +259,7 @@ static int l_quvi_resolve(lua_State *l)
   _free(redirect_url);
 
   if (rc != QUVI_OK)
-    luaL_error(l, qv->quvi->errmsg);
+    luaL_error(l, m->quvi->errmsg);
 
   return (1);
 }
@@ -447,13 +484,12 @@ void free_lua(_quvi_t * quvi)
   (*quvi)->lua = NULL;
 }
 
-
 /* Util scripts. */
 
 /* Finds the specified util script from the list. */
 
-static _quvi_lua_script_t find_util_script(_quvi_t quvi,
-    const char *basename)
+static _quvi_lua_script_t
+find_util_script(_quvi_t quvi, const char *basename)
 {
   _quvi_llst_node_t curr = quvi->util_scripts;
   while (curr)
@@ -497,10 +533,7 @@ prep_util_script(_quvi_t quvi,
   lua_getglobal(l, func_name);
 
   if (!lua_isfunction(l, -1))
-    {
-      luaL_error(l,
-                 "%s: function `%s' not found", (*s)->path, func_name);
-    }
+    luaL_error(l, "%s: function `%s' not found", (*s)->path, func_name);
 
   *pl = l;
 
@@ -536,8 +569,7 @@ QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_media_url_t mu)
     freprintf(&mu->suffix, "%s", lua_tostring(l, -1));
   else
     {
-      luaL_error(l,
-                 "%s: expected `%s' function to return a string",
+      luaL_error(l, "%s: expected `%s' function to return a string",
                  s->path, func_name);
     }
 
@@ -548,7 +580,7 @@ QUVIcode run_lua_suffix_func(_quvi_t quvi, _quvi_media_url_t mu)
 
 /* Executes the `trim_fields' lua function. */
 
-static QUVIcode run_lua_trim_fields_func(_quvi_media_t media, int ref)
+static QUVIcode run_lua_trim_fields_func(_quvi_media_t m, int ref)
 {
   const static char script_fname[] = "trim.lua";
   const static char func_name[] = "trim_fields";
@@ -557,9 +589,9 @@ static QUVIcode run_lua_trim_fields_func(_quvi_media_t media, int ref)
   lua_State *l;
   QUVIcode rc;
 
-  assert(media != NULL);
+  assert(m != NULL);
 
-  quvi = media->quvi;
+  quvi = m->quvi;
   assert(quvi != NULL);
 
   rc = prep_util_script(quvi, script_fname, func_name, &l, &s);
@@ -576,8 +608,7 @@ static QUVIcode run_lua_trim_fields_func(_quvi_media_t media, int ref)
 
   if (!lua_istable(l, -1))
     {
-      luaL_error(l,
-                 "%s: expected `%s' function to return a table",
+      luaL_error(l, "%s: expected `%s' function to return table",
                  s->path, func_name);
     }
 
@@ -586,7 +617,7 @@ static QUVIcode run_lua_trim_fields_func(_quvi_media_t media, int ref)
 
 /* Executes the `charset_from_data' lua function. */
 
-QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
+QUVIcode run_lua_charset_func(_quvi_media_t m, const char *data)
 {
   const static char script_fname[] = "charset.lua";
   const static char func_name[] = "charset_from_data";
@@ -595,8 +626,8 @@ QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
   lua_State *l;
   QUVIcode rc;
 
-  assert(media != NULL);
-  quvi = media->quvi;
+  assert(m != NULL);
+  quvi = m->quvi;
   assert(quvi != NULL);
 
   rc = prep_util_script(quvi, script_fname, func_name, &l, &s);
@@ -612,12 +643,11 @@ QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
     luaL_error(l, "%s: %s", s->path, lua_tostring(l, -1));
 
   if (lua_isstring(l, -1))
-    freprintf(&media->charset, "%s", lua_tostring(l, -1));
+    freprintf(&m->charset, "%s", lua_tostring(l, -1));
   else if (lua_isnil(l, -1)) ;  /* Charset was not found. We can live with that. */
   else
     {
-      luaL_error(l,
-                 "%s: expected `%s' function to return a string",
+      luaL_error(l, "%s: expected `%s' function to return a string",
                  s->path, func_name);
     }
 
@@ -632,6 +662,7 @@ QUVIcode run_lua_charset_func(_quvi_media_t media, const char *data)
 
 QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 {
+  static const char *f = "ident";
   _quvi_lua_script_t s;
   char *script_dir;
   _quvi_t quvi;
@@ -666,8 +697,7 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 
   if (!lua_isfunction(l, -1))
     {
-      freprintf(&quvi->errmsg, "%s: `ident' function not found",
-                s->path);
+      freprintf(&quvi->errmsg, "%s: `ident' function not found", s->path);
       return (QUVI_LUA);
     }
 
@@ -687,10 +717,13 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 
   if (lua_istable(l, -1))
     {
-      freprintf(&ident->domain, "%s", getfield_s(l, "domain"));
-      freprintf(&ident->formats, "%s", getfield_s(l, "formats"));
-      ident->categories = getfield_n(l, "categories");
-      rc = getfield_b(l, "handles") ? QUVI_OK : QUVI_NOSUPPORT;
+#define _wrap(n) \
+  do { freprintf(&ident->n, "%s", getfield_s(l, #n, s, f)); } while (0)
+      _wrap(formats);
+      _wrap(domain);
+#undef _wrap
+      ident->categories = getfield_n(l, "categories", s, f);
+      rc = getfield_b(l, "handles", s, f) ? QUVI_OK : QUVI_NOSUPPORT;
       if (rc == QUVI_OK)
         {
           rc = (ident->categories & quvi->category)
@@ -708,35 +741,36 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 /* Executes the host script's "parse" function. */
 
 static QUVIcode
-run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
+run_parse_func(lua_State * l, _quvi_llst_node_t n, _quvi_media_t m)
 {
-  static const char func_name[] = "parse";
+  static const char *f = "parse";
   _quvi_lua_script_t s;
   char *script_dir;
   _quvi_t quvi;
   QUVIcode rc;
 
-  assert(node != NULL);
-  assert(media != NULL);
+  assert(n != NULL);
+  assert(m != NULL);
 
-  quvi = media->quvi;           /* seterr macro needs this. */
-  s = (_quvi_lua_script_t) node->data;
+  quvi = m->quvi;           /* seterr macro needs this. */
+  s = (_quvi_lua_script_t) n->data;
   rc = QUVI_OK;
 
-  lua_getglobal(l, func_name);
+  lua_getglobal(l, f);
 
   if (!lua_isfunction(l, -1))
     {
       freprintf(&quvi->errmsg,
-                "%s: `%s' function not found", s->path, func_name);
+                "%s: `%s' function not found", s->path, f);
       return (QUVI_LUA);
     }
 
   script_dir = dirname_from(s->path);
 
   lua_newtable(l);
-  setfield_s(l, "requested_format", media->quvi->format);
-  setfield_s(l, "page_url", media->page_url);
+  setfield_reg_userdata(l, USERDATA_QUVI_MEDIA_T, m);
+  setfield_s(l, "requested_format", m->quvi->format);
+  setfield_s(l, "page_url", m->page_url);
   setfield_s(l, "script_dir", script_dir);
   setfield_s(l, "thumbnail_url", "");
   setfield_s(l, "redirect_url", "");
@@ -753,31 +787,30 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
 
   if (!lua_istable(l, -1))
     {
-      freprintf(&quvi->errmsg,
-                "expected `%s' function return a table", func_name);
+      freprintf(&quvi->errmsg, "expected `%s' function return a table", f);
       return (QUVI_LUA);
     }
 
-  freprintf(&media->redirect_url, "%s", getfield_s(l, "redirect_url"));
+  freprintf(&m->redirect_url, "%s", getfield_s(l, "redirect_url", s, f));
 
-  if (strlen(media->redirect_url) == 0)
+  if (strlen(m->redirect_url) == 0)
     {
       const int r = luaL_ref(l, LUA_REGISTRYINDEX);
-
-      rc = run_lua_trim_fields_func(media, r);
-
+      rc = run_lua_trim_fields_func(m, r);
       luaL_unref(l, LUA_REGISTRYINDEX, r);
 
       if (rc == QUVI_OK)
         {
-          freprintf(&media->start_time, "%s", getfield_s(l, "start_time"));
-          freprintf(&media->host_id, "%s", getfield_s(l, "host_id"));
-          freprintf(&media->title, "%s", getfield_s(l, "title"));
-          freprintf(&media->id, "%s", getfield_s(l, "id"));
-          media->duration = getfield_n(l, "duration");
-          freprintf(&media->thumbnail_url, "%s", getfield_s(l, "thumbnail_url"));
-
-          rc = getfield_iter_table_s(l, "url", media, s);
+#define _wrap(n) \
+  do { freprintf(&m->n, "%s", getfield_s(l, #n, s, f)); } while (0)
+          _wrap(thumbnail_url);
+          _wrap(start_time);
+          _wrap(host_id);
+          _wrap(title);
+          _wrap(id);
+#undef _wrap
+          m->duration = getfield_n(l, "duration", s, f);
+          rc = getfield_iter_table_s(l, "url", m, s, f);
         }
     }
 
@@ -788,22 +821,21 @@ run_parse_func(lua_State * l, _quvi_llst_node_t node, _quvi_media_t media)
 
 /* Match host script to the url. */
 
-static _quvi_llst_node_t find_host_script_node(_quvi_media_t media,
-    QUVIcode * rc)
+static _quvi_llst_node_t
+find_host_script_node(_quvi_media_t m, QUVIcode * rc)
 {
   _quvi_llst_node_t curr;
   _quvi_t quvi;
 
-  qv = media;
-  quvi = media->quvi;           /* seterr macro uses this. */
+  quvi = m->quvi;           /* seterr macro uses this. */
   curr = quvi->website_scripts;
 
   while (curr)
     {
       struct lua_ident_s ident;
 
-      ident.quvi = media->quvi;
-      ident.url = media->page_url;
+      ident.quvi = m->quvi;
+      ident.url = m->page_url;
       ident.domain = NULL;
       ident.formats = NULL;
 
@@ -828,37 +860,36 @@ static _quvi_llst_node_t find_host_script_node(_quvi_media_t media,
     }
 
   /* Trust that run_ident_func sets the rc. */
-  freprintf(&quvi->errmsg, "no support: %s", media->page_url);
+  freprintf(&quvi->errmsg, "no support: %s", m->page_url);
 
   return (NULL);
 }
 
 /* Match host script to the url */
-QUVIcode find_host_script(_quvi_media_t media)
+QUVIcode find_host_script(_quvi_media_t m)
 {
   QUVIcode rc;
-  find_host_script_node(media, &rc);
+  find_host_script_node(m, &rc);
   return (rc);
 }
 
 /* Match host script to the url and run parse func */
-QUVIcode find_host_script_and_parse(_quvi_media_t media)
+QUVIcode find_host_script_and_parse(_quvi_media_t m)
 {
   _quvi_llst_node_t script;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
 
-  qv = media;
-  quvi = media->quvi;           /* seterr macro uses this. */
+  quvi = m->quvi;           /* seterr macro uses this. */
   l = quvi->lua;
 
-  script = find_host_script_node(media, &rc);
+  script = find_host_script_node(m, &rc);
   if (script == NULL)
     return (rc);
 
   /* found a script. */
-  return (run_parse_func(l, script, media));
+  return (run_parse_func(l, script, m));
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */
