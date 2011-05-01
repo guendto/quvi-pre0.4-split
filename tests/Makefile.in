@@ -242,7 +242,6 @@ data/format/default/soundcloud.json \
 data/format/default/globo.json \
 data/format/default/cbsnews.json \
 data/format/default/sapo.json \
-data/format/default/tvlux.json \
 data/format/default/bloomberg.json \
 data/format/default/buzzhumor.json \
 data/format/default/vimeo.json \
@@ -280,7 +279,8 @@ data/format/other/ignore/length_bytes/dailymotion_hd.json \
 data/format/other/ignore/length_bytes/dailymotion_best.json
 
 JSON_TODO = \
-data/format/default/todo/collegehumor.json
+data/format/default/todo/collegehumor.json \
+data/format/default/todo/tvlux.json
 
 JSON_NLFY = \
 data/format/default/nlfy/sevenload.json \

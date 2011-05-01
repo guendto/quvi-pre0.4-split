@@ -43,7 +43,8 @@ target_triplet = @target@
 @ENABLE_NSFW_TRUE@lua/website/youjizz.lua
 
 @ENABLE_TODO_TRUE@am__append_2 = \
-@ENABLE_TODO_TRUE@lua/website/collegehumor.lua
+@ENABLE_TODO_TRUE@lua/website/collegehumor.lua \
+@ENABLE_TODO_TRUE@lua/website/tvlux.lua
 
 subdir = share
 DIST_COMMON = $(am__nobase_dist_pkgdata_DATA_DIST) \
@@ -85,11 +86,11 @@ am__nobase_dist_pkgdata_DATA_DIST = lua/README \
 	lua/website/sevenload.lua lua/website/soundcloud.lua \
 	lua/website/spiegel.lua lua/website/tagtele.lua \
 	lua/website/ted.lua lua/website/tmunderground.lua \
-	lua/website/theonion.lua lua/website/tvlux.lua \
-	lua/website/vimeo.lua lua/website/youtube.lua \
-	lua/website/keezmovies.lua lua/website/tube8.lua \
-	lua/website/xhamster.lua lua/website/xvideos.lua \
-	lua/website/youjizz.lua lua/website/collegehumor.lua
+	lua/website/theonion.lua lua/website/vimeo.lua \
+	lua/website/youtube.lua lua/website/keezmovies.lua \
+	lua/website/tube8.lua lua/website/xhamster.lua \
+	lua/website/xvideos.lua lua/website/youjizz.lua \
+	lua/website/collegehumor.lua lua/website/tvlux.lua
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -276,9 +277,8 @@ DIST_lua = lua/README lua/util/content_type.lua lua/util/charset.lua \
 	lua/website/sevenload.lua lua/website/soundcloud.lua \
 	lua/website/spiegel.lua lua/website/tagtele.lua \
 	lua/website/ted.lua lua/website/tmunderground.lua \
-	lua/website/theonion.lua lua/website/tvlux.lua \
-	lua/website/vimeo.lua lua/website/youtube.lua $(am__append_1) \
-	$(am__append_2)
+	lua/website/theonion.lua lua/website/vimeo.lua \
+	lua/website/youtube.lua $(am__append_1) $(am__append_2)
 EXTRA_DIST = $(DIST_lua)
 nobase_dist_pkgdata_DATA = $(DIST_lua) $(DIST_howtos)
 all: all-am
