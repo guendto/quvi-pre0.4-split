@@ -37,7 +37,6 @@ lua/website/tagtele.lua \
 lua/website/ted.lua \
 lua/website/tmunderground.lua \
 lua/website/theonion.lua \
-lua/website/tvlux.lua \
 lua/website/vimeo.lua \
 lua/website/youtube.lua
 
@@ -52,7 +51,8 @@ endif
 
 if ENABLE_TODO
 DIST_lua += \
-lua/website/collegehumor.lua
+lua/website/collegehumor.lua \
+lua/website/tvlux.lua
 endif
 
 EXTRA_DIST = $(DIST_lua)
