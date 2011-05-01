@@ -750,7 +750,7 @@ quvi_net_getprop_feat(quvi_net_propfeat_t n, QUVInetPropertyFeature opt, ...)
 
 /* quvi_net_get_one_prop_feat */
 
-extern const char *_net_property_features[];
+extern const char *net_prop_feats[];
 
 static const char *_feat_to_str(QUVInetPropertyFeatureName id)
 {
@@ -758,7 +758,7 @@ static const char *_feat_to_str(QUVInetPropertyFeatureName id)
   if (id > QUVI_NET_PROPERTY_FEATURE_NAME_NONE
       && id < _QUVI_NET_PROPERTY_FEATURE_NAME_LAST)
     {
-      s = _net_property_features[id];
+      s = net_prop_feats[id];
     }
   return (s);
 }

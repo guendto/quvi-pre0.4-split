@@ -23,6 +23,8 @@
 #include <memory.h>
 #include <assert.h>
 
+#include <lauxlib.h>
+
 #include "quvi/quvi.h"
 #include "quvi/net.h"
 #include "quvi/llst.h"
@@ -90,7 +92,11 @@ void free_net_handle(_quvi_net_t *n)
     }
 }
 
-const char *_net_property_features[] =
+#ifdef _0
+extern void dump_lua_stack(lua_State*); /* lua_wrap.c */
+#endif
+
+const char *net_prop_feats[] =
 {
   NULL,
   "arbitrary_cookie",
@@ -98,23 +104,27 @@ const char *_net_property_features[] =
   NULL
 };
 
-extern char *lua_get_field_s(lua_State *, const char *); /* lua_wrap.c */
-
 QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
 {
+  const char *url;
   QUVIcode rc;
-  char *url;
 
-  url = (char*)lua_tostring(l,1);
+  url = luaL_checkstring(l,1);
   rc  = QUVI_OK;
 
   if (q->status_func)
     {
       QUVIstatusType stat_type = QUVISTATUSTYPE_PAGE; /* Default */
 
-      if (lua_istable(l, 2))
+      if (lua_istable(l,2))
         {
-          char *s = lua_get_field_s(l, "fetch_type");
+          const char *s = NULL;
+
+          lua_pushstring(l, "fetch_type");
+          lua_gettable(l,2);
+
+          if (lua_isstring(l,-1))
+            s = lua_tostring(l,-1);
 
           if (s)
             {
@@ -139,18 +149,21 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
 
   freprintf(&(*n)->url, "%s", url);
 
-  /* Options from LUA script. */
-  if (lua_istable(l, 2))
+  /* Features from LUA script (quvi.fetch). */
+
+  if (lua_istable(l,2))
     {
       int i;
-      for (i=1; _net_property_features[i]; ++i)
+      for (i=1; net_prop_feats[i]; ++i)
         {
-          const char *v = lua_get_field_s(l, _net_property_features[i]);
-
-          rc = new_feat(*n, _net_property_features[i], v);
-
-          if (rc != QUVI_OK)
-            return (rc);
+          lua_pushstring(l, net_prop_feats[i]);
+          lua_gettable(l,2);
+          if (lua_isstring(l,-1))
+            {
+              rc = new_feat(*n, net_prop_feats[i], lua_tostring(l,-1));
+              if (rc != QUVI_OK)
+                return (rc);
+            }
         }
     }
 
