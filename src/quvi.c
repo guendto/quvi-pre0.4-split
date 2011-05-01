@@ -609,6 +609,11 @@ static quvi_t init_quvi()
   if (opts->format_given)
     quvi_setopt(quvi, QUVIOPT_FORMAT, opts->format_arg);
 
+  if (opts->no_shortened_given)
+    {
+      spew_e("warning: --no-shortened is deprecated, "
+             "use --no-resolve instead\n");
+    }
   quvi_setopt(quvi, QUVIOPT_NORESOLVE, opts->no_resolve_given);
   quvi_setopt(quvi, QUVIOPT_NOVERIFY, opts->no_verify_given);
 
