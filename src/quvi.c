@@ -33,6 +33,8 @@
 #include "platform.h"
 
 #include "quvi/quvi.h"
+#include "quvi/llst.h"
+
 #include "cmdline.h"
 
 #define _free(p) \

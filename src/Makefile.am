@@ -19,6 +19,7 @@ quvi_SOURCES = $(src) $(hdr)
 
 quvi_CPPFLAGS = \
     -I$(top_builddir)/include \
+    -I$(top_srcdir)/include \
     -I$(top_srcdir)/lib \
     $(libcurl_CFLAGS) \
     $(AM_CPPFLAGS)

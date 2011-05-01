@@ -23,6 +23,9 @@
 #include <string.h>
 
 #include "quvi/quvi.h"
+#include "quvi/net.h"
+#include "quvi/llst.h"
+
 #include "internal.h"
 #include "lua_wrap.h"
 #include "curl_wrap.h"

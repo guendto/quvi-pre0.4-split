@@ -24,6 +24,9 @@
 #include <assert.h>
 
 #include "quvi/quvi.h"
+#include "quvi/net.h"
+#include "quvi/llst.h"
+
 #include "internal.h"
 #include "curl_wrap.h"
 #include "lua_wrap.h"

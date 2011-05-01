@@ -17,7 +17,7 @@
  * 02110-1301  USA
  */
 
-#include <quvi/quvi.h>
+#include "quvi/quvi.h"
 
 /* Deprecated API functions.
  * See include/quvi/quvi.h.in for notes. */

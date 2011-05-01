@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include <quvi/quvi.h>
+#include <quvi/net.h>
 
 #ifdef HAVE_LIBSOUP_GNOME
 #include <libsoup/soup-gnome.h>

@@ -34,6 +34,9 @@
 #include <lauxlib.h>
 
 #include "quvi/quvi.h"
+#include "quvi/net.h"
+#include "quvi/llst.h"
+
 #include "internal.h"
 #include "util.h"
 #include "net_wrap.h"

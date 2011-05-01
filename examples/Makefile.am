@@ -13,7 +13,8 @@ noinst_PROGRAMS += callback_libsoup
 callback_libsoup_SOURCES=   callback_libsoup.c common.c common.h
 
 callback_libsoup_CPPFLAGS=  \
-    -I$(top_builddir)/include $(libsoup_CFLAGS) $(AM_CPPFLAGS)
+    -I$(top_builddir)/include -I$(top_srcdir)/include \
+    $(libsoup_CFLAGS) $(AM_CPPFLAGS)
 
 callback_libsoup_CFLAGS=    $(AM_CFLAGS)
 
