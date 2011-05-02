@@ -81,33 +81,33 @@ void dump_lua_stack(lua_State *l) /* http://www.lua.org/pil/24.2.3.html */
 
 /* Get field */
 
-#define _push(ltype,ctype,init,err...) \
+static const char *err_fmt =
+  "%s: %s: expected `%s' in returned table";
+
+#define _push(ltype,ctype,init) \
   do \
     { \
       ctype r = init; \
       lua_pushstring(l,k); \
       lua_gettable(l,-2); \
       if (!lua_is##ltype(l,-1)) \
-        luaL_error(l,##err); \
+          luaL_error(l, err_fmt, s->path, f, k); \
       r = lua_to##ltype(l,-1); \
       lua_pop(l,1); \
       return (r); \
     } \
   while(0)
 
-static const char *err_fmt =
-  "%s: %s: expected `%s' in returned table";
-
 static const char *getfield_s(lua_State *l, const char *k,
                               _quvi_lua_script_t s, const char *f)
 {
-  _push(string, const char*, NULL, err_fmt, s->path, f, k);
+  _push(string, const char*, NULL);
 }
 
 static long getfield_n(lua_State *l, const char *k,
                        _quvi_lua_script_t s, const char *f)
 {
-  _push(number, long, 0, err_fmt, s->path, f, k);
+  _push(number, long, 0);
 }
 
 #undef _push
