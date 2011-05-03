@@ -41,7 +41,8 @@ target_triplet = @target@
 @ENABLE_NSFW_TRUE@lua/website/xhamster.lua \
 @ENABLE_NSFW_TRUE@lua/website/xvideos.lua \
 @ENABLE_NSFW_TRUE@lua/website/youjizz.lua \
-@ENABLE_NSFW_TRUE@lua/website/pornhub.lua
+@ENABLE_NSFW_TRUE@lua/website/pornhub.lua \
+@ENABLE_NSFW_TRUE@lua/website/spankwire.lua
 
 @ENABLE_TODO_TRUE@am__append_2 = \
 @ENABLE_TODO_TRUE@lua/website/collegehumor.lua \
@@ -92,7 +93,8 @@ am__nobase_dist_pkgdata_DATA_DIST = lua/README \
 	lua/website/keezmovies.lua lua/website/tube8.lua \
 	lua/website/xhamster.lua lua/website/xvideos.lua \
 	lua/website/youjizz.lua lua/website/pornhub.lua \
-	lua/website/collegehumor.lua lua/website/tvlux.lua
+	lua/website/spankwire.lua lua/website/collegehumor.lua \
+	lua/website/tvlux.lua
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
