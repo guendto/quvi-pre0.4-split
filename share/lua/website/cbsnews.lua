@@ -26,11 +26,11 @@ function ident (self)
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "cbsnews.com"
--- m4v, seem to be available for most videos
--- mp4, appear to be for newer videos
--- Available height property can vary greatly per video.
+    -- m4v is available more most videos, mp4 appear to be available for
+    -- new videos. The height property of these videos may vary.
+    -- Our 'default' is 'm4v_216p'.
     r.formats    =
-        "default|best|m4v_216p|m4v_360p|m4v_480p|mp4_180p|mp4_240p|mp4_480p"
+        "default|best|m4v_360p|m4v_480p|mp4_180p|mp4_240p|mp4_480p"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain}, {"/video/watch/"})
@@ -79,9 +79,9 @@ function parse (self)
     end
 
     if r_fmt == 'best' then
-        -- Note: container (m4v/mp4) is ignored. Compare height and
-        -- bitrate properties. If the same height, then higher bitrate
-        -- decides.
+        -- Ignore container (e.g. "m4v") is ignored. Compare height
+        -- and bitrate properties. If the same height, then higher
+        -- bitrate determines.
         local best = {h=0,b=0}
         for u,v in pairs(t) do
             if best.h <= v.height and best.b < v.bitrate then
@@ -100,10 +100,9 @@ end
 function from_fmt_id(s)
     local _,_,t,h = s:find('(%w+)_(%d+)p')
     if not t or not h then
-        -- Default to "m4v_216p" which seems to be available for most.
-        -- Note that anything that matches "%w+_%d+p" but does not
-        -- exist in config, will be ignored and whatever is found
-        -- in the config in first, will be used instead.
+        -- Anything that matches the above pattern but does not exist in
+        -- the config, will be ignored. Instead, whatever is found in it
+        -- first will be used.
         t,h = from_fmt_id("m4v_216p")
     end
     return t,tonumber(h)
