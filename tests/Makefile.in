@@ -298,7 +298,8 @@ data/format/default/nsfw/xvideos.json \
 data/format/default/nsfw/tube8.json \
 data/format/default/nsfw/keezmovies.json \
 data/format/default/nsfw/xhamster.json \
-data/format/default/nsfw/youjizz.json
+data/format/default/nsfw/youjizz.json \
+data/format/default/nsfw/pornhub.json
 
 README = \
 README \
