@@ -273,7 +273,8 @@ data/format/other/golem_best.json \
 data/format/other/youtube_flv_360p.json \
 data/format/other/vimeo_hd.json \
 data/format/other/blip_best.json \
-data/format/other/blip_hd.json
+data/format/other/blip_hd.json \
+data/format/other/blip_sd.json
 
 JSON_IGNORE = \
 data/format/default/ignore/length_bytes/dailymotion.json \
