@@ -40,6 +40,7 @@ data/format/default/sapo.json \
 data/format/default/bloomberg.json \
 data/format/default/buzzhumor.json \
 data/format/default/vimeo.json \
+data/format/default/blip.json \
 data/format/other/cbsnews_mp4_240p.json \
 data/format/other/cbsnews_m4v_216p.json \
 data/format/other/ted_best.json \
@@ -65,7 +66,9 @@ data/format/other/spiegel_928k.json \
 data/format/other/youtube_flv_240p.json \
 data/format/other/golem_best.json \
 data/format/other/youtube_flv_360p.json \
-data/format/other/vimeo_hd.json
+data/format/other/vimeo_hd.json \
+data/format/other/blip_best.json \
+data/format/other/blip_hd.json
 
 JSON_IGNORE = \
 data/format/default/ignore/length_bytes/dailymotion.json \
