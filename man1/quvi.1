@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-04-27" "0.2.16" "quvi manual"
+.TH quvi 1 "2011-05-02" "0.2.16" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -320,16 +320,17 @@ Print available formats for dailym(otion).
 .IX Item "echo URL | quvi"
 Read from stdin. Same but read multiple URLs (in this case from a file):
 .Sp
-.Vb 5
+.Vb 7
 \&  % cat >> URLs
 \&  URL1
 \&  URL2
 \&  (^D)
 \&  % quvi < URLs
+\&  Or:
+\&  % quvi URLs
 .Ve
 .Sp
-Or specify the file in the command line, e.g.:
-  % quvi URLs
+Please note that each \s-1URL\s0 must be separated with a newline character.
 .SH "FILES"
 .IX Header "FILES"
 .IP "\fB~/.quvirc\fR" 4

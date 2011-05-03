@@ -237,9 +237,10 @@ Read from stdin. Same but read multiple URLs (in this case from a file):
   URL2
   (^D)
   % quvi < URLs
-
-Or specify the file in the command line, e.g.:
+  Or:
   % quvi URLs
+
+Please note that each URL must be separated with a newline character.
 
 =back
 
