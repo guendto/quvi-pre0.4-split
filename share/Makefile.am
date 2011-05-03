@@ -48,7 +48,8 @@ lua/website/tube8.lua \
 lua/website/xhamster.lua \
 lua/website/xvideos.lua \
 lua/website/youjizz.lua \
-lua/website/pornhub.lua
+lua/website/pornhub.lua \
+lua/website/spankwire.lua
 endif
 
 if ENABLE_TODO
