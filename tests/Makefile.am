@@ -60,7 +60,6 @@ data/format/other/golem_ipod.json \
 data/format/other/cbsnews_best.json \
 data/format/other/cbsnews_mp4_180p.json \
 data/format/other/cbsnews_m4v_480p.json \
-data/format/other/golem_high.json \
 data/format/other/vimeo_best.json \
 data/format/other/golem_best.json \
 data/format/other/blip_best.json \
