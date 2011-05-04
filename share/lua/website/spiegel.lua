@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2010,2011  Toni Gundogdu <legatvs@gmail.com>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -21,12 +21,18 @@
 --
 
 -- Formats.
-local lookup = {
-    default   = "VP6_388",
-    best      = "H264_1400",
-    ["576k"]  = "VP6_576",
-    ["928k"]  = "VP6_928",
-    ["1400k"] = "H264_1400"
+local formats = {
+    'default',
+    'best',
+    'vp6_315p',
+    'vp6_544p'
+}
+
+local format_lookup = {
+    default  = "VP6_388", -- vp6_135p
+    vp6_315p = "VP6_576",
+    vp6_544p = "VP6_928",
+    best     = "H264_1400" -- h264_544p
 }
 
 -- Identify the script.
@@ -35,11 +41,7 @@ function ident (self)
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "spiegel.de"
-    r.formats    = ""
-    for k,_ in pairs (lookup) do
-        r.formats = r.formats .."|".. k
-    end
-    r.formats    = r.formats:gsub("^%|","")
+    r.formats    = table.concat(formats, "|")
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain}, {"/video/"})
@@ -66,17 +68,15 @@ function parse (self)
         "http://video.spiegel.de/flash/%s.xml", self.id)
 
     local config = quvi.fetch (config_url, {fetch_type = 'config'})
-    local format = lookup[default]
 
-    for k,v in pairs (lookup) do
-        if (k == self.requested_format) then
-            format = v
-            break
-        end
-    end
+    local r_fmt  = self.requested_format
+    r_fmt = (not format_lookup[r_fmt]) and 'default' or r_fmt
+
+    local format = format_lookup[r_fmt]
 
     -- Match the format string to a link in config.
     local pattern = "<filename>(%d+)_(%d+)x(%d+)_(%w+)_(%d+).(%w+)"
+
     for id,w,h,c,b,s in config:gfind(pattern) do
         fname = string.format("%s_%sx%s_%s_%s.%s",id,w,h,c,b,s)
         if (format == string.format("%s_%s",c,b)) then
