@@ -249,15 +249,15 @@ data/format/default/vimeo.json \
 data/format/default/blip.json \
 data/format/other/cbsnews_mp4_240p.json \
 data/format/other/ted_best.json \
-data/format/other/spiegel_1400k.json \
 data/format/other/spiegel_best.json \
+data/format/other/spiegel_vp6_315p.json \
+data/format/other/spiegel_vp6_544p.json \
 data/format/other/youtube_mp4_720p.json \
 data/format/other/cbsnews_mp4_480p.json \
 data/format/other/youtube_mp4_360p.json \
 data/format/other/youtube_mp4_3072p.json \
 data/format/other/youtube_mp4_1080p.json \
 data/format/other/cbsnews_m4v_360p.json \
-data/format/other/spiegel_576k.json \
 data/format/other/golem_ipod.json \
 data/format/other/ted_hd.json \
 data/format/other/cbsnews_best.json \
@@ -267,7 +267,6 @@ data/format/other/golem_high.json \
 data/format/other/youtube_best.json \
 data/format/other/youtube_flv_480p.json \
 data/format/other/vimeo_best.json \
-data/format/other/spiegel_928k.json \
 data/format/other/youtube_flv_240p.json \
 data/format/other/golem_best.json \
 data/format/other/youtube_flv_360p.json \
