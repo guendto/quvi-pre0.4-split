@@ -26,7 +26,7 @@ function ident(self)
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "vimeo.com"
-    r.formats    = "default|best|hd"
+    r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain}, {"/%d+$"})
@@ -58,15 +58,14 @@ function parse(self)
     local _,_,s = config:find("<request_signature_expires>(.-)</")
     local exp   = s or error("no match: request signature expires")
 
-    local r = self.requested_format
-    r = (r == "best") and "hd" or r -- 'best' is an alias for 'hd'
-
-    local q = -- 'sd' is the 'default'.
-        (r == "hd") and "hd" or "sd"
+    -- default=sd, best=hd
+    local r_fmt = self.requested_format
+    r_fmt = (r_fmt == 'default') and 'sd' or r_fmt
+    r_fmt = (r_fmt == 'best') and 'hd' or r_fmt
 
     self.url = {
         string.format("http://vimeo.com/moogaloop/play/clip:%s/%s/%s/?q=%s",
-            self.id, sign, exp, q)
+            self.id, sign, exp, r_fmt)
     }
 
     return self
