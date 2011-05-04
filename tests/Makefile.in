@@ -238,6 +238,7 @@ data/format/default/academicearth.json \
 data/format/default/theonion.json \
 data/format/default/ted.json \
 data/format/default/tagtele.json \
+data/format/default/bikeradar.json \
 data/format/default/break.json \
 data/format/default/youtube.json \
 data/format/default/golem.json \
