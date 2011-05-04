@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2010,2011  Toni Gundogdu <legatvs@gmail.com>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -20,13 +20,25 @@
 -- 02110-1301  USA
 --
 
+local formats = {
+    'default',
+    'best',
+    'ipod'
+}
+
+local format_lookup = {
+    default = 'medium',
+    best = 'high',
+    ipod = 'ipod'
+}
+
 -- Identify the script.
 function ident (self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "video.golem.de"
-    r.formats    = "default|best|ipod|high"
+    r.formats    = table.concat(formats, "|")
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain}, {"/[%w-_]+/%d+/"})
@@ -41,30 +53,19 @@ function parse (self)
     local _,_,s = page:find('"id", "(.-)"')
     self.id     = s or error ("no match: video id")
 
-    local config_url =
-        string.format("http://video.golem.de/xml/%s", self.id)
+    local config_url = "http://video.golem.de/xml/" .. self.id
+    local config = quvi.fetch(config_url, {fetch_type = 'config'})
 
-    local config = quvi.fetch (config_url, {fetch_type = 'config'})
     local _,_,s  = config:find("<title>(.-)</")
-    self.title   = s or error ("no match: video title")
+    self.title   = s or error("no match: video title")
 
-    video_url =
-        string.format("http://video.golem.de/download/%s", self.id)
+    local r_fmt = self.requested_format
+    r_fmt = (not format_lookup[r_fmt]) and 'default' or r_fmt
 
-    format = "medium" -- This is the default.
-
-    if (self.requested_format == "best") then
-        format = "high"
-    else
-        for _,v in pairs({"ipod","high"}) do
-            if (v == self.requested_format) then
-                format = v
-                break
-            end
-        end
-    end
-
-    self.url = {video_url .. "?q=" .. format}
+    self.url = {
+        string.format("http://video.golem.de/download/%s?q=%s",
+            self.id, format_lookup[r_fmt])
+    }
 
     return self
 end
