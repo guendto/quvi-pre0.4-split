@@ -22,23 +22,30 @@
 
 -- <http://en.wikipedia.org/wiki/YouTube#Quality_and_codecs>
 -- $container_$maxwidth = '$fmt_id'
-local fmt_id_lookup = {
+
+local formats = {
     -- flv
-    flv_240p =  '5',
+    'default',  -- flv_240p
+    'flv_360p',
+    'flv_480p',
+    -- mp4
+    'mp4_360p',
+    'mp4_720p',
+    'mp4_1080p',
+    'mp4_3072p'
+    -- 'best' is determined by an algorithm.
+}
+
+local format_lookup = {
+    -- flv
+    default =  '5', -- flv_240p
     flv_360p = '34',
     flv_480p = '35',
     -- mp4
      mp4_360p = '18',
      mp4_720p = '22',
     mp4_1080p = '37',
-    mp4_3072p = '38',
--- These do not appear to be available as of 12/2010.
--- See also: <http://sourceforge.net/apps/trac/quvi/ticket/5>
-    -- webm
---    webm_480p = '43',
---    webm_720p = '45',
-    -- 3gp, use 'tgp' since lua won't accept '3gp'
---    tgp_144p  = '17'
+    mp4_3072p = '38'
 }
 
 -- Identify the script.
@@ -47,11 +54,7 @@ function ident(self)
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "youtube.com"
-    r.formats    = ""
-    for k,_ in pairs(fmt_id_lookup) do
-        r.formats = r.formats .."|".. k
-    end
-    r.formats     = "default|best" .. r.formats
+    r.formats    = table.concat(formats, "|") .. "|best"
     r.categories  = C.proto_http
     self.page_url = youtubify(self.page_url)
     local U       = require 'quvi/util'
@@ -127,11 +130,9 @@ function get_video_info(self, result)
     if self.requested_format == 'best' then
         url = best
     else
-        url = to_url(self.requested_format, t)
-        if not url and self.requested_format ~= 'default' then
-            -- Fallback to our 'default'.
-            url = to_url('default', t)
-        end
+        local r_fmt = self.requested_format
+        r_fmt = (not format_lookup[r_fmt]) and 'default' or r_fmt
+        url   = t[format_lookup[r_fmt]]
     end
 
     if url and #self.start_time > 0 then
@@ -148,25 +149,6 @@ function get_video_info(self, result)
     self.url = {url or error("no match: video url")}
 
     return self
-end
-
-function to_url(fmt, t)
-
-    fmt = (fmt == 'default') and 'flv_240p' or fmt
-
-    -- Match format ID alias to YouTube fmt ID.
-    local id
-
-    table.foreach(fmt_id_lookup,
-        function (k,v) if(k == fmt) then id = v end end)
-
-    -- Match fmt ID to available fmt IDs.
-    local url
-
-    table.foreach(t,
-        function (k,v) if(id == k) then url = v end end)
-
-    return url
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
