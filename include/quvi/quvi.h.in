@@ -399,6 +399,7 @@ typedef void *quvi_video_t;
  *       break;
  *     }
  *   fflush(stdout);
+ *   return (QUVI_OK);
  * }
  *
  * int main (int argc, char *argv[])
