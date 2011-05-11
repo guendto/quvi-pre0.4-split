@@ -231,7 +231,7 @@ static int l_quvi_fetch(lua_State * l)
   free_net_handle(&n);
 
   if (rc != QUVI_OK)
-    luaL_error(l, m->quvi->errmsg);
+    luaL_error(l, "%s", m->quvi->errmsg);
 
   return (1);
 }
@@ -262,7 +262,7 @@ static int l_quvi_resolve(lua_State *l)
   _free(redirect_url);
 
   if (rc != QUVI_OK)
-    luaL_error(l, m->quvi->errmsg);
+    luaL_error(l, "%s", m->quvi->errmsg);
 
   return (1);
 }
