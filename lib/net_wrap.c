@@ -212,7 +212,7 @@ QUVIcode resolve_wrapper(_quvi_t q, const char *url, char **dst)
     {
       const long param =
         makelong(QUVISTATUS_RESOLVE, 0);
-      
+
       if (q->status_func(param, 0) != QUVI_OK)
         return (QUVI_ABORTEDBYCALLBACK);
     }
