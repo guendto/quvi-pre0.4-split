@@ -639,7 +639,7 @@ QUVIcode run_lua_charset_func(_quvi_media_t m, const char *data)
 
 /* Executes the host script's "ident" function. */
 
-QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
+QUVIcode run_ident_func(_quvi_ident_t ident, _quvi_llst_node_t node)
 {
   static const char *f = "ident";
   _quvi_lua_script_t s;
@@ -720,18 +720,20 @@ QUVIcode run_ident_func(lua_ident_t ident, _quvi_llst_node_t node)
 /* Executes the host script's "parse" function. */
 
 static QUVIcode
-run_parse_func(lua_State * l, _quvi_llst_node_t n, _quvi_media_t m)
+run_parse_func(_quvi_llst_node_t n, _quvi_media_t m)
 {
   static const char *f = "parse";
   _quvi_lua_script_t s;
   char *script_dir;
   _quvi_t quvi;
+  lua_State *l;
   QUVIcode rc;
 
   assert(n != NULL);
   assert(m != NULL);
 
   quvi = m->quvi;           /* seterr macro needs this. */
+  l = quvi->lua;
   s = (_quvi_lua_script_t) n->data;
   rc = QUVI_OK;
 
@@ -801,28 +803,33 @@ run_parse_func(lua_State * l, _quvi_llst_node_t n, _quvi_media_t m)
 /* Match host script to the url. */
 
 static _quvi_llst_node_t
-find_host_script_node(_quvi_media_t m, QUVIcode * rc)
+find_host_script_node(_quvi_media_t media, _quvi_ident_t *dst, QUVIcode *rc)
 {
   _quvi_llst_node_t curr;
   _quvi_t quvi;
 
-  quvi = m->quvi;           /* seterr macro uses this. */
+  quvi = media->quvi;           /* seterr macro uses this. */
   curr = quvi->website_scripts;
 
   while (curr)
     {
-      struct lua_ident_s ident;
+      _quvi_ident_t ident = calloc(1, sizeof(*ident));
+      if (!ident)
+        {
+          *rc = QUVI_MEM;
+          return (NULL);
+        }
 
-      ident.quvi = m->quvi;
-      ident.url = m->page_url;
-      ident.domain = NULL;
-      ident.formats = NULL;
+      freprintf(&ident->url, "%s", media->page_url);
+      ident->quvi = media->quvi;
 
       /* Check if script ident this url. */
-      *rc = run_ident_func(&ident, curr);
+      *rc = run_ident_func(ident, curr);
 
-      _free(ident.domain);
-      _free(ident.formats);
+      if (!dst) /* Do not return ident data */
+        quvi_supported_ident_close((quvi_ident_t)&ident);
+      else
+        *dst = ident;
 
       if (*rc == QUVI_OK)
         {
@@ -839,16 +846,16 @@ find_host_script_node(_quvi_media_t m, QUVIcode * rc)
     }
 
   /* Trust that run_ident_func sets the rc. */
-  freprintf(&quvi->errmsg, "no support: %s", m->page_url);
+  freprintf(&quvi->errmsg, "no support: %s", media->page_url);
 
   return (NULL);
 }
 
 /* Match host script to the url */
-QUVIcode find_host_script(_quvi_media_t m)
+QUVIcode find_host_script(_quvi_media_t media, _quvi_ident_t *ident)
 {
   QUVIcode rc;
-  find_host_script_node(m, &rc);
+  find_host_script_node(media, ident, &rc);
   return (rc);
 }
 
@@ -856,19 +863,14 @@ QUVIcode find_host_script(_quvi_media_t m)
 QUVIcode find_host_script_and_parse(_quvi_media_t m)
 {
   _quvi_llst_node_t script;
-  _quvi_t quvi;
-  lua_State *l;
   QUVIcode rc;
 
-  quvi = m->quvi;           /* seterr macro uses this. */
-  l = quvi->lua;
-
-  script = find_host_script_node(m, &rc);
+  script = find_host_script_node(m, NULL, &rc);
   if (script == NULL)
     return (rc);
 
-  /* found a script. */
-  return (run_parse_func(l, script, m));
+  /* Found a script that handles the URL. */
+  return (run_parse_func(script, m));
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */
