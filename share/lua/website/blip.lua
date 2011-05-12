@@ -49,6 +49,11 @@ function parse (self)
     local U = require 'quvi/util'
     self.page_url = U.unescape(self.page_url)
 
+    local page = quvi.fetch(self.page_url)
+
+    local _,_,s = page:find('rel="videothumbnail" href="(.-)"')
+    self.thumbnail_url = s or ''
+
     local _,_,id = self.page_url:find('/flash/(%d+)')
     if not id then
         local r = quvi.resolve(self.page_url)
@@ -58,8 +63,8 @@ function parse (self)
         end
     end
 
-    if not id then
-        local page = quvi.fetch(self.page_url)
+    if not id and page then
+--        local page = quvi.fetch(self.page_url)
         _,_,id = page:find('post_masthed_(%d+)')
     end
 
@@ -87,14 +92,6 @@ function parse (self)
     local f = (r_fmt == 'default' or not t[r_fmt]) and 'source' or r_fmt
     f = (r_fmt == 'best') and choose_best(t).role or f
     self.url =  {t[f].url}
-
-    local _,_,s = config:find('media:thumbnail url="(.-)"')
-    if s then
-        if not s:find('^http://a.images.blip.tv') then
-            s = 'http://a.images.blip.tv' .. s
-        end
-    end
-    self.thumbnail_url = s or ''
 
     return self
 end
