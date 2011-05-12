@@ -208,17 +208,37 @@ static void dump_host(char *domain, char *formats)
   quvi_free(formats);
 }
 
-/* Wraps quvi_supported. */
+#ifdef _0
+#define _QUVI_SUPPORTED
+#endif
+
+/* Wraps quvi_supported_ident. */
 static void supported(quvi_t quvi)
 {
-  QUVIcode rc = QUVI_NOSUPPORT;
+#ifndef _QUVI_SUPPORTED
+  quvi_ident_t ident;
+  char *formats;
+#endif
+  QUVIcode rc;
   int i;
+
+  rc = QUVI_NOSUPPORT;
 
   for (i=0; i<opts->inputs_num; ++i)
     {
-      rc = quvi_supported(quvi, (char *)opts->inputs[i]);
+#ifndef _QUVI_SUPPORTED
+      rc = quvi_supported_ident(quvi, (char*)opts->inputs[i], &ident);
+      if (rc == QUVI_OK)
+        {
+          quvi_ident_getprop(ident, QUVI_IDENT_PROPERTY_FORMATS, &formats);
+          spew_qe("%s: OK\n\t%s\n", (char *)opts->inputs[i], formats);
+          quvi_supported_ident_close(&ident);
+        }
+#else
+      rc = quvi_supported(quvi, (char*)opts->inputs[i]);
       if (rc == QUVI_OK)
         spew_qe("%s: OK\n", (char *)opts->inputs[i]);
+#endif /* !_QUVI_SUPPORTED */
       else
         spew_qe("error: %s\n", quvi_strerror(quvi, rc));
     }

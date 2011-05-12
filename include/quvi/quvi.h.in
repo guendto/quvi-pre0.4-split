@@ -328,17 +328,39 @@ typedef enum
 
 } QUVIproperty;
 
+typedef enum
+{
+  QUVI_IDENT_PROPERTY_NONE = 0x00,
+  /**< Unused */
+  QUVI_IDENT_PROPERTY_URL = QUVIPROPERTY_STRING + 1,
+  /**< URL */
+  QUVI_IDENT_PROPERTY_DOMAIN = QUVIPROPERTY_STRING + 2,
+  /**< Domain string */
+  QUVI_IDENT_PROPERTY_FORMATS = QUVIPROPERTY_STRING + 3,
+  /**< Formats string */
+  QUVI_IDENT_PROPERTY_CATEGORIES = QUVIPROPERTY_LONG + 4,
+  /**< Formats string */
+  _QUVI_IDENT_PROPERTY_LAST = 4
+  /**< Placeholder */
+} QUVIidentProperty;
+
 /** @brief libquvi session handle */
 typedef void *quvi_t;
+
 /** @brief Media parsing session handle
 * @since 0.2.15
 */
 typedef void *quvi_media_t;
+
 /** @brief Video parsing session handle
 * @deprecated Since 0.2.15, use quvi_media_t instead
 */
 typedef void *quvi_video_t;
 
+/** @brief Webscript ident handle
+ * @since 0.2.16
+ */
+typedef void *quvi_ident_t;
 
 /**
  * @brief Status callback function
@@ -763,6 +785,7 @@ extern "C" {
    *   - Works with a limited number of URL shorteners, e.g. youtu.be and
    *   dai.ly, in which cases the LUA scripts can resolve to the
    *   destination URL without an Internet connection
+   *   - Consider using quvi_supported_ident() instead
    *
    * @since 0.2.9
    *
@@ -770,9 +793,81 @@ extern "C" {
    *   - 0.2.9 - 0.2.14: Limited to basic domain name comparison
    *   - 0.2.15: Improved heuristics: Additional checks for different URL parts
    *
+   * @sa quvi_supported_ident
+   *
    * @return Non-zero if an error occurred
    */
   QUVIcode quvi_supported(quvi_t quvi, char *url);
+
+  /**
+   * @brief Check whether the library could parse the URL
+   *
+   * Identical to quvi_supported() but returns the `ident' data from
+   * a matched website script.
+   *
+   * The library checks the URL with each website script to see whether it
+   * could parse the URL. This function is designed to work without an
+   * Internet connection.
+   *
+   * Most URL shortening services require that the URL is resolved over
+   * an Internet connection. This means that most "shortened" URLs will
+   * fail with this function (QUVI_NOSUPPORT).
+   *
+   * @param quvi Handle to session
+   * @param url Null-terminated string to an URL
+   * @param ident Handle to ident data (set to NULL to emulate quvi_supported())
+   *
+   * @remark Close ident handle with quvi_supported_ident_close() unless
+   *  `ident' parameter is set to NULL (see above)
+   *
+   * @sa quvi_ident_getprop
+   * @sa quvi_supported_ident_close
+   * @sa quvi_supported
+   *
+   * @since 0.2.16
+   *
+   * @return Non-zero if an error occurred
+   */
+  QUVIcode quvi_supported_ident(quvi_t quvi, char *url, quvi_ident_t *ident);
+
+  /**
+   * @brief Get property information from a ident handle
+   *
+   * @param handle Handle to a website script returned ident data
+   * @param property Property ID
+   * @param ... Parameter
+   *
+   * @warning Do not attempt to free the memory returned by this function
+   *
+   * @sa quvi_supported_ident
+   * @sa quvi_supported_ident_close
+   *
+   * @since 0.2.16
+   *
+   * @return Non-zero if an error occurred
+   *
+   * Example:
+   * @code
+   * quvi_ident_t ident;
+   * if (quvi_supported_ident(quvi, url, &ident) == QUVI_OK)
+   *  {
+   *    char *formats;
+   *    quvi_ident_getprop(ident, QUVI_IDENT_PROPERTY_FORMATS, &formats);
+   *    puts(formats);
+   *    quvi_supported_ident_close(&ident);
+   *  }
+   * @endcode
+   */
+  QUVIcode quvi_ident_getprop(quvi_ident_t handle, QUVIidentProperty property, ...);
+
+  /**
+   * @brief Close ident handle
+   *
+   * @sa quvi_supported_ident
+   *
+   * @since 0.2.16
+   */
+  void quvi_supported_ident_close(quvi_ident_t *ident);
 
   /**
    * @brief Return next supported website
