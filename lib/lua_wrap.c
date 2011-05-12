@@ -842,6 +842,9 @@ find_host_script_node(_quvi_media_t media, _quvi_ident_t *dst, QUVIcode *rc)
           return (NULL);
         }
 
+      /* No support, try the next script. */
+      quvi_supported_ident_close((quvi_ident_t)&ident);
+
       curr = curr->next;
     }
 
