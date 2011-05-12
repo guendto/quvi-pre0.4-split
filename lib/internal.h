@@ -141,6 +141,18 @@ struct _quvi_net_propfeat_s
 
 typedef struct _quvi_net_propfeat_s *_quvi_net_propfeat_t;
 
+/* quvi webscript ident handle */
+struct _quvi_ident_s
+{
+  long categories;
+  char *formats;
+  char *domain;
+  _quvi_t quvi;
+  char *url;
+};
+
+typedef struct _quvi_ident_s *_quvi_ident_t;
+
 #endif
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */
