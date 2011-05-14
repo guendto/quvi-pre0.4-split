@@ -34,6 +34,8 @@ data/format/default/break.json \
 data/format/default/youtube.json \
 data/format/default/golem.json \
 data/format/default/google.json \
+data/format/default/guardian.json \
+data/format/default/guardian_audio.json \
 data/format/default/soundcloud.json \
 data/format/default/globo.json \
 data/format/default/cbsnews.json \
