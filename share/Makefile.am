@@ -27,6 +27,7 @@ lua/website/funnyordie.lua \
 lua/website/globo.lua \
 lua/website/golem.lua \
 lua/website/google.lua \
+lua/website/guardian.lua \
 lua/website/liveleak.lua \
 lua/website/megavideo.lua \
 lua/website/pluzz.lua \
