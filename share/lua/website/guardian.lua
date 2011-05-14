@@ -49,6 +49,9 @@ function parse (self)
     local _,_,s = page:find("'src': '(.-)'")
     self.url    = {s or error ("no match: file")}
 
+    local _,_,s = page:find("'poster',%s+'(.-)'")
+    self.thumbnail_url = s or ''
+
     return self
 end
 
