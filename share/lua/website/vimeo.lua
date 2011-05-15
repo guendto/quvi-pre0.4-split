@@ -60,6 +60,19 @@ function parse(self)
 
     -- default=sd, best=hd
     local r_fmt = self.requested_format
+    if not (r_fmt == 'hd' or r_fmt == 'sd' or
+            r_fmt == 'default' or r_fmt == 'best') then
+        error("requested format must be one of: hd, sd, default, best")
+    end
+    if (r_fmt == 'best' or r_fmt == 'hd') then
+        -- first test whether hd is available
+        local _,_,s = config:find("<isHD>(.-)</")
+        local hd_ok = s or error("no match: hd availability")
+        if (r_fmt == 'hd') and (hd_ok == '0') then
+            error('this video is not available in HD')
+        end
+        r_fmt = (hd_ok == '1') and 'hd' or 'sd'
+    end
     r_fmt = (r_fmt == 'default') and 'sd' or r_fmt
     r_fmt = (r_fmt == 'best') and 'hd' or r_fmt
 
