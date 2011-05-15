@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010  Lionel Elie Mamane <lionel@mamane.lu>
+-- Copyright (C) 2010-2011  Lionel Elie Mamane <lionel@mamane.lu>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -26,9 +26,7 @@ function ident (self)
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "collegehumor.com"
-    r.formats    = "default"
--- default and hq seem to be the same. see also 'hq' parsing.
---    r.formats    = "default|best|hq"
+    r.formats    = "default|best|hq"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     local u      = collegehumorify(self.page_url)
