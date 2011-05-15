@@ -43,15 +43,18 @@ function parse (self)
     self.page_url, self.id = collegehumorify(self.page_url)
     self.id = self.id or error("no match: video id")
 
-    -- http://www.collegehumor.com/video:1942317 - OK
-    -- http://www.collegehumor.com/video:6463979 - FAILS
-
     local page  = quvi.fetch(
-        "http://www.collegehumor.com/moogaloop/video:" .. self.id,
+        "http://www.collegehumor.com/moogaloop/video/" .. self.id,
         {fetch_type = 'config'})
 
     local _,_,sd_url = page:find('<file><!%[%w+%[(.-)%]')
+    if (sd_url == '') then
+        sd_url = NULL
+    end
     local _,_,hq_url = page:find('<hq><!%[%w+%[(.-)%]')
+    if (hq_url == '') then
+        hq_url = NULL
+    end
 
     local url = sd_url or hq_url -- default to 'sd'
     url = url or error("no match: video url") -- we need this at least
