@@ -20,13 +20,16 @@
 -- 02110-1301  USA
 --
 
+-- w/ HD: <http://vimeo.com/1485507>
+-- no HD: <http://vimeo.com/10772672>
+
 -- Identify the script.
 function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "vimeo.com"
-    r.formats    = "default|best"
+    r.formats    = "default|best" -- default=sd, best=hd
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain}, {"/%d+$"})
@@ -58,23 +61,12 @@ function parse(self)
     local _,_,s = config:find("<request_signature_expires>(.-)</")
     local exp   = s or error("no match: request signature expires")
 
+    local _,_,s    = config:find('<isHD>(%d)')
+    local hd_avail = (s and s == '1') and 1 or 0
+
     -- default=sd, best=hd
     local r_fmt = self.requested_format
-    if not (r_fmt == 'hd' or r_fmt == 'sd' or
-            r_fmt == 'default' or r_fmt == 'best') then
-        error("requested format must be one of: hd, sd, default, best")
-    end
-    if (r_fmt == 'best' or r_fmt == 'hd') then
-        -- first test whether hd is available
-        local _,_,s = config:find("<isHD>(.-)</")
-        local hd_ok = s or error("no match: hd availability")
-        if (r_fmt == 'hd') and (hd_ok == '0') then
-            error('this video is not available in HD')
-        end
-        r_fmt = (hd_ok == '1') and 'hd' or 'sd'
-    end
-    r_fmt = (r_fmt == 'default') and 'sd' or r_fmt
-    r_fmt = (r_fmt == 'best') and 'hd' or r_fmt
+    r_fmt = (r_fmt == 'best' and hd_avail == 1) and 'hd' or 'sd'
 
     self.url = {
         string.format("http://vimeo.com/moogaloop/play/clip:%s/%s/%s/?q=%s",
