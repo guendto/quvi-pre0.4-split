@@ -272,7 +272,8 @@ data/format/other/vimeo_best.json \
 data/format/other/golem_best.json \
 data/format/other/blip_best.json \
 data/format/other/blip_hd.json \
-data/format/other/blip_sd.json
+data/format/other/blip_sd.json \
+data/format/other/collegehumor_best.json
 
 JSON_IGNORE = \
 data/format/default/ignore/length_bytes/dailymotion.json \
