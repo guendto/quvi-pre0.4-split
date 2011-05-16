@@ -253,6 +253,7 @@ data/format/default/bloomberg.json \
 data/format/default/buzzhumor.json \
 data/format/default/vimeo.json \
 data/format/default/blip.json \
+data/format/default/collegehumor.json \
 data/format/other/cbsnews_mp4_240p.json \
 data/format/other/ted_best.json \
 data/format/other/spiegel_best.json \
@@ -284,7 +285,6 @@ data/format/other/ignore/length_bytes/dailymotion_hd.json \
 data/format/other/ignore/length_bytes/dailymotion_best.json
 
 JSON_TODO = \
-data/format/default/todo/collegehumor.json \
 data/format/default/todo/tvlux.json
 
 JSON_NLFY = \

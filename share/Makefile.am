@@ -41,7 +41,8 @@ lua/website/ted.lua \
 lua/website/tmunderground.lua \
 lua/website/theonion.lua \
 lua/website/vimeo.lua \
-lua/website/youtube.lua
+lua/website/youtube.lua \
+lua/website/collegehumor.lua
 
 if ENABLE_NSFW
 DIST_lua += \
@@ -56,7 +57,6 @@ endif
 
 if ENABLE_TODO
 DIST_lua += \
-lua/website/collegehumor.lua \
 lua/website/tvlux.lua
 endif
 
