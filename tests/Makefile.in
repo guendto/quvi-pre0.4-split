@@ -281,8 +281,7 @@ data/format/other/collegehumor_best.json
 
 JSON_IGNORE = \
 data/format/default/ignore/length_bytes/dailymotion.json \
-data/format/other/ignore/length_bytes/dailymotion_hq.json \
-data/format/other/ignore/length_bytes/dailymotion_hd.json \
+data/format/other/ignore/length_bytes/dailymotion_h264_480p.json \
 data/format/other/ignore/length_bytes/dailymotion_best.json
 
 JSON_TODO = \
