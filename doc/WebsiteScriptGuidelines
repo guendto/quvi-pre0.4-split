@@ -1,0 +1,140 @@
+
+Generic guidelines
+==================
+
+1. `ident' function
+1.1. Required fields
+1.2. Different domain, same media host
+--
+2. `parse' function
+2.1. Required fields
+2.2. Optional fields
+2.3. Formats
+2.4. Other notes
+--
+3. Utility LUA scripts
+--
+4. Other useful tidbits
+
+
+1. `ident' function
+-------------------
+
+The `ident' function identifies the script to the library.
+
+1.1. Required fields
+--------------------
+
+The following fields are expected to be returned by the `ident'
+function:
+    - self.domain
+    - self.formats
+    - self.categories
+    - self.handles
+
+1.2. Different domain, same media host
+--------------------------------------
+
+* `ident' can currently return only one domain to the library
+
+* Write two scripts (e.g. foo.lua, bar.lua)
+    - foo.lua redirects
+    - bar.lua parses and returns the results
+    - See academicearth.lua for an example of this
+
+
+2. `parse' function
+-------------------
+
+The `parse' function is expected to parse the media details and return
+them to the library.
+
+2.1. Required fields
+--------------------
+
+The following fields are expected to be parsed and returned:
+  - self.host_id
+  - self.title
+  - self.id
+  - self.url (NOTE: an array of URLs)
+
+The script should exit with an error if one of the following cannot be parsed.
+
+2.2. Optional fields
+--------------------
+
+The following fields may be returned by the `parse' function:
+    - self.redirect_url     (see academicearth.lua)
+    - self.start_time       (youtube.lua)
+    - self.thumbnail_url    (youtube.lua)
+    - self.duration         (soundcloud.lua)
+
+2.3. Formats
+------------
+
+* Have at least the 'default' format, choose one if unsure
+
+* If >1 formats, add 'best' format
+
+    * If additional details (resolution, bitrate, etc.) are available
+        - Write an algorithm that determines the 'best' from the data
+        - See youtube.lua and cbsnews.lua for example
+
+    * Otherwise, choose one as the 'best'
+        - See blip.lua for an example of this
+
+    * Fallback to 'default' if the requested format is not available
+        - Exit with an error only if 'default' is not found either
+
+2.4. Other notes
+----------------
+
+* quvi.fetch only when necessary
+
+    * For example, do not fetch the self.page_url unless the returned
+      data is actually required
+
+    * You specify the following additional args with quvi.fetch
+
+        * fetch_type with quvi.fetch (see youtube.lua)
+
+        * arbitrary_cookie (see dailymotion.lua)
+
+        * user_agent (see globo.lua)
+
+* quvi.resolve only when necessary (see blip.lua for an example)
+
+
+3. Utility LUA scripts
+----------------------
+
+The additional scripts that the website scripts may use:
+    * bit.lua
+    * const.lua
+    * url.lua
+    * util.lua
+
+You can import these functions in your website script like so:
+    local U   = require 'quvi/util'  -- import util.lua
+    local url = U.unescape(orig_url)
+
+
+4. Other useful tidbits
+-----------------------
+
+If you are familiar with C, then the following:
+    b = (a == 1) 0:1;
+
+Could be written in LUA:
+    b = (a == 1) and 0 or 1
+
+So, for example (in LUA):
+    local foo
+    if bar == 'baz' then
+        foo = 1
+    else
+        foo = 0
+    end
+
+Could also be written:
+    local foo = (bar == 'baz') and 1 or 0

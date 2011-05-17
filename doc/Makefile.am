@@ -5,7 +5,8 @@ HowtoWriteWebsiteScript \
 HowtoGetDevelopmentCode \
 HowtoHelp \
 HowtoSubmitPatches \
-CodingStyle
+CodingStyle \
+WebsiteScriptGuidelines
 endif
 
 EXTRA_DIST = $(doc_DATA)
