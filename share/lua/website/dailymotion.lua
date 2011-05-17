@@ -26,7 +26,12 @@ function ident(self)
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "dailymotion."
-    r.formats    = "default|best|hq|hd"
+    --
+    -- 'best' is determined by parsing the available formats, picking
+    -- the one with the highest height quality. 'default' to the lowest
+    -- quality.
+    --
+    r.formats    = "default|best|h264_480p"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
 -- "http://dai.ly/cityofscars",
@@ -57,15 +62,31 @@ function parse(self)
     local _,_,s = page:find("video/(.-)_")
     self.id     = s or error("no match: video id")
 
-    self.url    = get_url(self, page, U)
-    if not self.url then
-        error("no match: video url")
-    end
+    local found = iter_media(page, U)
+    local r_fmt = self.requested_format
+
+    local url = (r_fmt == 'default' or not found[r_fmt])
+                    and choose_default(found).url
+                    or  found[r_fmt].url
+
+    url = (r_fmt == 'best')
+            and choose_best(found).url
+            or  url
+
+    self.url = {url or error('no match: media url')}
 
     return self
 end
 
-function get_url(self, page, U)
+function normalize(page_url) -- embedded URL to "regular".
+    if page_url:find("/swf/") then
+        page_url = page_url:gsub("/video/", "/")
+        page_url = page_url:gsub("/swf/", "/video/")
+    end
+    return page_url
+end
+
+function iter_media(page, U)
     local _,_,seq = page:find('"sequence",%s+"(.-)"')
     if not seq then
         local e = "no match: sequence"
@@ -90,42 +111,44 @@ function get_url(self, page, U)
         end
     end
 
-    -- "sd" is our "default".
-    local req_fmt = self.requested_format
-    req_fmt = (req_fmt == "default") and "sd" or req_fmt
-
-    -- choose "best" from the array, check against reported video
-    -- resolution height. pick the highest available.
-    local best,curr
-    local best_h = 0
-
-    for id,url in vpp:gfind('(%w+)URL":"(.-)"') do -- id=format id.
+    local t = {}
+    for id,url in vpp:gfind('(%w+)URL":"(.-)"') do
         url = url:gsub("\\/", "/")
-        -- found requested format id.
-        if id == req_fmt then
-            curr = url
-            break
+        local _,_,c,w,h = url:find('(%w+)%-(%d+)x(%d+)')
+        if not c or not w or not h then
+            error('no match: container, width, height')
         end
-        -- default to whatever is the first in the array.
-        if not curr then curr = url end
-        -- compare heights as reported in the URLs.
-        local _,_,w,h = url:find("(%d+)x(%d+)")
-        if tonumber(h) > tonumber(best_h) then
-            best_h = h
-            best = url
-        end
+        c = string.lower(c)
+--        print(c,w,h)
+        local id = c .. '_' .. h .. 'p'
+        t[id] = {width=tonumber(w), height=tonumber(h), url=url}
     end
-
-    curr = (req_fmt == "best") and best or curr
-    return {curr}
+    return t
 end
 
-function normalize(page_url) -- embedded URL to "regular".
-    if page_url:find("/swf/") then
-        page_url = page_url:gsub("/video/", "/")
-        page_url = page_url:gsub("/swf/", "/video/")
+function choose_default(t)
+    -- Go with the lowest resolution.
+    local r = {width=0xffff, height=0xffff, url=nil}
+    for k,v in pairs(t) do
+        if v.height < r.height then
+            r.width  = v.width
+            r.height = v.height
+            r.url    = v.url
+        end
     end
-    return page_url
+    return r
+end
+
+function choose_best(t)
+    local r = {width=0, height=0, url=nil}
+    for k,v in pairs(t) do
+        if v.height > r.height then
+            r.width  = v.width
+            r.height = v.height
+            r.url    = v.url
+        end
+    end
+    return r
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
