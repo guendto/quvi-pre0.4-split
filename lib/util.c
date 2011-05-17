@@ -25,32 +25,41 @@
 #include <libgen.h>
 #include <assert.h>
 
-#include <curl/curl.h>
-
 #ifdef HAVE_ICONV
 #include <iconv.h>
 #endif
 
 #include "quvi/quvi.h"
+#include "quvi/net.h"
+#include "quvi/llst.h"
+
 #include "internal.h"
 #include "curl_wrap.h"
 #include "util.h"
 
-char *freprintf(char **dst, const char *fmt, ...)
+char *vafreprintf(char **dst, const char *fmt, va_list args)
 {
-  va_list args;
-
   _free(*dst);
+  assert(*dst == NULL);
 
-  va_start(args, fmt);
   vasprintf(dst, fmt, args);
   va_end(args);
 
   return (*dst);
 }
 
+char *freprintf(char **dst, const char *fmt, ...)
+{
+  va_list args;
+
+  va_start(args, fmt);
+  vafreprintf(dst, fmt, args);
+
+  return (*dst);
+}
+
 #ifdef HAVE_ICONV
-QUVIcode to_utf8(_quvi_media_t video)
+QUVIcode to_utf8(_quvi_media_t media)
 {
   static const char to[] = "UTF-8";
   size_t insize, avail, iconv_code;
@@ -59,32 +68,32 @@ QUVIcode to_utf8(_quvi_media_t video)
   char *from, *wptr;
   iconv_t cd;
 
-  assert(video != 0);
-  assert(video->quvi != 0);
-  assert(video->title != 0);
-  assert(video->charset != 0);
+  assert(media != 0);
+  assert(media->quvi != 0);
+  assert(media->title != 0);
+  assert(media->charset != 0);
 
   wptr = outbuf;
   inptr = inbuf;
   avail = sizeof(outbuf);
-  insize = strlen(video->title);
+  insize = strlen(media->title);
 
   if (insize >= sizeof(inbuf))
     insize = sizeof(inbuf);
 
   memset(wptr, 0, sizeof(outbuf));
 
-  snprintf(inbuf, sizeof(inbuf), "%s", video->title);
+  snprintf(inbuf, sizeof(inbuf), "%s", media->title);
 
   /* Try with TRANSLIT first. */
-  asprintf(&from, "%s//TRANSLIT", video->charset);
+  asprintf(&from, "%s//TRANSLIT", media->charset);
   cd = iconv_open(to, from);
 
   /* If that fails, then without TRANSLIT. */
   if (cd == (iconv_t) - 1)
     {
       _free(from);
-      asprintf(&from, "%s", video->charset);
+      asprintf(&from, "%s", media->charset);
       cd = iconv_open(to, from);
     }
 
@@ -92,13 +101,13 @@ QUVIcode to_utf8(_quvi_media_t video)
     {
       if (errno == EINVAL)
         {
-          freprintf(&video->quvi->errmsg,
+          freprintf(&media->quvi->errmsg,
                     "conversion from %s to %s unavailable", from, to);
         }
       else
         {
 #ifdef HAVE_STRERROR
-          freprintf(&video->quvi->errmsg, "iconv_open: %s",
+          freprintf(&media->quvi->errmsg, "iconv_open: %s",
                     strerror(errno));
 #else
           perror("iconv_open");
@@ -116,7 +125,7 @@ QUVIcode to_utf8(_quvi_media_t video)
 
   if (iconv_code == (size_t) - 1)
     {
-      freprintf(&video->quvi->errmsg,
+      freprintf(&media->quvi->errmsg,
                 "converting characters from '%s' to '%s' failed", from,
                 to);
       _free(from);
@@ -124,30 +133,18 @@ QUVIcode to_utf8(_quvi_media_t video)
     }
   else
     {
-      freprintf(&video->title, "%s", outbuf);
+      freprintf(&media->title, "%s", outbuf);
     }
 
   _free(from);
 
   return (QUVI_OK);
 }
-#endif
+#endif /* HAVE_ICONV */
 
 char *unescape(_quvi_t quvi, char *s)
 {
-  char *tmp, *ret;
-
-  assert(quvi != 0);
-  assert(quvi->curl != 0);
-
-  tmp = curl_easy_unescape(quvi->curl, s, 0, NULL);
-  assert(tmp != 0);
-  ret = strdup(tmp);
-  curl_free(tmp);
-
-  free(s);
-
-  return (ret);
+  return curl_unescape_url(quvi, s);
 }
 
 char *from_html_entities(char *src)
@@ -186,9 +183,9 @@ char *from_html_entities(char *src)
   return (src);
 }
 
-static int new_video_link(_quvi_video_link_t * dst)
+static int new_media_url(_quvi_media_url_t * dst)
 {
-  struct _quvi_video_link_s *qvl;
+  struct _quvi_media_url_s *qvl;
 
   qvl = calloc(1, sizeof(*qvl));
   if (!qvl)
@@ -199,13 +196,13 @@ static int new_video_link(_quvi_video_link_t * dst)
   return (QUVI_OK);
 }
 
-int add_video_link(llst_node_t * lst, const char *fmt, ...)
+int add_media_url(_quvi_llst_node_t * lst, const char *fmt, ...)
 {
-  _quvi_video_link_t qvl;
+  _quvi_media_url_t qvl;
   va_list args;
   int rc;
 
-  rc = new_video_link(&qvl);
+  rc = new_media_url(&qvl);
   if (rc != QUVI_OK)
     return (rc);
 
@@ -219,7 +216,7 @@ int add_video_link(llst_node_t * lst, const char *fmt, ...)
       return (QUVI_MEM);
     }
 
-  return (llst_add(lst, qvl));
+  return (quvi_llst_append((quvi_llst_node_t*)lst, qvl));
 }
 
 char *dirname_from(const char *s)

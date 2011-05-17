@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2010  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,23 +17,10 @@
  * 02110-1301  USA
  */
 
-#ifndef llst_h
-#define llst_h
+void spew_e(const char *fmt, ...);
+void check_error(quvi_t, QUVIcode);
+void handle_resolve_status(quvi_word type);
+void handle_fetch_status(quvi_word type, void *p);
+void handle_verify_status(quvi_word type);
 
-struct _llst_node_s
-{
-  struct _llst_node_s *next;
-  struct _llst_node_s *prev;
-  void *data;
-};
-
-typedef struct _llst_node_s *llst_node_t;
-
-int llst_add(llst_node_t *, void *);
-
-int llst_size(llst_node_t);
-
-void llst_free(llst_node_t *);
-
-#endif
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

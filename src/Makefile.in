@@ -53,14 +53,14 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__quvi_SOURCES_DIST = quvi.c cmdline.c $(top_srcdir)/lib/strepl.c \
-	$(top_srcdir)/lib/llst.c $(top_srcdir)/lib/vasprintf.c \
-	$(top_srcdir)/lib/asprintf.c cmdline.h
+	$(top_srcdir)/lib/vasprintf.c $(top_srcdir)/lib/asprintf.c \
+	cmdline.h
 @ENABLE_QUVI_TRUE@@NO_ASPRINTF_TRUE@am__objects_1 =  \
 @ENABLE_QUVI_TRUE@@NO_ASPRINTF_TRUE@	quvi-vasprintf.$(OBJEXT) \
 @ENABLE_QUVI_TRUE@@NO_ASPRINTF_TRUE@	quvi-asprintf.$(OBJEXT)
 @ENABLE_QUVI_TRUE@am__objects_2 = quvi-quvi.$(OBJEXT) \
 @ENABLE_QUVI_TRUE@	quvi-cmdline.$(OBJEXT) quvi-strepl.$(OBJEXT) \
-@ENABLE_QUVI_TRUE@	quvi-llst.$(OBJEXT) $(am__objects_1)
+@ENABLE_QUVI_TRUE@	$(am__objects_1)
 am__objects_3 =
 @ENABLE_QUVI_TRUE@am_quvi_OBJECTS = $(am__objects_2) $(am__objects_3)
 quvi_OBJECTS = $(am_quvi_OBJECTS)
@@ -229,6 +229,10 @@ libdir = @libdir@
 libexecdir = @libexecdir@
 liblua_CFLAGS = @liblua_CFLAGS@
 liblua_LIBS = @liblua_LIBS@
+libsoup_CFLAGS = @libsoup_CFLAGS@
+libsoup_LIBS = @libsoup_LIBS@
+libsoup_gnome_CFLAGS = @libsoup_gnome_CFLAGS@
+libsoup_gnome_LIBS = @libsoup_gnome_LIBS@
 localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
@@ -254,13 +258,14 @@ top_srcdir = @top_srcdir@
 @ENABLE_QUVI_TRUE@    cmdline.ggo
 
 @ENABLE_QUVI_TRUE@src = quvi.c cmdline.c $(top_srcdir)/lib/strepl.c \
-@ENABLE_QUVI_TRUE@	$(top_srcdir)/lib/llst.c $(am__append_1)
+@ENABLE_QUVI_TRUE@	$(am__append_1)
 @ENABLE_QUVI_TRUE@hdr = \
-@ENABLE_QUVI_TRUE@cmdline.h
+@ENABLE_QUVI_TRUE@    cmdline.h
 
 @ENABLE_QUVI_TRUE@quvi_SOURCES = $(src) $(hdr)
 @ENABLE_QUVI_TRUE@quvi_CPPFLAGS = \
 @ENABLE_QUVI_TRUE@    -I$(top_builddir)/include \
+@ENABLE_QUVI_TRUE@    -I$(top_srcdir)/include \
 @ENABLE_QUVI_TRUE@    -I$(top_srcdir)/lib \
 @ENABLE_QUVI_TRUE@    $(libcurl_CFLAGS) \
 @ENABLE_QUVI_TRUE@    $(AM_CPPFLAGS)
@@ -366,7 +371,6 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-asprintf.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-cmdline.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-llst.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-quvi.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-strepl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-vasprintf.Po@am__quote@
@@ -442,22 +446,6 @@ quvi-strepl.obj: $(top_srcdir)/lib/strepl.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/lib/strepl.c' object='quvi-strepl.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-strepl.obj `if test -f '$(top_srcdir)/lib/strepl.c'; then $(CYGPATH_W) '$(top_srcdir)/lib/strepl.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/lib/strepl.c'; fi`
-
-quvi-llst.o: $(top_srcdir)/lib/llst.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-llst.o -MD -MP -MF $(DEPDIR)/quvi-llst.Tpo -c -o quvi-llst.o `test -f '$(top_srcdir)/lib/llst.c' || echo '$(srcdir)/'`$(top_srcdir)/lib/llst.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-llst.Tpo $(DEPDIR)/quvi-llst.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/lib/llst.c' object='quvi-llst.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-llst.o `test -f '$(top_srcdir)/lib/llst.c' || echo '$(srcdir)/'`$(top_srcdir)/lib/llst.c
-
-quvi-llst.obj: $(top_srcdir)/lib/llst.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-llst.obj -MD -MP -MF $(DEPDIR)/quvi-llst.Tpo -c -o quvi-llst.obj `if test -f '$(top_srcdir)/lib/llst.c'; then $(CYGPATH_W) '$(top_srcdir)/lib/llst.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/lib/llst.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-llst.Tpo $(DEPDIR)/quvi-llst.Po
-@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/lib/llst.c' object='quvi-llst.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-llst.obj `if test -f '$(top_srcdir)/lib/llst.c'; then $(CYGPATH_W) '$(top_srcdir)/lib/llst.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/lib/llst.c'; fi`
 
 quvi-vasprintf.o: $(top_srcdir)/lib/vasprintf.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-vasprintf.o -MD -MP -MF $(DEPDIR)/quvi-vasprintf.Tpo -c -o quvi-vasprintf.o `test -f '$(top_srcdir)/lib/vasprintf.c' || echo '$(srcdir)/'`$(top_srcdir)/lib/vasprintf.c

@@ -6,7 +6,7 @@ quvi - query media tool
 
 =head1 SYNOPSIS
 
-quvi [options] [url...]
+quvi [options] [url|file ...]
 
 =head1 DESCRIPTION
 
@@ -48,9 +48,10 @@ The default behaviour is planned to change to "all" in 0.2.20.
 
 =head1 OPTIONS
 
-quvi reads content from the standard input (stdin) by default unless
-an URL is specified in the command line. quvi expects each URL to be
-separated by a newline if they are read from the stdin.
+Unless an URL is specified in the command line, quvi reads from the stdin
+and expects each URL to be separated by a newline. The command line args
+may be either URLs or files to be read. As with reading from the stdin,
+each URL in the file is expected to be separated by a newline.
 
 =over 4
 
@@ -229,13 +230,17 @@ Print available formats for dailym(otion).
 
 =item echo "URL" | quvi
 
-Read from stdin. Same but with multiple URLs (in this case from a file):
+Read from stdin. Same but read multiple URLs (in this case from a file):
 
   % cat >> URLs
   URL1
   URL2
-  (CTRL+D)
+  (^D)
   % quvi < URLs
+  Or:
+  % quvi URLs
+
+Please note that each URL must be separated with a newline character.
 
 =back
 

@@ -31,6 +31,7 @@ AC_DEFINE_UNQUOTED([CANONICAL_TARGET], "$target", [...])
 AC_DEFINE_UNQUOTED([CANONICAL_HOST], "$host", [...])
 
 AM_INIT_AUTOMAKE([-Wall -Werror foreign dist-bzip2 dist-xz])
+AM_SILENT_RULES([yes])
 
 LT_INIT()
 LT_PREREQ([2.2])
@@ -102,15 +103,30 @@ fi
 
 # Checks for libraries.
 AM_ICONV
-PKG_CHECK_MODULES(libcurl, libcurl >= 7.18.0)
-PKG_CHECK_MODULES(liblua, lua >= 5.1, [], [
-    PKG_CHECK_MODULES(liblua, lua51 >= 5.1, [], [
-        PKG_CHECK_MODULES(liblua, lua5.1 >= 5.1, [], [
-            PKG_CHECK_MODULES(liblua, lua-5.1 >= 5.1)
+PKG_CHECK_MODULES([libcurl], [libcurl >= 7.18.0])
+PKG_CHECK_MODULES([liblua], [lua >= 5.1], [], [
+    PKG_CHECK_MODULES([liblua], [lua51 >= 5.1], [], [
+        PKG_CHECK_MODULES([liblua], [lua5.1 >= 5.1], [], [
+            PKG_CHECK_MODULES(liblua, [lua-5.1 >= 5.1])
         ])
     ])
 ])
-AM_SILENT_RULES([yes])
+
+AC_ARG_WITH([soup], AS_HELP_STRING([--with-soup], [Build with libsoup]))
+
+AS_IF([test "x$with_soup" = "xyes"], [
+    # Either libsoup-gnome or libsoup.
+    PKG_CHECK_MODULES( [libsoup_gnome], [libsoup-gnome-2.4 >= 2.26], [
+        AC_DEFINE([HAVE_LIBSOUP_GNOME], [1], [Have libsoup-gnome])
+        libsoup_CFLAGS="$libsoup_gnome_CFLAGS"
+        libsoup_LIBS="$libsoup_gnome_LIBS"
+        ], [PKG_CHECK_MODULES([libsoup], [libsoup-2.4 >= 2.26])]
+    )
+    AC_SUBST(libsoup_CFLAGS)
+    AC_SUBST(libsoup_LIBS)
+])
+
+AM_CONDITIONAL([WITH_SOUP], [test x"$with_soup" = "xyes"])
 
 # Checks for header files.
 AC_HEADER_STDC # `stdlib.h', `stdarg.h', `string.h', ...

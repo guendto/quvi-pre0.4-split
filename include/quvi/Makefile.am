@@ -1,4 +1,4 @@
-pkginclude_HEADERS = quvi.h
+pkginclude_HEADERS = quvi.h net.h llst.h
 
 pkgincludedir= $(includedir)/quvi
 

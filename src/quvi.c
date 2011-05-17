@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <errno.h>
 #include <assert.h>
 
 #include <curl/curl.h>
@@ -32,9 +33,9 @@
 #include "platform.h"
 
 #include "quvi/quvi.h"
-#include "cmdline.h"
+#include "quvi/llst.h"
 
-#include "llst.h"
+#include "cmdline.h"
 
 #define _free(p) \
     do { if (p) { free(p); p=0; } } while (0)
@@ -49,7 +50,7 @@ static CURL *curl = NULL;
 typedef struct gengetopt_args_info *opts_t;
 static opts_t opts = NULL;
 
-static llst_node_t inputs = NULL;
+static quvi_llst_node_t inputs = NULL;
 
 /* prints to std(e)rr. */
 static void spew_e(const char *fmt, ...)
@@ -207,17 +208,37 @@ static void dump_host(char *domain, char *formats)
   quvi_free(formats);
 }
 
-/* Wraps quvi_supported. */
+#ifdef _0
+#define _QUVI_SUPPORTED
+#endif
+
+/* Wraps quvi_supported_ident. */
 static void supported(quvi_t quvi)
 {
-  QUVIcode rc = QUVI_NOSUPPORT;
+#ifndef _QUVI_SUPPORTED
+  quvi_ident_t ident;
+  char *formats;
+#endif
+  QUVIcode rc;
   int i;
+
+  rc = QUVI_NOSUPPORT;
 
   for (i=0; i<opts->inputs_num; ++i)
     {
-      rc = quvi_supported(quvi, (char *)opts->inputs[i]);
+#ifndef _QUVI_SUPPORTED
+      rc = quvi_supported_ident(quvi, (char*)opts->inputs[i], &ident);
+      if (rc == QUVI_OK)
+        {
+          quvi_ident_getprop(ident, QUVI_IDENT_PROPERTY_FORMATS, &formats);
+          spew_qe("%s: OK\n\t%s\n", (char *)opts->inputs[i], formats);
+          quvi_supported_ident_close(&ident);
+        }
+#else
+      rc = quvi_supported(quvi, (char*)opts->inputs[i]);
       if (rc == QUVI_OK)
         spew_qe("%s: OK\n", (char *)opts->inputs[i]);
+#endif /* !_QUVI_SUPPORTED */
       else
         spew_qe("error: %s\n", quvi_strerror(quvi, rc));
     }
@@ -352,7 +373,7 @@ static void invoke_exec(quvi_media_t media)
   _free(cmd);
 }
 
-struct parsed_link_s
+struct parsed_url_s
 {
   char *media_url;
   char *content_type;
@@ -360,9 +381,9 @@ struct parsed_link_s
   char *file_suffix;
 };
 
-typedef struct parsed_link_s *parsed_link_t;
+typedef struct parsed_url_s *parsed_url_t;
 
-static void dump_media_link_xml(parsed_link_t p, int i)
+static void dump_media_url_xml(parsed_url_t p, int i)
 {
   char *media_url = curl_easy_escape(curl, p->media_url, 0);
 
@@ -384,7 +405,7 @@ static void dump_media_link_xml(parsed_link_t p, int i)
   _free(media_url);
 }
 
-static void dump_media_link_old(parsed_link_t p, int i)
+static void dump_media_url_old(parsed_url_t p, int i)
 {
   spew("link %02d  : %s\n", i, p->media_url);
 
@@ -398,8 +419,11 @@ static void dump_media_link_old(parsed_link_t p, int i)
     spew(":: content-type: %s\n", p->content_type);
 }
 
-static void dump_media_link_json(parsed_link_t p, int i)
+static void dump_media_url_json(parsed_url_t p, int i, int prepend_newln)
 {
+  if (prepend_newln)
+    spew(",\n");
+
   spew("    {\n"
        "      \"id\": \"%d\",\n", i);
 
@@ -413,17 +437,16 @@ static void dump_media_link_json(parsed_link_t p, int i)
     spew("      \"file_suffix\": \"%s\",\n", p->file_suffix);
 
   spew("      \"url\": \"%s\"\n"
-       "    }%s\n",
-       p->media_url,
-       i > 1 ? "," : "");
+       "    }",
+       p->media_url);
 }
 
-static void dump_media_links(quvi_media_t media)
+static void dump_media_urls(quvi_media_t media)
 {
-  int i = 0;
+  int json_flag=0, i=1;
   do
     {
-      struct parsed_link_s p;
+      struct parsed_url_s p;
 
       memset(&p, 0, sizeof(&p));
 
@@ -432,16 +455,21 @@ static void dump_media_links(quvi_media_t media)
       quvi_getprop(media, QUVIPROP_MEDIACONTENTLENGTH, &p.content_length);
       quvi_getprop(media, QUVIPROP_FILESUFFIX, &p.file_suffix);
 
-      ++i;
-
       if (opts->xml_given)
-        dump_media_link_xml(&p,i);
+        dump_media_url_xml(&p,i);
       else if (opts->old_given)
-        dump_media_link_old(&p,i);
+        dump_media_url_old(&p,i);
       else
-        dump_media_link_json(&p,i);
+        {
+          dump_media_url_json(&p, i, i>1);
+          json_flag = 1;
+        }
+      ++i;
     }
   while (quvi_next_media_url(media) == QUVI_OK);
+
+  if (json_flag)
+    spew("\n");
 }
 
 struct parsed_s
@@ -577,7 +605,7 @@ static void dump_media(quvi_media_t media)
   else
     dump_media_json(&p);
 
-  dump_media_links(media);
+  dump_media_urls(media);
 
   if (opts->xml_given)
     spew("</media>\n");
@@ -608,6 +636,11 @@ static quvi_t init_quvi()
   if (opts->format_given)
     quvi_setopt(quvi, QUVIOPT_FORMAT, opts->format_arg);
 
+  if (opts->no_shortened_given)
+    {
+      spew_e("warning: --no-shortened is deprecated, "
+             "use --no-resolve instead\n");
+    }
   quvi_setopt(quvi, QUVIOPT_NORESOLVE, opts->no_resolve_given);
   quvi_setopt(quvi, QUVIOPT_NOVERIFY, opts->no_verify_given);
 
@@ -655,14 +688,7 @@ static quvi_t init_quvi()
 
 static void cleanup()
 {
-  llst_node_t curr = inputs;
-
-  while (curr)
-    {
-      _free(curr->data);
-      curr = curr->next;
-    }
-  llst_free(&inputs);
+  quvi_llst_free(&inputs);
   assert(inputs == NULL);
 
   if (quvi)
@@ -677,10 +703,14 @@ static void cleanup()
   assert(opts == NULL);
 }
 
-static void read_stdin()
+static void read_from(FILE *f, int close)
 {
   char b[256];
-  while (fgets(b, sizeof(b), stdin))
+
+  if (!f)
+    return;
+
+  while (fgets(b, sizeof(b), f))
     {
       if (strlen(b) > 16)
         {
@@ -689,32 +719,79 @@ static void read_stdin()
           if (b[n] == '\n')
             b[n] = '\0';
 
-          llst_add(&inputs, strdup(b));
+          quvi_llst_append(&inputs, strdup(b));
         }
     }
+
+  if (close)
+    {
+      fclose(f);
+      f = NULL;
+    }
+}
+
+static char *parse_url_scheme(const char *url)
+{
+  char *p, *r;
+
+  p = strstr(url, ":/");
+  if (!p)
+    return (NULL);
+
+  asprintf(&r, "%.*s", (int)(p - url), url);
+
+  return (r);
+}
+
+static int is_url(const char *s)
+{
+  char *p = parse_url_scheme(s);
+  if (p)
+    {
+      _free(p);
+      return (1);
+    }
+  return (0);
+}
+
+static FILE* open_file(const char *path)
+{
+  FILE *f = fopen(path, "rt");
+  if (!f)
+#ifdef HAVE_STRERROR
+    spew_e("error: %s: %s\n", path, strerror(errno));
+#else
+    perror("fopen");
+#endif
+  return (f);
 }
 
 static int read_input()
 {
   if (opts->inputs_num == 0)
-    read_stdin();
+    read_from(stdin, 0);
   else
     {
       int i;
       for (i=0; i<opts->inputs_num; ++i)
-        llst_add(&inputs, strdup(opts->inputs[i]));
+        {
+          if (!is_url(opts->inputs[i]))
+            read_from(open_file(opts->inputs[i]), 1);
+          else /* Must be an URL. */
+            quvi_llst_append(&inputs, strdup(opts->inputs[i]));
+        }
     }
-  return (llst_size(inputs));
+  return (quvi_llst_size(inputs));
 }
 
 int main(int argc, char *argv[])
 {
-  const char *url, *home, *no_config, *fname;
+  const char *home, *no_config, *fname;
   QUVIcode rc, last_failure;
+  quvi_llst_node_t curr;
   quvi_media_t media;
   int no_config_flag;
   int i, inputs_num;
-  llst_node_t curr;
   int errors;
 
   assert(quvi == NULL);
@@ -724,7 +801,6 @@ int main(int argc, char *argv[])
 
   no_config = getenv("QUVI_NO_CONFIG");
   no_config_flag = 1;
-  url = NULL;
 
   home = getenv("QUVI_HOME");
   if (!home)
@@ -805,7 +881,7 @@ int main(int argc, char *argv[])
 
   if (inputs_num == 0)
     {
-      spew_qe("error: no input links\n");
+      spew_qe("error: no input urls\n");
       return (QUVI_INVARG);
     }
 
@@ -814,7 +890,8 @@ int main(int argc, char *argv[])
 
   for (i=0, curr=inputs; curr; ++i)
     {
-      rc = quvi_parse(quvi, (char *)curr->data, &media);
+      char *url = quvi_llst_data(curr);
+      rc = quvi_parse(quvi, url, &media);
       if (rc == QUVI_OK)
         {
           assert(media != 0);
@@ -837,7 +914,7 @@ int main(int argc, char *argv[])
         }
       quvi_parse_close(&media);
       assert(media == 0);
-      curr = curr->next;
+      curr = quvi_llst_next(curr);
     }
 
   if (inputs_num > 1)

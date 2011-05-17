@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2009,2010,2011  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,17 +17,24 @@
  * 02110-1301  USA
  */
 
-#ifndef curl_wrap_h
-#define curl_wrap_h
+#include "quvi/quvi.h"
 
-#include <curl/curl.h>
+/* Deprecated API functions.
+ * See include/quvi/quvi.h.in for notes. */
 
-QUVIcode curl_init(_quvi_t);
-void     curl_close(_quvi_t);
-QUVIcode curl_fetch(_quvi_t, _quvi_net_t);
-QUVIcode curl_resolve(_quvi_t, _quvi_net_t);
-QUVIcode curl_verify(_quvi_t, _quvi_net_t);
-char*    curl_unescape_url(_quvi_t, char*);
+/* quvi_next_videolink */
 
-#endif
+QUVIcode quvi_next_videolink(quvi_video_t handle)
+{
+  return (quvi_next_media_url(handle));
+}
+
+/* quvi_next_host */
+
+QUVIcode quvi_next_host(char **domain, char **formats)
+{
+  *domain = *formats = NULL;
+  return (QUVI_LAST);
+}
+
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

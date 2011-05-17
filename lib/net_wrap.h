@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2009,2010,2011  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -17,17 +17,16 @@
  * 02110-1301  USA
  */
 
-#ifndef curl_wrap_h
-#define curl_wrap_h
+#ifndef net_h
 
-#include <curl/curl.h>
+_quvi_net_t new_net_handle();
 
-QUVIcode curl_init(_quvi_t);
-void     curl_close(_quvi_t);
-QUVIcode curl_fetch(_quvi_t, _quvi_net_t);
-QUVIcode curl_resolve(_quvi_t, _quvi_net_t);
-QUVIcode curl_verify(_quvi_t, _quvi_net_t);
-char*    curl_unescape_url(_quvi_t, char*);
+void free_net_handle(_quvi_net_t *n);
+
+QUVIcode fetch_wrapper(_quvi_t, lua_State*, _quvi_net_t*);
+QUVIcode resolve_wrapper(_quvi_t, const char*, char **);
+QUVIcode verify_wrapper(_quvi_t, _quvi_llst_node_t);
 
 #endif
+
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

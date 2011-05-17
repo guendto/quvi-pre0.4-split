@@ -48,6 +48,7 @@ extern "C" {
     char * exec_arg;  /**< @brief Invoke arg after parsing.  */
     char * exec_orig; /**< @brief Invoke arg after parsing original value given at command line.  */
     const char *exec_help; /**< @brief Invoke arg after parsing help description.  */
+    const char *no_shortened_help; /**< @brief Do not decompress shortened URLs (depr. use -r instead) help description.  */
     const char *no_resolve_help; /**< @brief Do not resolve redirections help description.  */
     const char *no_verify_help; /**< @brief Do not verify media URL help description.  */
     const char *category_http_help; /**< @brief Category HTTP website scripts help description.  */
@@ -55,9 +56,9 @@ extern "C" {
     const char *category_rtsp_help; /**< @brief Category RTSP website scripts help description.  */
     const char *category_rtmp_help; /**< @brief Category RTMP website scripts help description.  */
     const char *category_all_help; /**< @brief All website script categories help description.  */
-    char * format_arg;  /**< @brief Video format to query (default='default').  */
-    char * format_orig; /**< @brief Video format to query original value given at command line.  */
-    const char *format_help; /**< @brief Video format to query help description.  */
+    char * format_arg;  /**< @brief Media format to query (default='default').  */
+    char * format_orig; /**< @brief Media format to query original value given at command line.  */
+    const char *format_help; /**< @brief Media format to query help description.  */
     char * agent_arg; /**< @brief Identify as arg (default='Mozilla/5.0').  */
     char * agent_orig;  /**< @brief Identify as arg original value given at command line.  */
     const char *agent_help; /**< @brief Identify as arg help description.  */
@@ -78,6 +79,7 @@ extern "C" {
     unsigned int quiet_given ;  /**< @brief Whether quiet was given.  */
     unsigned int verbose_libcurl_given ;  /**< @brief Whether verbose-libcurl was given.  */
     unsigned int exec_given ; /**< @brief Whether exec was given.  */
+    unsigned int no_shortened_given ; /**< @brief Whether no-shortened was given.  */
     unsigned int no_resolve_given ; /**< @brief Whether no-resolve was given.  */
     unsigned int no_verify_given ;  /**< @brief Whether no-verify was given.  */
     unsigned int category_http_given ;  /**< @brief Whether category-http was given.  */

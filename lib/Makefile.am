@@ -9,7 +9,8 @@ src = \
     curl_wrap.c \
     lua_wrap.c \
     strepl.c \
-    llst.c
+    net_wrap.c \
+    depr.c
 
 if NO_ASPRINTF
 src += vasprintf.c asprintf.c
@@ -21,13 +22,14 @@ hdr = \
     internal.h \
     util.h \
     platform.h \
-    llst.h
+    net_wrap.h
 
 lib_LTLIBRARIES = libquvi.la
 libquvi_la_SOURCES = $(src) $(hdr)
 
 libquvi_la_CPPFLAGS = \
     -I$(top_builddir)/include \
+    -I$(top_srcdir)/include \
     -DDATADIR='"$(datadir)"' \
     -DPKGDATADIR='"$(pkgdatadir)"' \
     $(libcurl_CFLAGS) \
