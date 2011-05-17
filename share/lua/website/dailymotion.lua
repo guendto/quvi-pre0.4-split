@@ -62,6 +62,9 @@ function parse(self)
     local _,_,s = page:find("video/(.-)_")
     self.id     = s or error("no match: video id")
 
+    local _,_,s = page:find('"og:image" content="(.-)"')
+    self.thumbnail_url = s or ''
+
     local found = iter_media(page, U)
     local r_fmt = self.requested_format
 
@@ -96,6 +99,12 @@ function iter_media(page, U)
         error(e)
     end
     seq = U.unescape(seq)
+
+    local _,_,msg = seq:find('"message":"(.-)"')
+    if msg then
+        msg = msg:gsub('+',' ')
+        error(msg)
+    end
 
     local _,_,vpp = seq:find('"videoPluginParameters":{(.-)}')
     if not vpp then
