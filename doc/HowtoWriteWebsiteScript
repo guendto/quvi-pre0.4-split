@@ -402,7 +402,10 @@ Or:
 
   * If you are unsure about something, don't hesitate to ask
 
-See also:
-    $prefix/doc/quvi/HowtoSubmitPatches
-Or:
-    $top_srcdir/doc/HowtoSubmitPatches
+Other resources:
+
+[1] $prefix/doc/quvi/HowtoSubmitPatches
+    (or $top_srcdir/doc/HowtoSubmitPatches)
+
+[2] $prefix/doc/quvi/WebsiteScriptGuidelines
+    (or $top_srcdir/doc/HowtoSubmitPatches)

@@ -230,7 +230,8 @@ top_srcdir = @top_srcdir@
 @WITH_DOC_TRUE@HowtoGetDevelopmentCode \
 @WITH_DOC_TRUE@HowtoHelp \
 @WITH_DOC_TRUE@HowtoSubmitPatches \
-@WITH_DOC_TRUE@CodingStyle
+@WITH_DOC_TRUE@CodingStyle \
+@WITH_DOC_TRUE@WebsiteScriptGuidelines
 
 EXTRA_DIST = $(doc_DATA)
 all: all-am
