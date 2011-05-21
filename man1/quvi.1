@@ -124,7 +124,7 @@
 .\" ========================================================================
 .\"
 .IX Title "quvi 1"
-.TH quvi 1 "2011-05-02" "0.2.16" "quvi manual"
+.TH quvi 1 "2011-05-21" "0.2.16" "quvi manual"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -149,9 +149,12 @@ to install or use Adobe Flash Player. quvi is not an \*(L"alternative\*(R" but r
 a \*(L"workaround\*(R" to Adobe Flash Player.
 .PP
 Read also:
-  * <http://en.wikipedia.org/wiki/Adobe_Flash#Performance>
-  * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
-  * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
+.PP
+.Vb 3
+\&  * <http://en.wikipedia.org/wiki/Adobe_Flash#Performance>
+\&  * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
+\&  * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
+.Ve
 .SH "NOTES \- PROTOCOL CATEGORIES"
 .IX Header "NOTES - PROTOCOL CATEGORIES"
 As of 0.2.12, quvi supports different \*(L"protocol categories\*(R". For
@@ -159,14 +162,20 @@ historical reasons, it defaults to the \s-1HTTP\s0 category. This means
 that any website scripts that parse and return \s-1RTMP/MMS/RTSP\s0 media
 URLs are not considered unless an appropriate category switch is used.
 For example:
-    % quvi \-\-support                 # \s-1HTTP\s0 websites only (default)
-    % quvi \-\-support \-\-category\-rtmp # \s-1RTMP\s0 websites only
-    % quvi \-\-support \-a              # Websites of all categories
+.PP
+.Vb 3
+\&  % quvi \-\-support                 # HTTP websites only (default)
+\&  % quvi \-\-support \-\-category\-rtmp # RTMP websites only
+\&  % quvi \-\-support \-a              # Websites of all categories
+.Ve
 .PP
 With this in mind:
-    % quvi \s-1RTMP_URL\s0
-    error: no support: \s-1RTMP_URL\s0
-    % quvi \-a \s-1RTMP_URL\s0 # \s-1OK\s0
+.PP
+.Vb 3
+\&  % quvi RTMP_URL
+\&  error: no support: RTMP_URL
+\&  % quvi \-a RTMP_URL # OK
+.Ve
 .PP
 The default behaviour is planned to change to \*(L"all\*(R" in 0.2.20.
 .SH "OPTIONS"
@@ -213,7 +222,7 @@ Invoke \fIarg\fR for each (successfully) parsed media. You can use the following
 specifiers in \fIarg\fR:
 .Sp
 .Vb 1
-\&    %u  Media URL
+\&  %u  Media URL
 .Ve
 .Sp
 Note that \fIall\fR occurences of the specifier will be replaced,
@@ -225,12 +234,12 @@ shortened URLs will stop working with quvi. Note that this switch
 has no effect on website scripts that use the quvi.resolve function.
 .IP "\fB\-n, \-\-no\-verify\fR" 4
 .IX Item "-n, --no-verify"
-Do not verify media \s-1URL\s0 after parsing it. Normally this serves two
+Do not verify media stream \s-1URL\s0 after parsing it. Normally this serves two
 purposes:
 .Sp
 .Vb 2
-\& * Check that the URL works
-\& * Get content\-length and content\-type
+\&  * Check that the URL works
+\&  * Get content\-length and content\-type
 .Ve
 .Sp
 If this switch used, the program will report invalid values for those
@@ -276,49 +285,37 @@ Default is 30.
 .IX Header "EXAMPLES"
 .IP "quvi \s-1URL\s0" 4
 .IX Item "quvi URL"
-Test \s-1URL\s0.
+Query \s-1URL\s0.
 .IP "quvi \-\-support" 4
 .IX Item "quvi --support"
-Dump supported websites (of \s-1HTTP\s0 category).
+Print supported website in the \s-1HTTP\s0 category.
 .IP "quvi \-\-support \-\-category\-rtmp" 4
 .IX Item "quvi --support --category-rtmp"
-Same but dump supported websites of \s-1RTMP\s0 category.
-See also \*(L"\s-1NOTES\s0 \- \s-1PROTOCOL\s0 \s-1CATEGORIES\s0\*(R"
-.IP "quvi \-\-support \-\-category\-all" 4
-.IX Item "quvi --support --category-all"
-Dump \fBall\fR supported websites.
-See also \*(L"\s-1NOTES\s0 \- \s-1PROTOCOL\s0 \s-1CATEGORIES\s0\*(R"
+Same but in the \s-1RTMP\s0 category. See also \*(L"\s-1NOTES\s0 \- \s-1PROTOCOL\s0 \s-1CATEGORIES\s0\*(R".
 .IP "quvi \-\-support \s-1URL\s0" 4
 .IX Item "quvi --support URL"
-Check if \s-1URL\s0 is supported. Note that most \*(L"shortened\*(R" URLs will fail
-with this. The exit status will be the last exit status of the
-last checked \s-1URL\s0. See also \*(L"\s-1EXIT\s0 \s-1STATUS\s0\*(R".
-.IP "quvi \-\-support \-\-category\-all \s-1URL\s0" 4
-.IX Item "quvi --support --category-all URL"
-Same but check against all protocol categories.
-See also \*(L"\s-1NOTES\s0 \- \s-1PROTOCOL\s0 \s-1CATEGORIES\s0\*(R"
+Query (without an Internet connection) if libquvi can handle the \s-1URL\s0.
+Note that this will fail with most \*(L"shortened\*(R" URLs.
 .IP "quvi \s-1YOUTUBE_URL\s0" 4
 .IX Item "quvi YOUTUBE_URL"
-Query for YouTube media \s-1URL\s0.
+Query for YouTube media stream \s-1URL\s0.
 .IP "quvi \s-1YOUTUBE_URL\s0 \-f best" 4
 .IX Item "quvi YOUTUBE_URL -f best"
-Query for \*(L"best\*(R" (available format) YouTube media \s-1URL\s0.
+Query for \*(L"best\*(R" (available format).
 .IP "quvi \s-1YOUTUBE_URL\s0 \-f best \-\-xml" 4
 .IX Item "quvi YOUTUBE_URL -f best --xml"
-Same but print details in \s-1XML\s0.
+Same but print the results in \s-1XML\s0.
 .IP "quvi \-f list youtube" 4
 .IX Item "quvi -f list youtube"
-Print available formats for YouTube.
+Match the search pattern \*(L"youtube\*(R" to those domain names returned
+by libquvi and print the results.
 .IP "quvi \-f list yout" 4
 .IX Item "quvi -f list yout"
-Same.
-.IP "quvi \-f list dailym" 4
-.IX Item "quvi -f list dailym"
-Print available formats for dailym(otion).
+Yields the same results.
 .ie n .IP "echo ""\s-1URL\s0"" | quvi" 4
 .el .IP "echo ``\s-1URL\s0'' | quvi" 4
 .IX Item "echo URL | quvi"
-Read from stdin. Same but read multiple URLs (in this case from a file):
+Read input from the pipeline. Similarly:
 .Sp
 .Vb 7
 \&  % cat >> URLs
@@ -330,13 +327,14 @@ Read from stdin. Same but read multiple URLs (in this case from a file):
 \&  % quvi URLs
 .Ve
 .Sp
-Please note that each \s-1URL\s0 must be separated with a newline character.
+Separate each \s-1URL\s0 with a newline.
 .SH "FILES"
 .IX Header "FILES"
-.IP "\fB~/.quvirc\fR" 4
-.IX Item "~/.quvirc"
-You can define most of the command line options in the
-config file. For example:
+.ie n .IP "\fB\fB$HOME\fB/.quvirc\fR" 4
+.el .IP "\fB\f(CB$HOME\fB/.quvirc\fR" 4
+.IX Item "$HOME/.quvirc"
+You can define most of the command line options in the config file.
+For example:
 .Sp
 .Vb 4
 \& agent = some_agent/1.0     # \-\-agent
@@ -345,28 +343,33 @@ config file. For example:
 \& verbose\-libcurl            # \-\-verbose\-libcurl
 .Ve
 .Sp
-Note that you can also define \f(CW$QUVI_HOME\fR and use it instead of \f(CW$HOME\fR (~).
+You can use \f(CW$QUVI_HOME\fR instead of \f(CW$HOME\fR.
 .SH "ENVIRONMENT"
 .IX Header "ENVIRONMENT"
 .IP "\fB\s-1QUVI_HOME\s0\fR" 4
 .IX Item "QUVI_HOME"
-Path to the directory containing the configuration file (.quvirc).
-Mimics \f(CW$HOME\fR found on Unix-like systems. Note that using this
-overrides the use of \f(CW$HOME\fR.
+Path to the directory with the configuration file. If set, quvi
+command uses this instead of \f(CW$HOME\fR.
 .IP "\fB\s-1QUVI_BASEDIR\s0\fR" 4
 .IX Item "QUVI_BASEDIR"
-Exclusive path to the directory holding the essential libquvi files,
-or the Lua scripts.
+Path to the \*(L"base directory\*(R" with the libquvi \s-1LUA\s0 scripts. Overrides
+the default search paths. e.g.:
 .Sp
-Exlusivity here means that by setting this variable, the user
-can override all other built-in and default search paths.
-.Sp
-Not to be confused with \fB\s-1QUVI_HOME\s0\fR which is strictly for
-\&\f(CWquvi(1)\fR, whereas \fB\s-1QUVI_BASEDIR\s0\fR is for libquvi.
+.Vb 3
+\&  % ls /usr/share/quvi/lua
+\&  README util website
+\&  % env QUVI_BASEDIR=/usr/share/quvi quvi
+.Ve
 .IP "\fB\s-1QUVI_SHOW_SCANDIR\s0\fR" 4
 .IX Item "QUVI_SHOW_SCANDIR"
-Set this variable if you need libquvi to report the scanned
-directory paths. Each scanned path is printed to stderr.
+If set, libquvi prints the \s-1LUA\s0 script search paths to the stderr.
+.IP "\fB\s-1QUVI_SHOW_SCRIPT\s0\fR" 4
+.IX Item "QUVI_SHOW_SCRIPT"
+If set, the \s-1LUA\s0 scripts found by libquvi are printed to the stderr.
+.Sp
+.Vb 1
+\&  % env QUVI_SHOW_SCRIPT=1 quvi
+.Ve
 .SH "EXIT STATUS"
 .IX Header "EXIT STATUS"
 quvi exits with 0 on success and >0 if an error occurred.
@@ -393,15 +396,13 @@ quvi exits with 0 on success and >0 if an error occurred.
 .IX Header "DEBUGGING TIPS"
 .IP "\fB\-\-verbose\-libcurl\fR" 4
 .IX Item "--verbose-libcurl"
-You can use this switch to amp up libcurl verbosity.
+Make libcurl verbose.
 .IP "\fBDebug symbols\fR" 4
 .IX Item "Debug symbols"
-Compile quvi with \f(CW\*(C`\-g\*(C'\fR, refer to \f(CWgcc(1)\fR documentation for the
-details.
+Compile quvi with \f(CW\*(C`\-g\*(C'\fR, see also \f(CWgcc(1)\fR.
 .IP "\fBOther tools\fR" 4
 .IX Item "Other tools"
-Make use of such tools as \f(CWstrace(1)\fR, \f(CWgdb(1)\fR and \f(CWvalgrind(1)\fR.
-They may prove invaluable.
+See also \f(CWgdb(1)\fR, \f(CWstrace(1)\fR and \f(CWvalgrind(1)\fR.
 .SH "WWW"
 .IX Header "WWW"
 <http://quvi.sourceforge.net/>

@@ -24,6 +24,7 @@ to install or use Adobe Flash Player. quvi is not an "alternative" but rather
 a "workaround" to Adobe Flash Player.
 
 Read also:
+
   * <http://en.wikipedia.org/wiki/Adobe_Flash#Performance>
   * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
   * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
@@ -35,14 +36,16 @@ historical reasons, it defaults to the HTTP category. This means
 that any website scripts that parse and return RTMP/MMS/RTSP media
 URLs are not considered unless an appropriate category switch is used.
 For example:
-    % quvi --support                 # HTTP websites only (default)
-    % quvi --support --category-rtmp # RTMP websites only
-    % quvi --support -a              # Websites of all categories
+
+  % quvi --support                 # HTTP websites only (default)
+  % quvi --support --category-rtmp # RTMP websites only
+  % quvi --support -a              # Websites of all categories
 
 With this in mind:
-    % quvi RTMP_URL
-    error: no support: RTMP_URL
-    % quvi -a RTMP_URL # OK
+
+  % quvi RTMP_URL
+  error: no support: RTMP_URL
+  % quvi -a RTMP_URL # OK
 
 The default behaviour is planned to change to "all" in 0.2.20.
 
@@ -100,7 +103,7 @@ Turn on libcurl verbose mode.
 Invoke I<arg> for each (successfully) parsed media. You can use the following
 specifiers in I<arg>:
 
-    %u  Media URL
+  %u  Media URL
 
 Note that I<all> occurences of the specifier will be replaced,
 and each new value will be quoted ("").
@@ -113,11 +116,11 @@ has no effect on website scripts that use the quvi.resolve function.
 
 =item B<-n, --no-verify>
 
-Do not verify media URL after parsing it. Normally this serves two
+Do not verify media stream URL after parsing it. Normally this serves two
 purposes:
 
- * Check that the URL works
- * Get content-length and content-type
+  * Check that the URL works
+  * Get content-length and content-type
 
 If this switch used, the program will report invalid values for those
 details (e.g. 0 content length, empty string for content-type, etc.) but
@@ -177,60 +180,45 @@ Default is 30.
 
 =item quvi URL
 
-Test URL.
+Query URL.
 
 =item quvi --support
 
-Dump supported websites (of HTTP category).
+Print supported website in the HTTP category.
 
 =item quvi --support --category-rtmp
 
-Same but dump supported websites of RTMP category.
-See also L</NOTES - PROTOCOL CATEGORIES>
-
-=item quvi --support --category-all
-
-Dump B<all> supported websites.
-See also L</NOTES - PROTOCOL CATEGORIES>
+Same but in the RTMP category. See also L</NOTES - PROTOCOL CATEGORIES>.
 
 =item quvi --support URL
 
-Check if URL is supported. Note that most "shortened" URLs will fail
-with this. The exit status will be the last exit status of the
-last checked URL. See also L</EXIT STATUS>.
-
-=item quvi --support --category-all URL
-
-Same but check against all protocol categories.
-See also L</NOTES - PROTOCOL CATEGORIES>
+Query (without an Internet connection) if libquvi can handle the URL.
+Note that this will fail with most "shortened" URLs.
 
 =item quvi YOUTUBE_URL
 
-Query for YouTube media URL.
+Query for YouTube media stream URL.
 
 =item quvi YOUTUBE_URL -f best
 
-Query for "best" (available format) YouTube media URL.
+Query for "best" (available format).
 
 =item quvi YOUTUBE_URL -f best --xml
 
-Same but print details in XML.
+Same but print the results in XML.
 
 =item quvi -f list youtube
 
-Print available formats for YouTube.
+Match the search pattern "youtube" to those domain names returned
+by libquvi and print the results.
 
 =item quvi -f list yout
 
-Same.
-
-=item quvi -f list dailym
-
-Print available formats for dailym(otion).
+Yields the same results.
 
 =item echo "URL" | quvi
 
-Read from stdin. Same but read multiple URLs (in this case from a file):
+Read input from the pipeline. Similarly:
 
   % cat >> URLs
   URL1
@@ -240,7 +228,7 @@ Read from stdin. Same but read multiple URLs (in this case from a file):
   Or:
   % quvi URLs
 
-Please note that each URL must be separated with a newline character.
+Separate each URL with a newline.
 
 =back
 
@@ -248,17 +236,17 @@ Please note that each URL must be separated with a newline character.
 
 =over 4
 
-=item B<~/.quvirc>
+=item B<$HOME/.quvirc>
 
-You can define most of the command line options in the
-config file. For example:
+You can define most of the command line options in the config file.
+For example:
 
  agent = some_agent/1.0     # --agent
  proxy = http://foo:1234    # --proxy
  no-verify                  # --no-verify
  verbose-libcurl            # --verbose-libcurl
 
-Note that you can also define $QUVI_HOME and use it instead of $HOME (~).
+You can use $QUVI_HOME instead of $HOME.
 
 =back
 
@@ -268,25 +256,27 @@ Note that you can also define $QUVI_HOME and use it instead of $HOME (~).
 
 =item B<QUVI_HOME>
 
-Path to the directory containing the configuration file (.quvirc).
-Mimics $HOME found on Unix-like systems. Note that using this
-overrides the use of $HOME.
+Path to the directory with the configuration file. If set, quvi
+command uses this instead of $HOME.
 
 =item B<QUVI_BASEDIR>
 
-Exclusive path to the directory holding the essential libquvi files,
-or the Lua scripts.
+Path to the "base directory" with the libquvi LUA scripts. Overrides
+the default search paths. e.g.:
 
-Exlusivity here means that by setting this variable, the user
-can override all other built-in and default search paths.
-
-Not to be confused with B<QUVI_HOME> which is strictly for
-C<quvi(1)>, whereas B<QUVI_BASEDIR> is for libquvi.
+  % ls /usr/share/quvi/lua
+  README util website
+  % env QUVI_BASEDIR=/usr/share/quvi quvi
 
 =item B<QUVI_SHOW_SCANDIR>
 
-Set this variable if you need libquvi to report the scanned
-directory paths. Each scanned path is printed to stderr.
+If set, libquvi prints the LUA script search paths to the stderr.
+
+=item B<QUVI_SHOW_SCRIPT>
+
+If set, the LUA scripts found by libquvi are printed to the stderr.
+
+  % env QUVI_SHOW_SCRIPT=1 quvi
 
 =back
 
@@ -317,17 +307,15 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
 
 =item B<--verbose-libcurl>
 
-You can use this switch to amp up libcurl verbosity.
+Make libcurl verbose.
 
 =item B<Debug symbols>
 
-Compile quvi with C<-g>, refer to C<gcc(1)> documentation for the
-details.
+Compile quvi with C<-g>, see also C<gcc(1)>.
 
 =item B<Other tools>
 
-Make use of such tools as C<strace(1)>, C<gdb(1)> and C<valgrind(1)>.
-They may prove invaluable.
+See also C<gdb(1)>, C<strace(1)> and C<valgrind(1)>.
 
 =back
 
