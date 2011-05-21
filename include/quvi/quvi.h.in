@@ -603,7 +603,7 @@ extern "C" {
    * @code
    * quvi_t quvi;
    * quvi_init(&quvi);
-   * quvi_setopt(quvi, QUVIOPT_FORMAT, "hd");
+   * quvi_setopt(quvi, QUVIOPT_FORMAT, "mp4_360p");
    * ...
    * @endcode
    */
@@ -831,7 +831,7 @@ extern "C" {
   QUVIcode quvi_supported_ident(quvi_t quvi, char *url, quvi_ident_t *ident);
 
   /**
-   * @brief Get property information from a ident handle
+   * @brief Get property information from an ident handle
    *
    * @param handle Handle to a website script returned ident data
    * @param property Property ID

@@ -21,6 +21,10 @@
 #define quvi_llst_h
 
 /** @defgroup libquvi_llst Linked list interface
+ *
+ * The linked list interface.
+ *
+ * @since 0.2.16
  * @{
  */
 
@@ -38,6 +42,7 @@ extern "C" {
    * @param llst Handle to a linked list node (if NULL, new linked list is created)
    * @param data Data to be appended to the list
    *
+   * Example:
    * @code
    * quvi_llst_node_t l = NULL;
    * quvi_llst_append(l, strdup("foo"));

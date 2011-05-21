@@ -22,10 +22,8 @@
 
 /** @defgroup libquvi_net_if Network interface
  *
- * The network interface can be used to override the default use of
- * libcurl which libquvi uses by default for tasks requiring network
- * access. Examples of this are fetching, resolving (HTTP
- * redirections) and verifying media stream URLs.
+ * The network interface allows overriding the default use of libcurl in
+ * libquvi.
  *
  * @since 0.2.16
  * @{
@@ -44,8 +42,15 @@ typedef void *quvi_net_propfeat_t;
 /**
  * @brief Fetch callback function
  *
- * This function gets called by libquvi when the library (e.g. website
- * script) attempts to fetch data from an URL.
+ * Called by the library when it attempts to fetch an URL.
+ *
+ * @note
+ * - Must set QUVI_NET_PROPERTY_CONTENT
+ * - Must set QUVI_NET_PROPERTY_RESPONSECODE
+ * - Must return QUVI_OK or QUVI_CALLBACK if error occurred
+ *   - In which case must set error with quvi_net_seterr()
+ *
+ * @sa quvi_net_getprop
  *
  * @since 0.2.16
  */
@@ -54,9 +59,16 @@ typedef int (*quvi_callback_fetch) (quvi_net_t);
 /**
  * @brief Resolve callback function
  *
- * This function gets called by libquvi when the library (e.g. website
- * script) attempts to resolve an URL. A typical example of this would be
- * when the library checks if an URL is a redirection to a new URL.
+ * Called by the library when it attempts to resolve an URL to a
+ * another location.
+ *
+ * @note
+ * - Must set QUVI_NET_PROPERTY_REDIRECTURL if new location was found
+ * - Must set QUVI_NET_PROPERTY_RESPONSECODE
+ * - Must return QUVI_OK or QUVI_CALLBACK if error occurred
+ *   - In which case must set error with quvi_net_seterr()
+ *
+ * @sa quvi_net_getprop
  *
  * @since 0.2.16
  */
@@ -65,15 +77,22 @@ typedef int (*quvi_callback_resolve) (quvi_net_t);
 /**
  * @brief Verify callback function
  *
- * This function gets called by libquvi when the library verifies
- * that the media stream URL works.
+ * Called by the library when it attempts to verify a media stream URL.
+ *
+ * @note
+ * - Must set QUVI_NET_PROPERTY_CONTENTTYPE
+ * - Must set QUVI_NET_PROPERTY_CONTENTLENGTH
+ * - Must set QUVI_NET_PROPERTY_RESPONSECODE
+ * - Must return QUVI_OK or QUVI_CALLBACK if error occurred
+ *   - In which case must set error with quvi_net_seterr()
+ *
+ * @sa quvi_net_getprop
  *
  * @since 0.2.16
  */
 typedef int (*quvi_callback_verify) (quvi_net_t);
 
-/** @enum QUVInetProperty Network property codes to be used with
- * quvi_net_getprop()
+/** @enum QUVInetProperty Property codes
  *
  * @since 0.2.16
  */
@@ -82,27 +101,31 @@ typedef enum
   QUVI_NET_PROPERTY_NONE = 0x00,
   /**< Unused */
   QUVI_NET_PROPERTY_URL  = QUVIPROPERTY_STRING + 1,
-  /**< URL */
+  /**< URL (Null-terminated string) */
   QUVI_NET_PROPERTY_REDIRECTURL = QUVIPROPERTY_STRING + 2,
-  /**< Redirection URL */
+  /**< URL to another location (Null-terminated string) */
   QUVI_NET_PROPERTY_CONTENT = QUVIPROPERTY_STRING + 3,
-  /**< Fetch content */
+  /**< Content (Null-terminated string) */
   QUVI_NET_PROPERTY_CONTENTTYPE = QUVIPROPERTY_STRING + 4,
-  /**< Content-type parsed from the returned HTTP header */
+  /**< Content-type parsed from the returned HTTP header
+   * (Null-terminated string) */
   QUVI_NET_PROPERTY_CONTENTLENGTH = QUVIPROPERTY_DOUBLE + 5,
-  /**< Content-length parsed from the returned HTTP header */
+  /**< Content-length parsed from the returned HTTP header (long) */
   QUVI_NET_PROPERTY_RESPONSECODE = QUVIPROPERTY_LONG + 6,
-  /**< Response code returned by the server */
+  /**< Response code returned by the server (long) */
   QUVI_NET_PROPERTY_FEATURES = QUVIPROPERTY_VOID + 7,
-  /**< Network features, e.g. arbitrary cookie, etc. */
+  /**< Network features, e.g. arbitrary cookie, etc. (Pointer to a
+   * linked list)
+   * @sa quvi_llst_next
+   * @sa quvi_llst_data
+   */
 
   /* Add new ones below. Bump _QUVI_NET_PROPERTY_LAST accordingly. */
 
   _QUVI_NET_PROPERTY_LAST = 7 /**< Placeholder */
 } QUVInetProperty;
 
-/** @enum QUVInetPropertyFeature Network property feature codes to be used
- * with quvi_net_getprop_feat()
+/** @enum QUVInetPropertyFeature Property feature codes
  *
  * @since 0.2.16
  */
@@ -111,9 +134,9 @@ typedef enum
   QUVI_NET_PROPERTY_FEATURE_NONE = 0x00,
   /**< Unused */
   QUVI_NET_PROPERTY_FEATURE_NAME = QUVIPROPERTY_STRING + 1,
-  /**< Name of the property feature */
+  /**< Name of the property feature (Null-terminated string) */
   QUVI_NET_PROPERTY_FEATURE_VALUE = QUVIPROPERTY_STRING + 2,
-  /**< Value of the property feature */
+  /**< Value of the property feature (Null-terminated string) */
 
   /* Add new ones below. Bump _QUVI_NET_PROPERTY_FEATURE_LAST accordingly. */
 
@@ -122,7 +145,7 @@ typedef enum
 
 } QUVInetPropertyFeature;
 
-/** enum QUVInetPropertyFeatureName Network property feature names
+/** enum QUVInetPropertyFeatureName Property feature names
  *
  * @since 0.2.16
  */
@@ -193,17 +216,22 @@ extern "C" {
    */
   QUVIcode quvi_net_getprop_feat(quvi_net_propfeat_t handle, QUVInetPropertyFeature feature, ...);
 
-  /** @brief Convenience function that wraps the use of quvi_llst_* and
-   * quvi_net_getprop_feat().
+  /** @brief Convenience function that wraps quvi_net_getprop_feat()
    *
    * @param handle Network handle
    * @param feature Feature name ID
    *
-   * @return Null-terminated string (or NULL)
+   * @return Null-terminated string or NULL
    *
    * @warning Do not attempt to free the memory returned by this function
    *
-   * @since 0.2.16 */
+   * @note Returns the first matching result
+   *
+   * @sa quvi_llst_next
+   * @sa quvi_llst_data
+   *
+   * @since 0.2.16
+   */
   char *quvi_net_get_one_prop_feat(quvi_net_t handle, QUVInetPropertyFeatureName feature);
 
   /** @brief Set network error message
