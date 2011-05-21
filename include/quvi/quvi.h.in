@@ -123,7 +123,12 @@ typedef enum
 typedef enum
 {
   QUVIOPT_FORMAT = 0x00,
-  /**< Requested format */
+  /**< Requested format, the resulting format may be different from the
+   * requested one if the LUA script was unable to parse an URL to the
+   * requested format. The scripts are expected to fallback to the
+   * 'default' format if the requested format could not be parsed and
+   * raise an error if that failed as well.
+   */
 
   QUVIOPT_NOVERIFY,
   /**< Do not verify URL; content-type, content-length (of HTTP), etc.

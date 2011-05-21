@@ -150,7 +150,11 @@ Enable all categories of website scripts.
 
 =item B<-f, --format> I<arg>
 
-Query for I<arg> format. I<arg> can also be C<help>.
+Query for I<arg> format. I<arg> can also be C<help>. The resulting
+format may be different from the requested one if the LUA script
+was unable to parse an URL to the requested format. The scripts are
+expected to fallback to the 'default' format if the requested format
+could not be parsed and raise an error if that failed as well.
 
 =item B<--agent> I<arg>
 

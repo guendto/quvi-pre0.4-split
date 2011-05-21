@@ -264,7 +264,11 @@ Enable category \s-1RTMP\s0 website scripts.
 Enable all categories of website scripts.
 .IP "\fB\-f, \-\-format\fR \fIarg\fR" 4
 .IX Item "-f, --format arg"
-Query for \fIarg\fR format. \fIarg\fR can also be \f(CW\*(C`help\*(C'\fR.
+Query for \fIarg\fR format. \fIarg\fR can also be \f(CW\*(C`help\*(C'\fR. The resulting
+format may be different from the requested one if the \s-1LUA\s0 script
+was unable to parse an \s-1URL\s0 to the requested format. The scripts are
+expected to fallback to the 'default' format if the requested format
+could not be parsed and raise an error if that failed as well.
 .IP "\fB\-\-agent\fR \fIarg\fR" 4
 .IX Item "--agent arg"
 Identify quvi as \fIarg\fR to servers. Default is \*(L"Mozilla/5.0\*(R".
