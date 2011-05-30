@@ -145,21 +145,12 @@ function Dailymotion.iter_formats(page, U)
     return t
 end
 
-function Dailymotion.copy(a,b)
-    a.container = b.container
-    a.codec     = b.codec
-    a.width     = b.width
-    a.height    = b.height
-    a.url       = b.url
-end
-
 function Dailymotion.choose_default(formats) -- Lowest quality available
-    local r = {width=0xffff, height=0xffff,
-               url=nil, container=nil, codec=nil}
+    local r = {width=0xffff, height=0xffff, url=nil}
     local U = require 'quvi/util'
     for _,v in pairs(formats) do
         if U.is_lower_quality(v,r) then
-            Dailymotion.copy(r,v)
+            r = v
         end
     end
 --    for k,v in pairs(r) do print(k,v) end
@@ -167,11 +158,11 @@ function Dailymotion.choose_default(formats) -- Lowest quality available
 end
 
 function Dailymotion.choose_best(formats) -- Highest quality available
-    local r = {width=0, height=0, url=nil, container=nil, codec=nil}
+    local r = {width=0, height=0, url=nil}
     local U = require 'quvi/util'
     for _,v in pairs(formats) do
         if U.is_higher_quality(v,r) then
-            Dailymotion.copy(r,v)
+            r = v
         end
     end
 --    for k,v in pairs(r) do print(k,v) end
