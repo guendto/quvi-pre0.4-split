@@ -776,7 +776,7 @@ extern "C" {
   /** @} */ /* End of libquvi_parse group */
 
 
-  /** @defgroup libquvi_util Utility functions
+  /** @defgroup libquvi_support_func Support functions
    * @{
    */
 
@@ -1013,7 +1013,7 @@ extern "C" {
    */
   void quvi_free(void *ptr);
 
-  /** @} */ /* End of libquvi_util group. */
+  /** @} */ /* End of libquvi_support_func group. */
 
 #ifdef __cplusplus
 }
