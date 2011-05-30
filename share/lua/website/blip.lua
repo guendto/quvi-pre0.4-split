@@ -129,20 +129,12 @@ function Blip.iter_formats(config)
     return t
 end
 
-function Blip.copy(a,b)
-    a.container = b.container
-    a.height    = b.height
-    a.width     = b.width
-    a.role      = b.role
-    a.url       = b.url
-end
-
 function Blip.choose_best(formats) -- Highest quality available
-    local r = {role=nil, width=0, height=0, url=nil, container=nil}
+    local r = {width=0, height=0, url=nil}
     local U = require 'quvi/util'
     for _,v in pairs(formats) do
         if U.is_higher_quality(v,r) then
-            Blip.copy(r,v)
+            r = v
         end
     end
 --    for k,v in pairs(r) do print(k,v) end
