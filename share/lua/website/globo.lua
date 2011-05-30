@@ -37,16 +37,22 @@ function ident (self)
     return r
 end
 
--- Parse video URL.
+-- Query available formats.
+function query_formats(self)
+    self.formats = 'default'
+    return self
+end
+
+-- Parse media URL.
 function parse (self)
     self.host_id = "globo"
     local page   = quvi.fetch(self.page_url)
 
     local _,_,s = page:find('midiaId: (.-),')
-    self.id     = s or error ("no match: video id")
+    self.id     = s or error ("no match: media id")
 
     local _,_,s = page:find('<title>.*-.*- (.-)</title>')
-    self.title  = s or error ("no match: video title")
+    self.title  = s or error ("no match: media title")
 
     s = "http://playervideo.globo.com/webmedia/GMCPlayListASX"
         .. "?flash=true&midiaId="
@@ -59,7 +65,7 @@ function parse (self)
     local opts  = {fetch_type = 'config', user_agent = 'iphone'}
     local xml   = quvi.fetch (s, opts)
     local _,_,s = xml:find('<video duration=".*" src="(.-)%?')
-    self.url    = {s or error ('no match: video url')}
+    self.url    = {s or error ('no match: media url')}
 
     return self
 end

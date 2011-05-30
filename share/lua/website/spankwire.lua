@@ -33,16 +33,22 @@ function ident(self)
     return r
 end
 
--- Parse video URL.
+-- Query available formats.
+function query_formats(self)
+    self.formats = 'default'
+    return self
+end
+
+-- Parse media URL.
 function parse(self)
     self.host_id = 'spankwire'
     local page   = quvi.fetch(self.page_url)
 
     local _,_,s = page:find('id="vidTitle">.-<h1>(.-)</')
-    self.title  = s or error('no match: video title')
+    self.title  = s or error('no match: media title')
 
     local _,_,s = page:find('ArticleId:%s+(%d+)')
-    self.id     = s or error('no match: video id')
+    self.id     = s or error('no match: media id')
 
     local _,_,s = page:find('videoPath=(.-)"')
     local s = s or error('no match: video path')
@@ -50,7 +56,7 @@ function parse(self)
     local config = quvi.fetch(self.page_url .. s, {fetch_type='config'})
 
     local _,_,s = config:find('<url>(.-)</url>')
-    self.url    = {s or error('no match: video url')}
+    self.url    = {s or error('no match: media url')}
 
     return self
 end
