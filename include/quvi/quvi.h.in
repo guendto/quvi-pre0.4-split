@@ -283,7 +283,9 @@ typedef enum
   /**< Last server returned HTTP code */
 
   QUVIPROP_FORMAT = QUVIPROPERTY_STRING + 10,
-  /**< Requested format, set using QUVIOPT_FORMAT */
+  /**< Requested format, set using QUVIOPT_FORMAT
+   * @sa QUVIOPT_FORMAT
+   */
 
   QUVIPROP_STARTTIME = QUVIPROPERTY_STRING + 11,
   /**< Start time for media */
@@ -326,7 +328,10 @@ typedef enum
 
   QUVIPROP_VIDEOFORMAT = QUVIPROPERTY_STRING + 10,
   /**< Requested video format, set using QUVIOPT_FORMAT
-   * @deprecated Since 0.2.15, use QUVIPROP_FORMAT instead */
+   * @deprecated Since 0.2.15, use QUVIPROP_FORMAT instead
+   * @sa QUVIPROP_FORMAT
+   * @sa QUVIOPT_FORMAT
+   */
 
   _QUVIPROP_LAST = 13
   /**< Placeholder */
@@ -342,7 +347,11 @@ typedef enum
   QUVI_IDENT_PROPERTY_DOMAIN = QUVIPROPERTY_STRING + 2,
   /**< Domain string */
   QUVI_IDENT_PROPERTY_FORMATS = QUVIPROPERTY_STRING + 3,
-  /**< Formats string */
+  /**<
+   * Formats string, a static list of format IDs, typically this is
+   * either 'default' or 'default|best' if script supports >1 formats
+   * @sa quvi_query_formats
+   **/
   QUVI_IDENT_PROPERTY_CATEGORIES = QUVIPROPERTY_LONG + 4,
   /**< Formats string */
   _QUVI_IDENT_PROPERTY_LAST = 4
@@ -873,6 +882,41 @@ extern "C" {
    * @since 0.2.16
    */
   void quvi_supported_ident_close(quvi_ident_t *ident);
+
+  /**
+   * @brief Return list of supported format IDs to the specified URL
+   *
+   * Check whether the URL is supported and return a dynamically created
+   * list of format IDs available to the URL. The list is constructed
+   * from the server returned data and therefore assumed to be available.
+   *
+   * The function does not verify the availability, this can be done
+   * by setting QUVIOPT_FORMAT and calling quvi_parse().
+   *
+   * This function has three significant differences to the
+   * quvi_supported() and quvi_supported_ident() functions:
+   *
+   *  - Returns a dynamically created list of *available* formats
+   *  - Resolves shortened URLs (unless QUVIOPT_RESOLVE is set)
+   *  - Requires an Internet connection
+   *
+   * @param quvi Session handle
+   * @param url URL to check
+   * @param formats Format list of IDs, each separated with '|'
+   *
+   * @note Returned formats string must be quvi_free()d after use
+   *
+   * @sa quvi_next_supported_website
+   * @sa quvi_supported_ident
+   * @sa quvi_supported
+   * @sa QUVIOPT_FORMAT
+   * @sa QUVIOPT_NORESOLVE
+   *
+   * @return Non-zero if an error occurred
+   *
+   * @since 0.2.17
+   */
+  QUVIcode quvi_query_formats(quvi_t quvi, char *url, char **formats);
 
   /**
    * @brief Return next supported website

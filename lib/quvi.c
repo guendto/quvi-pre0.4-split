@@ -103,6 +103,30 @@ QUVIcode quvi_supported(quvi_t quvi, char *url)
   return quvi_supported_ident(quvi, url, NULL);
 }
 
+static QUVIcode resolve_unless_disabled(_quvi_media_t media)
+{
+  QUVIcode rc = QUVI_OK;
+
+  if (!media->quvi->no_resolve)
+    {
+      char *redirect_url = NULL;
+
+      rc = resolve_wrapper(media->quvi, media->page_url, &redirect_url);
+
+      if (rc != QUVI_OK)
+        return (rc);
+      else
+        {
+          if (redirect_url)
+            {
+              freprintf(&media->page_url, "%s", redirect_url);
+              _free(redirect_url);
+            }
+        }
+    }
+  return (rc);
+}
+
 /* quvi_parse */
 
 QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
@@ -124,23 +148,9 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
 
   freprintf(&media->page_url, "%s", url);
 
-  if (!media->quvi->no_resolve)
-    {
-      char *redirect_url = NULL;
-
-      rc = resolve_wrapper(quvi, media->page_url, &redirect_url);
-
-      if (rc != QUVI_OK)
-        return (rc);
-      else
-        {
-          if (redirect_url)
-            {
-              freprintf(&media->page_url, "%s", redirect_url);
-              _free(redirect_url);
-            }
-        }
-    }
+  rc = resolve_unless_disabled(media);
+  if (rc != QUVI_OK)
+    return (rc);
 
   while (1)
     {
@@ -990,6 +1000,36 @@ QUVIcode quvi_ident_getprop(quvi_ident_t i, QUVIidentProperty prop, ...)
   va_end(arg);
 
   return (_ident_getprop(i,prop,p));
+}
+
+/* quvi_query_formats */
+
+QUVIcode quvi_query_formats(quvi_t handle, char *url, char **formats)
+{
+  _quvi_media_t m;
+  QUVIcode rc;
+
+  is_badhandle(handle);
+  is_invarg(url);
+  is_invarg(formats);
+  *formats = NULL;
+
+  m = calloc(1, sizeof(*m));
+  if (!m)
+    return (QUVI_MEM);
+
+  m->quvi = handle;
+  freprintf(&m->page_url, "%s", url);
+
+  rc = resolve_unless_disabled(m);
+  if (rc != QUVI_OK)
+    return (rc);
+
+  rc = find_host_script_and_query_formats(m, formats);
+
+  quvi_parse_close((quvi_media_t)&m);
+
+  return (rc);
 }
 
 #undef is_badhandle
