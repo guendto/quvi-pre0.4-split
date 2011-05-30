@@ -110,20 +110,12 @@ function CBSNews.iter_formats(config) -- Iterate available formats
     return t
 end
 
-function CBSNews.copy(a,b)
-    a.container = b.container
-    a.bitrate   = b.bitrate
-    a.height    = b.height
-    a.width     = b.width
-    a.url       = b.url
-end
-
 function CBSNews.choose_best(formats) -- Highest quality available
-    local r = {width=0, height=0, bitrate=0, url=nil, container=nil}
+    local r = {width=0, height=0, bitrate=0, url=nil}
     local U = require 'quvi/util'
     for _,v in pairs(formats) do
         if U.is_higher_quality(v,r) then
-            CBSNews.copy(r,v)
+            r = v
         end
     end
 --    for k,v in pairs(r) do print(k,v) end
@@ -131,12 +123,11 @@ function CBSNews.choose_best(formats) -- Highest quality available
 end
 
 function CBSNews.choose_default(t) -- Lowest quality available
-    local r = {  width=0xffff, height=0xffff,
-               bitrate=0xffff,    url=nil, container=nil}
+    local r = {width=0xffff, height=0xffff, bitrate=0xffff, url=nil}
     local U = require 'quvi/util'
     for _,v in pairs(t) do
         if U.is_lower_quality(v,r) then
-            CBSNews.copy(r,v)
+            r = v
         end
     end
 --    for k,v in pairs(r) do print(k,v) end
