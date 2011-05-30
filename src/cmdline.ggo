@@ -54,6 +54,9 @@ option "category-all"
     a "All website script categories"
     optional
 
+option "query-formats"
+    F "Query available formats for URL"
+    optional
 option "format"
     f "Media format to query"
     string typestr="arg"
