@@ -172,19 +172,12 @@ function YouTube.get_video_info(self)
     return self
 end
 
-function YouTube.copy(a,b)
-    a.fmt_id = b.fmt_id
-    a.height = b.height
-    a.width  = b.width
-    a.url    = b.url
-end
-
 function YouTube.choose_best(formats) -- Highest quality available
     local r = {width=0, height=0, url=nil}
     local U = require 'quvi/util'
     for _,v in pairs(formats) do
         if U.is_higher_quality(v,r) then
-            YouTube.copy(r,v)
+            r = v
         end
     end
 --    for k,v in pairs(r) do print(k,v) end
@@ -196,7 +189,7 @@ function YouTube.choose_default(formats) -- Lowest quality available
     local U = require 'quvi/util'
     for _,v in pairs(formats) do
         if U.is_lower_quality(v,r) then
-            YouTube.copy(r,v)
+            r = v
         end
     end
 --    for k,v in pairs(r) do print(k,v) end
