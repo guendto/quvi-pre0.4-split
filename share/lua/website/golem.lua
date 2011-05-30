@@ -103,31 +103,23 @@ function Golem.iter_formats(config)
     return t
 end
 
-function Golem.copy(a,b)
-    a.container = b.container
-    a.height    = b.height
-    a.width     = b.width
-    a.url       = b.url
-    a.id        = b.id
-end
-
 function Golem.choose_best(formats) -- Highest quality available
-    local r = {width=0, height=0, container=nil, url=nil, id=nil}
+    local r = {width=0, height=0, url=nil}
     local U = require 'quvi/util'
     for _,v in pairs(formats) do
         if U.is_higher_quality(v,r) then
-            Golem.copy(r,v)
+            r = v
         end
     end
     return r
 end
 
 function Golem.choose_default(formats)
-    local r = {width=0xffff, height=0xffff, url=nil, container=nil, id=nil}
+    local r = {width=0xffff, height=0xffff, url=nil}
     local U = require 'quvi/util'
     for _,v in pairs(formats) do
         if U.is_lower_quality(v,r) then
-            Golem.copy(r,v)
+            r = v
         end
     end
     return r
