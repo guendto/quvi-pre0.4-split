@@ -20,72 +20,150 @@
 -- 02110-1301  USA
 --
 
--- Formats.
-local formats = {
-    'default',
-    'best',
-    'vp6_315p',
-    'vp6_544p'
-}
+--
+-- NOTE: mp4s do not appear to be available (404) even if listed in the
+--       config xml, this is the case at least with the test URL
+--
 
-local format_lookup = {
-    default  = "VP6_388", -- vp6_135p
-    vp6_315p = "VP6_576",
-    vp6_544p = "VP6_928",
-    best     = "H264_1400" -- h264_544p
-}
+local Spiegel = {} -- Utility functions unique to this script
 
 -- Identify the script.
-function ident (self)
+function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "spiegel.de"
-    r.formats    = table.concat(formats, "|")
+    r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain}, {"/video/"})
     return r
 end
 
--- Parse video URL.
-function parse (self)
-    self.host_id = "spiegel"
+-- Query available formats.
+function query_formats(self)
+    Spiegel.get_media_id(self)
 
-    local _,_,s = self.page_url:find("/video/video%-(.-)%.")
-    self.id     = s or error ("no match: video id")
+    local config  = Spiegel.get_config(self)
+    local formats = Spiegel.iter_formats(config)
 
-    local playlist_url = string.format(
-        "http://www1.spiegel.de/active/playlist/fcgi/playlist.fcgi/"
-        .. "asset=flashvideo/mode=id/id=%s", self.id)
-
-    local playlist = quvi.fetch (playlist_url, {fetch_type = 'playlist'})
-
-    local _,_,s = playlist:find("<headline>(.-)</")
-    self.title  = s or error ("no match: video title")
-
-    local config_url = string.format(
-        "http://video.spiegel.de/flash/%s.xml", self.id)
-
-    local config = quvi.fetch (config_url, {fetch_type = 'config'})
-
-    local r_fmt  = self.requested_format
-    r_fmt = (not format_lookup[r_fmt]) and 'default' or r_fmt
-
-    local format = format_lookup[r_fmt]
-
-    -- Match the format string to a link in config.
-    local pattern = "<filename>(%d+)_(%d+)x(%d+)_(%w+)_(%d+).(%w+)"
-
-    for id,w,h,c,b,s in config:gfind(pattern) do
-        fname = string.format("%s_%sx%s_%s_%s.%s",id,w,h,c,b,s)
-        if (format == string.format("%s_%s",c,b)) then
-            self.url = {"http://video.spiegel.de/flash/"..fname}
-            break
-        end
+    local t = {}
+    for _,v in pairs(formats) do
+        table.insert(t, Spiegel.to_s(v))
     end
 
+    table.sort(t)
+    self.formats = table.concat(t, "¦")
+
     return self
+end
+
+-- Parse media URL.
+function parse(self)
+    self.host_id = "spiegel"
+
+    Spiegel.get_media_id(self)
+
+    local playlist = Spiegel.get_playlist(self)
+
+    local _,_,s = playlist:find("<headline>(.-)</")
+    self.title  = s or error ("no match: media title")
+
+    local config  = Spiegel.get_config(self)
+    local formats = Spiegel.iter_formats(config)
+
+    local U       = require 'quvi/util'
+    local format  = U.choose_format(self, formats,
+                                    Spiegel.choose_best,
+                                    Spiegel.choose_default,
+                                    Spiegel.to_s)
+
+    self.duration = format.duration or 0
+    self.url      = {format.url or error("no match: media url")}
+
+    return self
+end
+
+--
+-- Utility functions
+--
+
+function Spiegel.get_media_id(self)
+    local _,_,s = self.page_url:find("/video/video%-(.-)%.")
+    self.id     = s or error ("no match: media id")
+end
+
+function Spiegel.get_playlist(self)
+    local fmt_s = "http://www1.spiegel.de/active/playlist/fcgi/playlist.fcgi/"
+               .. "asset=flashvideo/mode=id/id=%s"
+
+    local playlist_url = string.format(fmt_s, self.id)
+
+    return quvi.fetch(playlist_url, {fetch_type = 'playlist'})
+end
+
+function Spiegel.get_config(self)
+    local fmt_s      = "http://video.spiegel.de/flash/%s.xml"
+    local config_url = string.format(fmt_s, self.id)
+    return quvi.fetch(config_url, {fetch_type = 'config'})
+end
+
+function Spiegel.iter_formats(config)
+    local p = '<filename>(.-)<'
+           .. '.-<codec>(.-)<'
+           .. '.-<totalbitrate>(%d+)'
+           .. '.-<width>(%d+)'
+           .. '.-<height>(%d+)'
+           .. '.-<duration>(%d+)'
+    local t = {}
+    for fn,c,b,w,h,d in config:gfind(p) do
+        local _,_,cn = fn:find('%.(%w+)$') 
+        local u = 'http://video.spiegel.de/flash/' .. fn
+--        print(u,c,b,w,h,cn,d)
+        table.insert(t, {codec=string.lower(c), url=u,
+                         width=tonumber(w),     height=tonumber(h),
+                         bitrate=tonumber(b),   duration=tonumber(d),
+                         container=cn})
+    end
+    return t
+end
+
+function Spiegel.copy(a,b)
+    a.container = b.container
+    a.duration  = b.duration
+    a.bitrate   = b.bitrate
+    a.height    = b.height
+    a.width     = b.width
+    a.codec     = b.codec
+    a.url       = b.url
+end
+
+function Spiegel.choose_best(formats) -- Highest quality available
+    local r = {codec=nil, url=nil, container=nil, width=0, height=0,
+               bitrate=0, duration=0}
+    local U = require 'quvi/util'
+    for _,v in pairs(formats) do
+        if U.is_higher_quality(v,r) then
+            Spiegel.copy(r,v)
+        end
+    end
+    return r
+end
+
+function Spiegel.choose_default(formats) -- Lowest quality available
+    local r = {codec=nil, url=nil, container=nil, width=0xffff,
+               height=0xffff, bitrate=0xffff, duration=0}
+    local U = require 'quvi/util'
+    for _,v in pairs(formats) do
+        if U.is_lower_quality(v,r) then
+            Spiegel.copy(r,v)
+        end
+    end
+    return r
+end
+
+function Spiegel.to_s(t)
+    return string.format('%s_%s_%sp', t.container, t.codec, t.height)
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
