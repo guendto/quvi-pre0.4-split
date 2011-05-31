@@ -310,6 +310,35 @@ static void format_help(quvi_t quvi)
     exit(0);
 }
 
+/* Query which formats are available for the URL */
+static void query_formats(quvi_t quvi)
+{
+  QUVIcode rc;
+  int i;
+
+  if (opts->inputs_num < 1)
+    {
+      spew_qe("error: no input URLs\n");
+      exit (QUVI_INVARG);
+    }
+
+  for (i=0; i<opts->inputs_num; ++i)
+    {
+      char *formats = NULL;
+
+      rc = quvi_query_formats(quvi, (char*)opts->inputs[i], &formats);
+      if (rc == QUVI_OK)
+        {
+          spew("%10s : %s\n", formats, opts->inputs[i]);
+          quvi_free(formats);
+        }
+      else
+        spew_qe("%s\n", quvi_strerror(quvi, rc));
+    }
+
+  exit(rc);
+}
+
 /* dumps all supported hosts to stdout. */
 static void support(quvi_t quvi)
 {
@@ -869,6 +898,9 @@ int main(int argc, char *argv[])
 
   quvi = init_quvi();
 
+  if (opts->query_formats_given)
+    query_formats(quvi);
+
   if (opts->support_given)
     support(quvi);
 
@@ -881,7 +913,7 @@ int main(int argc, char *argv[])
 
   if (inputs_num == 0)
     {
-      spew_qe("error: no input urls\n");
+      spew_qe("error: no input URLs\n");
       return (QUVI_INVARG);
     }
 

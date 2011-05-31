@@ -1,5 +1,6 @@
 
 -- quvi
+-- Copyright (C) 2011  Toni Gundogdu <legatvs@gmail.com>
 -- Copyright (C) 2010-2011  Lionel Elie Mamane <lionel@mamane.lu>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
@@ -20,6 +21,8 @@
 -- 02110-1301  USA
 --
 
+local CollegeHumor = {} -- Utility functions unique to this script
+
 -- Identify the script.
 function ident (self)
     package.path = self.script_dir .. '/?.lua'
@@ -34,12 +37,57 @@ function ident (self)
     return r
 end
 
--- Parse video URL.
-function parse (self)
-    self.host_id = "collegehumor"
+-- Query formats.
+function query_formats(self)
+    local config  = CollegeHumor.get_config(self)
+    local formats = CollegeHumor.iter_formats(config)
 
-    self.id = get_media_id(self.page_url)
-    self.id = self.id or error("no match: video id")
+    local t = {}
+    for k,v in pairs(formats) do
+        table.insert(t, CollegeHumor.to_s(v))
+    end
+
+    table.sort(t)
+    self.formats = table.concat(t, "|")
+
+    return self
+end
+
+-- Parse media URL.
+function parse (self)
+    self.host_id  = "collegehumor"
+    local config  = CollegeHumor.get_config(self)
+
+    local _,_,s = config:find('<caption>(.-)<')
+    self.title  = s or error("no match: media title")
+
+    local _,_,s = config:find('<thumbnail><!%[.-%[(.-)%]')
+    self.thumbnail_url = s or ""
+
+    local formats = CollegeHumor.iter_formats(config)
+    local U       = require 'quvi/util'
+    self.url      = {U.choose_format(self, formats,
+                                     CollegeHumor.choose_best,
+                                     CollegeHumor.choose_default,
+                                     CollegeHumor.to_s).url
+                        or error('no match: media url')}
+
+    return self
+end
+
+--
+-- Utility functions
+--
+
+function CollegeHumor.get_media_id(url)
+    if not url then return url end
+    local _,_,s = url:find('/video[/:](%d+)')
+    return s
+end
+
+function CollegeHumor.get_config(self)
+    self.id = CollegeHumor.get_media_id(self.page_url)
+                or error("no match: media id")
 
     -- quvi normally checks the page URL for a redirection to another
     -- URL. Disabling this check (QUVIOPT_NORESOLVE) breaks the support
@@ -51,30 +99,39 @@ function parse (self)
         string.format("http://www.collegehumor.com/moogaloop/video%s%s",
             (#r > 0) and ':' or '/', self.id)
 
-    local config     = quvi.fetch(config_url, {fetch_type='config'})
-    local _,_,sd_url = config:find('<file><!%[%w+%[(.-)%]')
-    local _,_,hq_url = config:find('<hq><!%[%w+%[(.-)%]')
-    local hq_avail   = (hq_url and #hq_url > 0) and 1 or 0
-
-    -- default=sd, best=hq
-    local s = (self.requested_format == 'best' and hq_avail == 1)
-                and hq_url or sd_url
-
-    self.url = {s or error('no match: media url')}
-
-    local _,_,s = config:find('<caption>(.-)<')
-    self.title  = s or error("no match: video title")
-
-    local _,_,s = config:find('<thumbnail><!%[%w+%[(.-)%]')
-    self.thumbnail_url = s or ""
-
-    return self
+    return quvi.fetch(config_url, {fetch_type='config'})
 end
 
-function get_media_id(url)
-    if not url then return url end
-    local _,_,s = url:find('collegehumor%.com/video[/:](%d+)')
-    return s
+function CollegeHumor.iter_formats(config)
+    local _,_,sd_url = config:find('<file><!%[.-%[(.-)%]')
+    local _,_,hq_url = config:find('<hq><!%[.-%[(.-)%]')
+    local hq_avail   = (hq_url and #hq_url > 0) and 1 or 0
+
+    local t = {}
+
+    local _,_,s = sd_url:find('%.(%w+)$')
+    table.insert(t, {quality='sd', url=sd_url, container=s})
+
+    if hq_avail == 1 and hq_url then
+        local _,_,s = hq_url:find('%.(%w+)$')
+        table.insert(t, {quality='hq', url=hq_url, container=s})
+    end
+
+    return t
+end
+
+function CollegeHumor.choose_best(formats) -- Assume last is best.
+    local r
+    for _,v in pairs(formats) do r = v end
+    return r
+end
+
+function CollegeHumor.choose_default(formats) -- Whatever is found first.
+    for _,v in pairs(formats) do return v end
+end
+
+function CollegeHumor.to_s(t)
+    return string.format('%s_%s', t.container, t.quality)
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:

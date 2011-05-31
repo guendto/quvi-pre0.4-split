@@ -56,6 +56,7 @@ extern "C" {
     const char *category_rtsp_help; /**< @brief Category RTSP website scripts help description.  */
     const char *category_rtmp_help; /**< @brief Category RTMP website scripts help description.  */
     const char *category_all_help; /**< @brief All website script categories help description.  */
+    const char *query_formats_help; /**< @brief Query available formats for URL help description.  */
     char * format_arg;  /**< @brief Media format to query (default='default').  */
     char * format_orig; /**< @brief Media format to query original value given at command line.  */
     const char *format_help; /**< @brief Media format to query help description.  */
@@ -87,6 +88,7 @@ extern "C" {
     unsigned int category_rtsp_given ;  /**< @brief Whether category-rtsp was given.  */
     unsigned int category_rtmp_given ;  /**< @brief Whether category-rtmp was given.  */
     unsigned int category_all_given ; /**< @brief Whether category-all was given.  */
+    unsigned int query_formats_given ;  /**< @brief Whether query-formats was given.  */
     unsigned int format_given ; /**< @brief Whether format was given.  */
     unsigned int agent_given ;  /**< @brief Whether agent was given.  */
     unsigned int proxy_given ;  /**< @brief Whether proxy was given.  */

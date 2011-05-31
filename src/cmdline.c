@@ -50,6 +50,7 @@ const char *gengetopt_args_info_help[] =
   "      --category-rtsp        Category RTSP website scripts",
   "      --category-rtmp        Category RTMP website scripts",
   "  -a, --category-all         All website script categories",
+  "  -F, --query-formats        Query available formats for URL",
   "  -f, --format=arg           Media format to query  (default=`default')",
   "      --agent=arg            Identify as arg  (default=`Mozilla/5.0')",
   "      --proxy=arg            Use proxy for HTTP connections",
@@ -122,6 +123,7 @@ void clear_given (struct gengetopt_args_info *args_info)
   args_info->category_rtsp_given = 0 ;
   args_info->category_rtmp_given = 0 ;
   args_info->category_all_given = 0 ;
+  args_info->query_formats_given = 0 ;
   args_info->format_given = 0 ;
   args_info->agent_given = 0 ;
   args_info->proxy_given = 0 ;
@@ -168,11 +170,12 @@ void init_args_info(struct gengetopt_args_info *args_info)
   args_info->category_rtsp_help = gengetopt_args_info_help[14] ;
   args_info->category_rtmp_help = gengetopt_args_info_help[15] ;
   args_info->category_all_help = gengetopt_args_info_help[16] ;
-  args_info->format_help = gengetopt_args_info_help[17] ;
-  args_info->agent_help = gengetopt_args_info_help[18] ;
-  args_info->proxy_help = gengetopt_args_info_help[19] ;
-  args_info->no_proxy_help = gengetopt_args_info_help[20] ;
-  args_info->connect_timeout_help = gengetopt_args_info_help[21] ;
+  args_info->query_formats_help = gengetopt_args_info_help[17] ;
+  args_info->format_help = gengetopt_args_info_help[18] ;
+  args_info->agent_help = gengetopt_args_info_help[19] ;
+  args_info->proxy_help = gengetopt_args_info_help[20] ;
+  args_info->no_proxy_help = gengetopt_args_info_help[21] ;
+  args_info->connect_timeout_help = gengetopt_args_info_help[22] ;
 
 }
 
@@ -338,6 +341,8 @@ cmdline_parser_dump(FILE *outfile, struct gengetopt_args_info *args_info)
     write_into_file(outfile, "category-rtmp", 0, 0 );
   if (args_info->category_all_given)
     write_into_file(outfile, "category-all", 0, 0 );
+  if (args_info->query_formats_given)
+    write_into_file(outfile, "query-formats", 0, 0 );
   if (args_info->format_given)
     write_into_file(outfile, "format", args_info->format_orig, 0);
   if (args_info->agent_given)
@@ -625,6 +630,7 @@ cmdline_parser_internal (
         { "category-rtsp",  0, NULL, 0 },
         { "category-rtmp",  0, NULL, 0 },
         { "category-all", 0, NULL, 'a' },
+        { "query-formats",  0, NULL, 'F' },
         { "format", 1, NULL, 'f' },
         { "agent",  1, NULL, 0 },
         { "proxy",  1, NULL, 0 },
@@ -633,7 +639,7 @@ cmdline_parser_internal (
         { 0,  0, 0, 0 }
       };
 
-      c = getopt_long (argc, argv, "hqsrnaf:", long_options, &option_index);
+      c = getopt_long (argc, argv, "hqsrnaFf:", long_options, &option_index);
 
       if (c == -1) break; /* Exit from `while (1)' loop.  */
 
@@ -700,6 +706,18 @@ cmdline_parser_internal (
                           &(local_args_info.category_all_given), optarg, 0, 0, ARG_NO,
                           check_ambiguity, override, 0, 0,
                           "category-all", 'a',
+                          additional_error))
+            goto failure;
+
+          break;
+        case 'F': /* Query available formats for URL.  */
+
+
+          if (update_arg( 0 ,
+                          0 , &(args_info->query_formats_given),
+                          &(local_args_info.query_formats_given), optarg, 0, 0, ARG_NO,
+                          check_ambiguity, override, 0, 0,
+                          "query-formats", 'F',
                           additional_error))
             goto failure;
 

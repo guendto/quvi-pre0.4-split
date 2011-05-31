@@ -20,54 +20,113 @@
 -- 02110-1301  USA
 --
 
-local formats = {
-    'default',
-    'best',
-    'ipod'
-}
-
-local format_lookup = {
-    default = 'medium',
-    best = 'high',
-    ipod = 'ipod'
-}
+local Golem = {} -- Utility functions unique to this script
 
 -- Identify the script.
-function ident (self)
+function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "video.golem.de"
-    r.formats    = table.concat(formats, "|")
+    r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain}, {"/[%w-_]+/%d+/"})
     return r
 end
 
--- Parse video URL.
-function parse (self)
-    self.host_id = "golem"
-    local page   = quvi.fetch(self.page_url)
+-- Query available formats.
+function query_formats(self)
+    local config  = Golem.get_config(self)
+    local formats = Golem.iter_formats(config)
 
-    local _,_,s = page:find('"id", "(.-)"')
-    self.id     = s or error ("no match: video id")
+    local t = {}
+    for _,v in pairs(formats) do
+        table.insert(t, Golem.to_s(v))
+    end
 
-    local config_url = "http://video.golem.de/xml/" .. self.id
-    local config = quvi.fetch(config_url, {fetch_type = 'config'})
-
-    local _,_,s  = config:find("<title>(.-)</")
-    self.title   = s or error("no match: video title")
-
-    local r_fmt = self.requested_format
-    r_fmt = (not format_lookup[r_fmt]) and 'default' or r_fmt
-
-    self.url = {
-        string.format("http://video.golem.de/download/%s?q=%s",
-            self.id, format_lookup[r_fmt])
-    }
+    table.sort(t)
+    self.formats = table.concat(t, "|")
 
     return self
+end
+
+-- Parse media URL.
+function parse(self)
+    self.host_id = "golem"
+    local config = Golem.get_config(self)
+
+    local _,_,s  = config:find("<title>(.-)</")
+    self.title   = s or error("no match: media title")
+
+    local _,_,s  = config:find('<teaser.-<url>(.-)<.-</teaser>')
+    if s then
+        self.thumbnail_url = string.format('http://video.golem.de%s', s)
+    end
+
+    local formats = Golem.iter_formats(config)
+    local U       = require 'quvi/util'
+    self.url      = {U.choose_format(self, formats,
+                                     Golem.choose_best,
+                                     Golem.choose_default,
+                                     Golem.to_s).url
+                        or error("no match: media url")}
+
+    return self
+end
+
+--
+-- Utility functions
+--
+
+function Golem.get_config(self)
+    local _,_,s = self.page_url:find('/[%w-_]+/(%d+)/')
+    self.id = s or error("no match: media id")
+
+    local config_url = "http://video.golem.de/xml/" .. self.id
+    return quvi.fetch(config_url, {fetch_type = 'config'})
+end
+
+function Golem.iter_formats(config)
+    local p = '<(%w+) width="(%d+)" height="(%d+)">'
+           .. '.-<filename>.-%.(%w+)<'
+           .. '.-<url>(.-)<'
+           .. '.-</teaser>'
+    local t = {}
+    for id,w,h,c,u in config:gfind(p) do
+            u = 'http://video.golem.de' .. u
+--            print(id,w,h,c,u)
+            table.insert(t, {width=tonumber(w), height=tonumber(h),
+                             container=c, url=u, id=id})
+    end
+
+    return t
+end
+
+function Golem.choose_best(formats) -- Highest quality available
+    local r = {width=0, height=0, url=nil}
+    local U = require 'quvi/util'
+    for _,v in pairs(formats) do
+        if U.is_higher_quality(v,r) then
+            r = v
+        end
+    end
+    return r
+end
+
+function Golem.choose_default(formats)
+    local r = {width=0xffff, height=0xffff, url=nil}
+    local U = require 'quvi/util'
+    for _,v in pairs(formats) do
+        if U.is_lower_quality(v,r) then
+            r = v
+        end
+    end
+    return r
+end
+
+function Golem.to_s(t)
+    return string.format("%s_%s_%sp", t.container, t.id, t.height)
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
