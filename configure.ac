@@ -19,7 +19,7 @@ AC_SUBST(QUVI_CURRENT)
 AC_SUBST(QUVI_REVISION)
 AC_SUBST(QUVI_AGE)
 
-AC_CONFIG_SRCDIR([src/libquvi/quvi.c])
+AC_CONFIG_SRCDIR([src/libquvi/quvi_api.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([config.aux])
 AC_CONFIG_MACRO_DIR([m4])

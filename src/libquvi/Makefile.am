@@ -6,7 +6,9 @@ EXTRA_LIBQUVI_LDFLAGS += -Wl,--version-script=$(top_srcdir)/libquvi.ver
 endif
 
 src = \
-    quvi.c \
+    quvi_api.c \
+    net_api.c \
+    llst_api.c \
     util.c \
     curl_wrap.c \
     lua_wrap.c \

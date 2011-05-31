@@ -136,7 +136,7 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
             }
         }
 
-      if (q->status_func(makelong(QUVISTATUS_FETCH, stat_type),
+      if (q->status_func(_makelong(QUVISTATUS_FETCH, stat_type),
                          (void *)url) != QUVI_OK)
         {
           return (QUVI_ABORTEDBYCALLBACK);
@@ -178,8 +178,8 @@ QUVIcode fetch_wrapper(_quvi_t q, lua_State *l, _quvi_net_t *n)
 
       if (q->status_func)
         {
-          if (q->status_func(makelong(QUVISTATUS_FETCH,
-                                      QUVISTATUSTYPE_DONE), 0) != QUVI_OK)
+          if (q->status_func(_makelong(QUVISTATUS_FETCH,
+                                       QUVISTATUSTYPE_DONE), 0) != QUVI_OK)
             {
               rc = QUVI_ABORTEDBYCALLBACK;
             }
@@ -210,8 +210,7 @@ QUVIcode resolve_wrapper(_quvi_t q, const char *url, char **dst)
 
   if (q->status_func)
     {
-      const long param =
-        makelong(QUVISTATUS_RESOLVE, 0);
+      const long param = _makelong(QUVISTATUS_RESOLVE, 0);
 
       if (q->status_func(param, 0) != QUVI_OK)
         return (QUVI_ABORTEDBYCALLBACK);
@@ -236,7 +235,7 @@ QUVIcode resolve_wrapper(_quvi_t q, const char *url, char **dst)
       if (q->status_func)
         {
           const long param =
-            makelong(QUVISTATUS_RESOLVE, QUVISTATUSTYPE_DONE);
+            _makelong(QUVISTATUS_RESOLVE, QUVISTATUSTYPE_DONE);
 
           rc = q->status_func(param, 0);
         }
@@ -274,7 +273,7 @@ QUVIcode verify_wrapper(_quvi_t q, _quvi_llst_node_t l)
 
   if (q->status_func)
     {
-      if (q->status_func(makelong(QUVISTATUS_VERIFY, 0), 0) != QUVI_OK)
+      if (q->status_func(_makelong(QUVISTATUS_VERIFY, 0), 0) != QUVI_OK)
         return (QUVI_ABORTEDBYCALLBACK);
     }
 
@@ -300,7 +299,7 @@ QUVIcode verify_wrapper(_quvi_t q, _quvi_llst_node_t l)
       if (q->status_func)
         {
           const long param =
-            makelong(QUVISTATUS_VERIFY, QUVISTATUSTYPE_DONE);
+            _makelong(QUVISTATUS_VERIFY, QUVISTATUSTYPE_DONE);
 
           rc = q->status_func(param, 0);
         }

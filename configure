@@ -575,7 +575,7 @@ PACKAGE_STRING='quvi 0.2.17'
 PACKAGE_BUGREPORT='http://sourceforge.net/apps/trac/quvi'
 PACKAGE_URL='http://quvi.sourceforge.net/'
 
-ac_unique_file="src/libquvi/quvi.c"
+ac_unique_file="src/libquvi/quvi_api.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>

@@ -24,16 +24,43 @@
 
 #include "platform.h"
 
-#define makelong(low,high) \
+#define _makelong(low,high) \
     ((long)   (((quvi_word)((uint64_t)(low)  & 0xffff)) | \
     ((uint64_t)((quvi_word)((uint64_t)(high) & 0xffff))) << 16))
 
-#define makeword(low,high) \
+#define _makeword(low,high) \
     ((quvi_word)(((quvi_byte)((uint64_t)(low)  & 0xff)) | \
     ((quvi_word)((quvi_byte) ((uint64_t)(high) & 0xff))) << 8))
 
 #define _free(p) \
     do { if (p) free(p); p=0; } while(0)
+
+#define _is_invarg(p) \
+  do { if (p == NULL) return (QUVI_INVARG); } while (0)
+
+#define _is_badhandle(h) \
+  do { if (h == NULL) return (QUVI_BADHANDLE); } while (0)
+
+#define _set_alloc_s(dst) \
+    do { freprintf(&dst, "%s", va_arg(arg,char*)); } while(0); break
+
+#define _set_s(value) \
+    do { *sp = value ? value:(char*)empty; } while(0); break
+
+#define _set_from_arg_n(dst) \
+    do { dst = va_arg(arg,long); } while(0); break
+
+#define _set_from_value_n(dst,value) \
+    do { *dst = value; } while(0); break
+
+#define _init_from_arg(dst,type) \
+    do { \
+        if ( !(dst = va_arg(arg,type)) ) \
+            rc = QUVI_INVARG; \
+    } while (0); break
+
+#define _set_v(value) \
+    do  { *vp = value ? value:NULL; } while(0); break
 
 /* linked list handle */
 struct _quvi_llst_node_s
