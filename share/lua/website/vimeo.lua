@@ -63,7 +63,7 @@ function parse(self)
     self.title  = s or error("no match: media title")
 
     local _,_,s = config:find('<duration>(%d+)')
-    self.duration = tonumber(s) or 0
+    self.duration = (tonumber(s) or 0) * 1000 -- to msec
 
     local _,_,s = config:find('<thumbnail>(.-)<')
     self.thumbnail_url = s or ''
