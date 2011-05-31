@@ -145,7 +145,7 @@ function YouTube.get_video_info(self)
         self.thumbnail_url = U.unescape(self.thumbnail_url)
     end
     
-    self.duration = config['length_seconds'] or 0
+    self.duration = (config['length_seconds'] or 0)*1000 -- to msec
 
     self.requested_format =
         YouTube.convert_deprecated_id(self.requested_format)
