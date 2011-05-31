@@ -575,7 +575,7 @@ PACKAGE_STRING='quvi 0.2.17'
 PACKAGE_BUGREPORT='http://sourceforge.net/apps/trac/quvi'
 PACKAGE_URL='http://quvi.sourceforge.net/'
 
-ac_unique_file="lib/quvi.c"
+ac_unique_file="src/libquvi/quvi.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -19668,7 +19668,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile include/Makefile include/quvi/Makefile include/quvi/quvi.h lib/Makefile man1/Makefile share/Makefile doc/Makefile src/Makefile examples/Makefile tests/Makefile scripts/Makefile libquvi.pc doxygen.conf"
+ac_config_files="$ac_config_files Makefile man1/Makefile share/Makefile doc/Makefile examples/Makefile tests/Makefile src/Makefile src/libquvi/Makefile src/libquvi/quvi/Makefile src/libquvi/quvi/quvi.h src/quvi/Makefile scripts/Makefile libquvi.pc doxygen.conf"
 
 
 cat >confcache <<\_ACEOF
@@ -20858,16 +20858,16 @@ do
     "depfiles") CONFIG_COMMANDS="$CONFIG_COMMANDS depfiles" ;;
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
-    "include/quvi/Makefile") CONFIG_FILES="$CONFIG_FILES include/quvi/Makefile" ;;
-    "include/quvi/quvi.h") CONFIG_FILES="$CONFIG_FILES include/quvi/quvi.h" ;;
-    "lib/Makefile") CONFIG_FILES="$CONFIG_FILES lib/Makefile" ;;
     "man1/Makefile") CONFIG_FILES="$CONFIG_FILES man1/Makefile" ;;
     "share/Makefile") CONFIG_FILES="$CONFIG_FILES share/Makefile" ;;
     "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
-    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
     "tests/Makefile") CONFIG_FILES="$CONFIG_FILES tests/Makefile" ;;
+    "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
+    "src/libquvi/Makefile") CONFIG_FILES="$CONFIG_FILES src/libquvi/Makefile" ;;
+    "src/libquvi/quvi/Makefile") CONFIG_FILES="$CONFIG_FILES src/libquvi/quvi/Makefile" ;;
+    "src/libquvi/quvi/quvi.h") CONFIG_FILES="$CONFIG_FILES src/libquvi/quvi/quvi.h" ;;
+    "src/quvi/Makefile") CONFIG_FILES="$CONFIG_FILES src/quvi/Makefile" ;;
     "scripts/Makefile") CONFIG_FILES="$CONFIG_FILES scripts/Makefile" ;;
     "libquvi.pc") CONFIG_FILES="$CONFIG_FILES libquvi.pc" ;;
     "doxygen.conf") CONFIG_FILES="$CONFIG_FILES doxygen.conf" ;;

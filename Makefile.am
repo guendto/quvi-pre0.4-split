@@ -9,7 +9,7 @@ ChangeLog.pre-gitlog
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libquvi.pc
 
-SUBDIRS = include lib man1 src examples share scripts
+SUBDIRS = man1 examples share scripts src
 
 if WITH_DOC
 SUBDIRS += doc
@@ -49,8 +49,8 @@ else
 endif
 cmdline:
 if HAVE_GENGETOPT
-	@GENGETOPT@ < $(top_srcdir)/src/cmdline.ggo -C --unamed-opts=URL \
-		--output-dir $(top_srcdir)/src --no-version
+	@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
+		--output-dir $(top_srcdir)/src/quvi --no-version
 else
 	@echo "error: configure did not find 'gengetopt' command"
 endif

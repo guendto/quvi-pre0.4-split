@@ -103,7 +103,7 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
 	distdir dist dist-all distcheck
 ETAGS = etags
 CTAGS = ctags
-DIST_SUBDIRS = include lib man1 src examples share scripts doc tests
+DIST_SUBDIRS = man1 examples share scripts src doc tests
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -298,7 +298,7 @@ ChangeLog.pre-gitlog
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libquvi.pc
-SUBDIRS = include lib man1 src examples share scripts $(am__append_1) \
+SUBDIRS = man1 examples share scripts src $(am__append_1) \
 	$(am__append_2)
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
@@ -844,8 +844,8 @@ dox:
 @HAVE_DOXYGEN_TRUE@	@echo doxygen generated pages can be found in doc/ subdir
 @HAVE_DOXYGEN_FALSE@	@echo configure did not find doxygen
 cmdline:
-@HAVE_GENGETOPT_TRUE@	@GENGETOPT@ < $(top_srcdir)/src/cmdline.ggo -C --unamed-opts=URL \
-@HAVE_GENGETOPT_TRUE@		--output-dir $(top_srcdir)/src --no-version
+@HAVE_GENGETOPT_TRUE@	@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
+@HAVE_GENGETOPT_TRUE@		--output-dir $(top_srcdir)/src/quvi --no-version
 @HAVE_GENGETOPT_FALSE@	@echo "error: configure did not find 'gengetopt' command"
 
 local-clean:

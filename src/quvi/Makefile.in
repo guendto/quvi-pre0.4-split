@@ -35,9 +35,10 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 target_triplet = @target@
-@HAVE_GNU_LD_TRUE@am__append_1 = -Wl,--version-script=$(top_srcdir)/libquvi.ver
-@NO_ASPRINTF_TRUE@am__append_2 = vasprintf.c asprintf.c
-subdir = lib
+@ENABLE_QUVI_TRUE@@NO_ASPRINTF_TRUE@am__append_1 = $(top_srcdir)/src/libquvi/vasprintf.c \
+@ENABLE_QUVI_TRUE@@NO_ASPRINTF_TRUE@	$(top_srcdir)/src/libquvi/asprintf.c
+@ENABLE_QUVI_TRUE@bin_PROGRAMS = quvi$(EXEEXT)
+subdir = src/quvi
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -50,48 +51,32 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
-am__vpath_adj = case $$p in \
-    $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
-    *) f=$$p;; \
-  esac;
-am__strip_dir = f=`echo $$p | sed -e 's|^.*/||'`;
-am__install_max = 40
-am__nobase_strip_setup = \
-  srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`
-am__nobase_strip = \
-  for p in $$list; do echo "$$p"; done | sed -e "s|$$srcdirstrip/||"
-am__nobase_list = $(am__nobase_strip_setup); \
-  for p in $$list; do echo "$$p $$p"; done | \
-  sed "s| $$srcdirstrip/| |;"' / .*\//!s/ .*/ ./; s,\( .*\)/[^/]*$$,\1,' | \
-  $(AWK) 'BEGIN { files["."] = "" } { files[$$2] = files[$$2] " " $$1; \
-    if (++n[$$2] == $(am__install_max)) \
-      { print $$2, files[$$2]; n[$$2] = 0; files[$$2] = "" } } \
-    END { for (dir in files) print dir, files[dir] }'
-am__base_list = \
-  sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
-  sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(libdir)"
-LTLIBRARIES = $(lib_LTLIBRARIES)
-libquvi_la_LIBADD =
-am__libquvi_la_SOURCES_DIST = quvi.c util.c curl_wrap.c lua_wrap.c \
-	strepl.c net_wrap.c depr.c vasprintf.c asprintf.c curl_wrap.h \
-	lua_wrap.h internal.h util.h platform.h net_wrap.h
-@NO_ASPRINTF_TRUE@am__objects_1 = libquvi_la-vasprintf.lo \
-@NO_ASPRINTF_TRUE@	libquvi_la-asprintf.lo
-am__objects_2 = libquvi_la-quvi.lo libquvi_la-util.lo \
-	libquvi_la-curl_wrap.lo libquvi_la-lua_wrap.lo \
-	libquvi_la-strepl.lo libquvi_la-net_wrap.lo libquvi_la-depr.lo \
-	$(am__objects_1)
+am__installdirs = "$(DESTDIR)$(bindir)"
+PROGRAMS = $(bin_PROGRAMS)
+am__quvi_SOURCES_DIST = quvi.c cmdline.c \
+	$(top_srcdir)/src/libquvi/strepl.c \
+	$(top_srcdir)/src/libquvi/vasprintf.c \
+	$(top_srcdir)/src/libquvi/asprintf.c cmdline.h
+@ENABLE_QUVI_TRUE@@NO_ASPRINTF_TRUE@am__objects_1 =  \
+@ENABLE_QUVI_TRUE@@NO_ASPRINTF_TRUE@	quvi-vasprintf.$(OBJEXT) \
+@ENABLE_QUVI_TRUE@@NO_ASPRINTF_TRUE@	quvi-asprintf.$(OBJEXT)
+@ENABLE_QUVI_TRUE@am__objects_2 = quvi-quvi.$(OBJEXT) \
+@ENABLE_QUVI_TRUE@	quvi-cmdline.$(OBJEXT) quvi-strepl.$(OBJEXT) \
+@ENABLE_QUVI_TRUE@	$(am__objects_1)
 am__objects_3 =
-am_libquvi_la_OBJECTS = $(am__objects_2) $(am__objects_3)
-libquvi_la_OBJECTS = $(am_libquvi_la_OBJECTS)
+@ENABLE_QUVI_TRUE@am_quvi_OBJECTS = $(am__objects_2) $(am__objects_3)
+quvi_OBJECTS = $(am_quvi_OBJECTS)
+am__DEPENDENCIES_1 =
+@ENABLE_QUVI_TRUE@quvi_DEPENDENCIES =  \
+@ENABLE_QUVI_TRUE@	$(top_builddir)/src/libquvi/libquvi.la \
+@ENABLE_QUVI_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+@ENABLE_QUVI_TRUE@	$(am__DEPENDENCIES_1)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
-libquvi_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libquvi_la_CFLAGS) \
-	$(CFLAGS) $(libquvi_la_LDFLAGS) $(LDFLAGS) -o $@
+quvi_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(quvi_CFLAGS) $(CFLAGS) \
+	$(quvi_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/config.aux/depcomp
 am__depfiles_maybe = depfiles
@@ -118,8 +103,8 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(libquvi_la_SOURCES)
-DIST_SOURCES = $(am__libquvi_la_SOURCES_DIST)
+SOURCES = $(quvi_SOURCES)
+DIST_SOURCES = $(am__quvi_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -153,7 +138,7 @@ ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
-EXTRA_LIBQUVI_LDFLAGS = @EXTRA_LIBQUVI_LDFLAGS@ $(am__append_1)
+EXTRA_LIBQUVI_LDFLAGS = @EXTRA_LIBQUVI_LDFLAGS@
 FGREP = @FGREP@
 GENGETOPT = @GENGETOPT@
 GIT = @GIT@
@@ -272,38 +257,29 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-src = quvi.c util.c curl_wrap.c lua_wrap.c strepl.c net_wrap.c depr.c \
-	$(am__append_2)
-hdr = \
-    curl_wrap.h \
-    lua_wrap.h \
-    internal.h \
-    util.h \
-    platform.h \
-    net_wrap.h
+@ENABLE_QUVI_TRUE@EXTRA_DIST = cmdline.ggo
+@ENABLE_QUVI_TRUE@src = quvi.c cmdline.c \
+@ENABLE_QUVI_TRUE@	$(top_srcdir)/src/libquvi/strepl.c \
+@ENABLE_QUVI_TRUE@	$(am__append_1)
+@ENABLE_QUVI_TRUE@hdr = cmdline.h
+@ENABLE_QUVI_TRUE@quvi_SOURCES = $(src) $(hdr)
+@ENABLE_QUVI_TRUE@quvi_CPPFLAGS = \
+@ENABLE_QUVI_TRUE@    -I$(top_builddir)/src/libquvi \
+@ENABLE_QUVI_TRUE@    -I$(top_srcdir)/src/libquvi \
+@ENABLE_QUVI_TRUE@    $(libcurl_CFLAGS) \
+@ENABLE_QUVI_TRUE@    $(AM_CPPFLAGS)
 
-lib_LTLIBRARIES = libquvi.la
-libquvi_la_SOURCES = $(src) $(hdr)
-libquvi_la_CPPFLAGS = \
-    -I$(top_builddir)/include \
-    -I$(top_srcdir)/include \
-    -DDATADIR='"$(datadir)"' \
-    -DPKGDATADIR='"$(pkgdatadir)"' \
-    $(libcurl_CFLAGS) \
-    $(liblua_CFLAGS) \
-    $(AM_CPPFLAGS)
+@ENABLE_QUVI_TRUE@quvi_CFLAGS = \
+@ENABLE_QUVI_TRUE@    $(AM_CFLAGS)
 
-libquvi_la_CFLAGS = \
-    $(AM_CFLAGS)
+@ENABLE_QUVI_TRUE@quvi_LDFLAGS = \
+@ENABLE_QUVI_TRUE@    $(AM_LDFLAGS)
 
-libquvi_la_LDFLAGS = \
-    $(libcurl_LIBS) \
-    $(liblua_LIBS) \
-    $(LIBICONV) \
-    $(LTLIBICONV) \
-    -version-info $(QUVI_CURRENT):$(QUVI_REVISION):$(QUVI_AGE) \
-    $(EXTRA_LIBQUVI_LDFLAGS) \
-    $(AM_LDFLAGS)
+@ENABLE_QUVI_TRUE@quvi_LDADD = \
+@ENABLE_QUVI_TRUE@    $(top_builddir)/src/libquvi/libquvi.la \
+@ENABLE_QUVI_TRUE@    $(libcurl_LIBS) \
+@ENABLE_QUVI_TRUE@    $(LIBICONV) \
+@ENABLE_QUVI_TRUE@    $(LTLIBICONV)
 
 all: all-am
 
@@ -318,9 +294,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign lib/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign src/quvi/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign lib/Makefile
+	  $(AUTOMAKE) --foreign src/quvi/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -339,39 +315,52 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
-	test -z "$(libdir)" || $(MKDIR_P) "$(DESTDIR)$(libdir)"
-	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
-	list2=; for p in $$list; do \
-	  if test -f $$p; then \
-	    list2="$$list2 $$p"; \
-	  else :; fi; \
-	done; \
-	test -z "$$list2" || { \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(libdir)'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(libdir)"; \
-	}
+	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	for p in $$list; do echo "$$p $$p"; done | \
+	sed 's/$(EXEEXT)$$//' | \
+	while read p p1; do if test -f $$p || test -f $$p1; \
+	  then echo "$$p"; echo "$$p"; else :; fi; \
+	done | \
+	sed -e 'p;s,.*/,,;n;h' -e 's|.*|.|' \
+	    -e 'p;x;s,.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/' | \
+	sed 'N;N;N;s,\n, ,g' | \
+	$(AWK) 'BEGIN { files["."] = ""; dirs["."] = 1 } \
+	  { d=$$3; if (dirs[d] != 1) { print "d", d; dirs[d] = 1 } \
+	    if ($$2 == $$4) files[d] = files[d] " " $$1; \
+	    else { print "f", $$3 "/" $$4, $$1; } } \
+	  END { for (d in files) print "f", d, files[d] }' | \
+	while read type dir files; do \
+	    if test "$$dir" = .; then dir=; else dir=/$$dir; fi; \
+	    test -z "$$files" || { \
+	    echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files '$(DESTDIR)$(bindir)$$dir'"; \
+	    $(INSTALL_PROGRAM_ENV) $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL_PROGRAM) $$files "$(DESTDIR)$(bindir)$$dir" || exit $$?; \
+	    } \
+	; done
 
-uninstall-libLTLIBRARIES:
+uninstall-binPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
-	for p in $$list; do \
-	  $(am__strip_dir) \
-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$f'"; \
-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$f"; \
-	done
+	@list='$(bin_PROGRAMS)'; test -n "$(bindir)" || list=; \
+	files=`for p in $$list; do echo "$$p"; done | \
+	  sed -e 'h;s,^.*/,,;s/$(EXEEXT)$$//;$(transform)' \
+	      -e 's/$$/$(EXEEXT)/' `; \
+	test -n "$$list" || exit 0; \
+	echo " ( cd '$(DESTDIR)$(bindir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(bindir)" && rm -f $$files
 
-clean-libLTLIBRARIES:
-	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
-	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
-	  dir="`echo $$p | sed -e 's|/[^/]*$$||'`"; \
-	  test "$$dir" != "$$p" || dir=.; \
-	  echo "rm -f \"$${dir}/so_locations\""; \
-	  rm -f "$${dir}/so_locations"; \
-	done
-libquvi.la: $(libquvi_la_OBJECTS) $(libquvi_la_DEPENDENCIES) 
-	$(AM_V_CCLD)$(libquvi_la_LINK) -rpath $(libdir) $(libquvi_la_OBJECTS) $(libquvi_la_LIBADD) $(LIBS)
+clean-binPROGRAMS:
+	@list='$(bin_PROGRAMS)'; test -n "$$list" || exit 0; \
+	echo " rm -f" $$list; \
+	rm -f $$list || exit $$?; \
+	test -n "$(EXEEXT)" || exit 0; \
+	list=`for p in $$list; do echo "$$p"; done | sed 's/$(EXEEXT)$$//'`; \
+	echo " rm -f" $$list; \
+	rm -f $$list
+quvi$(EXEEXT): $(quvi_OBJECTS) $(quvi_DEPENDENCIES) 
+	@rm -f quvi$(EXEEXT)
+	$(AM_V_CCLD)$(quvi_LINK) $(quvi_OBJECTS) $(quvi_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -379,15 +368,11 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-asprintf.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-curl_wrap.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-depr.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-lua_wrap.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-net_wrap.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-quvi.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-strepl.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-util.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libquvi_la-vasprintf.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-asprintf.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-cmdline.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-quvi.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-strepl.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/quvi-vasprintf.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -413,77 +398,85 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
-libquvi_la-quvi.lo: quvi.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-quvi.lo -MD -MP -MF $(DEPDIR)/libquvi_la-quvi.Tpo -c -o libquvi_la-quvi.lo `test -f 'quvi.c' || echo '$(srcdir)/'`quvi.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-quvi.Tpo $(DEPDIR)/libquvi_la-quvi.Plo
+quvi-quvi.o: quvi.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-quvi.o -MD -MP -MF $(DEPDIR)/quvi-quvi.Tpo -c -o quvi-quvi.o `test -f 'quvi.c' || echo '$(srcdir)/'`quvi.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-quvi.Tpo $(DEPDIR)/quvi-quvi.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='quvi.c' object='libquvi_la-quvi.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='quvi.c' object='quvi-quvi.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-quvi.lo `test -f 'quvi.c' || echo '$(srcdir)/'`quvi.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-quvi.o `test -f 'quvi.c' || echo '$(srcdir)/'`quvi.c
 
-libquvi_la-util.lo: util.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-util.lo -MD -MP -MF $(DEPDIR)/libquvi_la-util.Tpo -c -o libquvi_la-util.lo `test -f 'util.c' || echo '$(srcdir)/'`util.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-util.Tpo $(DEPDIR)/libquvi_la-util.Plo
+quvi-quvi.obj: quvi.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-quvi.obj -MD -MP -MF $(DEPDIR)/quvi-quvi.Tpo -c -o quvi-quvi.obj `if test -f 'quvi.c'; then $(CYGPATH_W) 'quvi.c'; else $(CYGPATH_W) '$(srcdir)/quvi.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-quvi.Tpo $(DEPDIR)/quvi-quvi.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='util.c' object='libquvi_la-util.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='quvi.c' object='quvi-quvi.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-util.lo `test -f 'util.c' || echo '$(srcdir)/'`util.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-quvi.obj `if test -f 'quvi.c'; then $(CYGPATH_W) 'quvi.c'; else $(CYGPATH_W) '$(srcdir)/quvi.c'; fi`
 
-libquvi_la-curl_wrap.lo: curl_wrap.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-curl_wrap.lo -MD -MP -MF $(DEPDIR)/libquvi_la-curl_wrap.Tpo -c -o libquvi_la-curl_wrap.lo `test -f 'curl_wrap.c' || echo '$(srcdir)/'`curl_wrap.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-curl_wrap.Tpo $(DEPDIR)/libquvi_la-curl_wrap.Plo
+quvi-cmdline.o: cmdline.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-cmdline.o -MD -MP -MF $(DEPDIR)/quvi-cmdline.Tpo -c -o quvi-cmdline.o `test -f 'cmdline.c' || echo '$(srcdir)/'`cmdline.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-cmdline.Tpo $(DEPDIR)/quvi-cmdline.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='curl_wrap.c' object='libquvi_la-curl_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cmdline.c' object='quvi-cmdline.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-curl_wrap.lo `test -f 'curl_wrap.c' || echo '$(srcdir)/'`curl_wrap.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-cmdline.o `test -f 'cmdline.c' || echo '$(srcdir)/'`cmdline.c
 
-libquvi_la-lua_wrap.lo: lua_wrap.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-lua_wrap.lo -MD -MP -MF $(DEPDIR)/libquvi_la-lua_wrap.Tpo -c -o libquvi_la-lua_wrap.lo `test -f 'lua_wrap.c' || echo '$(srcdir)/'`lua_wrap.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-lua_wrap.Tpo $(DEPDIR)/libquvi_la-lua_wrap.Plo
+quvi-cmdline.obj: cmdline.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-cmdline.obj -MD -MP -MF $(DEPDIR)/quvi-cmdline.Tpo -c -o quvi-cmdline.obj `if test -f 'cmdline.c'; then $(CYGPATH_W) 'cmdline.c'; else $(CYGPATH_W) '$(srcdir)/cmdline.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-cmdline.Tpo $(DEPDIR)/quvi-cmdline.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='lua_wrap.c' object='libquvi_la-lua_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='cmdline.c' object='quvi-cmdline.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-lua_wrap.lo `test -f 'lua_wrap.c' || echo '$(srcdir)/'`lua_wrap.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-cmdline.obj `if test -f 'cmdline.c'; then $(CYGPATH_W) 'cmdline.c'; else $(CYGPATH_W) '$(srcdir)/cmdline.c'; fi`
 
-libquvi_la-strepl.lo: strepl.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-strepl.lo -MD -MP -MF $(DEPDIR)/libquvi_la-strepl.Tpo -c -o libquvi_la-strepl.lo `test -f 'strepl.c' || echo '$(srcdir)/'`strepl.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-strepl.Tpo $(DEPDIR)/libquvi_la-strepl.Plo
+quvi-strepl.o: $(top_srcdir)/src/libquvi/strepl.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-strepl.o -MD -MP -MF $(DEPDIR)/quvi-strepl.Tpo -c -o quvi-strepl.o `test -f '$(top_srcdir)/src/libquvi/strepl.c' || echo '$(srcdir)/'`$(top_srcdir)/src/libquvi/strepl.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-strepl.Tpo $(DEPDIR)/quvi-strepl.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='strepl.c' object='libquvi_la-strepl.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/libquvi/strepl.c' object='quvi-strepl.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-strepl.lo `test -f 'strepl.c' || echo '$(srcdir)/'`strepl.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-strepl.o `test -f '$(top_srcdir)/src/libquvi/strepl.c' || echo '$(srcdir)/'`$(top_srcdir)/src/libquvi/strepl.c
 
-libquvi_la-net_wrap.lo: net_wrap.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-net_wrap.lo -MD -MP -MF $(DEPDIR)/libquvi_la-net_wrap.Tpo -c -o libquvi_la-net_wrap.lo `test -f 'net_wrap.c' || echo '$(srcdir)/'`net_wrap.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-net_wrap.Tpo $(DEPDIR)/libquvi_la-net_wrap.Plo
+quvi-strepl.obj: $(top_srcdir)/src/libquvi/strepl.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-strepl.obj -MD -MP -MF $(DEPDIR)/quvi-strepl.Tpo -c -o quvi-strepl.obj `if test -f '$(top_srcdir)/src/libquvi/strepl.c'; then $(CYGPATH_W) '$(top_srcdir)/src/libquvi/strepl.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/libquvi/strepl.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-strepl.Tpo $(DEPDIR)/quvi-strepl.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='net_wrap.c' object='libquvi_la-net_wrap.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/libquvi/strepl.c' object='quvi-strepl.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-net_wrap.lo `test -f 'net_wrap.c' || echo '$(srcdir)/'`net_wrap.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-strepl.obj `if test -f '$(top_srcdir)/src/libquvi/strepl.c'; then $(CYGPATH_W) '$(top_srcdir)/src/libquvi/strepl.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/libquvi/strepl.c'; fi`
 
-libquvi_la-depr.lo: depr.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-depr.lo -MD -MP -MF $(DEPDIR)/libquvi_la-depr.Tpo -c -o libquvi_la-depr.lo `test -f 'depr.c' || echo '$(srcdir)/'`depr.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-depr.Tpo $(DEPDIR)/libquvi_la-depr.Plo
+quvi-vasprintf.o: $(top_srcdir)/src/libquvi/vasprintf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-vasprintf.o -MD -MP -MF $(DEPDIR)/quvi-vasprintf.Tpo -c -o quvi-vasprintf.o `test -f '$(top_srcdir)/src/libquvi/vasprintf.c' || echo '$(srcdir)/'`$(top_srcdir)/src/libquvi/vasprintf.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-vasprintf.Tpo $(DEPDIR)/quvi-vasprintf.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='depr.c' object='libquvi_la-depr.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/libquvi/vasprintf.c' object='quvi-vasprintf.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-depr.lo `test -f 'depr.c' || echo '$(srcdir)/'`depr.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-vasprintf.o `test -f '$(top_srcdir)/src/libquvi/vasprintf.c' || echo '$(srcdir)/'`$(top_srcdir)/src/libquvi/vasprintf.c
 
-libquvi_la-vasprintf.lo: vasprintf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-vasprintf.lo -MD -MP -MF $(DEPDIR)/libquvi_la-vasprintf.Tpo -c -o libquvi_la-vasprintf.lo `test -f 'vasprintf.c' || echo '$(srcdir)/'`vasprintf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-vasprintf.Tpo $(DEPDIR)/libquvi_la-vasprintf.Plo
+quvi-vasprintf.obj: $(top_srcdir)/src/libquvi/vasprintf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-vasprintf.obj -MD -MP -MF $(DEPDIR)/quvi-vasprintf.Tpo -c -o quvi-vasprintf.obj `if test -f '$(top_srcdir)/src/libquvi/vasprintf.c'; then $(CYGPATH_W) '$(top_srcdir)/src/libquvi/vasprintf.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/libquvi/vasprintf.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-vasprintf.Tpo $(DEPDIR)/quvi-vasprintf.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='vasprintf.c' object='libquvi_la-vasprintf.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/libquvi/vasprintf.c' object='quvi-vasprintf.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-vasprintf.lo `test -f 'vasprintf.c' || echo '$(srcdir)/'`vasprintf.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-vasprintf.obj `if test -f '$(top_srcdir)/src/libquvi/vasprintf.c'; then $(CYGPATH_W) '$(top_srcdir)/src/libquvi/vasprintf.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/libquvi/vasprintf.c'; fi`
 
-libquvi_la-asprintf.lo: asprintf.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -MT libquvi_la-asprintf.lo -MD -MP -MF $(DEPDIR)/libquvi_la-asprintf.Tpo -c -o libquvi_la-asprintf.lo `test -f 'asprintf.c' || echo '$(srcdir)/'`asprintf.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libquvi_la-asprintf.Tpo $(DEPDIR)/libquvi_la-asprintf.Plo
+quvi-asprintf.o: $(top_srcdir)/src/libquvi/asprintf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-asprintf.o -MD -MP -MF $(DEPDIR)/quvi-asprintf.Tpo -c -o quvi-asprintf.o `test -f '$(top_srcdir)/src/libquvi/asprintf.c' || echo '$(srcdir)/'`$(top_srcdir)/src/libquvi/asprintf.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-asprintf.Tpo $(DEPDIR)/quvi-asprintf.Po
 @am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='asprintf.c' object='libquvi_la-asprintf.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/libquvi/asprintf.c' object='quvi-asprintf.o' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libquvi_la_CPPFLAGS) $(CPPFLAGS) $(libquvi_la_CFLAGS) $(CFLAGS) -c -o libquvi_la-asprintf.lo `test -f 'asprintf.c' || echo '$(srcdir)/'`asprintf.c
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-asprintf.o `test -f '$(top_srcdir)/src/libquvi/asprintf.c' || echo '$(srcdir)/'`$(top_srcdir)/src/libquvi/asprintf.c
+
+quvi-asprintf.obj: $(top_srcdir)/src/libquvi/asprintf.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -MT quvi-asprintf.obj -MD -MP -MF $(DEPDIR)/quvi-asprintf.Tpo -c -o quvi-asprintf.obj `if test -f '$(top_srcdir)/src/libquvi/asprintf.c'; then $(CYGPATH_W) '$(top_srcdir)/src/libquvi/asprintf.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/libquvi/asprintf.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/quvi-asprintf.Tpo $(DEPDIR)/quvi-asprintf.Po
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='$(top_srcdir)/src/libquvi/asprintf.c' object='quvi-asprintf.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(quvi_CPPFLAGS) $(CPPFLAGS) $(quvi_CFLAGS) $(CFLAGS) -c -o quvi-asprintf.obj `if test -f '$(top_srcdir)/src/libquvi/asprintf.c'; then $(CYGPATH_W) '$(top_srcdir)/src/libquvi/asprintf.c'; else $(CYGPATH_W) '$(srcdir)/$(top_srcdir)/src/libquvi/asprintf.c'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -575,9 +568,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(PROGRAMS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(bindir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -607,8 +600,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic clean-libLTLIBRARIES clean-libtool \
-	mostlyclean-am
+clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -rf ./$(DEPDIR)
@@ -634,7 +626,7 @@ install-dvi: install-dvi-am
 
 install-dvi-am:
 
-install-exec-am: install-libLTLIBRARIES
+install-exec-am: install-binPROGRAMS
 
 install-html: install-html-am
 
@@ -674,23 +666,23 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-binPROGRAMS
 
 .MAKE: install-am install-strip
 
-.PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
-	clean-libLTLIBRARIES clean-libtool ctags distclean \
-	distclean-compile distclean-generic distclean-libtool \
-	distclean-tags distdir dvi dvi-am html html-am info info-am \
-	install install-am install-data install-data-am install-dvi \
+.PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
+	clean-generic clean-libtool ctags distclean distclean-compile \
+	distclean-generic distclean-libtool distclean-tags distdir dvi \
+	dvi-am html html-am info info-am install install-am \
+	install-binPROGRAMS install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libLTLIBRARIES
+	install-html-am install-info install-info-am install-man \
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	pdf pdf-am ps ps-am tags uninstall uninstall-am \
+	uninstall-binPROGRAMS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
