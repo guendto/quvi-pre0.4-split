@@ -27,29 +27,7 @@
 
 extern const char empty[]; /* quvi_api.c */
 
-static QUVIcode _net_setprop(_quvi_net_t n, QUVInetProperty p, va_list arg)
-{
-  switch (p)
-    {
-    case QUVI_NET_PROPERTY_URL:
-      _set_alloc_s(n->url);
-    case QUVI_NET_PROPERTY_FEATURES:
-      break; /* Ignored: read-only */
-    case QUVI_NET_PROPERTY_REDIRECTURL:
-      _set_alloc_s(n->redirect.url);
-    case QUVI_NET_PROPERTY_CONTENT:
-      _set_alloc_s(n->fetch.content);
-    case QUVI_NET_PROPERTY_CONTENTTYPE:
-      _set_alloc_s(n->verify.content_type);
-    case QUVI_NET_PROPERTY_CONTENTLENGTH:
-      _set_from_arg_n(n->verify.content_length);
-    case QUVI_NET_PROPERTY_RESPONSECODE:
-      _set_from_arg_n(n->resp_code);
-    default:
-      return (QUVI_INVARG);
-    }
-  return (QUVI_OK);
-}
+/* Title: quvi Network API */
 
 static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
 {
@@ -110,8 +88,88 @@ static QUVIcode _net_getprop(_quvi_net_t n, QUVInetProperty p, ...)
   return (rc);
 }
 
-static QUVIcode
-_net_getprop_feat(_quvi_net_propfeat_t n, QUVInetPropertyFeature feature, ...)
+/*
+ * Function: quvi_net_getprop
+ *
+ * Returns a network property.
+ *
+ * Parameters:
+ *  net      - Network handle
+ *  property - Property ID
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ */
+QUVIcode quvi_net_getprop(quvi_net_propfeat_t net,
+                          QUVInetProperty property,
+                          ...)
+{
+  va_list arg;
+  void *p;
+
+  _is_badhandle(net);
+
+  va_start(arg, property);
+  p = va_arg(arg, void*);
+  va_end(arg);
+
+  return (_net_getprop(net, property, p));
+}
+
+static QUVIcode _net_setprop(_quvi_net_t n, QUVInetProperty p, va_list arg)
+{
+  switch (p)
+    {
+    case QUVI_NET_PROPERTY_URL:
+      _set_alloc_s(n->url);
+    case QUVI_NET_PROPERTY_FEATURES:
+      break; /* Ignored: read-only */
+    case QUVI_NET_PROPERTY_REDIRECTURL:
+      _set_alloc_s(n->redirect.url);
+    case QUVI_NET_PROPERTY_CONTENT:
+      _set_alloc_s(n->fetch.content);
+    case QUVI_NET_PROPERTY_CONTENTTYPE:
+      _set_alloc_s(n->verify.content_type);
+    case QUVI_NET_PROPERTY_CONTENTLENGTH:
+      _set_from_arg_n(n->verify.content_length);
+    case QUVI_NET_PROPERTY_RESPONSECODE:
+      _set_from_arg_n(n->resp_code);
+    default:
+      return (QUVI_INVARG);
+    }
+  return (QUVI_OK);
+}
+
+/*
+ * Function: quvi_net_setprop
+ *
+ * Sets a network property.
+ *
+ * Parameters:
+ *  net      - Network handle
+ *  property - Property ID
+ *  ...      - Parameter
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ */
+QUVIcode quvi_net_setprop(quvi_net_t net, QUVInetProperty property, ...)
+{
+  va_list arg;
+  QUVIcode rc;
+
+  _is_badhandle(net);
+
+  va_start(arg, property);
+  rc = _net_setprop(net, property, arg);
+  va_end(arg);
+
+  return (rc);
+}
+
+static QUVIcode _net_getprop_feat(_quvi_net_propfeat_t n,
+                                  QUVInetPropertyFeature feature,
+                                  ...)
 {
   QUVIcode rc;
   va_list arg;
@@ -160,62 +218,70 @@ _net_getprop_feat(_quvi_net_propfeat_t n, QUVInetPropertyFeature feature, ...)
   return (rc);
 }
 
-/* quvi_net_setprop */
-
-QUVIcode quvi_net_setprop(quvi_net_t n, QUVInetProperty p, ...)
-{
-  va_list arg;
-  QUVIcode rc;
-
-  _is_badhandle(n);
-
-  va_start(arg, p);
-  rc = _net_setprop(n, p, arg);
-  va_end(arg);
-
-  return (rc);
-}
-
-/* quvi_net_getprop */
-
-QUVIcode quvi_net_getprop(quvi_net_propfeat_t n, QUVInetProperty prop, ...)
+/*
+ * Function: quvi_net_getprop_feat
+ *
+ * Returns a network property feature.
+ *
+ * Parameters:
+ *  handle  - Property feature handle
+ *  feature - Property feature ID
+ *  ...     - Parameter
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ */
+QUVIcode quvi_net_getprop_feat(quvi_net_propfeat_t handle,
+                               QUVInetPropertyFeature feature,
+                               ...)
 {
   va_list arg;
   void *p;
 
-  _is_badhandle(n);
+  _is_badhandle(handle);
 
-  va_start(arg, prop);
+  va_start(arg, feature);
   p = va_arg(arg, void*);
   va_end(arg);
 
-  return (_net_getprop(n,prop,p));
+  return (_net_getprop_feat(handle, feature, p));
 }
 
-/* quvi_net_getprop_feat */
-
-QUVIcode
-quvi_net_getprop_feat(quvi_net_propfeat_t n, QUVInetPropertyFeature opt, ...)
+/*
+ * Function: quvi_net_seterr
+ *
+ * Sets a network error message.
+ *
+ * Parameters:
+ *  net - Network handle
+ *  fmt - Format string
+ *  ... - Parameter
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ */
+QUVIcode quvi_net_seterr(quvi_net_t net, const char *fmt, ...)
 {
-  va_list arg;
-  void *p;
+  _quvi_net_t n;
+  va_list args;
 
-  _is_badhandle(n);
+  _is_badhandle(net);
+  n = (_quvi_net_t) net;
 
-  va_start(arg, opt);
-  p = va_arg(arg, void*);
-  va_end(arg);
+  va_start(args, fmt);
+  vafreprintf(&n->errmsg, fmt, args);
 
-  return (_net_getprop_feat(n,opt,p));
+  return (QUVI_OK);
 }
 
-/* quvi_net_get_one_prop_feat */
+/* Title: Convenience functions */
 
 extern const char *net_prop_feats[];
 
 static const char *_feat_to_str(QUVInetPropertyFeatureName id)
 {
   const char *s = NULL;
+
   if (id > QUVI_NET_PROPERTY_FEATURE_NAME_NONE
       && id < _QUVI_NET_PROPERTY_FEATURE_NAME_LAST)
     {
@@ -224,12 +290,29 @@ static const char *_feat_to_str(QUVInetPropertyFeatureName id)
   return (s);
 }
 
-char *
-quvi_net_get_one_prop_feat(quvi_net_t n, QUVInetPropertyFeatureName id)
+/*
+ * Function: quvi_net_get_one_prop_feat
+ *
+ * Returns the first matching property feature from the list. A
+ * convenience function that allows finding the feature by an ID rather
+ * than a string.
+ *
+ * Parameters:
+ *  net  - Network handle
+ *  name - Property feature ID
+ *
+ * Returns:
+ *  A null-terminated string, otherwise NULL.
+ *
+ * See Also:
+ *  <quvi_net_getprop_feat>
+ */
+char *quvi_net_get_one_prop_feat(quvi_net_t net,
+                                 QUVInetPropertyFeatureName name)
 {
   quvi_llst_node_t opt;
 
-  quvi_net_getprop(n, QUVI_NET_PROPERTY_FEATURES, &opt);
+  quvi_net_getprop(net, QUVI_NET_PROPERTY_FEATURES, &opt);
 
   while (opt)
     {
@@ -238,10 +321,13 @@ quvi_net_get_one_prop_feat(quvi_net_t n, QUVInetPropertyFeatureName id)
 
       popt = (quvi_net_propfeat_t) quvi_llst_data(opt);
 
-      quvi_net_getprop_feat(popt, QUVI_NET_PROPERTY_FEATURE_NAME, &feat_name);
-      quvi_net_getprop_feat(popt, QUVI_NET_PROPERTY_FEATURE_VALUE, &feat_value);
+      quvi_net_getprop_feat(popt,
+                            QUVI_NET_PROPERTY_FEATURE_NAME, &feat_name);
 
-      s = _feat_to_str(id);
+      quvi_net_getprop_feat(popt,
+                            QUVI_NET_PROPERTY_FEATURE_VALUE, &feat_value);
+
+      s = _feat_to_str(name);
 
       if (s && !strcmp(feat_name,s))
         return ((char*)feat_value);
@@ -251,20 +337,5 @@ quvi_net_get_one_prop_feat(quvi_net_t n, QUVInetPropertyFeatureName id)
   return (NULL);
 }
 
-/* quvi_net_seterr */
-
-QUVIcode quvi_net_seterr(quvi_net_t handle, const char *fmt, ...)
-{
-  _quvi_net_t n;
-  va_list args;
-
-  _is_badhandle(handle);
-  n = (_quvi_net_t) handle;
-
-  va_start(args, fmt);
-  vafreprintf(&n->errmsg, fmt, args);
-
-  return (QUVI_OK);
-}
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */
