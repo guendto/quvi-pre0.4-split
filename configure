@@ -19614,7 +19614,7 @@ else
 fi
 
 
-ac_config_files="$ac_config_files Makefile man1/Makefile share/Makefile doc/Makefile examples/Makefile tests/Makefile src/Makefile src/libquvi/Makefile src/libquvi/quvi/Makefile src/libquvi/quvi/quvi.h src/quvi/Makefile scripts/Makefile libquvi.pc"
+ac_config_files="$ac_config_files Makefile man1/Makefile share/Makefile doc/Makefile examples/Makefile tests/Makefile src/Makefile src/libquvi/Makefile src/libquvi/quvi/Makefile src/libquvi/Overviews/Makefile src/quvi/Makefile scripts/Makefile libquvi.pc"
 
 
 cat >confcache <<\_ACEOF
@@ -20808,7 +20808,7 @@ do
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/libquvi/Makefile") CONFIG_FILES="$CONFIG_FILES src/libquvi/Makefile" ;;
     "src/libquvi/quvi/Makefile") CONFIG_FILES="$CONFIG_FILES src/libquvi/quvi/Makefile" ;;
-    "src/libquvi/quvi/quvi.h") CONFIG_FILES="$CONFIG_FILES src/libquvi/quvi/quvi.h" ;;
+    "src/libquvi/Overviews/Makefile") CONFIG_FILES="$CONFIG_FILES src/libquvi/Overviews/Makefile" ;;
     "src/quvi/Makefile") CONFIG_FILES="$CONFIG_FILES src/quvi/Makefile" ;;
     "scripts/Makefile") CONFIG_FILES="$CONFIG_FILES scripts/Makefile" ;;
     "libquvi.pc") CONFIG_FILES="$CONFIG_FILES libquvi.pc" ;;

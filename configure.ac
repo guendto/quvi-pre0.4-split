@@ -244,7 +244,7 @@ AC_CONFIG_FILES([
     src/Makefile
     src/libquvi/Makefile
     src/libquvi/quvi/Makefile
-    src/libquvi/quvi/quvi.h
+    src/libquvi/Overviews/Makefile
     src/quvi/Makefile
     scripts/Makefile
     libquvi.pc
