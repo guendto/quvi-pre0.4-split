@@ -17,20 +17,29 @@
  * 02110-1301  USA
  */
 
+/*
+ * Title: quvi API: Deprecated
+ */
+
 #include "quvi/quvi.h"
 
-/* Deprecated API functions.
- * See include/quvi/quvi.h.in for notes. */
-
-/* quvi_next_videolink */
-
+/*
+ * Function: quvi_next_videolink
+ *
+ * Deprecated since 0.2.15. Removed in 0.2.20, use
+ * <quvi_next_media_url> instead.
+ */
 QUVIcode quvi_next_videolink(quvi_video_t handle)
 {
   return (quvi_next_media_url(handle));
 }
 
-/* quvi_next_host */
-
+/*
+ * Function: quvi_next_host
+ *
+ * Deprecated since 0.2.0. Removed in 0.2.20, use
+ * <quvi_next_supported_website> instead.
+ */
 QUVIcode quvi_next_host(char **domain, char **formats)
 {
   *domain = *formats = NULL;
