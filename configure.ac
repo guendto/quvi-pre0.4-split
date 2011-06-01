@@ -63,10 +63,6 @@ AC_PATH_PROG(GENGETOPT, gengetopt, no)
 AM_CONDITIONAL([HAVE_GENGETOPT], [test x"$GENGETOPT" != "xno"])
 AC_SUBST(GENGETOPT)
 
-AC_PATH_PROG(DOXYGEN, doxygen, no)
-AM_CONDITIONAL([HAVE_DOXYGEN], [test x"$DOXYGEN" != "xno"])
-AC_SUBST(DOXYGEN)
-
 AC_PATH_PROG(PROVE, prove, no)
 AM_CONDITIONAL([HAVE_PROVE], [test x"$PROVE" != "xno"])
 AC_SUBST(PROVE)
@@ -252,7 +248,6 @@ AC_CONFIG_FILES([
     src/quvi/Makefile
     scripts/Makefile
     libquvi.pc
-    doxygen.conf
 ])
 
 AC_OUTPUT
@@ -282,7 +277,6 @@ Options:
 
 #Other:
 #    gengetopt:      ${GENGETOPT}
-#    doxygen:        ${DOXYGEN}
 #    prove:          ${PROVE}
 #    pod2man:        ${POD2MAN}
 #    pod2html:       ${POD2HTML}

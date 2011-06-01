@@ -3,7 +3,6 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = \
 libquvi.pc.in \
 libquvi.ver \
-doxygen.conf.in \
 ChangeLog.pre-gitlog
 
 pkgconfigdir = $(libdir)/pkgconfig
@@ -24,7 +23,7 @@ test:
 	@(cd tests; $(MAKE) all test)
 endif
 
-.PHONY: pod2man pod2html dox cmdline
+.PHONY: pod2man pod2html cmdline
 pod2man:
 if HAVE_POD2MAN
 	@POD2MAN@ -c "quvi manual" -n quvi \
@@ -39,13 +38,6 @@ if HAVE_POD2HTML
         --outfile=$(top_builddir)/man1/quvi.1.html
 else
 	@echo "error: configure did not find pod2html command"
-endif
-dox:
-if HAVE_DOXYGEN
-	@$(DOXYGEN) $(top_builddir)/doxygen.conf
-	@echo doxygen generated pages can be found in doc/ subdir
-else
-	@echo configure did not find doxygen
 endif
 cmdline:
 if HAVE_GENGETOPT
