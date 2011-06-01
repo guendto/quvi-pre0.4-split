@@ -73,9 +73,10 @@ struct content_s
 
 typedef struct content_s *content_t;
 
-size_t
-quvi_write_callback_default(void *p, size_t size, size_t nmemb,
-                            void *data)
+size_t quvi_write_callback_default(void *p,
+                                   size_t size,
+                                   size_t nmemb,
+                                   void *data)
 {
   content_t m = (content_t)data;
   const size_t rsize = size * nmemb;
@@ -122,9 +123,7 @@ QUVIcode curl_fetch(_quvi_t q, _quvi_net_t n)
   curl_easy_setopt(q->curl, CURLOPT_WRITEDATA, &content);
 
   curl_easy_setopt(q->curl, CURLOPT_WRITEFUNCTION,
-                   q->write_func
-                   ? (curl_write_callback) q->write_func
-                   : (curl_write_callback) quvi_write_callback_default);
+                   (curl_write_callback) quvi_write_callback_default);
 
   set_opts_from_lua_script(q,n);
 
@@ -162,9 +161,7 @@ static void set_redirect_opts(_quvi_t q, content_t m, const char *url)
   curl_easy_setopt(q->curl, CURLOPT_WRITEDATA, m);
 
   curl_easy_setopt(q->curl, CURLOPT_WRITEFUNCTION,
-                   (q->write_func)
-                   ? (curl_write_callback) q->write_func
-                   : (curl_write_callback) quvi_write_callback_default);
+                   (curl_write_callback) quvi_write_callback_default);
 
   /* GET -> HEAD */
   curl_easy_setopt(q->curl, CURLOPT_URL, url);
@@ -244,9 +241,7 @@ QUVIcode curl_verify(_quvi_t q, _quvi_net_t n)
   curl_easy_setopt(q->curl, CURLOPT_WRITEDATA, &tmp);
 
   curl_easy_setopt(q->curl, CURLOPT_WRITEFUNCTION,
-                   (q->write_func)
-                   ? (curl_write_callback) q->write_func
-                   : (curl_write_callback) quvi_write_callback_default);
+                   (curl_write_callback) quvi_write_callback_default);
 
   set_opts_from_lua_script(q,n);
 
