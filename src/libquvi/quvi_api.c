@@ -32,8 +32,40 @@
 #include "util.h"
 #include "net_wrap.h"
 
-/* quvi_init */
+/*
+ * Title: quvi API
+ *
+ * See also <Overview>.
+ */
 
+/*
+ * Function: quvi_init
+ *
+ * Creates a new session.
+ *
+ * Parameters:
+ *  session - New session handle (receives)
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ *
+ * See Also:
+ *  * <quvi_close>
+ *  * <quvi_strerror>
+ *
+ * Example:
+ * (start code)
+ * QUVIcode rc;
+ * quvi_t q;
+ * rc = quvi_init(&q);
+ * if (rc != QUVI_OK)
+ *   {
+ *     fprintf(stderr, "%s\n", quvi_strerror(q,rc));
+ *     return (rc);
+ *   }
+ * quvi_close(&q);
+ * (end)
+ */
 QUVIcode quvi_init(quvi_t * dst)
 {
   _quvi_t quvi;
@@ -62,9 +94,18 @@ QUVIcode quvi_init(quvi_t * dst)
   return (init_lua(quvi));
 }
 
-/* quvi_close */
-
-void quvi_close(quvi_t * handle)
+/*
+ * Function: quvi_close
+ *
+ * Closes a previously started session.
+ *
+ * Parameters:
+ *  session - Session handle
+ *
+ * See Also:
+ *  <quvi_init>
+ */
+void quvi_close(quvi_t *handle)
 {
   _quvi_t *quvi;
 
@@ -90,11 +131,152 @@ void quvi_close(quvi_t * handle)
     }
 }
 
-/* quvi_supported */
-
-QUVIcode quvi_supported(quvi_t quvi, char *url)
+static QUVIcode _setopt(_quvi_t quvi, QUVIoption opt, va_list arg)
 {
-  return quvi_supported_ident(quvi, url, NULL);
+  switch (opt)
+    {
+    case QUVIOPT_FORMAT:
+      _set_alloc_s(quvi->format);
+    case QUVIOPT_NOVERIFY:
+      _set_from_arg_n(quvi->no_verify);
+    case QUVIOPT_STATUSFUNCTION:
+      quvi->status_func = va_arg(arg, quvi_callback_status);
+      break;
+    case QUVIOPT_NORESOLVE:
+      _set_from_arg_n(quvi->no_resolve);
+    case QUVIOPT_CATEGORY:
+      _set_from_arg_n(quvi->category);
+    case QUVIOPT_FETCHFUNCTION:
+      quvi->fetch_func = va_arg(arg, quvi_callback_fetch);
+      break;
+    case QUVIOPT_RESOLVEFUNCTION:
+      quvi->resolve_func = va_arg(arg, quvi_callback_resolve);
+      break;
+    case QUVIOPT_VERIFYFUNCTION:
+      quvi->verify_func = va_arg(arg, quvi_callback_verify);
+      break;
+    default:
+      return (QUVI_INVARG);
+    }
+  return (QUVI_OK);
+}
+
+/*
+ * Function: quvi_setopt
+ *
+ * Sets a session option.
+ *
+ * Parameters:
+ *  session - Session handle
+ *  option  - Option ID
+ *  ...     - Parameter
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ *
+ * Example:
+ * (start code)
+ * quvi_setopt(q, QUVIOPT_FORMAT, "best");
+ * quvi_setopt(q, QUVIOPT_CATEGORY, QUVIPROTO_HTTP|QUVIPROTO_RTMP);
+ * (end)
+ */
+QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...)
+{
+  va_list arg;
+  QUVIcode rc;
+
+  _is_badhandle(quvi);
+
+  va_start(arg, opt);
+  rc = _setopt(quvi, opt, arg);
+  va_end(arg);
+
+  return (rc);
+}
+
+static QUVIcode _getinfo(_quvi_t quvi, QUVIinfo info, ...)
+{
+  QUVIcode rc;
+  va_list arg;
+  double *dp;
+  char **sp;
+  void **vp;
+  long *lp;
+  int type;
+
+  rc = QUVI_OK;
+  dp = 0;
+  sp = 0;
+  vp = 0;
+  lp = 0;
+
+  va_start(arg, info);
+  type = QUVIINFO_TYPEMASK & (int)info;
+
+  switch (type)
+    {
+    case QUVIINFO_DOUBLE:
+      _init_from_arg(dp, double *);
+    case QUVIINFO_STRING:
+      _init_from_arg(sp, char **);
+    case QUVIINFO_LONG:
+      _init_from_arg(lp, long *);
+    case QUVIINFO_VOID:
+      _init_from_arg(vp, void **);
+    default:
+      rc = QUVI_INVARG;
+    }
+  va_end(arg);
+
+  if (rc != QUVI_OK)
+    return (rc);
+
+  switch (info)
+    {
+    case QUVIINFO_CURL:
+      _set_v(quvi->curl);
+    case QUVIINFO_CURLCODE:
+      _set_from_value_n(lp, quvi->curlcode);
+    case QUVIINFO_RESPONSECODE:
+      _set_from_value_n(lp, quvi->resp_code);
+    default:
+      rc = QUVI_INVARG;
+    }
+
+  return (rc);
+}
+
+/*
+ * Function: quvi_getinfo
+ *
+ * Returns session info.
+ *
+ * Parameters:
+ *  session - Session handle
+ *  info    - Info ID
+ *  ...     - Parameter
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ *
+ * Example:
+ * (start code)
+ * long resp_code;
+ * quvi_getinfo(q, QUVIINFO_RESPONSECODE, &resp_code);
+ * (end)
+ */
+QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...)
+{
+  va_list arg;
+  void *p;
+
+  _is_badhandle(quvi);
+
+  va_start(arg, info);
+  p = va_arg(arg, void *);
+  va_end(arg);
+
+  return (_getinfo(quvi, info, p));
 }
 
 static QUVIcode resolve_unless_disabled(_quvi_media_t media)
@@ -121,8 +303,34 @@ static QUVIcode resolve_unless_disabled(_quvi_media_t media)
   return (rc);
 }
 
-/* quvi_parse */
-
+/*
+ * Function: quvi_parse
+ *
+ * Parses an URL.
+ *
+ * Parameters:
+ *  session - Session handle
+ *  url     - URL (null-terminated string)
+ *  media   - Media handle (receives)
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ *
+ * See Also:
+ *  * <quvi_parse_close>
+ *  * <quvi_close>
+ *
+ * Example:
+ * (start code)
+ * quvi_media_t m;
+ * rc = quvi_parse(q, URL, &m);
+ * if (rc != QUVI_OK)
+ *   {
+ *     ...
+ *   }
+ * quvi_parse_close(&m);
+ * (end)
+ */
 QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
 {
   _quvi_media_t media;
@@ -179,9 +387,6 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
       while (curr)
         {
           rc = verify_wrapper(media->quvi, curr);
-#ifdef _0
-          rc = query_file_length(media->quvi, curr);
-#endif
           if (rc != QUVI_OK)
             break;
           curr = curr->next;
@@ -194,8 +399,14 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
   return (rc);
 }
 
-/* quvi_parse_close */
-
+/*
+ * Function: quvi_parse_close
+ *
+ * Releases a previously allocated media handle.
+ *
+ * Parameters:
+ *  media - Media handle
+ */
 void quvi_parse_close(quvi_media_t * handle)
 {
   _quvi_media_t *media = (_quvi_media_t *) handle;
@@ -227,55 +438,6 @@ void quvi_parse_close(quvi_media_t * handle)
       _free(*media);
       assert(*media == NULL);
     }
-}
-
-static QUVIcode _setopt(_quvi_t quvi, QUVIoption opt, va_list arg)
-{
-  switch (opt)
-    {
-    case QUVIOPT_FORMAT:
-      _set_alloc_s(quvi->format);
-    case QUVIOPT_NOVERIFY:
-      _set_from_arg_n(quvi->no_verify);
-    case QUVIOPT_STATUSFUNCTION:
-      quvi->status_func = va_arg(arg, quvi_callback_status);
-      break;
-    case QUVIOPT_WRITEFUNCTION:
-      quvi->write_func = va_arg(arg, quvi_callback_write);
-      break;
-    case QUVIOPT_NORESOLVE:
-      _set_from_arg_n(quvi->no_resolve);
-    case QUVIOPT_CATEGORY:
-      _set_from_arg_n(quvi->category);
-    case QUVIOPT_FETCHFUNCTION:
-      quvi->fetch_func = va_arg(arg, quvi_callback_fetch);
-      break;
-    case QUVIOPT_RESOLVEFUNCTION:
-      quvi->resolve_func = va_arg(arg, quvi_callback_resolve);
-      break;
-    case QUVIOPT_VERIFYFUNCTION:
-      quvi->verify_func = va_arg(arg, quvi_callback_verify);
-      break;
-    default:
-      return (QUVI_INVARG);
-    }
-  return (QUVI_OK);
-}
-
-/* quvi_setopt */
-
-QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...)
-{
-  va_list arg;
-  QUVIcode rc;
-
-  _is_badhandle(quvi);
-
-  va_start(arg, opt);
-  rc = _setopt(quvi, opt, arg);
-  va_end(arg);
-
-  return (rc);
 }
 
 const char empty[] = "";
@@ -352,56 +514,204 @@ static QUVIcode _getprop(_quvi_media_t media, QUVIproperty prop, ...)
   return (rc);
 }
 
-static QUVIcode _getinfo(_quvi_t quvi, QUVIinfo info, ...)
+/*
+ * Function: quvi_getprop
+ *
+ * Returns a media property.
+ *
+ * Parameters:
+ *  media    - Media handle
+ *  property - Property ID
+ *  ...      - Parameter
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ *
+ * Example:
+ * Error handling omitted for brewity.
+ * (start code)
+ * double media_content_length;
+ * char *media_url;
+ * quvi_media_t m;
+ * quvi_t q;
+ *
+ * quvi_init(&q);
+ * quvi_parse(q, URL, &m);
+ * quvi_getprop(m, QUVIPROP_MEDIAURL, &media_url);
+ * quvi_getprop(m, QUVIPROP_MEDIACONTENTLENGTH, &media_content_length);
+ * quvi_parse_close(&m);
+ * quvi_close(&q);
+ * (end)
+ */
+QUVIcode quvi_getprop(quvi_media_t media, QUVIproperty prop, ...)
 {
-  QUVIcode rc;
   va_list arg;
-  double *dp;
-  char **sp;
-  void **vp;
-  long *lp;
-  int type;
+  void *p;
 
-  rc = QUVI_OK;
-  dp = 0;
-  sp = 0;
-  vp = 0;
-  lp = 0;
+  _is_badhandle(media);
 
-  va_start(arg, info);
-  type = QUVIINFO_TYPEMASK & (int)info;
-
-  switch (type)
-    {
-    case QUVIINFO_DOUBLE:
-      _init_from_arg(dp, double *);
-    case QUVIINFO_STRING:
-      _init_from_arg(sp, char **);
-    case QUVIINFO_LONG:
-      _init_from_arg(lp, long *);
-    case QUVIINFO_VOID:
-      _init_from_arg(vp, void **);
-    default:
-      rc = QUVI_INVARG;
-    }
+  va_start(arg, prop);
+  p = va_arg(arg, void *);
   va_end(arg);
 
+  return (_getprop(media, prop, p));
+}
+
+/*
+ * Title: Support
+ */
+
+/*
+ * Function: quvi_query_formats
+ *
+ * Queries available formats to the URL. The query is done over an Internet
+ * connection. It resolves any shortened URLs _unless_ <QUVIOPT_NORESOLVE> is
+ * set explicitly with <quvi_setopt>. This function checks also if an URL is
+ * supported, similarly to that <quvi_supported>.
+ *
+ * Unlike <quvi_supported>, <quvi_supported_ident> and
+ * <quvi_next_supported_website> which all return a _static_ format ID
+ * list as specified in the webscript's `ident' function,
+ * <quvi_query_formats> constructs the list of format IDs dynamically
+ * for each URL.
+ *
+ * Please note that this function returns only 'default' to those URLs
+ * that have their corresponding webscripts handle only one (1) format.
+ * e.g. No internet connection is required in such case and a static
+ * string ('default') is returned to the caller instead.
+ *
+ * Parameters:
+ *  session - Session handle
+ *  url     - URL (null-terminated string)
+ *  formats - Null-terminated string (receives)
+ *
+ * Returns:
+ *  A null-terminated string or NULL. <quvi_free> it when done.
+ *
+ * See Also:
+ *  * <quvi_init>
+ *  * <quvi_close>
+ *  * <quvi_free>
+ *
+ * Example:
+ * Error handling omitted for brewity.
+ * (start code)
+ * char *formats;
+ * quvi_t q;
+ *
+ * quvi_init(&q);
+ * quvi_query_formats(q, URL, &formats);
+ * puts(formats);
+ * quvi_free(formats);
+ * quvi_close(&q);
+ * (end)
+ */
+QUVIcode quvi_query_formats(quvi_t handle, char *url, char **formats)
+{
+  _quvi_media_t m;
+  QUVIcode rc;
+
+  _is_badhandle(handle);
+  _is_invarg(url);
+  _is_invarg(formats);
+  *formats = NULL;
+
+  m = calloc(1, sizeof(*m));
+  if (!m)
+    return (QUVI_MEM);
+
+  m->quvi = handle;
+  freprintf(&m->page_url, "%s", url);
+
+  rc = resolve_unless_disabled(m);
   if (rc != QUVI_OK)
     return (rc);
 
-  switch (info)
-    {
-    case QUVIINFO_CURL:
-      _set_v(quvi->curl);
-    case QUVIINFO_CURLCODE:
-      _set_from_value_n(lp, quvi->curlcode);
-    case QUVIINFO_RESPONSECODE:
-      _set_from_value_n(lp, quvi->resp_code);
-    default:
-      rc = QUVI_INVARG;
-    }
+  rc = find_host_script_and_query_formats(m, formats);
+
+  quvi_parse_close((quvi_media_t)&m);
 
   return (rc);
+}
+
+/*
+ * Function: quvi_next_media_url
+ *
+ * Iterates the media stream URLs.
+ *
+ * Parameters:
+ *  media - Media handle
+ *
+ * Returns:
+ *  Non-zero value if an error occurred or QUVI_LAST, otherwise QUVI_OK.
+ *
+ * See Also:
+ *  <quvi_getprop>
+ *
+ * Example:
+ * Error handling omitted for brewity.
+ * (start code)
+ * quvi_media_t m;
+ * char *url;
+ * quvi_t q;
+ *
+ * quvi_init(&q);
+ * quvi_parse(q, URL, &m);
+ * do
+ *   {
+ *     quvi_getprop(m, QUVIPROP_MEDIAURL, &url);
+ *     puts(url);
+ *   }
+ * while (quvi_next_media_url(media) == QUVI_OK);
+ * quvi_parse_close(&m);
+ * quvi_close(&q);
+ * (end)
+ */
+QUVIcode quvi_next_media_url(quvi_media_t handle)
+{
+  _quvi_media_t media;
+
+  _is_badhandle(handle);
+
+  media = (_quvi_media_t) handle;
+
+  /* start from the first */
+  if (!media->curr)
+    {
+      media->curr = media->url;
+      return (QUVI_OK);
+    }
+
+  /* move to the next */
+  media->curr = media->curr->next;
+  if (!media->curr)
+    {
+      media->curr = media->url;  /* reset */
+      return (QUVI_LAST);
+    }
+
+  return (QUVI_OK);
+}
+
+/*
+ * Function: quvi_supported
+ *
+ * Checks whether library supports the URL. Does not require an Internet
+ * connection. Shortened URLs will fail with this function.
+ *
+ * Parameters:
+ *  session - Session handle
+ *  url     - URL (null-terminated string)
+ *
+ * Returns:
+ *  Non-zero value if an error occurred or QUVI_NOSUPPORT, otherwise QUVI_OK.
+ *
+ * See Also:
+ *  <quvi_supported_ident>
+ */
+QUVIcode quvi_supported(quvi_t quvi, char *url)
+{
+  return quvi_supported_ident(quvi, url, NULL);
 }
 
 static QUVIcode _ident_getprop(_quvi_ident_t i, QUVIidentProperty p, ...)
@@ -463,70 +773,134 @@ static QUVIcode _ident_getprop(_quvi_ident_t i, QUVIidentProperty p, ...)
   return (rc);
 }
 
-/* quvi_getinfo */
-
-QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...)
+/*
+ * Function: quvi_supported_ident
+ *
+ * Otherwise identical to <quvi_supported> but returns the `ident' data.
+ *
+ * Parameters:
+ *  session - Session handle
+ *  url     - URL (null-terminated string)
+ *  ident   - Ident handle (receives)
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ *
+ * See Also:
+ *  * <quvi_ident_getprop>
+ *  * <quvi_supported_ident_close>
+ *
+ * Example:
+ * Error handling omitted for brewity.
+ * (start code)
+ * quvi_ident_t ident;
+ * quvi_t q;
+ *
+ * quvi_init(&q);
+ * if (quvi_supported_ident(q, URL, &ident) == QUVI_OK)
+ *   {
+ *     char *formats;
+ *     quvi_ident_getprop(ident, QUVI_IDENT_PROPERTY_FORMATS, &formats);
+ *     puts(formats);
+ *     quvi_supported_ident_close(&ident);
+ *   }
+ * quvi_close(&q);
+ * (end)
+ */
+QUVIcode quvi_supported_ident(quvi_t quvi, char *url, quvi_ident_t *ident)
 {
-  va_list arg;
-  void *p;
+  _quvi_media_t m;
+  QUVIcode rc;
 
+  /* ident may be NULL */
   _is_badhandle(quvi);
+  _is_invarg(url);
 
-  va_start(arg, info);
-  p = va_arg(arg, void *);
-  va_end(arg);
+  m = calloc(1, sizeof(*m));
+  if (!m)
+    return (QUVI_MEM);
 
-  return (_getinfo(quvi, info, p));
+  m->quvi = quvi;
+  freprintf(&m->page_url, "%s", url);
+
+  rc = find_host_script(m, (_quvi_ident_t*)ident);
+
+  quvi_parse_close((quvi_media_t)&m);
+
+  return (rc);
 }
 
-/* quvi_getprop */
+/*
+ * Function: quvi_supported_ident_close
+ *
+ * Releases a previously allocated ident handle.
+ *
+ * Parameters:
+ *  ident - Ident handle
+ *
+ * See Also:
+ *  <quvi_supported_ident>
+ */
+void quvi_supported_ident_close(quvi_ident_t *handle)
+{
+  _quvi_ident_t *ident = (_quvi_ident_t*) handle;
 
-QUVIcode quvi_getprop(quvi_media_t media, QUVIproperty prop, ...)
+  if (ident && *ident)
+    {
+      _free((*ident)->domain);
+      _free((*ident)->formats);
+      _free((*ident)->url);
+      _free((*ident));
+      assert(*ident == NULL);
+    }
+}
+
+/*
+ * Function: quvi_ident_getprop
+ *
+ * Returns an ident property.
+ *
+ * Parameters:
+ *  ident    - Ident handle
+ *  property - Property ID
+ *  ...      - Parameters
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ *
+ * See Also:
+ *  <quvi_supported_ident>
+ */
+QUVIcode quvi_ident_getprop(quvi_ident_t i, QUVIidentProperty prop, ...)
 {
   va_list arg;
   void *p;
 
-  _is_badhandle(media);
+  _is_badhandle(i);
 
   va_start(arg, prop);
-  p = va_arg(arg, void *);
+  p = va_arg(arg, void*);
   va_end(arg);
 
-  return (_getprop(media, prop, p));
+  return (_ident_getprop(i,prop,p));
 }
 
-/* quvi_next_media_url */
-
-QUVIcode quvi_next_media_url(quvi_media_t handle)
-{
-  _quvi_media_t media;
-
-  _is_badhandle(handle);
-
-  media = (_quvi_media_t) handle;
-
-  /* start from the first */
-  if (!media->curr)
-    {
-      media->curr = media->url;
-      return (QUVI_OK);
-    }
-
-  /* move to the next */
-  media->curr = media->curr->next;
-  if (!media->curr)
-    {
-      media->curr = media->url;  /* reset */
-      return (QUVI_LAST);
-    }
-
-  return (QUVI_OK);
-}
-
-/* quvi_next_supported_website */
-
-QUVIcode
-quvi_next_supported_website(quvi_t handle, char **domain, char **formats)
+/*
+ * Function: quvi_next_supported_website
+ *
+ * Returns the next supported website.
+ *
+ * Parameters:
+ *  session - Session handle
+ *  domain  - Null-terminated string containing the domain (receives)
+ *  formats - Null-terminated (static) string containing formats (receives)
+ *
+ * Returns:
+ *  Non-zero value if an error occurred or QUVI_LAST, otherwise QUVI_OK.
+ */
+QUVIcode quvi_next_supported_website(quvi_t handle,
+                                     char **domain,
+                                     char **formats)
 {
   struct _quvi_ident_s ident;
   _quvi_t quvi;
@@ -580,94 +954,18 @@ quvi_next_supported_website(quvi_t handle, char **domain, char **formats)
   return (rc);
 }
 
-/* quvi_supported_ident */
-
-QUVIcode quvi_supported_ident(quvi_t quvi, char *url, quvi_ident_t *ident)
-{
-  _quvi_media_t m;
-  QUVIcode rc;
-
-  /* ident may be NULL */
-  _is_badhandle(quvi);
-  _is_invarg(url);
-
-  m = calloc(1, sizeof(*m));
-  if (!m)
-    return (QUVI_MEM);
-
-  m->quvi = quvi;
-  freprintf(&m->page_url, "%s", url);
-
-  rc = find_host_script(m, (_quvi_ident_t*)ident);
-
-  quvi_parse_close((quvi_media_t)&m);
-
-  return (rc);
-}
-
-/* quvi_supported_ident_close */
-void quvi_supported_ident_close(quvi_ident_t *handle)
-{
-  _quvi_ident_t *ident = (_quvi_ident_t*) handle;
-
-  if (ident && *ident)
-    {
-      _free((*ident)->domain);
-      _free((*ident)->formats);
-      _free((*ident)->url);
-      _free((*ident));
-      assert(*ident == NULL);
-    }
-}
-
-/* quvi_ident_getprop */
-
-QUVIcode quvi_ident_getprop(quvi_ident_t i, QUVIidentProperty prop, ...)
-{
-  va_list arg;
-  void *p;
-
-  _is_badhandle(i);
-
-  va_start(arg, prop);
-  p = va_arg(arg, void*);
-  va_end(arg);
-
-  return (_ident_getprop(i,prop,p));
-}
-
-/* quvi_query_formats */
-
-QUVIcode quvi_query_formats(quvi_t handle, char *url, char **formats)
-{
-  _quvi_media_t m;
-  QUVIcode rc;
-
-  _is_badhandle(handle);
-  _is_invarg(url);
-  _is_invarg(formats);
-  *formats = NULL;
-
-  m = calloc(1, sizeof(*m));
-  if (!m)
-    return (QUVI_MEM);
-
-  m->quvi = handle;
-  freprintf(&m->page_url, "%s", url);
-
-  rc = resolve_unless_disabled(m);
-  if (rc != QUVI_OK)
-    return (rc);
-
-  rc = find_host_script_and_query_formats(m, formats);
-
-  quvi_parse_close((quvi_media_t)&m);
-
-  return (rc);
-}
-
-/* quvi_strerror */
-
+/*
+ * Function: quvi_strerror
+ *
+ * Returns a corresponding error message to the return code.
+ *
+ * Parameters:
+ *  session - Session handle
+ *  code    - Return code
+ *
+ * Returns:
+ *  A null-terminated string. Do _not_ attempt to <quvi_free> it.
+ */
 char *quvi_strerror(quvi_t handle, QUVIcode code)
 {
   static const char *errormsgs[] =
@@ -701,8 +999,17 @@ char *quvi_strerror(quvi_t handle, QUVIcode code)
   return ((char *)errormsgs[code]);
 }
 
-/* quvi_version */
-
+/*
+ * Function: quvi_version
+ *
+ * Returns a quvi version string.
+ *
+ * Parameters:
+ *  id - Version ID
+ *
+ * Returns:
+ *  A null-terminated string. Do _not_ attempt to <quvi_free> it.
+ */
 char *quvi_version(QUVIversion type)
 {
   static const char version[] = PACKAGE_VERSION;
@@ -729,11 +1036,18 @@ char *quvi_version(QUVIversion type)
 
   if (type == QUVI_VERSION_LONG)
     return ((char *)version_long);
+
   return ((char *)version);
 }
 
-/* quvi_free */
-
+/*
+ * Function: quvi_free
+ *
+ * Frees allocated memory.
+ *
+ * Parameters:
+ *  pointer - Pointer to data
+ */
 void quvi_free(void *ptr)
 {
   if (ptr != NULL)
