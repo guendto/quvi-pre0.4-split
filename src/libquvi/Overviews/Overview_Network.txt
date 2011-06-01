@@ -1,0 +1,94 @@
+Title: Overview: Network
+
+About: Network Interface
+
+Allows overriding the default use of <libcurl at http://curl.haxx.se/libcurl/c/>
+in libquvi. For example, an application could use <libsoup at
+http://live.gnome.org/LibSoup> instead of libcurl.
+
+About: Requirements
+
+An application must set the callbacks with <quvi_setopt>. This can be
+done after a new session started with <quvi_init>.
+
+Note that each callback is expected to set different properties.
+
+About: Common properties
+
+These properties must be set by _all network callbacks_
+  * QUVI_NET_PROPERTY_RESPONSECODE - Last server returned response code
+
+About: quvi_callback_fetch
+
+Set with <quvi_setopt> and QUVIOPT_FETCHFUNCTION. Must set following properties
+_in addition_ to <Common properties>.
+  * QUVI_NET_PROPERTY_CONTENT
+
+See Also:
+  * <Common properties>
+
+About: quvi_callback_resolve
+
+Set with <quvi_setopt> and QUVIOPT_RESOLVEFUNCTION. Must set following
+properties _in addition_ to <Common properties>.
+  * QUVI_NET_PROPERTY_REDIRECTURL - If any
+
+This callback must return QUVI_CALLBACK _only if an error occurred_,
+e.g. if no redirection URL was found, this callback should return QUVI_OK.
+
+See Also:
+  * <Common properties>
+
+About: quvi_callback_verify
+
+Set with <quvi_setopt> and QUVIOPT_VERIFYFUNCTION. Must set following
+properties _in addition_ to <Common properties>.
+  * QUVI_NET_PROPERTY_CONTENTTYPE
+  * QUVI_NET_PROPERTY_CONTENTLENGTH
+
+See Also:
+  * <Common properties>
+
+About: Example
+
+Basic example. Error handling and omitted for brewity.
+
+(start code)
+static QUVIcode fetch_callback(quvi_net_t net)
+{
+  char *content, *url;
+
+  quvi_net_getprop(net, QUVI_NET_PROPERTY_URL, &url);
+
+  /* Do whatever to fetch the data from the "url". Set response code
+   * returned by the server. This must be set _always_. The example
+   * assumes "resp_code" was set. Omitted for brewity. */
+
+  quvi_net_setprop(net, QUVI_NET_PROPERTY_RESPONSECODE, resp_code);
+
+  /* This example  assumes data was saved to the "content" variable.
+   * Omitted for brewity. */
+
+  /* If an error occurred. */
+  if (error)
+    {
+      quvi_net_seterr(net, "%s (http/%d)", reason, resp_code);
+      return (QUVI_CALLBACK); /* Indicates an error */
+    }
+
+  /* Otherwise set the expected (by the library) properties. */
+  quvi_net_setprop(net, QUVI_NET_PROPERTY_CONTENT, content);
+
+  return (QUVI_OK);
+}
+
+int main(int argc, char **argv)
+{
+    quvi_t q;
+    quvi_init(&q);
+    quvi_setopt(q, QUVIOPT_FETCHFUNCTION, &fetch_callback);
+    quvi_parse(...);
+    quvi_close(&q);
+    return (0);
+}
+(end)

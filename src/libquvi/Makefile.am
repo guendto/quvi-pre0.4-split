@@ -1,5 +1,5 @@
 
-SUBDIRS = quvi
+SUBDIRS = quvi Overviews
 
 if HAVE_GNU_LD
 EXTRA_LIBQUVI_LDFLAGS += -Wl,--version-script=$(top_srcdir)/libquvi.ver

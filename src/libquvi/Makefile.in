@@ -311,7 +311,7 @@ target_vendor = @target_vendor@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = quvi
+SUBDIRS = quvi Overviews
 src = quvi_api.c net_api.c llst_api.c depr_api.c curl_wrap.c \
 	lua_wrap.c net_wrap.c util.c strepl.c $(am__append_2)
 hdr = \
