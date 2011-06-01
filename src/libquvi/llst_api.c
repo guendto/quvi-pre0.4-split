@@ -25,8 +25,24 @@
 
 #include "internal.h"
 
-/* quvi_llst_append */
+/* Title: quvi Linked list API */
 
+/*
+ * Function: quvi_llst_append
+ *
+ * Appends (or creates a new list) a element to a linked-list.
+ *
+ * Parameters:
+ *  node - Handle to a linked list or NULL to create new list
+ *  data - Data to append to the list
+ *
+ * Returns:
+ *  Non-zero value if an error occurred.
+ *
+ * See Also:
+ *  * <quvi_llst_free>
+ *  * <Example>
+ */
 QUVIcode quvi_llst_append(quvi_llst_node_t *l, void *data)
 {
   _quvi_llst_node_t n;
@@ -58,8 +74,17 @@ QUVIcode quvi_llst_append(quvi_llst_node_t *l, void *data)
   return (QUVI_OK);
 }
 
-/* quvi_llst_size */
-
+/*
+ * Function: quvi_llst_size
+ *
+ * Returns the number of nodes in the linked list.
+ *
+ * Parameters:
+ *  node - Handle to a linked list node
+ *
+ * Returns:
+ *  Number of nodes in list.
+ */
 size_t quvi_llst_size(quvi_llst_node_t l)
 {
   _quvi_llst_node_t curr = l;
@@ -74,8 +99,17 @@ size_t quvi_llst_size(quvi_llst_node_t l)
   return (n);
 }
 
-/* quvi_llst_next */
-
+/*
+ * Function: quvi_llst_next
+ *
+ * Returns the next node in the linked list.
+ *
+ * Parameters:
+ *  node - Handle to a linked list node
+ *
+ * Returns:
+ *  Handle to the next node in the list, otherwise NULL.
+ */
 quvi_llst_node_t quvi_llst_next(quvi_llst_node_t l)
 {
   _quvi_llst_node_t curr = l;
@@ -86,8 +120,17 @@ quvi_llst_node_t quvi_llst_next(quvi_llst_node_t l)
   return (curr);
 }
 
-/* quvi_llst_data */
-
+/*
+ * Function: quvi_llst_data
+ *
+ * Returns a pointer to the node data.
+ *
+ * Parameters:
+ *  node - Handle to a linked list node
+ *
+ * Returns:
+ *  Pointer to the node data.
+ */
 void *quvi_llst_data(quvi_llst_node_t l)
 {
   _quvi_llst_node_t curr = l;
@@ -98,8 +141,14 @@ void *quvi_llst_data(quvi_llst_node_t l)
   return (curr);
 }
 
-/* quvi_llst_free */
-
+/*
+ * Function: quvi_llst_free
+ *
+ * Releases memory allocated by the linked list.
+ *
+ * Parameters:
+ *  node - Handle to a linked list node
+ */
 void quvi_llst_free(quvi_llst_node_t *l)
 {
   _quvi_llst_node_t curr = *l;
