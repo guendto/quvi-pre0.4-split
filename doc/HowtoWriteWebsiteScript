@@ -295,45 +295,50 @@ Or you can use the project default:
         * the domain pattern (e.g. "buzzhumor.com") is found in the URL
         * the path pattern (e.g. "/videos/") is found in the URL
 
-    You can leave r.formats untouched, unless you know that the website
+    You can leave r.formats as it is, unless you know that the website
     supports more than one ("default") video format and you know how to
     access those. If you are not sure, that's OK too, we can always add
     those later.
 
     See youtube.lua, dailymotion.lua and vimeo.lua for examples of scripts
-    with additional formats.
+    that support >1 formats.
 
 3) Change r.categories only if you know that the website uses non-HTTP.
 
     See francetelevisions.lua for an example of this.
 
-4) Move to the `parse' function. This is where most of the magic happens.
+4) Leave the dummy `query_formats` function as it is. The library calls
+    this function to query the website for the available formats, since
+    we're assuming there's only one format, the 'default', you can leave
+    this function as it is.
+
+5) Move to the `parse' function. This is where most of the magic happens.
 
     To keep things simple, let's go ahead and assume that our 'foo'
     website is nearly identical to 'buzzhumor'.
 
-  4.1) Update the host_id.
+  5.1) Update the host_id.
 
 -   self.host_id = 'buzzhumor'
 +   self.host_id = 'foo'
 
-  4.2) In order to have something to work with, let's grab the video page
+  5.2) In order to have something to work with, let's grab the video page
   from the user specified URL.
 
     local page = quvi.fetch(self.page_url)
 
-  4.3) Now that we have the page, it's time to parse the video details
+  5.3) Now that we have the page, it's time to parse the video details
   from it. Let's start from the video title:
 
     local _,_,s = page:find('<title>(.-)</title>')
     self.title  = s or error("no match: video title")
 
-  4.4) Grab the video ID.
+  5.4) Grab the video ID.
 
     local _,_,s = page:find('vid_id="(.-)"')
     self.id     = s or error("no match: video id")
 
-  4.5) We're almost done: the only remaining one is the media URL:
+  5.5) We're almost done: the only remaining one is the media URL:
 
     local _,_,s = page:find('vid_url="(.-)"')
     self.url    = {s or error("no match: video url")}
@@ -394,6 +399,7 @@ Or:
 
   * Does the website support more than one video format?
     - If yes, see if you can add support for them
+        - See youtube.lua, cbsnews.lua, dailymotion.lua for examples
     - We can, of course, add the support later
 
   * Does the parsed video title contain extra characters?
