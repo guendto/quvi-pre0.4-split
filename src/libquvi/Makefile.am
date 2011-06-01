@@ -9,12 +9,12 @@ src = \
     quvi_api.c \
     net_api.c \
     llst_api.c \
-    util.c \
+    depr_api.c \
     curl_wrap.c \
     lua_wrap.c \
-    strepl.c \
     net_wrap.c \
-    depr.c
+    util.c \
+    strepl.c
 
 if NO_ASPRINTF
 src += vasprintf.c asprintf.c
