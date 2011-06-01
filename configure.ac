@@ -97,6 +97,9 @@ if [ test x"$GIT" != "xno" ]; then
     fi
 fi
 
+AC_PATH_PROGS(ND, [naturaldocs NaturalDocs], no)
+AM_CONDITIONAL([HAVE_ND], [test "x$ND" != "xno"])
+
 # Checks for libraries.
 AM_ICONV
 PKG_CHECK_MODULES([libcurl], [libcurl >= 7.18.0])
@@ -123,6 +126,25 @@ AS_IF([test "x$with_soup" = "xyes"], [
 ])
 
 AM_CONDITIONAL([WITH_SOUP], [test x"$with_soup" = "xyes"])
+
+ND_FORMAT=HTML
+AC_ARG_WITH([nd-output],
+  [AS_HELP_STRING([--with-nd-output=FORMAT],
+    [NaturalDocs output format (HTML or FramedHTML)])],
+  [
+    if [ test x"$ND" = "xno" ]; then
+      AC_MSG_ERROR([NaturalDocs not found. No point in setting output format])
+    fi
+    case $withval in
+      HTML|FramedHTML)
+        ND_FORMAT=$withval
+        ;;
+      *)
+        AC_MSG_ERROR([NaturalDocs does not support $withval output format])
+        ;;
+    esac
+  ])
+AC_SUBST(ND_FORMAT)
 
 # Checks for header files.
 AC_HEADER_STDC # `stdlib.h', `stdarg.h', `string.h', ...

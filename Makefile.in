@@ -192,6 +192,8 @@ LTLIBOBJS = @LTLIBOBJS@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
+ND = @ND@
+ND_FORMAT = @ND_FORMAT@
 NM = @NM@
 NMEDIT = @NMEDIT@
 OBJDUMP = @OBJDUMP@
@@ -825,27 +827,35 @@ uninstall-am: uninstall-pkgconfigDATA
 @ENABLE_TESTS_TRUE@test:
 @ENABLE_TESTS_TRUE@	@(cd tests; $(MAKE) all test)
 
-.PHONY: pod2man pod2html cmdline
+.PHONY: pod2man pod2html cmdline doc
 pod2man:
-@HAVE_POD2MAN_TRUE@	@POD2MAN@ -c "quvi manual" -n quvi \
-@HAVE_POD2MAN_TRUE@		 -s 1 -r @VERSION@ $(top_srcdir)/man1/quvi.1.pod $(top_builddir)/man1/quvi.1
+@HAVE_POD2MAN_TRUE@	@@POD2MAN@ -c "quvi manual" -n quvi \
+@HAVE_POD2MAN_TRUE@		-s 1 -r @VERSION@ $(top_srcdir)/man1/quvi.1.pod \
+@HAVE_POD2MAN_TRUE@		$(top_builddir)/man1/quvi.1 && echo See man1/
 @HAVE_POD2MAN_FALSE@	@echo "error: configure did not find pod2man command"
 pod2html:
-@HAVE_POD2HTML_TRUE@	@POD2HTML@ --title="quvi manual" \
+@HAVE_POD2HTML_TRUE@	@@POD2HTML@ --title="quvi manual" \
 @HAVE_POD2HTML_TRUE@		--infile=$(top_srcdir)/man1/quvi.1.pod \
-@HAVE_POD2HTML_TRUE@        --outfile=$(top_builddir)/man1/quvi.1.html
+@HAVE_POD2HTML_TRUE@        --outfile=$(top_builddir)/man1/quvi.1.html && echo See man1/
 @HAVE_POD2HTML_FALSE@	@echo "error: configure did not find pod2html command"
 cmdline:
-@HAVE_GENGETOPT_TRUE@	@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
+@HAVE_GENGETOPT_TRUE@	@@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
 @HAVE_GENGETOPT_TRUE@		--output-dir $(top_srcdir)/src/quvi --no-version
 @HAVE_GENGETOPT_FALSE@	@echo "error: configure did not find 'gengetopt' command"
+doc:
+@HAVE_ND_TRUE@	@test -d $(top_builddir)/doc/html || mkdir $(top_builddir)/doc/html
+@HAVE_ND_TRUE@	@test -d $(top_builddir)/doc/nd_tmp || mkdir $(top_builddir)/doc/nd_tmp
+@HAVE_ND_TRUE@	@@ND@ -i $(top_srcdir)/src/ \
+@HAVE_ND_TRUE@		-o $(ND_FORMAT) $(top_builddir)/doc/html/ \
+@HAVE_ND_TRUE@		-p $(top_builddir)/doc/nd_tmp/ && echo See doc/html
+@HAVE_ND_FALSE@	@echo configure did not find NaturalDocs
 
 local-clean:
 	@rm -rf *.tmp *.core *.html
 
 ChangeLog:
 	@if test -f $(top_srcdir)/.git/HEAD; then \
-		git log --stat --after="Sun Nov 14 11:03:50 2010" > $@; \
+		@GIT@ log --stat --after="Sun Nov 14 11:03:50 2010" > $@; \
 	fi
 
 dist: ChangeLog
