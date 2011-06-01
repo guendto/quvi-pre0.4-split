@@ -78,7 +78,6 @@ struct _quvi_s
   quvi_callback_resolve resolve_func;
   quvi_callback_status status_func;
   quvi_callback_verify verify_func;
-  quvi_callback_write write_func;
   quvi_callback_fetch fetch_func;
   _quvi_llst_node_t website_scripts;
   _quvi_llst_node_t curr_website;
