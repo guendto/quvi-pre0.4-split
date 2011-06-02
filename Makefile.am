@@ -51,7 +51,7 @@ doc:
 if HAVE_ND
 	@test -d $(top_builddir)/doc/html || mkdir $(top_builddir)/doc/html
 	@test -d $(top_builddir)/doc/nd_tmp || mkdir $(top_builddir)/doc/nd_tmp
-	@@ND@ -i $(top_srcdir)/src/ \
+	@@ND@ -hl all -i $(top_srcdir)/doc/ -i $(top_srcdir)/src/ \
 		-o $(ND_FORMAT) $(top_builddir)/doc/html/ \
 		-p $(top_builddir)/doc/nd_tmp/ && echo See doc/html
 else

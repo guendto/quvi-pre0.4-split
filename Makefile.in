@@ -845,7 +845,7 @@ cmdline:
 doc:
 @HAVE_ND_TRUE@	@test -d $(top_builddir)/doc/html || mkdir $(top_builddir)/doc/html
 @HAVE_ND_TRUE@	@test -d $(top_builddir)/doc/nd_tmp || mkdir $(top_builddir)/doc/nd_tmp
-@HAVE_ND_TRUE@	@@ND@ -i $(top_srcdir)/src/ \
+@HAVE_ND_TRUE@	@@ND@ -hl all -i $(top_srcdir)/doc/ -i $(top_srcdir)/src/ \
 @HAVE_ND_TRUE@		-o $(ND_FORMAT) $(top_builddir)/doc/html/ \
 @HAVE_ND_TRUE@		-p $(top_builddir)/doc/nd_tmp/ && echo See doc/html
 @HAVE_ND_FALSE@	@echo configure did not find NaturalDocs
