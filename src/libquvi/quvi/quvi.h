@@ -122,7 +122,7 @@ typedef enum
  * Enum: Options
  *
  * QUVIOPT_FORMAT          - Requested format
- * QUVIOPT_NOVERIFY        - Do not verify media URLs
+ * QUVIOPT_NOVERIFY        - Do not verify (HTTP) media URLs
  * QUVIOPT_STATUSFUNCTION  - Callback function for status updates
  * QUVIOPT_NORESOLVE       - Do not attempt to resolve URLs to new location
  * QUVIOPT_CATEGORY        - Bit pattern of OR'd webscript categories
