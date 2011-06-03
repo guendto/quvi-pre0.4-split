@@ -23,7 +23,7 @@ test:
 	@(cd tests; $(MAKE) all test)
 endif
 
-.PHONY: pod2man pod2html cmdline doc
+.PHONY: pod2man pod2html cmdline doc dist-doc
 pod2man:
 if HAVE_POD2MAN
 	@@POD2MAN@ -c "quvi manual" -n quvi \
@@ -49,14 +49,20 @@ else
 endif
 doc:
 if HAVE_ND
-	@test -d $(top_builddir)/doc/html || mkdir $(top_builddir)/doc/html
-	@test -d $(top_builddir)/doc/nd_tmp || mkdir $(top_builddir)/doc/nd_tmp
-	@@ND@ -hl all -i $(top_srcdir)/doc/ -i $(top_srcdir)/src/ \
-		-o $(ND_FORMAT) $(top_builddir)/doc/html/ \
-		-p $(top_builddir)/doc/nd_tmp/ && echo See doc/html
+	@test -d $(top_builddir)/doc/quvi-@VERSION@ || \
+		mkdir $(top_builddir)/doc/quvi-@VERSION@
+	@test -d $(top_builddir)/doc/nd_temp || \
+		mkdir $(top_builddir)/doc/nd_temp
+	@@ND@ -i $(top_srcdir)/doc/ -i $(top_srcdir)/src/ \
+		-o $(ND_FORMAT) $(top_builddir)/doc/quvi-@VERSION@/ \
+		-p $(top_builddir)/doc/nd_temp/ && echo See doc/quvi-@VERSION@
 else
-	@echo configure did not find NaturalDocs
+	@echo "error: configure did not find NaturalDocs" && exit 1
 endif
+dist-doc: doc
+	@tar chof - $(top_builddir)/doc/quvi-@VERSION@ | \
+			GZIP=--best gzip -c >quvi-@VERSION@-doc.tar.gz \
+			&& echo Created quvi-@VERSION@-doc.tar.gz
 
 local-clean:
 	@rm -rf *.tmp *.core *.html
