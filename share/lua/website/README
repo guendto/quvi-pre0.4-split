@@ -71,6 +71,22 @@ Returns: table containing the following details:
         See quvi/util.lua for "handles" function.
 
 
+self query_formats(self) [REQUIRED]
+-----------------------------------
+
+Queries the URL for available formats.
+
+Parameters:
+  * self (table)
+    - page_url (string) -- User specified page URL
+
+Sets:
+  * self.formats (string) -- Each format string separated with '|'
+
+Returns:
+  * Updated `self' table
+
+
 self parse(self) [REQUIRED]
 ---------------------------
 
@@ -91,7 +107,7 @@ Sets:
   * redirect_url  (string, see academicearth.lua)
   * start_time    (string, see youtube.lua)
   * thumbnail_url (string)
-  * duration      (numeric)
+  * duration      (numeric, msec)
 
 Returns:
   * Updated `self' table
