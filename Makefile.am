@@ -64,9 +64,6 @@ dist-doc: doc
 			GZIP=--best gzip -c >quvi-@VERSION@-doc.tar.gz \
 			&& echo Created quvi-@VERSION@-doc.tar.gz
 
-local-clean:
-	@rm -rf *.tmp *.core *.html
-
 ChangeLog:
 	@if test -f $(top_srcdir)/.git/HEAD; then \
 		@GIT@ log --stat --after="Sun Nov 14 11:03:50 2010" > $@; \
@@ -75,5 +72,3 @@ ChangeLog:
 dist: ChangeLog
 
 .PHONY: ChangeLog
-
-distclean-local: local-clean
