@@ -1,0 +1,29 @@
+
+Title: HOWTO: Help
+
+You can help with the quvi project in a number of ways.
+
+Report bugs:
+
+Visit our <Trac at http://sourceforge.net/apps/trac/quvi>. Check for
+duplicates before you submit, the issue may have already been fixed.
+
+Write fixes:
+
+Visit our <Trac at http://sourceforge.net/apps/trac/quvi/report/3> for
+open issues. Read also <Coding style> and <Submitting patches>.
+
+Write support for additional websites:
+
+Visit our <Trac at http://sourceforge.net/apps/trac/quvi/report/3> for
+requests. See also <HOWTO: Webscript>.
+
+Gather data:
+
+Traffic logs, etc. See also <HOWTO: Webscript> for <Generating network
+traffic logs>.
+
+Check the development status:
+
+Visit the <page at
+http://sourceforge.net/apps/trac/quvi/wiki/DevelopmentStatus>.
