@@ -9,7 +9,7 @@ cleanup()
     echo "WARNING!
 Removes _files_ listed in $source and $cachedir directory.
 Last chance to bail out (^C) before we continue."
-    read -s n1
+    read n1
     for file in `cat $source`; do # Remove files only.
         [ -e "$file" ] && [ -f "$file" ] && rm "$file"
     done
