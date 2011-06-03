@@ -55,7 +55,7 @@ option "category-all"
     optional
 
 option "query-formats"
-    F "Query available formats for URL"
+    F "Query available formats to URL"
     optional
 option "format"
     f "Media format to query"

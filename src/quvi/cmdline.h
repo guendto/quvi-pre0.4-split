@@ -56,7 +56,7 @@ extern "C" {
     const char *category_rtsp_help; /**< @brief Category RTSP website scripts help description.  */
     const char *category_rtmp_help; /**< @brief Category RTMP website scripts help description.  */
     const char *category_all_help; /**< @brief All website script categories help description.  */
-    const char *query_formats_help; /**< @brief Query available formats for URL help description.  */
+    const char *query_formats_help; /**< @brief Query available formats to URL help description.  */
     char * format_arg;  /**< @brief Media format to query (default='default').  */
     char * format_orig; /**< @brief Media format to query original value given at command line.  */
     const char *format_help; /**< @brief Media format to query help description.  */
