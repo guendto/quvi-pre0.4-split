@@ -59,10 +59,6 @@ AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 AC_PROG_MKDIR_P
 
-AC_PATH_PROG(GENGETOPT, gengetopt, no)
-AM_CONDITIONAL([HAVE_GENGETOPT], [test x"$GENGETOPT" != "xno"])
-AC_SUBST(GENGETOPT)
-
 AC_PATH_PROG(PROVE, prove, no)
 AM_CONDITIONAL([HAVE_PROVE], [test x"$PROVE" != "xno"])
 AC_SUBST(PROVE)
@@ -70,10 +66,6 @@ AC_SUBST(PROVE)
 AC_PATH_PROG(VALGRIND, valgrind, no)
 AM_CONDITIONAL([HAVE_VALGRIND], [test x"$VALGRIND" != "xno"])
 AC_SUBST(VALGRIND)
-
-AC_PATH_PROG(POD2MAN, pod2man, no)
-AM_CONDITIONAL([HAVE_POD2MAN], [test x"$POD2MAN" != "xno"])
-AC_SUBST(POD2MAN)
 
 AC_PATH_PROG(DATE, date, no)
 if [ test x"$DATE" != "xno" ]; then
@@ -264,29 +256,21 @@ AC_OUTPUT
 
 AC_MSG_NOTICE([
 
-Configured:
-    quvi version:   ${VERSION}  g:${git_describe}  b:${build_date}
-    host setup:     ${host}
-    compiler:       ${CC}
-    cflags:         ${CFLAGS}
-    prefix:         ${prefix}
+ quvi version:   ${VERSION}  g:${git_describe}  b:${build_date}
+ host setup:     ${host}
+ compiler:       ${CC}
+ cflags:         ${CFLAGS}
+ prefix:         ${prefix}
 
 Options:
-    build libquvi:  shared=${enable_shared} static=${enable_static}
-    build examples: ${enable_examples}
-    build quvi:     ${enable_quvi}
-    --
-    enable tests:   ${enable_tests}
-    enable todo:    ${enable_todo}
-    enable nsfw:    ${enable_nsfw}
-    enable nlfy:    ${enable_nlfy}
-    --
-    install manual: ${with_man}
-    install docs:   ${with_doc}
+ build examples: ${enable_examples}
+ build libquvi:  shared=${enable_shared} static=${enable_static}
+ build quvi:     ${enable_quvi}
+--
+ enable tests:   ${enable_tests}
+ enable todo:    ${enable_todo}
+ enable nsfw:    ${enable_nsfw}
+ enable nlfy:    ${enable_nlfy}
+--
+ install manual: ${with_man}
 ])
-
-#Other:
-#    gengetopt:      ${GENGETOPT}
-#    prove:          ${PROVE}
-#    pod2man:        ${POD2MAN}
-
