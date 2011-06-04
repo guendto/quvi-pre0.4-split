@@ -236,21 +236,27 @@ static void supported(quvi_t quvi)
   exit(rc);
 }
 
+static const char depr_msg[] =
+  "Warning:\n"
+  "   '--format list' is deprecated and will be removed in\n"
+  "   quvi 0.2.20. Use --query-formats instead.";
+
 static void format_help(quvi_t quvi)
 {
   int quit = 0;
 
   if (strcmp(opts->format_arg, "help") == 0)
     {
-      printf("Usage:\n"
-             "   --format arg            get format arg\n"
-             "   --format list           list websites and supported formats\n"
-             "   --format list arg       match arg to websites, list formats for matches\n"
-             "Examples:\n"
-             "   --format mp4_360p       get format mp4_360p (youtube)\n"
-             "   --format list youtube   list youtube formats\n"
-             "   --format list dailym    list dailym(otion) formats\n"
-            );
+      printf(
+        "Usage:\n"
+        "   --format arg                get format arg of media\n"
+        "   --format list               print domains with formats\n"
+        "   --format list arg           match arg to supported domain names\n"
+        "Examples:\n"
+        "   --format list youtube       print youtube formats\n"
+        "   --format fmt34_360p         get format fmt34_360p of media\n"
+        "%s\n",
+        depr_msg);
       quit = 1;
     }
 
@@ -293,6 +299,7 @@ static void format_help(quvi_t quvi)
               break;
             }
         }
+      spew_qe("%s\n", depr_msg);
       quit = 1;
     }
 
