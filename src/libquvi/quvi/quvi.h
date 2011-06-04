@@ -50,7 +50,7 @@ typedef enum
  * QUVI_NOLUAWEBSITE - Failed to find any webscripts
  * QUVI_NOLUAUTIL - Failed to find the utility scripts
  * QUVI_NOSUPPORT - libquvi cannot handle the URL
- * QUVI_CALLBACK  - Callback error occurred
+ * QUVI_CALLBACK  - Network callback error occurred
  * QUVI_ICONV     - libiconv error occurred
  * QUVI_LUA       - liblua (or webscript) error occurred
  * QUVI_PCRE      - Deprecated since 0.2.9, removed in 0.2.20
