@@ -19,14 +19,7 @@ test:
 	@(cd tests; $(MAKE) all test)
 endif
 
-.PHONY: cmdline doc dist-doc
-cmdline:
-if HAVE_GENGETOPT
-	@@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
-		--output-dir $(top_srcdir)/src/quvi --no-version
-else
-	@echo "error: configure did not find 'gengetopt' command"
-endif
+.PHONY: doc dist-doc
 doc:
 if HAVE_ND
 	@test -d $(top_builddir)/doc/quvi-@VERSION@ || \

@@ -32,5 +32,14 @@ quvi_LDADD =  \
     $(LIBICONV) \
     $(LTLIBICONV)
 
-endif
+cmdline.c: cmdline.ggo
+if HAVE_GENGETOPT
+	@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
+		--output-dir $(top_builddir)/src/quvi --no-version
+else
+	@echo "error: configure did not find 'gengetopt' command" && exit 1
+endif # HAVE_GENGETOPT
 
+dist-hook: cmdline.c
+
+endif # ENABLE_QUVI
