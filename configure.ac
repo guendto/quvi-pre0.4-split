@@ -75,10 +75,6 @@ AC_PATH_PROG(POD2MAN, pod2man, no)
 AM_CONDITIONAL([HAVE_POD2MAN], [test x"$POD2MAN" != "xno"])
 AC_SUBST(POD2MAN)
 
-AC_PATH_PROG(POD2HTML, pod2html, no)
-AM_CONDITIONAL([HAVE_POD2HTML], [test x"$POD2HTML" != "xno"])
-AC_SUBST(POD2HTML)
-
 AC_PATH_PROG(DATE, date, no)
 if [ test x"$DATE" != "xno" ]; then
     build_date=`"$DATE" +%Y-%m-%d 2>/dev/null`
@@ -301,5 +297,4 @@ Options:
 #    gengetopt:      ${GENGETOPT}
 #    prove:          ${PROVE}
 #    pod2man:        ${POD2MAN}
-#    pod2html:       ${POD2HTML}
 
