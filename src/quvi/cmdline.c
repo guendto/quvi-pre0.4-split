@@ -51,12 +51,11 @@ const char *gengetopt_args_info_help[] =
   "      --category-rtmp        Category RTMP website scripts",
   "  -a, --category-all         All website script categories",
   "  -F, --query-formats        Query available formats to URL",
-  "  -f, --format=arg           Media format to query  (default=`default')",
+  "  -f, --format=arg           Get format arg of media  (default=`default')",
   "      --agent=arg            Identify as arg  (default=`Mozilla/5.0')",
-  "      --proxy=arg            Use proxy for HTTP connections",
+  "      --proxy=arg            Use HTTP proxy arg (e.g. http://addr:port)",
   "      --no-proxy             Disable use of HTTP proxy",
   "      --connect-timeout=arg  Seconds connecting allowed to take  (default=`30')",
-  "\nExamples:\n  quvi YOUTUBE_URL -f mp4_360p\n  quvi URL --exec \"/usr/bin/vlc %u\"",
   0
 };
 
@@ -722,7 +721,7 @@ cmdline_parser_internal (
             goto failure;
 
           break;
-        case 'f': /* Media format to query.  */
+        case 'f': /* Get format arg of media.  */
 
 
           if (update_arg( (void *)&(args_info->format_arg),
@@ -904,7 +903,7 @@ cmdline_parser_internal (
                 goto failure;
 
             }
-          /* Use proxy for HTTP connections.  */
+          /* Use HTTP proxy arg (e.g. http://addr:port).  */
           else if (strcmp (long_options[option_index].name, "proxy") == 0)
             {
 

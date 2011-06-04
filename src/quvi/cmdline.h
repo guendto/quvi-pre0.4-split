@@ -57,15 +57,15 @@ extern "C" {
     const char *category_rtmp_help; /**< @brief Category RTMP website scripts help description.  */
     const char *category_all_help; /**< @brief All website script categories help description.  */
     const char *query_formats_help; /**< @brief Query available formats to URL help description.  */
-    char * format_arg;  /**< @brief Media format to query (default='default').  */
-    char * format_orig; /**< @brief Media format to query original value given at command line.  */
-    const char *format_help; /**< @brief Media format to query help description.  */
+    char * format_arg;  /**< @brief Get format arg of media (default='default').  */
+    char * format_orig; /**< @brief Get format arg of media original value given at command line.  */
+    const char *format_help; /**< @brief Get format arg of media help description.  */
     char * agent_arg; /**< @brief Identify as arg (default='Mozilla/5.0').  */
     char * agent_orig;  /**< @brief Identify as arg original value given at command line.  */
     const char *agent_help; /**< @brief Identify as arg help description.  */
-    char * proxy_arg; /**< @brief Use proxy for HTTP connections.  */
-    char * proxy_orig;  /**< @brief Use proxy for HTTP connections original value given at command line.  */
-    const char *proxy_help; /**< @brief Use proxy for HTTP connections help description.  */
+    char * proxy_arg; /**< @brief Use HTTP proxy arg (e.g. http://addr:port).  */
+    char * proxy_orig;  /**< @brief Use HTTP proxy arg (e.g. http://addr:port) original value given at command line.  */
+    const char *proxy_help; /**< @brief Use HTTP proxy arg (e.g. http://addr:port) help description.  */
     const char *no_proxy_help; /**< @brief Disable use of HTTP proxy help description.  */
     int connect_timeout_arg;  /**< @brief Seconds connecting allowed to take (default='30').  */
     char * connect_timeout_orig;  /**< @brief Seconds connecting allowed to take original value given at command line.  */
