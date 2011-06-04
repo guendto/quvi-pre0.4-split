@@ -23,23 +23,7 @@ test:
 	@(cd tests; $(MAKE) all test)
 endif
 
-.PHONY: pod2man pod2html cmdline doc dist-doc
-pod2man:
-if HAVE_POD2MAN
-	@@POD2MAN@ -c "quvi manual" -n quvi \
-		-s 1 -r @VERSION@ $(top_srcdir)/man1/quvi.1.pod \
-		$(top_builddir)/man1/quvi.1 && echo See man1/
-else
-	@echo "error: configure did not find pod2man command"
-endif
-pod2html:
-if HAVE_POD2HTML
-	@@POD2HTML@ --title="quvi manual" \
-		--infile=$(top_srcdir)/man1/quvi.1.pod \
-        --outfile=$(top_builddir)/man1/quvi.1.html && echo See man1/
-else
-	@echo "error: configure did not find pod2html command"
-endif
+.PHONY: cmdline doc dist-doc
 cmdline:
 if HAVE_GENGETOPT
 	@@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
