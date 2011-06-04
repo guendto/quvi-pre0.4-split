@@ -2,9 +2,15 @@ if ENABLE_QUVI
 
 EXTRA_DIST = cmdline.ggo
 
-src = quvi.c cmdline.c \
-    $(top_srcdir)/src/libquvi/strepl.c 
+cmdline.c: cmdline.ggo
+	@test -f $(top_srcdir)/src/quvi/cmdline.c || \
+		gengetopt < $(top_srcdir)/src/quvi/cmdline.ggo \
+			-C --unamed-opts=URL --output-dir $(top_builddir)/src/quvi \
+				--no-version
 
+cmdline.h: cmdline.c
+
+src = cmdline.c quvi.c $(top_srcdir)/src/libquvi/strepl.c
 hdr = cmdline.h
 
 if NO_ASPRINTF
@@ -32,17 +38,5 @@ quvi_LDADD =  \
     $(libcurl_LIBS) \
     $(LIBICONV) \
     $(LTLIBICONV)
-
-BUILT_SOURCES = cmdline.c
-
-cmdline.c: cmdline.ggo
-if HAVE_GENGETOPT
-	@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
-		--output-dir $(top_builddir)/src/quvi --no-version
-else
-	@echo "error: configure did not find 'gengetopt' command" && exit 1
-endif # HAVE_GENGETOPT
-
-cmdline.h: cmdline.c
 
 endif # ENABLE_QUVI
