@@ -8,7 +8,7 @@ ChangeLog.pre-gitlog
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libquvi.pc
 
-SUBDIRS = man1 examples share scripts src
+SUBDIRS = src examples share scripts
 
 if WITH_DOC
 SUBDIRS += doc

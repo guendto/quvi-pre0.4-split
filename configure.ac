@@ -254,16 +254,16 @@ AM_CONDITIONAL([HAVE_GNU_LD], [test x"$with_gnu_ld" = "xyes"])
 
 AC_CONFIG_FILES([
     Makefile
-    man1/Makefile
-    share/Makefile
-    doc/Makefile
-    examples/Makefile
-    tests/Makefile
     src/Makefile
     src/libquvi/Makefile
     src/libquvi/quvi/Makefile
     src/libquvi/Overviews/Makefile
     src/quvi/Makefile
+    examples/Makefile
+    tests/Makefile
+    doc/Makefile
+    doc/man1/Makefile
+    share/Makefile
     scripts/Makefile
     libquvi.pc
 ])
