@@ -1,15 +1,5 @@
 if ENABLE_QUVI
 
-EXTRA_DIST = cmdline.ggo
-
-cmdline.c: cmdline.ggo
-	@test -f $(top_srcdir)/src/quvi/cmdline.c || \
-		gengetopt < $(top_srcdir)/src/quvi/cmdline.ggo \
-			-C --unamed-opts=URL --output-dir $(top_builddir)/src/quvi \
-				--no-version
-
-cmdline.h: cmdline.c
-
 src = cmdline.c quvi.c $(top_srcdir)/src/libquvi/strepl.c
 hdr = cmdline.h
 
