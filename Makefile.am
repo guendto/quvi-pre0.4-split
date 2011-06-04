@@ -34,8 +34,8 @@ else
 endif
 dist-doc: doc
 	@tar chof - $(top_builddir)/doc/quvi-@VERSION@ | \
-			GZIP=--best gzip -c >quvi-@VERSION@-doc.tar.gz \
-			&& echo Created quvi-@VERSION@-doc.tar.gz
+			GZIP=--best gzip -c >quvi-doc-@VERSION@.tar.gz \
+			&& echo Created quvi-doc-@VERSION@.tar.gz
 
 ChangeLog:
 	@if test -f $(top_srcdir)/.git/HEAD; then \
