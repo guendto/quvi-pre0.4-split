@@ -31,8 +31,7 @@
     --disable-examples      Do not build examples
 
     --with-soup             Build with libsoup(-gnome) [#4]
-    --without-man           Do not install manual pages
-    --without-doc           Do not install doc/ contents
+    --without-man           Do not install manual page(s)
 
 [1] Webscripts marked as "NSFW" ("Not Safe For Work")
     (installed only with --enable-nsfw)
