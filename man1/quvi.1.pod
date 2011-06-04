@@ -13,9 +13,6 @@ quvi [options] [url|file ...]
 quvi is a command line tool for parsing Adobe Flash media stream URLs. It
 supports many websites including YouTube and Dailymotion.
 
-The parsed details are printed to standard output (in JSON), everything else
-is printed to standard error.
-
 =head1 MOTIVATION
 
 quvi parses Adobe Flash media stream URLs for third party applications. It
@@ -25,36 +22,32 @@ a "workaround" to Adobe Flash Player.
 
 Read also:
 
-  * <http://en.wikipedia.org/wiki/Adobe_Flash#Performance>
-  * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
-  * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
+ * <http://en.wikipedia.org/wiki/Adobe_Flash#Performance>
+ * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
+ * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
 
 =head1 NOTES - PROTOCOL CATEGORIES
 
-As of 0.2.12, quvi supports different "protocol categories". For
-historical reasons, it defaults to the HTTP category. This means
-that any website scripts that parse and return RTMP/MMS/RTSP media
-URLs are not considered unless an appropriate category switch is used.
+quvi supports "protocol categories", but for historical reasons it does not
+consider the non-HTTP webscripts unless explicitly told to do so. This
+behaviour will change in 0.2.20. Until then, the category switches must be
+used with quvi, e.g.:
+
+ % quvi                    # HTTP protocol category (default)
+ % quvi --category-rtmp    # RTMP protocol category webscripts only
+ % quvi --category-all     # Webscripts of all supported categories
+
 For example:
 
-  % quvi --support                 # HTTP websites only (default)
-  % quvi --support --category-rtmp # RTMP websites only
-  % quvi --support -a              # Websites of all categories
-
-With this in mind:
-
-  % quvi RTMP_URL
-  error: no support: RTMP_URL
-  % quvi -a RTMP_URL # OK
-
-The default behaviour is planned to change to "all" in 0.2.20.
+ % quvi RTMP_URL    # No support
+ % quvi -a RTMP_URL # OK
 
 =head1 OPTIONS
 
-Unless an URL is specified in the command line, quvi reads from the stdin
-and expects each URL to be separated by a newline. The command line args
-may be either URLs or files to be read. As with reading from the stdin,
-each URL in the file is expected to be separated by a newline.
+Unless an arg is specified in the command line, quvi reads from the
+stdin. The command line args may be either URLs or files to read.
+If quvi reads from either stdin or files, it expects each URL to be
+separated by a newline character.
 
 =over 4
 
@@ -70,29 +63,25 @@ Print program version and exit.
 
 Print license and exit.
 
-=item B<--support>
+=item B<--support> [I<arg>]
 
-Print supported hosts and exit. To check if an URL is supported, specify
-an URL as an argument to the program. See L</EXAMPLES>.
+Print supported hosts and exit. If an I<arg> is specified, the program
+checks, instead, whether the I<arg> is supported.
 
 =item B<--xml>
 
-Print the details in XML (instead of JSON). URLs are escaped (URL encoded,
-unlike in JSON). Encoding is always UTF-8 (like in JSON).
+Print the media details in XML.
 
 =item B<--old>
 
-Print the details in the previously used default output format
-(0.2.3 and earlier).
+Print the media details in the format used in the prior E<lt>0.2.4 versions
+of quvi.
 
 =item B<-q, --quiet>
 
-Turn off all output printed to stderr (excl. any errors). libcurl
-will continue to generate messages to stderr if the L</--verbose-libcurl>
-switch is used.
-
-This switch has no no effect on the the media details which are
-printed to stdout.
+Turn off all output printed to stderr (excl. any errors). If
+C<--verbose-libcurl> is enabled, libcurl will continue to print messages to
+stderr. The media details will still be printed to stdout.
 
 =item B<--verbose-libcurl>
 
@@ -100,61 +89,55 @@ Turn on libcurl verbose mode.
 
 =item B<--exec> I<arg>
 
-Invoke I<arg> for each (successfully) parsed media. You can use the following
-specifiers in I<arg>:
+Invoke I<arg> after each successfully parsed URL. Each occurence of the
+following specifiers will be replaced (and double-quoted) in the I<arg>:
 
-  %u  Media URL
-
-Note that I<all> occurences of the specifier will be replaced,
-and each new value will be quoted ("").
+ %u  Media URL
 
 =item B<-r, --no-resolve>
 
-Do not attempt to resolve URL redirections. If used, most of the
-shortened URLs will stop working with quvi. Note that this switch
-has no effect on website scripts that use the quvi.resolve function.
+Do not resolve URL redirections. If enabled, breaks the compatibility
+with most "shortened" URLs. Webscripts that use redirection resolving
+explicitly, ignore this switch.
 
 =item B<-n, --no-verify>
 
-Do not verify media stream URL after parsing it. Normally this serves two
-purposes:
-
-  * Check that the URL works
-  * Get content-length and content-type
-
-If this switch used, the program will report invalid values for those
-details (e.g. 0 content length, empty string for content-type, etc.) but
-may save some bandwidth if those details are not needed.
-
-Note that the URL is verified for HTTP only.
+Do not verify media stream URL after parsing. The verification is
+specific to HTTP and ignored with other protocols. If enabled, some
+of the media details, e.g. content length, will be incomplete.
 
 =item B<--category-http>
 
-Enable category HTTP website scripts. This is the default category.
+Enable category HTTP webscripts. This is the default category.
 
 =item B<--category-mms>
 
-Enable category MMS website scripts.
+Enable category MMS webscripts.
 
 =item B<--category-rtsp>
 
-Enable category RTSP website scripts.
+Enable category RTSP webscripts.
 
 =item B<--category-rtmp>
 
-Enable category RTMP website scripts.
+Enable category RTMP webscripts.
 
 =item B<--category-all>
 
-Enable all categories of website scripts.
+Enable all categories of webscripts.
+
+=item B<-F, --query-formats> I<arg>
+
+Query available formats to an I<arg>.
 
 =item B<-f, --format> I<arg>
 
-Query for I<arg> format. I<arg> can also be C<help>. The resulting
-format may be different from the requested one if the LUA script
-was unable to parse an URL to the requested format. The scripts are
-expected to fallback to the 'default' format if the requested format
-could not be parsed and raise an error if that failed as well.
+Get format I<arg> of the media. I<arg> can also be C<help> or C<list>.
+The resulting format may be different from the I<arg> if the library
+was unable to get the requested format.
+
+I<arg> C<list> is deprecated and will be removed in 0.2.20. Use
+C<--query-formats> instead.
 
 =item B<--agent> I<arg>
 
@@ -168,8 +151,8 @@ achieve the same.
 
 =item B<--no-proxy>
 
-Disable use of HTTP proxy completely. Proxy will not
-be used even if defined in http_proxy.
+Disable use of HTTP proxy completely. Proxy will not be used even
+if it is defined in http_proxy.
 
 =item B<--connect-timeout> I<seconds>
 
@@ -184,55 +167,35 @@ Default is 30.
 
 =item quvi URL
 
-Query URL.
+Query the media details for the URL.
 
-=item quvi --support
-
-Print supported website in the HTTP category.
-
-=item quvi --support --category-rtmp
-
-Same but in the RTMP category. See also L</NOTES - PROTOCOL CATEGORIES>.
-
-=item quvi --support URL
-
-Query (without an Internet connection) if libquvi can handle the URL.
-Note that this will fail with most "shortened" URLs.
-
-=item quvi YOUTUBE_URL
-
-Query for YouTube media stream URL.
-
-=item quvi YOUTUBE_URL -f best
-
-Query for "best" (available format).
-
-=item quvi YOUTUBE_URL -f best --xml
+=item quvi --xml URL
 
 Same but print the results in XML.
 
-=item quvi -f list youtube
+=item quvi -f best URL
 
-Match the search pattern "youtube" to those domain names returned
-by libquvi and print the results.
+Query for the best available format, assumes E<gt>1 formats are
+supported, otherwise will fallback to default format.
 
-=item quvi -f list yout
+=item quvi -F URL
 
-Yields the same results.
+Query available formats to the URL. To use a format string from the
+returned list, choose one and use it with C<--format>.
 
-=item echo "URL" | quvi
+=item quvi --support
 
-Read input from the pipeline. Similarly:
+Print supported website in the HTTP category and exit.
 
-  % cat >> URLs
-  URL1
-  URL2
-  (^D)
-  % quvi < URLs
-  Or:
-  % quvi URLs
+=item quvi --support --category-rtmp
 
-Separate each URL with a newline.
+Same but print only those from the RTMP category. See also
+L</NOTES - PROTOCOL CATEGORIES>.
+
+=item quvi --support URL
+
+Check whether the URL is supported. This does not require an Internet
+connection but will fail with most "shortened" URLs.
 
 =back
 
@@ -242,15 +205,15 @@ Separate each URL with a newline.
 
 =item B<$HOME/.quvirc>
 
-You can define most of the command line options in the config file.
-For example:
+Most of the command line options can also be defined in the
+configuration file. For example:
 
  agent = some_agent/1.0     # --agent
  proxy = http://foo:1234    # --proxy
  no-verify                  # --no-verify
  verbose-libcurl            # --verbose-libcurl
 
-You can use $QUVI_HOME instead of $HOME.
+You can also use $QUVI_HOME instead of $HOME.
 
 =back
 
@@ -268,9 +231,7 @@ command uses this instead of $HOME.
 Path to the "base directory" with the libquvi LUA scripts. Overrides
 the default search paths. e.g.:
 
-  % ls /usr/share/quvi/lua
-  README util website
-  % env QUVI_BASEDIR=/usr/share/quvi quvi
+ % env QUVI_BASEDIR=/dir/with/quvi/lua/scripts/ quvi
 
 =item B<QUVI_SHOW_SCANDIR>
 
@@ -280,7 +241,7 @@ If set, libquvi prints the LUA script search paths to the stderr.
 
 If set, the LUA scripts found by libquvi are printed to the stderr.
 
-  % env QUVI_SHOW_SCRIPT=1 quvi
+ % env QUVI_SHOW_SCRIPT=1 quvi
 
 =back
 
@@ -288,22 +249,24 @@ If set, the LUA scripts found by libquvi are printed to the stderr.
 
 quvi exits with 0 on success and E<gt>0 if an error occurred.
 
-  QUVI_OK               = 0x00
-  QUVI_MEM              = 0x01, Memory allocation failed
-                            (or invalid quvi command line option)
-  QUVI_BADHANDLE        = 0x02, Bad session handle
-  QUVI_INVARG           = 0x03, Invalid function (or command line) arg
-  QUVI_CURLINIT         = 0x04, libcurl initialization failed
-  QUVI_LAST             = 0x05, Indicates end of list iteration
-  QUVI_ABORTEDBYCALLBACK= 0x06, Aborted by callback function
-  QUVI_LUAINIT          = 0x07, Lua initialization failure
-  QUVI_NOLUAWEBSITE     = 0x08, Failed to find lua website scripts
-  --
-  QUVI_PCRE             = 0x40, libpcre error occurred, deprecated 0.2.9+
-  QUVI_NOSUPPORT        = 0x41, libquvi does not support the host
-  QUVI_CURL             = 0x42, libcurl error occurred
-  QUVI_ICONV            = 0x43, libiconv error occurred
-  QUVI_LUA              = 0x44, lua error occurred
+ QUVI_OK               = 0x00
+ QUVI_MEM              = 0x01, Memory allocation failed
+                           (or invalid quvi command line option)
+ QUVI_BADHANDLE        = 0x02, Bad session handle
+ QUVI_INVARG           = 0x03, Invalid function (or command line) arg
+ QUVI_CURLINIT         = 0x04, libcurl initialization failed
+ QUVI_LAST             = 0x05, Indicates end of list iteration
+ QUVI_ABORTEDBYCALLBACK= 0x06, Aborted by callback function
+ QUVI_LUAINIT          = 0x07, Lua initialization failure
+ QUVI_NOLUAWEBSITE     = 0x08, Failed to find lua webscripts
+ QUVI_NOLUAUTIL        = 0x09, Failed to find the utility scripts
+ --
+ QUVI_NOSUPPORT        = 0x41, libquvi does not support the host
+ QUVI_CALLBACK         = 0x42, network callback error occurred
+ QUVI_ICONV            = 0x43, libiconv error occurred
+ QUVI_LUA              = 0x44, lua error occurred
+ -- Deprecated (removed in 0.2.20)
+ QUVI_PCRE             = 0x40, libpcre error occurred, depr. since 0.2.9
 
 =head1 DEBUGGING TIPS
 
@@ -325,21 +288,17 @@ See also C<gdb(1)>, C<strace(1)> and C<valgrind(1)>.
 
 =head1 WWW
 
-E<lt>http://quvi.sourceforge.net/E<gt>
-
-E<lt>http://repo.or.cz/w/quvi.gitE<gt>
-
-=head1 CONTRIBUTE
-
-E<lt>http://repo.or.cz/w/quvi.git/tree/HEAD:/docE<gt>
+ Home  : http://quvi.sourceforge.net/
+ gitweb: http://repo.or.cz/w/quvi.git
 
 =head1 BACKGROUND
 
-quvi or "(qu)ery (vi)deo" for historical reasons. As of 0.2.15
-a more suitable name would be qume or "(qu)ery (me)dia".
+The name originates from the words "query" and "video". With the release
+0.2.15 a better suited name for the project would be "qume" (query
+media).
 
-quvi was inspired by cclive. Embeddable LUA scripting was introduced
-in 0.2.0.
+ * Inspired by cclive
+ * Embeddable LUA scripting was introduced in 0.2.0
 
 =head1 LICENSE
 
