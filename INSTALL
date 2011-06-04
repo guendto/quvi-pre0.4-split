@@ -1,6 +1,7 @@
 
 
-    Prerequisites
+Prerequisites
+-------------
 
 * libcurl   7.18.0+  <http://curl.haxx.se/>
 * libiconv  1.12.0+  <http://www.gnu.org/software/libiconv/>
@@ -16,11 +17,13 @@
       [libiconv]
 
 
-    Installation
+Installation from (release) source tarball
+------------------------------------------
 
 "./configure && make install", typically. See also "./configure --help".
+See also "Installation from development code" further below.
 
-    --enable-tests          Enable tests (e.g. "make check")
+    --enable-tests          Enable tests (e.g. "make check", req. Perl)
     --enable-verbose-tests  Verbose tests
 
     --enable-nsfw           Install (&test) webscripts marked as "NSFW" [#1]
@@ -48,14 +51,32 @@
     (compiled only with --enable-examples and --with-soup)
 
 
-    C API documentation
+Installation from development code
+----------------------------------
+
+If you are compiling quvi from the development code, run "autogen.sh".
+This generates the configuration files that are not in the git
+repository. You will need:
+
+  * Perl (with pod2man)
+  * GNU autoconf
+  * GNU automake
+  * gengetopt
+
+Once the files have been generated, you can follow the instructions in
+"Installation from source tarball".
+
+
+C API documentation
+-------------------
 
 "make doc" generates the C API reference documentation from the
 NaturalDocs tags. The same documentation is available at:
     <http://quvi.sourceforge.net/>
 
 
-    Tests
+Tests
+-----
 
 Run either "make check" or "make test". Please note that in order to
 enable tests, you must run `configure' with `--enable-tests'. Note also
