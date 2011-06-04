@@ -35,3 +35,6 @@ src/libquvi/Overviews/Makefile.in
 src/libquvi/quvi/Makefile.in
 src/quvi/Makefile.in
 tests/Makefile.in
+src/quvi/cmdline.c
+src/quvi/cmdline.h
+doc/man1/quvi.1
