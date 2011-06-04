@@ -1,4 +1,5 @@
 if ENABLE_QUVI
+
 EXTRA_DIST = cmdline.ggo
 
 src = quvi.c cmdline.c \
@@ -32,6 +33,8 @@ quvi_LDADD =  \
     $(LIBICONV) \
     $(LTLIBICONV)
 
+BUILT_SOURCES = cmdline.c
+
 cmdline.c: cmdline.ggo
 if HAVE_GENGETOPT
 	@GENGETOPT@ < $(top_srcdir)/src/quvi/cmdline.ggo -C --unamed-opts=URL \
@@ -40,6 +43,6 @@ else
 	@echo "error: configure did not find 'gengetopt' command" && exit 1
 endif # HAVE_GENGETOPT
 
-dist-hook: cmdline.c
+cmdline.h: cmdline.c
 
 endif # ENABLE_QUVI
