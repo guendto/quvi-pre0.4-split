@@ -765,7 +765,6 @@ static QUVIcode run_parse_func(_quvi_llst_node_t n, _quvi_media_t m)
 {
   static const char *f = "parse";
   _quvi_lua_script_t s;
-  char *script_dir;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
@@ -787,19 +786,14 @@ static QUVIcode run_parse_func(_quvi_llst_node_t n, _quvi_media_t m)
       return (QUVI_LUA);
     }
 
-  script_dir = dirname_from(s->path);
-
   lua_newtable(l);
   setfield_reg_userdata(l, USERDATA_QUVI_MEDIA_T, m);
   setfield_s(l, "requested_format", m->quvi->format);
   setfield_s(l, "page_url", m->page_url);
-  setfield_s(l, "script_dir", script_dir);
   setfield_s(l, "thumbnail_url", "");
   setfield_s(l, "redirect_url", "");
   setfield_s(l, "start_time", "");
   setfield_n(l, "duration", 0);
-
-  _free(script_dir);
 
   if (lua_pcall(l, 1, 1, 0))
     {

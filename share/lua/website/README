@@ -96,7 +96,6 @@ Parameters:
   * self (table)
     - page_url         (string) -- User specified page URL
     - requested_format (string) -- User requested format ID
-    - script_dir       (string) -- Path to script directory
 
 Sets:
   * host_id (string)
