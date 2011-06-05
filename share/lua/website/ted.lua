@@ -94,8 +94,12 @@ function Ted.iter_formats(page)
             local u,q = 'http://www.ted.com' .. src
             c         = string.lower(c)
             if c == 'mp4' then
-                q = have_sd and 'sd' or 'hd'
-                have_sd = true
+                if not have_sd then
+                    have_sd = true
+                    q = 'sd'
+                else
+                    q = 'hd'
+                end
             end
 --            print(u,c,q)
             table.insert(t, {url=u, container=c, quality=q})
@@ -104,9 +108,13 @@ function Ted.iter_formats(page)
     return t
 end
 
-function Ted.choose_best(formats) -- Last is the 'best'
-    local r
-    for _,v in pairs(formats) do r = v end
+function Ted.choose_best(formats) -- Last 'mp4' is the 'best'
+    local r = Ted.choose_default(formats)
+    for _,v in pairs(formats) do
+        if v.container == 'mp4' then
+            r = v
+        end
+    end
     return r
 end
 
