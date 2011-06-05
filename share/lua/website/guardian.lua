@@ -45,6 +45,9 @@ function parse (self)
     self.host_id = "guardian"
     local page   = quvi.fetch(self.page_url)
 
+    local _,_,s = page:find('div class="expired">.-<p>(.-)<')
+    if s then error(s) end
+
     local _,_,s = page:find('data%-text="(.-)"')
     self.title  = s:gsub('%s+%-%s+video','')
                     or error ("no match: media title")
