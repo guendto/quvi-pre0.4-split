@@ -151,7 +151,8 @@ function Spiegel.choose_default(formats) -- Lowest quality available
 end
 
 function Spiegel.to_s(t)
-    return string.format('%s_%s_%sp', t.container, t.codec, t.height)
+    return string.format('%s_%s_%sk_%sp',
+        t.container, t.codec, t.bitrate, t.height)
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
