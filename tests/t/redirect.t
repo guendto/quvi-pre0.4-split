@@ -16,7 +16,7 @@ use Test::Quvi;
 
 my $q = Test::Quvi->new;
 
-# Test self.redirect in the academicearth.lua script.
+# Test self.redirect_url in academicearth.lua
 my $u =
   "http://www.academicearth.org/lectures/intro-roman-architecture";
 
