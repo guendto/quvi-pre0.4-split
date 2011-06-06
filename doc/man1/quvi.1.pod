@@ -39,8 +39,8 @@ used with quvi, e.g.:
 
 For example:
 
- % quvi RTMP_URL    # No support
- % quvi -a RTMP_URL # OK
+ % quvi "RTMP_URL"      # No support
+ % quvi -a "RTMP_URL"   # OK
 
 =head1 OPTIONS
 
@@ -126,9 +126,9 @@ Enable category RTMP webscripts.
 
 Enable all categories of webscripts.
 
-=item B<-F, --query-formats> I<arg>
+=item B<-F, --query-formats>
 
-Query available formats to an I<arg>.
+Query available formats.
 
 =item B<-f, --format> I<arg>
 
@@ -141,7 +141,7 @@ C<--query-formats> instead.
 
 =item B<--agent> I<arg>
 
-Identify quvi as I<arg> to servers. Default is "Mozilla/5.0".
+Identify quvi as I<arg> to the HTTP servers. Default is "Mozilla/5.0".
 
 =item B<--proxy> I<arg>
 
@@ -163,25 +163,28 @@ Default is 30.
 
 =head1 EXAMPLES
 
+Put the URLs inside quotes when they are specified as the command line
+arguments to the program. This is the recommended practice.
+
 =over 4
 
-=item quvi URL
+=item quvi "URL"
 
-Query the media details for the URL.
+Typical use.
 
-=item quvi --xml URL
+=item quvi --xml "URL"
 
 Same but print the results in XML.
 
-=item quvi -f best URL
+=item quvi -f best "URL"
 
-Query for the best available format, assumes E<gt>1 formats are
-supported, otherwise will fallback to default format.
+Get for the best available format of the media. This assumes E<gt>1
+formats are supported, otherwise will fallback to default format.
 
-=item quvi -F URL
+=item quvi -F "URL"
 
-Query available formats to the URL. To use a format string from the
-returned list, choose one and use it with C<--format>.
+Query available formats to the URL. Use one of the returned format
+strings from this list with C<--format>.
 
 =item quvi --support
 
@@ -192,7 +195,7 @@ Print supported website in the HTTP category and exit.
 Same but print only those from the RTMP category. See also
 L</NOTES - PROTOCOL CATEGORIES>.
 
-=item quvi --support URL
+=item quvi --support "URL"
 
 Check whether the URL is supported. This does not require an Internet
 connection but will fail with most "shortened" URLs.
