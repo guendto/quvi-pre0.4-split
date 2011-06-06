@@ -12,7 +12,6 @@ bin_PROGRAMS = quvi
 quvi_SOURCES = $(src) $(hdr)
 
 quvi_CPPFLAGS = \
-    -I$(top_builddir)/src/libquvi \
     -I$(top_srcdir)/src/libquvi \
     $(libcurl_CFLAGS) \
     $(AM_CPPFLAGS)
