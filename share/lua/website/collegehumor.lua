@@ -24,16 +24,16 @@
 local CollegeHumor = {} -- Utility functions unique to this script
 
 -- Identify the script.
-function ident (self)
+function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "collegehumor.com"
+    local domains= {"collegehumor.com", "dorkly.com"}
+    r.domain     = table.concat(domains, "|")
     r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url,
-                    {r.domain}, {"/video[:/]%d+/?"})
+    r.handles    = U.handles(self.page_url, domains, {"/video[:/]%d+/?"})
     return r
 end
 
@@ -54,7 +54,7 @@ function query_formats(self)
 end
 
 -- Parse media URL.
-function parse (self)
+function parse(self)
     self.host_id  = "collegehumor"
     local config  = CollegeHumor.get_config(self)
 
@@ -71,7 +71,6 @@ function parse (self)
                                      CollegeHumor.choose_default,
                                      CollegeHumor.to_s).url
                         or error('no match: media url')}
-
     return self
 end
 
@@ -79,15 +78,25 @@ end
 -- Utility functions
 --
 
-function CollegeHumor.get_media_id(url)
-    if not url then return url end
-    local _,_,s = url:find('/video[/:](%d+)')
-    return s
+function CollegeHumor.get_media_id(self)
+    local R         = require 'quvi/url'
+    local domain    = R.parse(self.page_url).host:gsub('^www%.', '', 1)
+
+    _,_,self.host_id = domain:find('^(.+)%.[^.]+$')
+    if not self.host_id then
+        error("no match: domain")
+    end
+
+    _,_,self.id = self.page_url:find('/video[/:](%d+)')
+    if not self.id then
+        error("no match: media id")
+    end
+
+    return domain
 end
 
 function CollegeHumor.get_config(self)
-    self.id = CollegeHumor.get_media_id(self.page_url)
-                or error("no match: media id")
+    local domain = CollegeHumor.get_media_id(self)
 
     -- quvi normally checks the page URL for a redirection to another
     -- URL. Disabling this check (QUVIOPT_NORESOLVE) breaks the support
@@ -96,8 +105,8 @@ function CollegeHumor.get_config(self)
 
     -- Make a note of the use of the quvi.resolve returned string.
     local config_url =
-        string.format("http://www.collegehumor.com/moogaloop/video%s%s",
-            (#r > 0) and ':' or '/', self.id)
+        string.format("http://www.%s/moogaloop/video%s%s",
+            domain, (#r > 0) and ':' or '/', self.id)
 
     return quvi.fetch(config_url, {fetch_type='config'})
 end
