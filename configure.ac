@@ -216,13 +216,13 @@ AC_ARG_ENABLE([nlfy],
     [enable_nlfy=no])
 AM_CONDITIONAL([ENABLE_NLFY], [test x"$enable_nlfy" != "xno"])
 
-# --with-man
-AC_ARG_WITH([man],
-    [AS_HELP_STRING([--with-man],
+# --with-manual
+AC_ARG_WITH([manual],
+    [AS_HELP_STRING([--with-manual],
         [install manual pages @<:@default=yes@:>@])],
     [],
-    [with_man=yes])
-AM_CONDITIONAL([WITH_MAN], [test x"$with_man" != "xno"])
+    [with_manual=yes])
+AM_CONDITIONAL([WITH_MANUAL], [test x"$with_manual" != "xno"])
 
 # GNU ld?
 AM_CONDITIONAL([HAVE_GNU_LD], [test x"$with_gnu_ld" = "xyes"])
@@ -263,5 +263,5 @@ Options:
  enable nsfw:    ${enable_nsfw}
  enable nlfy:    ${enable_nlfy}
 --
- install manual: ${with_man}
+ install manual: ${with_manual}
 ])
