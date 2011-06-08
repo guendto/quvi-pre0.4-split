@@ -84,6 +84,7 @@ end
 
 function Vimeo.normalize(url)
     url = url:gsub("player.", "") -- player.vimeo.com
+    url = url:gsub("/video/", "/") -- player.vimeo.com
     return url
 end
 
