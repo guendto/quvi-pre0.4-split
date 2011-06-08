@@ -17,45 +17,51 @@ Prerequisites
       [libiconv]
 
 
-Installation from (release) source tarball
-------------------------------------------
+Installation from source
+------------------------
 
 "./configure && make install", typically. See also "./configure --help".
-See also "Installation from development code" further below.
+If you are compiling quvi from the development code from the git
+repository, see "Installation from development code", instead.
 
     --enable-tests          Enable tests (e.g. "make check", req. Perl)
-    --enable-verbose-tests  Verbose tests
+                                The tests are not run by default. For
+                                verbose tests, set TEST_VERBOSE
+                                environment.
 
-    --enable-nsfw           Install (&test) webscripts marked as "NSFW" [#1]
-    --enable-todo           Install (&test) webscripts marked as "TODO" [#2]
-    --enable-nlfy           Enable tests for webscripts marked as "NLFY" [#3]
+    --enable-nsfw           Install (&test) webscripts marked as "NSFW"
+                                "Not safe for work" webscripts. Not installed
+                                by default.
+
+    --enable-todo           Install (&test) webscripts marked as "TODO"
+                                Broken, outdated etc. webscripts. Not
+                                installed by default. Recommended for
+                                developers only.
+
+    --enable-nlfy           Enable *tests* for webscripts marked as "NLFY"
+                                "No love for you" scripts for websites that
+                                follow strict country policies (a.k.a.
+                                "Sorry, we do not accept connections from
+                                your country"). Not tested by default.
+                                See also --enable-tests above. These
+                                webscripts are installed *always*.
 
     --disable-quvi          Do not build (&install) the quvi command
-    --disable-examples      Do not build examples
+    --enable-examples       Build examples which are not compiled by default
 
-    --with-soup             Build with libsoup(-gnome) [#4]
-    --without-man           Do not install manual page(s)
+    --with-soup             Build with libsoup(-gnome)
+                                Required *only* by examples/callback_libsoup.c,
+                                ignored unless both --enable-examples and
+                                --with-soup are used
 
-[1] Webscripts marked as "NSFW" ("Not Safe For Work")
-    (installed only with --enable-nsfw)
-
-[2] Broken and outdated webscripts marked as "TODO" for developers
-    (installed only with --enable-todo)
-
-[3] Webscripts marked as "NLFY" ("No Love For You") for websites
-    that follow strict country policies, a.k.a.
-        "Sorry we do not accept connections from your country"
-    (installed always)
-
-[4] Required currently by examples/callback_libsoup.c *only*
-    (compiled only with --enable-examples and --with-soup)
+    --without-manual        Do not install manual page(s).
 
 
 Installation from development code
 ----------------------------------
 
-If you are compiling quvi from the development code, run "autogen.sh".
-This generates the configuration files that are not in the git
+If you are compiling quvi from the development code, run "autogen.sh",
+first. This generates the configuration files that are not in the git
 repository. You will need:
 
   * Perl (with pod2man)
@@ -63,8 +69,8 @@ repository. You will need:
   * GNU automake
   * gengetopt
 
-Once the files have been generated, you can follow the instructions in
-"Installation from source tarball".
+Once the files have been generated, follow the instructions in "Installation
+from source" above.
 
 
 C API documentation
@@ -74,11 +80,12 @@ C API documentation
 NaturalDocs tags. The same documentation is available at:
     <http://quvi.sourceforge.net/>
 
+The documentation is not installed with quvi.
+
 
 Tests
 -----
 
-Run either "make check" or "make test". Please note that in order to
-enable tests, you must run `configure' with `--enable-tests'. Note also
-that the test suite is intended for developers and *will* use the
-Internet. See also $top_srcdir/tests/README.
+"configure --enable-tests && make check", typically. The test suite is
+intended for developers only and will use the Internet. See also
+$top_srcdir/tests/README.
