@@ -184,15 +184,6 @@ AC_ARG_ENABLE([tests],
     [enable_tests=no])
 AM_CONDITIONAL([ENABLE_TESTS], [test x"$enable_tests" != "xno"])
 
-# --enable-verbose-tests
-AC_ARG_ENABLE([verbose-tests],
-    [AS_HELP_STRING([--enable-verbose-tests],
-        [enable verbose tests @<:@default=no@:>@])],
-    [],
-    [enable_verbose_tests=no])
-AM_CONDITIONAL([ENABLE_VERBOSE_TESTS],
-    [test x"$enable_verbose_tests" != "xno"])
-
 # --enable-nsfw
 AC_ARG_ENABLE([nsfw],
     [AS_HELP_STRING([--enable-nsfw],

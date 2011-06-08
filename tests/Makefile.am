@@ -23,10 +23,6 @@ EXTRA_DIST = \
 
 PROVE_OPTS_COMMON = --nocolor
 
-if ENABLE_VERBOSE_TESTS
-PROVE_OPTS_COMMON += -v
-endif
-
 # Options for those tests that use Test::Quvi.
 
 PROVE_OPTS = -I $(top_srcdir)/tests/lib/
@@ -62,12 +58,13 @@ PROVE_OPTS_POD = $(PROVE_OPTS_COMMON)
 TESTQUVI_OPTS_POD = -p $(top_srcdir)/doc/man1
 
 test: all
-	@ ok=1; for t in $(TESTS_T); do \
-		( $(PROVE) $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
+	@verbose=; test -n "$$TEST_VERBOSE" && verbose=-v; \
+	ok=1; for t in $(TESTS_T); do \
+		( $(PROVE) $$verbose $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
 		:: $(TESTQUVI_OPTS) ) || ok=; \
 	done; \
 	for t in $(TESTS_POD_T); do \
-		( $(PROVE) $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
+		( $(PROVE) $$verbose $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
 		:: $(TESTQUVI_OPTS_POD) ) || ok=; \
 	done; \
 	if test -z "$$ok"; then exit 1; fi
