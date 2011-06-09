@@ -33,12 +33,17 @@ function ident(self)
     r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url, domains, {"/video[:/]%d+/?"})
+    r.handles    = U.handles(self.page_url, domains,
+                    {"/video[:/]%d+/?", "/embed/%d+"})
     return r
 end
 
 -- Query formats.
 function query_formats(self)
+    if CollegeHumor.redirect_if_embed(self) then
+        return self
+    end
+
     local config  = CollegeHumor.get_config(self)
     local formats = CollegeHumor.iter_formats(config)
 
@@ -56,7 +61,12 @@ end
 -- Parse media URL.
 function parse(self)
     self.host_id  = "collegehumor"
-    local config  = CollegeHumor.get_config(self)
+
+    if CollegeHumor.redirect_if_embed(self) then
+        return self
+    end
+
+    local config = CollegeHumor.get_config(self)
 
     local _,_,s = config:find('<caption>(.-)<')
     self.title  = s or error("no match: media title")
@@ -77,6 +87,19 @@ end
 --
 -- Utility functions
 --
+
+function CollegeHumor.redirect_if_embed(self) -- dorkly embeds YouTube videos
+    if self.page_url:match('/embed/%d+') then
+        local page  = quvi.fetch(self.page_url)
+        local _,_,s = page:find('youtube.com/embed/([%w-_]+)')
+        if s then
+            -- Hand over to youtube.lua
+            self.redirect_url = 'http://youtube.com/watch?v=' .. s
+            return true
+        end
+    end
+    return false
+end
 
 function CollegeHumor.get_media_id(self)
     local R         = require 'quvi/url'
