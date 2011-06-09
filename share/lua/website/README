@@ -46,6 +46,9 @@ Returns: table containing the following details:
     - Identifies the script, this is essentially a pattern, e.g.
       "video.google." (note the lack of TLD) or "youtube.com"
     - Should cover any additional TLDs and website domain names
+    - If the script can handle >1 (_different_) websites, put the
+      domain names into an array, each domain name separated by '|',
+      see collegehumor.lua for an example of this
 
   * formats (string)
     - Array of available format IDs (e.g. "default|best|hq|hd")
@@ -81,7 +84,9 @@ Parameters:
     - page_url (string) -- User specified page URL
 
 Sets:
-  * self.formats (string) -- Each format string separated with '|'
+  * self.formats (string) -- Each format string separated by '|'
+  Optional:
+  * redirect_url (string, see collegehumor.lua)
 
 Returns:
   * Updated `self' table
