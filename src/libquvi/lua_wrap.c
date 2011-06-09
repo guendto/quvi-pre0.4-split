@@ -742,6 +742,7 @@ static QUVIcode run_query_formats_func(_quvi_llst_node_t n,
   lua_newtable(l);
   setfield_reg_userdata(l, USERDATA_QUVI_MEDIA_T, m);
   setfield_s(l, "page_url", m->page_url);
+  setfield_s(l, "redirect_url", "");
 
   if (lua_pcall(l, 1, 1, 0))
     {
@@ -750,7 +751,11 @@ static QUVIcode run_query_formats_func(_quvi_llst_node_t n,
     }
 
   if (lua_istable(l, -1))
-    freprintf(formats, "%s", getfield_s(l, "formats", s, f));
+    {
+      freprintf(&m->redirect_url, "%s", getfield_s(l, "redirect_url", s, f));
+      if (strlen(m->redirect_url) == 0)
+        freprintf(formats, "%s", getfield_s(l, "formats", s, f));
+    }
   else
     luaL_error(l, "%s: expected `%s' function return a table", s->path, f);
 

@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2009,2010,2011  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2009-2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -303,6 +303,51 @@ static QUVIcode resolve_unless_disabled(_quvi_media_t media)
   return (rc);
 }
 
+typedef enum
+{
+  ParseFunc=0x00,
+  QueryFormatsFunc
+} FindScriptFunc;
+
+static QUVIcode resolve_and_find_script(_quvi_media_t m,
+                                        FindScriptFunc func,
+                                        char **formats)
+{
+  QUVIcode rc = resolve_unless_disabled(m);
+
+  if (rc != QUVI_OK)
+    return (rc);
+
+  while (1)
+    {
+      switch (func)
+        {
+        case ParseFunc:
+        default:
+          rc = find_host_script_and_parse(m);
+          break;
+        case QueryFormatsFunc:
+          rc = find_host_script_and_query_formats(m, formats);
+          break;
+        }
+      if (rc != QUVI_OK)
+        return (rc);
+      else
+        {
+          /* Check for "in-script redirection URL". Not to be confused
+           * with "resolving redirection URLs". */
+          if (strlen(m->redirect_url))
+            {
+              freprintf(&m->page_url, "%s", m->redirect_url);
+              continue;
+            }
+          else
+            break;
+        }
+    }
+  return (rc);
+}
+
 /*
  * Function: quvi_parse
  *
@@ -333,7 +378,7 @@ static QUVIcode resolve_unless_disabled(_quvi_media_t media)
  */
 QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
 {
-  _quvi_media_t media;
+  _quvi_media_t m;
   QUVIcode rc;
 
   _is_invarg(dst);
@@ -341,60 +386,41 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
   _is_invarg(url);
   _is_badhandle(quvi);
 
-  media = calloc(1, sizeof(*media));
-  if (!media)
+  m = calloc(1, sizeof(*m));
+  if (!m)
     return (QUVI_MEM);
 
-  media->quvi = quvi;
-  *dst = media;
+  m->quvi = quvi;
+  *dst = m;
 
-  freprintf(&media->page_url, "%s", url);
+  freprintf(&m->page_url, "%s", url);
 
-  rc = resolve_unless_disabled(media);
+  rc = resolve_and_find_script(m, ParseFunc, NULL);
   if (rc != QUVI_OK)
     return (rc);
 
-  while (1)
-    {
-      rc = find_host_script_and_parse(media);
-      if (rc != QUVI_OK)
-        return (rc);
-      else
-        {
-          if (strlen(media->redirect_url))
-            {
-              /* Found an "in-script redirection instruction", not be
-               * confused with "resolving redirection" */
-              freprintf(&media->page_url, "%s", media->redirect_url);
-              continue;
-            }
-          else
-            break;
-        }
-    }
-
 #ifdef HAVE_ICONV               /* Convert character set encoding to utf8. */
-  if (media->charset)
-    to_utf8(media);
+  if (m->charset)
+    to_utf8(m);
 #endif
-  assert(media->title != NULL); /* must be set in the lua script */
+  assert(m->title != NULL); /* must be set in the lua script */
 
-  media->title = from_html_entities(media->title);
+  m->title = from_html_entities(m->title);
 
-  if (!media->quvi->no_verify)
+  if (!m->quvi->no_verify)
     {
-      _quvi_llst_node_t curr = media->url;
+      _quvi_llst_node_t curr = m->url;
       while (curr)
         {
-          rc = verify_wrapper(media->quvi, curr);
+          rc = verify_wrapper(m->quvi, curr);
           if (rc != QUVI_OK)
             break;
           curr = curr->next;
         }
     }
 
-  /* set current media url to first url in the list. */
-  media->curr = media->url;
+  /* Make current media URL from the first URL. */
+  m->curr = m->url;
 
   return (rc);
 }
@@ -623,11 +649,7 @@ QUVIcode quvi_query_formats(quvi_t handle, char *url, char **formats)
   m->quvi = handle;
   freprintf(&m->page_url, "%s", url);
 
-  rc = resolve_unless_disabled(m);
-  if (rc != QUVI_OK)
-    return (rc);
-
-  rc = find_host_script_and_query_formats(m, formats);
+  rc = resolve_and_find_script(m, QueryFormatsFunc, formats);
 
   quvi_parse_close((quvi_media_t)&m);
 
