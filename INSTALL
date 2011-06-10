@@ -67,7 +67,7 @@ repository. You will need:
   * Perl (with pod2man)
   * GNU autoconf
   * GNU automake
-  * gengetopt
+  * GNU gengetopt
 
 Once the files have been generated, follow the instructions in "Installation
 from source" above.
