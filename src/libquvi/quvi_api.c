@@ -66,19 +66,19 @@
  * quvi_close(&q);
  * (end)
  */
-QUVIcode quvi_init(quvi_t * dst)
+QUVIcode quvi_init(quvi_t *session)
 {
   _quvi_t quvi;
   QUVIcode rc;
 
-  _is_invarg(dst);
-  *dst = 0;
+  _is_invarg(session);
+  *session = NULL;
 
   quvi = calloc(1, sizeof(*quvi));
   if (!quvi)
     return (QUVI_MEM);
 
-  *dst = (quvi_t) quvi;
+  *session = (quvi_t) quvi;
 
   rc = curl_init(quvi);
   if (rc != QUVI_OK)
@@ -105,11 +105,9 @@ QUVIcode quvi_init(quvi_t * dst)
  * See Also:
  *  <quvi_init>
  */
-void quvi_close(quvi_t *handle)
+void quvi_close(quvi_t *session)
 {
-  _quvi_t *quvi;
-
-  quvi = (_quvi_t *) handle;
+  _quvi_t *quvi = (_quvi_t*) session;
 
   if (quvi && *quvi)
     {
@@ -180,15 +178,15 @@ static QUVIcode _setopt(_quvi_t quvi, QUVIoption opt, va_list arg)
  * quvi_setopt(q, QUVIOPT_CATEGORY, QUVIPROTO_HTTP|QUVIPROTO_RTMP);
  * (end)
  */
-QUVIcode quvi_setopt(quvi_t quvi, QUVIoption opt, ...)
+QUVIcode quvi_setopt(quvi_t session, QUVIoption option, ...)
 {
   va_list arg;
   QUVIcode rc;
 
-  _is_badhandle(quvi);
+  _is_badhandle(session);
 
-  va_start(arg, opt);
-  rc = _setopt(quvi, opt, arg);
+  va_start(arg, option);
+  rc = _setopt(session, option, arg);
   va_end(arg);
 
   return (rc);
@@ -205,10 +203,10 @@ static QUVIcode _getinfo(_quvi_t quvi, QUVIinfo info, ...)
   int type;
 
   rc = QUVI_OK;
-  dp = 0;
-  sp = 0;
-  vp = 0;
-  lp = 0;
+  dp = NULL;
+  sp = NULL;
+  vp = NULL;
+  lp = NULL;
 
   va_start(arg, info);
   type = QUVIINFO_TYPEMASK & (int)info;
@@ -265,18 +263,18 @@ static QUVIcode _getinfo(_quvi_t quvi, QUVIinfo info, ...)
  * quvi_getinfo(q, QUVIINFO_RESPONSECODE, &resp_code);
  * (end)
  */
-QUVIcode quvi_getinfo(quvi_t quvi, QUVIinfo info, ...)
+QUVIcode quvi_getinfo(quvi_t session, QUVIinfo info, ...)
 {
   va_list arg;
   void *p;
 
-  _is_badhandle(quvi);
+  _is_badhandle(session);
 
   va_start(arg, info);
   p = va_arg(arg, void *);
   va_end(arg);
 
-  return (_getinfo(quvi, info, p));
+  return (_getinfo(session, info, p));
 }
 
 static QUVIcode resolve_unless_disabled(_quvi_media_t media)
@@ -376,22 +374,23 @@ static QUVIcode resolve_and_find_script(_quvi_media_t m,
  * quvi_parse_close(&m);
  * (end)
  */
-QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
+QUVIcode quvi_parse(quvi_t session, char *url, quvi_media_t *media)
 {
   _quvi_media_t m;
   QUVIcode rc;
 
-  _is_invarg(dst);
-  *dst = 0;
+  _is_invarg(media);
+  *media = NULL;
+
   _is_invarg(url);
-  _is_badhandle(quvi);
+  _is_badhandle(session);
 
   m = calloc(1, sizeof(*m));
   if (!m)
     return (QUVI_MEM);
 
-  m->quvi = quvi;
-  *dst = m;
+  m->quvi = session;
+  *media  = m;
 
   freprintf(&m->page_url, "%s", url);
 
@@ -433,13 +432,13 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
  * Parameters:
  *  media - Media handle
  */
-void quvi_parse_close(quvi_media_t * handle)
+void quvi_parse_close(quvi_media_t *media)
 {
-  _quvi_media_t *media = (_quvi_media_t *) handle;
+  _quvi_media_t *m = (_quvi_media_t*) media;
 
-  if (media && *media)
+  if (m && *m)
     {
-      _quvi_llst_node_t curr = (*media)->url;
+      _quvi_llst_node_t curr = (*m)->url;
 
       while (curr)
         {
@@ -449,20 +448,20 @@ void quvi_parse_close(quvi_media_t * handle)
           _free(l->url);
           curr = curr->next;
         }
-      quvi_llst_free((quvi_llst_node_t)&(*media)->url);
-      assert((*media)->url == NULL);
+      quvi_llst_free((quvi_llst_node_t)&(*m)->url);
+      assert((*m)->url == NULL);
 
-      _free((*media)->id);
-      _free((*media)->title);
-      _free((*media)->charset);
-      _free((*media)->page_url);
-      _free((*media)->host_id);
-      _free((*media)->redirect_url);
-      _free((*media)->start_time);
-      _free((*media)->thumbnail_url);
+      _free((*m)->id);
+      _free((*m)->title);
+      _free((*m)->charset);
+      _free((*m)->page_url);
+      _free((*m)->host_id);
+      _free((*m)->redirect_url);
+      _free((*m)->start_time);
+      _free((*m)->thumbnail_url);
 
-      _free(*media);
-      assert(*media == NULL);
+      _free(*m);
+      assert(*m == NULL);
     }
 }
 
@@ -479,12 +478,12 @@ static QUVIcode _getprop(_quvi_media_t media, QUVIproperty prop, ...)
   int type;
 
   qvl = (_quvi_media_url_t) media->curr->data;
-  assert(qvl != 0);
+  assert(qvl != NULL);
 
   rc = QUVI_OK;
-  dp = 0;
-  sp = 0;
-  lp = 0;
+  dp = NULL;
+  sp = NULL;
+  lp = NULL;
 
   va_start(arg, prop);
   type = QUVIPROPERTY_TYPEMASK & (int)prop;
@@ -569,18 +568,18 @@ static QUVIcode _getprop(_quvi_media_t media, QUVIproperty prop, ...)
  * quvi_close(&q);
  * (end)
  */
-QUVIcode quvi_getprop(quvi_media_t media, QUVIproperty prop, ...)
+QUVIcode quvi_getprop(quvi_media_t media, QUVIproperty property, ...)
 {
   va_list arg;
   void *p;
 
   _is_badhandle(media);
 
-  va_start(arg, prop);
+  va_start(arg, property);
   p = va_arg(arg, void *);
   va_end(arg);
 
-  return (_getprop(media, prop, p));
+  return (_getprop(media, property, p));
 }
 
 /*
@@ -632,12 +631,12 @@ QUVIcode quvi_getprop(quvi_media_t media, QUVIproperty prop, ...)
  * quvi_close(&q);
  * (end)
  */
-QUVIcode quvi_query_formats(quvi_t handle, char *url, char **formats)
+QUVIcode quvi_query_formats(quvi_t session, char *url, char **formats)
 {
   _quvi_media_t m;
   QUVIcode rc;
 
-  _is_badhandle(handle);
+  _is_badhandle(session);
   _is_invarg(url);
   _is_invarg(formats);
   *formats = NULL;
@@ -646,7 +645,7 @@ QUVIcode quvi_query_formats(quvi_t handle, char *url, char **formats)
   if (!m)
     return (QUVI_MEM);
 
-  m->quvi = handle;
+  m->quvi = session;
   freprintf(&m->page_url, "%s", url);
 
   rc = resolve_and_find_script(m, QueryFormatsFunc, formats);
@@ -689,26 +688,24 @@ QUVIcode quvi_query_formats(quvi_t handle, char *url, char **formats)
  * quvi_close(&q);
  * (end)
  */
-QUVIcode quvi_next_media_url(quvi_media_t handle)
+QUVIcode quvi_next_media_url(quvi_media_t media)
 {
-  _quvi_media_t media;
+  _quvi_media_t m = (_quvi_media_t) media;
 
-  _is_badhandle(handle);
-
-  media = (_quvi_media_t) handle;
+  _is_badhandle(media);
 
   /* start from the first */
-  if (!media->curr)
+  if (!m->curr)
     {
-      media->curr = media->url;
+      m->curr = m->url;
       return (QUVI_OK);
     }
 
   /* move to the next */
-  media->curr = media->curr->next;
-  if (!media->curr)
+  m->curr = m->curr->next;
+  if (!m->curr)
     {
-      media->curr = media->url;  /* reset */
+      m->curr = m->url;  /* reset */
       return (QUVI_LAST);
     }
 
@@ -731,9 +728,9 @@ QUVIcode quvi_next_media_url(quvi_media_t handle)
  * See Also:
  *  <quvi_supported_ident>
  */
-QUVIcode quvi_supported(quvi_t quvi, char *url)
+QUVIcode quvi_supported(quvi_t session, char *url)
 {
-  return quvi_supported_ident(quvi, url, NULL);
+  return quvi_supported_ident(session, url, NULL);
 }
 
 static QUVIcode _ident_getprop(_quvi_ident_t i, QUVIidentProperty p, ...)
@@ -749,11 +746,11 @@ static QUVIcode _ident_getprop(_quvi_ident_t i, QUVIidentProperty p, ...)
   int type;
 
   rc = QUVI_OK;
-  sp = 0;
-  lp = 0;
+  sp = NULL;
+  lp = NULL;
 #ifdef _UNUSED
-  dp = 0;
-  vp = 0;
+  dp = NULL;
+  vp = NULL;
 #endif
 
   va_start(arg, p);
@@ -829,23 +826,23 @@ static QUVIcode _ident_getprop(_quvi_ident_t i, QUVIidentProperty p, ...)
  * quvi_close(&q);
  * (end)
  */
-QUVIcode quvi_supported_ident(quvi_t quvi, char *url, quvi_ident_t *ident)
+QUVIcode quvi_supported_ident(quvi_t session, char *url, quvi_ident_t *ident)
 {
   _quvi_media_t m;
   QUVIcode rc;
 
   /* ident may be NULL */
-  _is_badhandle(quvi);
+  _is_badhandle(session);
   _is_invarg(url);
 
   m = calloc(1, sizeof(*m));
   if (!m)
     return (QUVI_MEM);
 
-  m->quvi = quvi;
+  m->quvi = session;
   freprintf(&m->page_url, "%s", url);
 
-  rc = find_host_script(m, (_quvi_ident_t*)ident);
+  rc = find_host_script(m, (_quvi_ident_t*) ident);
 
   quvi_parse_close((quvi_media_t)&m);
 
@@ -893,18 +890,20 @@ void quvi_supported_ident_close(quvi_ident_t *handle)
  * See Also:
  *  <quvi_supported_ident>
  */
-QUVIcode quvi_ident_getprop(quvi_ident_t i, QUVIidentProperty prop, ...)
+QUVIcode quvi_ident_getprop(quvi_ident_t ident,
+                            QUVIidentProperty property,
+                            ...)
 {
   va_list arg;
   void *p;
 
-  _is_badhandle(i);
+  _is_badhandle(ident);
 
-  va_start(arg, prop);
+  va_start(arg, property);
   p = va_arg(arg, void*);
   va_end(arg);
 
-  return (_ident_getprop(i,prop,p));
+  return (_ident_getprop(ident, property, p));
 }
 
 /*
@@ -920,7 +919,7 @@ QUVIcode quvi_ident_getprop(quvi_ident_t i, QUVIidentProperty prop, ...)
  * Returns:
  *  Non-zero value if an error occurred or QUVI_LAST, otherwise QUVI_OK.
  */
-QUVIcode quvi_next_supported_website(quvi_t handle,
+QUVIcode quvi_next_supported_website(quvi_t session,
                                      char **domain,
                                      char **formats)
 {
@@ -928,8 +927,8 @@ QUVIcode quvi_next_supported_website(quvi_t handle,
   _quvi_t quvi;
   QUVIcode rc;
 
-  _is_badhandle(handle);
-  quvi = (_quvi_t) handle;
+  _is_badhandle(session);
+  quvi = (_quvi_t) session;
 
   _is_invarg(domain);
   _is_invarg(formats);
@@ -969,7 +968,7 @@ QUVIcode quvi_next_supported_website(quvi_t handle,
         {
           _free(ident.domain);
           _free(ident.formats);
-          rc = quvi_next_supported_website(handle, domain, formats);
+          rc = quvi_next_supported_website(session, domain, formats);
         }
     }
 
@@ -988,7 +987,7 @@ QUVIcode quvi_next_supported_website(quvi_t handle,
  * Returns:
  *  A null-terminated string. Do _not_ attempt to <quvi_free> it.
  */
-char *quvi_strerror(quvi_t handle, QUVIcode code)
+char *quvi_strerror(quvi_t session, QUVIcode code)
 {
   static const char *errormsgs[] =
   {
@@ -1005,7 +1004,7 @@ char *quvi_strerror(quvi_t handle, QUVIcode code)
     "invalid error code (internal _INTERNAL_QUVI_LAST)"
   };
 
-  _quvi_t quvi = (_quvi_t) handle;
+  _quvi_t quvi = (_quvi_t) session;
 
   if (quvi)
     {
@@ -1032,7 +1031,7 @@ char *quvi_strerror(quvi_t handle, QUVIcode code)
  * Returns:
  *  A null-terminated string. Do _not_ attempt to <quvi_free> it.
  */
-char *quvi_version(QUVIversion type)
+char *quvi_version(QUVIversion id)
 {
   static const char version[] = PACKAGE_VERSION;
   static const char version_long[] =
@@ -1056,7 +1055,7 @@ char *quvi_version(QUVIversion type)
 #endif
     ")";
 
-  if (type == QUVI_VERSION_LONG)
+  if (id == QUVI_VERSION_LONG)
     return ((char *)version_long);
 
   return ((char *)version);
@@ -1070,10 +1069,10 @@ char *quvi_version(QUVIversion type)
  * Parameters:
  *  pointer - Pointer to data
  */
-void quvi_free(void *ptr)
+void quvi_free(void *pointer)
 {
-  if (ptr != NULL)
-    free(ptr);
+  if (pointer != NULL)
+    free(pointer);
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */
