@@ -11,12 +11,12 @@ duplicates before you submit, the issue may have already been fixed.
 Write fixes:
 
 Visit our <Trac at http://sourceforge.net/apps/trac/quvi/report/3> for
-open issues. Read also <Coding style> and <Submitting patches>.
+open tickets. Read also <Coding style> and <Submitting patches>.
 
 Write support for additional websites:
 
 Visit our <Trac at http://sourceforge.net/apps/trac/quvi/report/3> for
-requests. See also <HOWTO: Webscript>.
+open tickets. See also <HOWTO: Webscript>.
 
 Gather data:
 
