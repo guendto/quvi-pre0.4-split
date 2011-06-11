@@ -1,5 +1,5 @@
 /* quvi
- * Copyright (C) 2009,2010,2011  Toni Gundogdu <legatvs@gmail.com>
+ * Copyright (C) 2009-2011  Toni Gundogdu <legatvs@gmail.com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -79,6 +79,11 @@ static void spew(const char *fmt, ...)
   va_start(ap, fmt);
   vfprintf(stdout, fmt, ap);
   va_end(ap);
+}
+
+static void dump_error(quvi_t quvi, QUVIcode rc)
+{
+  fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
 }
 
 static void handle_resolve_status(quvi_word type)
@@ -230,7 +235,7 @@ static void supported(quvi_t quvi)
           quvi_supported_ident_close(&ident);
         }
       else
-        spew_qe("error: %s\n", quvi_strerror(quvi, rc));
+        dump_error(quvi,rc);
     }
 
   exit(rc);
@@ -330,7 +335,7 @@ static void query_formats(quvi_t quvi)
           quvi_free(formats);
         }
       else
-        spew_qe("%s\n", quvi_strerror(quvi, rc));
+        dump_error(quvi,rc);
     }
 
   exit(rc);
@@ -638,11 +643,6 @@ static void dump_media(quvi_media_t media)
   else if (opts->old_given) ;
   else
     spew("  ]\n}\n");
-}
-
-static void dump_error(quvi_t quvi, QUVIcode rc)
-{
-  fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
 }
 
 static quvi_t init_quvi()
