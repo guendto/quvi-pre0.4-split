@@ -129,7 +129,7 @@ typedef enum
  * QUVIOPT_FETCHFUNCTION   - Callback function for fetching URLs
  * QUVIOPT_RESOLVEFUNCTION - Callback function for resolving URL redirections
  * QUVIOPT_VERIFYFUNCTION  - Callback function for verifying media URLs
- * QUVIOPT_WRITEFUNCTION   - Deprecated since 0.2.17, removed in 0.2.17
+ * QUVIOPT_WRITEFUNCTION   - Deprecated since 0.2.17, removed in 0.2.20
  * QUVIOPT_NOSHORTENED     - Deprecated since 0.2.16, removed in 0.2.20,
  *                            use <QUVIOPT_NORESOLVE> instead
  */
