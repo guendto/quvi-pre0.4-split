@@ -1,4 +1,40 @@
 
+0.2.17  Fri Jun 17 2011  Toni Gundogdu
+
+Changes: dist
+    - Remove --enable-verbose-test, set TEST_VERBOSE for same effect
+    - Rewrite doc/ files for NaturalDocs and place under doc/nd/
+    - Add doc/nd/ with NaturalDocs formatted text files
+        - These are not installed with quvi, see also --with-doc below
+    - Bump libcurl prerequisite to 7.18.2 (#58)
+    - Rename --with-man -> --with-manual
+    - Remove --with-doc
+        - Apart from doc/man1/quvi.1, nothing is installed from doc/
+        - See also --with-manual
+
+Changes: API
+    - Mark QUVIOPT_WRITEFUNCTION as deprecated (removed in 0.2.20)
+        - Remove QUVI_WRITEFUNC_ABORT
+        - Remove quvi_callback_write
+    - Rewrite header files to use NaturalDocs comments instead
+        - Move function descriptions to src/lib/*_api.c
+    - Add quvi_query_formats
+
+Changes: quvi
+    - Make minor changes to "--support arg" output
+    - Add --query-formats
+
+Changes: Webscripts
+    - academicearth.lua: Rewrite to redirect to Blip
+    - collegehumor.lua: Add support for dorkly (#55)
+        - Thanks to Lionel Elie Mamane for the original patch
+    - vimeo.lua: Handle player.vimeo.com URLs (#56)
+        - Thanks Lionel
+
+Fixes: Webscripts
+    - bikeradar.lua: Title parsing
+
+
 0.2.16  Sat May 21 2011  Toni Gundogdu
 
 Changes: quvi
