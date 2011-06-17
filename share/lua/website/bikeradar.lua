@@ -48,10 +48,10 @@ function parse(self)
 
     local page = quvi.fetch(self.page_url)
 
-    local _,_,s = page:find('<meta name="og:title" content="(.-)"/>')
+    local _,_,s = page:find('"og:title" content="(.-)"/>')
     self.title  = s or error("no match: media title")
 
-    local _,_,s = page:find('name="og:image" content="(.-)"')
+    local _,_,s = page:find('"og:image" content="(.-)"')
     self.thumbnail_url = s or ''
 
     local _,_,s = page:find('<param name="flashvars" value="vcode=(%w+)&')
