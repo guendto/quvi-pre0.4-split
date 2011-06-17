@@ -1,5 +1,5 @@
 
-Title: Webscript guidelines
+Title: Webscript: Guidelines
 
 About: ident function
 
@@ -128,4 +128,4 @@ About: See also
 
 Related pages.
 
- * <Formats>
+ * <Overview: Formats>

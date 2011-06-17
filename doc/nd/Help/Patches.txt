@@ -1,7 +1,7 @@
 
-Title: Submitting patches
+Title: Help: Patches
 
-About: Before you submit
+About: Before you submit patches
 
 Considerations.
 
@@ -14,13 +14,13 @@ Considerations.
     % quvi -q TEST_URL > foo.json
 (end)
 
- * Please read also <Coding style>
+ * Please read also <Help: Style>
 
 
 About: Creating a patch
 
-Please submit your contributions in the <patch at http://is.gd/lJdP1u>
-format.
+Please submit your contributions in the <patch at
+http://en.wikipedia.org/wiki/Patch_%28Unix%29> format.
 
 Create your patches with <git at http://git-scm.com/>:
   * Check for unnecessary whitespace with "git diff --check" and fix them

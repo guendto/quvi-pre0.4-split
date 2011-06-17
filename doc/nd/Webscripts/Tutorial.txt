@@ -1,12 +1,12 @@
 
-Title: HOWTO: Webscript
+Title: Webscript: Tutorial
 
 About: General tips
 
 General tips and recommendations.
 
- * Read <Coding style> and <Webscript guidelines>
- * Work with the development code, read <Development>
+ * Read <Help: Style> and <Webscript: Guidelines>
+ * Work with the development code, read <Help: Development>
  * Use git, this documentation uses git exclusively
  * Amp up libquvi verbosity
 
@@ -84,7 +84,7 @@ https://addons.mozilla.org/en-US/firefox/addon/live-http-headers/>.
 
 About: Once a website is chosen
 
-Read <Webscript guidelines>. Go over the existing scripts for examples.
+Read <Webscript: Guidelines>. Go over the existing scripts for examples.
 Write down how your website provides the required data and how you could
 parse it in your webscript.
 
@@ -115,7 +115,7 @@ Please read:
  * $top_srcdir/share/lua/website/README
 
 This README covers the webscript functions. Be sure to read the
-<Webscript guidelines> as well.
+<Webscript: Guidelines> as well.
 
 
 About: Writing a webscript
@@ -227,7 +227,7 @@ r.formats:
 
 Leave it as it is. Let's assume that foo.bar only supports
 one format. The formats are a bit more complex topic to cover. You can
-read more about them in the <Formats>.
+read more about them in the <Overview: Formats>.
 
 (start code)
 r.formats = 'default'
@@ -382,6 +382,6 @@ About: See also
 
 Related pages.
 
- * <Webscript guidelines>
- * <Submitting patches>
- * <Formats>
+ * <Webscript: Guidelines>
+ * <Overview: Formats>
+ * <Help: Patches>

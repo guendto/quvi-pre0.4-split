@@ -1,10 +1,14 @@
 
-Title: Coding style
+Title: Help: Style
 
 C:
 
 quvi project uses <astyle at http://astyle.sourceforge.net/> to reformat
 the C source code. See also $(top_srcdir)/scripts/astyle_c.sh.
+
+(start code)
+astyle --mode=c --style=gnu -c
+(end)
 
 Configure your editor to use the following settings.
 
