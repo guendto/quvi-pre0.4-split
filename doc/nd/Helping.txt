@@ -1,5 +1,5 @@
 
-Title: HOWTO: Help
+Title: Helping
 
 You can help with the quvi project in a number of ways.
 
