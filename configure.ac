@@ -232,7 +232,6 @@ AC_CONFIG_FILES([
     src/Makefile
     src/libquvi/Makefile
     src/libquvi/quvi/Makefile
-    src/libquvi/Overviews/Makefile
     src/quvi/Makefile
     examples/Makefile
     tests/Makefile

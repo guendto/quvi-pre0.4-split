@@ -32,7 +32,6 @@ scripts/Makefile.in
 share/Makefile.in
 src/Makefile.in
 src/libquvi/Makefile.in
-src/libquvi/Overviews/Makefile.in
 src/libquvi/quvi/Makefile.in
 src/quvi/Makefile.in
 tests/Makefile.in
