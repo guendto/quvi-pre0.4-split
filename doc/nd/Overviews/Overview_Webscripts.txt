@@ -1,17 +1,15 @@
 Title: Overview: Webscripts
 
-About: Parse URL
+About: Parsing
 
-To parse an URL, libquvi runs "webscripts" (or "website scripts").
-The parsed media details that are then returned to the application
-using the quvi API. Each _supported_ website has a corresponding
-script that was written specifically to handle that website. These
-scripts are written in <LUA at http://www.lua.org/about.html>.
+libquvi runs "webscripts" (or "website scripts") to parse the media
+details. These details are then returned to the applications using
+libquvi. The scripts are written in <LUA at http://www.lua.org/about.html>.
+There is a corresponding script for each supported website, although some
+exceptions to this rule exist.
 
-About: Technical differences
+About: Contributing
 
-The webscripts are typically very different from one another. Writing
-new ones and maintaining the existing ones are by far the most time
-consuming part of the project. If you are interested in contributing new
-scripts to the project, please see the existing scripts. They are the
-best starting place.
+If you are interested in contributing new scripts to the project,
+please see <HOWTO: Help> and <HOWTO: Webscript>. Patches (fixing or
+otherwise) are always welcome and appreciated.
