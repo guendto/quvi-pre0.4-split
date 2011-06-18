@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010,2011  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2011  Lionel Elie Mamane <lionel@mamane.lu>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -34,6 +34,14 @@ function ident(self)
     r.handles    = U.handles(self.page_url, {r.domain},
 		     {"/watch/%d+/", "/watch/yt-[^/]+/"})
     return r
+end
+
+-- Query available formats.
+function query_formats(self)
+    if not Metacafe.redirectp(self) then
+        self.formats = 'default'
+    end
+    return self
 end
 
 -- Parse media URL.
