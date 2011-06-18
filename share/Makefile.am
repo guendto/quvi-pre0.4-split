@@ -30,6 +30,7 @@ lua/website/google.lua \
 lua/website/guardian.lua \
 lua/website/liveleak.lua \
 lua/website/megavideo.lua \
+lua/website/metacafe.lua \
 lua/website/pluzz.lua \
 lua/website/publicsenat.lua \
 lua/website/sapo.lua \
