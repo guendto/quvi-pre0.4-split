@@ -111,9 +111,11 @@ Arguments to tests
     The test suite can check the returned against JSONs. Use the
     --json-file if you need to do this.
 
-    Note about the t/d/url.t:  you can tell the test to use the
-    (page) URL from the JSON instead of specifying it in the command
-    line with --url.
+    Tip: url.t can read page URL from the JSON with -j
+    For example:
+        prove -l t/d/url.t :: \
+            -q ../tmp/src/quvi/quvi -b ../share \
+            -j data/format/default/youtube.json
 
     Use the --ignore option if you need to ignore any of the JSON
     values. e.g.:
