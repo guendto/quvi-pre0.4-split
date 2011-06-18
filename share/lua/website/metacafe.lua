@@ -32,13 +32,17 @@ function ident(self)
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain},
-                    {"/watch/%d+/"})
+		     {"/watch/%d+/", "/watch/yt-[^/]+/"})
     return r
 end
 
 -- Parse media URL.
 function parse(self)
     self.host_id = "metacafe"
+
+    if Metacafe.redirectp(self) then
+        return self
+    end
 
     local U    = require 'quvi/util'
     local page = Metacafe.fetch_page(self, U)
@@ -65,6 +69,16 @@ end
 --
 -- Utility functions
 --
+
+function Metacafe.redirectp(self)
+    local _,_,s = self.page_url:find('/watch/yt%-([^/]+)/')
+    if s then
+        -- Hand over to youtube.lua
+        self.redirect_url = 'http://youtube.com/watch?v=' .. s
+        return true
+    end
+    return false
+end
 
 function Metacafe.fetch_page(self, U)
     self.page_url = Metacafe.normalize(self.page_url)
