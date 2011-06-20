@@ -28,12 +28,14 @@ function ident(self)
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "video.foxnews.com"
-    r.formats    = "default|best|bitrate"
+    r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url, {r.domain}, {"/v/%d+"}) or
-                   U.handles(self.page_url, {r.domain}, {"/v/embed%.js"}, {"id%=%d+"}) or
-                   U.handles(self.page_url, {r.domain}, {"/v/video%-embed%.html"}, {"video_id=%d+"})
+    r.handles    = U.handles(self.page_url, {r.domain}, {"/v/%d+"})
+                    or U.handles(self.page_url, {r.domain}, {"/v/embed%.js"},
+                        {"id%=%d+"})
+                    or U.handles(self.page_url, {r.domain},
+                        {"/v/video%-embed%.html"}, {"video_id=%d+"})
     return r
 end
 
@@ -97,40 +99,24 @@ end
 -- Utility functions
 --
 
-function Foxnews.fetch_smil(self, U)
-    Foxnews.normalize(self)
-
-    return quvi.fetch('http://video.foxnews.com/v/feed/video/' .. self.id .. '.smil')
-end
-
 function Foxnews.fetch_feed_js(self, U)
     self.page_url = Foxnews.normalize(self)
 
-    return quvi.fetch('http://video.foxnews.com/v/feed/video/' .. self.id .. '.js?template=grab')
+    return quvi.fetch('http://video.foxnews.com/v/feed/video/'
+            .. self.id .. '.js?template=grab')
 end
 
 function Foxnews.normalize(self) -- "Normalize" embedded URLs
     if self.page_url:find("/v/embed.js?id=",1,true) then
         self.page_url = self.page_url:gsub("/v/embed%.js%?id=(%d+)", "/v/%1/")
     elseif self.page_url:find("/v/video-embed.html?video_id=",1,true) then
-        self.page_url = self.page_url:gsub("/v/video%-embed%.html%?video_id=(%d+)", "/v/%1/")
+        self.page_url =
+            self.page_url:gsub("/v/video%-embed%.html%?video_id=(%d+)",
+                               "/v/%1/")
     end
     local _, ie, s = self.page_url:find("/v/(%d+)")
     self.id = s or error("no match: media id")
     self.page_url = self.page_url:sub(1, ie)
-end
-
-function Foxnews.iter_formats_smil(smil, U)
-    local _,_,base = smil:find('<meta name="httpBase" content="[^"]+"')
-    if not base then
-       error("no match: httpBase")
-    end
-    local t = {}
-    for url, br in vpp:gfind('<video src="[^"]+" system-bitrate="[^"]+"') do
-        table.insert(t, {url=base .. "/" .. url, bitrate=br})
-    end
-
-    return t
 end
 
 function Foxnews.iter_formats_js(page, U)
@@ -144,9 +130,10 @@ function Foxnews.iter_formats_js(page, U)
         local format = {}
         for key,value in attrs:gfind('"(.-)":"(.-)"') do
             format[key]=value
-	end
+	    end
         if format.rel == "stream" then
-            for _, key in pairs({"framerate","bitrate","height","duration","width"}) do
+            local a = {"framerate","bitrate","height","duration","width"}
+            for _, key in pairs(a) do
                 if format[key] then
                     format[key]=tonumber(format[key])
                 end
@@ -173,7 +160,7 @@ function Foxnews.iter_thumbnails_js(page, U)
         local thumb = {}
         for key,value in attrs:gfind('"(.-)":"(.-)"') do
             thumb[key]=value
-	end
+	    end
         table.insert(t, thumb)
     end
 
