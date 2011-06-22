@@ -20,6 +20,8 @@
 -- 02110-1301  USA
 --
 
+local Xvideos = {} -- Utility functions unique to this script
+
 -- Identify the script.
 function ident (self)
     package.path = self.script_dir .. '/?.lua'
@@ -29,6 +31,7 @@ function ident (self)
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
+    Xvideos.normalize(self)
     r.handles    = U.handles(self.page_url, {r.domain}, {"/video%d+/"})
     return r
 end
@@ -42,6 +45,7 @@ end
 -- Parse media URL.
 function parse (self)
     self.host_id = "xvideos"
+    Xvideos.normalize(self)
     local page   = quvi.fetch(self.page_url)
 
     local _,_,s = page:find("<title>(.-)%s+-%s+XVID")
@@ -50,12 +54,29 @@ function parse (self)
     local _,_,s = page:find("id_video=(.-)&amp;")
     self.id     = s or error ("no match: media id")
 
+    local _,_,s = page:find("url_bigthumb=(.-)&amp;")
+    self.thumbnail_url = s or ''
+
     local _,_,s = page:find("flv_url=(.-)&amp;")
     s           = s or error ("no match: flv url")
     local U     = require 'quvi/util'
     self.url    = {U.unescape(s)}
 
     return self
+end
+
+--
+-- Utility functions
+--
+
+function Xvideos.normalize(self) -- "Normalize" embedded URL
+    if not self.page_url then return end
+    -- http://flashservice.xvideos.com/embedframe/ID to
+    -- http://www.xvideos.com/videoID/
+    local url = self.page_url
+    url = url:gsub("flashservice.xvideos.com", "www.xvideos.com")
+    url = url:gsub("/embedframe/", "/video")
+    self.page_url = url
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
