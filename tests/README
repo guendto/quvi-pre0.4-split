@@ -128,6 +128,10 @@ Arguments to tests
     NOTE: The test suite ignores some of the values (e.g. media URL,
     thumbnail URL) by default.
 
+Environment:
+
+    Set TEST_VERBOSE to amp up the verbosity level of the tests.
+
 Data: JSON
 
     The JSON data exist for confirming that quvi returns the expected
