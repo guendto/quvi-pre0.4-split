@@ -32,7 +32,7 @@ function ident (self)
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     Xvideos.normalize(self)
-    r.handles    = U.handles(self.page_url, {r.domain}, {"/video%d+/"})
+    r.handles    = U.handles(self.page_url, {r.domain}, {"/video%d+"})
     return r
 end
 
