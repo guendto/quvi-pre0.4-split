@@ -120,7 +120,7 @@ function Foxnews.normalize(self) -- "Normalize" embedded URLs
 end
 
 function Foxnews.iter_formats_js(page, U)
-    local _,_,formats = page:find('"media%-content":(%b[])')
+    local formats = Foxnews.find_set(page, '"media%-content"')
     if not formats then
         error("no match: media-content")
     end
@@ -150,7 +150,7 @@ function Foxnews.iter_formats_js(page, U)
 end
 
 function Foxnews.iter_thumbnails_js(page, U)
-    local _,_,thumbs = page:find('"media%-thumbnail":(%b[])')
+    local thumbs = Foxnews.find_set(page, '"media%-thumbnail"')
     if not thumbs then
         return {}
     end
@@ -197,6 +197,14 @@ function Foxnews.to_s(t)
     else
         return string.format("%s_%sp", t.width, t.height)
     end
+end
+
+function Foxnews.find_set(str, label)
+    local _, _, r = str:find(label .. ':(%b[])')
+    if not r then
+        _, _, r = str:find(label .. ':(%b{})')
+    end
+    return r
 end
 
 -- Local Variables: **
