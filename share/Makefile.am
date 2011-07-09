@@ -44,6 +44,7 @@ lua/website/ted.lua \
 lua/website/tmunderground.lua \
 lua/website/theonion.lua \
 lua/website/vimeo.lua \
+lua/website/yfrog.lua \
 lua/website/youtube.lua
 
 if ENABLE_NSFW
