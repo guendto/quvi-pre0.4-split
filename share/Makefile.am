@@ -11,6 +11,7 @@ lua/website/quvi/url.lua \
 lua/website/quvi/util.lua \
 lua/website/academicearth.lua \
 lua/website/arte.lua \
+lua/website/audioboo.lua \
 lua/website/bikeradar.lua \
 lua/website/blip.lua \
 lua/website/bloomberg.lua \
