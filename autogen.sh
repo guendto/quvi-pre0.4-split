@@ -42,7 +42,6 @@ Run without options to (re)generate the configuration files."
   exit 0
 }
 
-clean_flag=off
 while [ $# -gt 0 ]
 do
   case "$1" in
