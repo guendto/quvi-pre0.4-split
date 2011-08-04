@@ -1,4 +1,13 @@
 
+0.2.19  Fri Aug 05 2011  Toni Gundogdu
+
+Fixes: Webscripts
+    - ted.lua: attempt to index local 's' (#65)
+    - youtube.lua: no match: fmt_url_map (#63)
+        - Thanks to Zefram <zefram@fysh.org> for the patch
+    - funnyordie.lua: no match: flv url (#64)
+
+
 0.2.18  Mon Jul 18 2011  Toni Gundogdu
 
 Changes: Webscripts
