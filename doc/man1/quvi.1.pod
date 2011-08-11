@@ -133,12 +133,9 @@ Query available formats to an URL.
 
 =item B<-f, --format> I<arg> (=default)
 
-Get format I<arg> of the media. I<arg> can also be C<help> or C<list>.
-The resulting format may be different from the I<arg> if the library
-was unable to get the requested format.
-
-I<arg> C<list> is deprecated and will be removed in 0.2.20. Use
-C<--query-formats> instead.
+Get format I<arg> of the media. The resulting format may be different
+from the I<arg> if the library was unable to get the requested format.
+See also C<--query-formats>.
 
 =item B<--agent> I<arg> (=Mozilla/5.0)
 
@@ -269,8 +266,6 @@ quvi exits with 0 on success and E<gt>0 if an error occurred.
  QUVI_CALLBACK         = 0x42, network callback error occurred
  QUVI_ICONV            = 0x43, libiconv error occurred
  QUVI_LUA              = 0x44, lua error occurred
- -- Deprecated (removed in 0.2.20)
- QUVI_PCRE             = 0x40, libpcre error occurred, depr. since 0.2.9
 
 =head1 DEBUGGING TIPS
 
