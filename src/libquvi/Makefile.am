@@ -1,11 +1,11 @@
 
 SUBDIRS = quvi
+EXTRA_DIST = depr_api.c
 
 src = \
     quvi_api.c \
     net_api.c \
     llst_api.c \
-    depr_api.c \
     curl_wrap.c \
     lua_wrap.c \
     net_wrap.c \
