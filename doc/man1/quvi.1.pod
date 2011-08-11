@@ -131,7 +131,7 @@ Enable all categories of webscripts.
 
 Query available formats to an URL.
 
-=item B<-f, --format> I<arg>
+=item B<-f, --format> I<arg> (=default)
 
 Get format I<arg> of the media. I<arg> can also be C<help> or C<list>.
 The resulting format may be different from the I<arg> if the library
@@ -140,7 +140,7 @@ was unable to get the requested format.
 I<arg> C<list> is deprecated and will be removed in 0.2.20. Use
 C<--query-formats> instead.
 
-=item B<--agent> I<arg>
+=item B<--agent> I<arg> (=Mozilla/5.0)
 
 Identify quvi as I<arg> to the HTTP servers. Default is "Mozilla/5.0".
 
