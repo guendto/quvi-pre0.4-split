@@ -224,9 +224,6 @@ AC_ARG_WITH([manual],
     [with_manual=yes])
 AM_CONDITIONAL([WITH_MANUAL], [test x"$with_manual" != "xno"])
 
-# GNU ld?
-AM_CONDITIONAL([HAVE_GNU_LD], [test x"$with_gnu_ld" = "xyes"])
-
 AC_CONFIG_FILES([
     Makefile
     src/Makefile
