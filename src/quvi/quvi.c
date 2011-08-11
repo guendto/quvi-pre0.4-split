@@ -153,17 +153,6 @@ static int status_callback(long param, void *data)
   return (0);
 }
 
-static size_t write_callback(void *p, size_t size, size_t nmemb,
-                             void *data)
-{
-  size_t r = quvi_write_callback_default(p, size, nmemb, data);
-  /* Could do something useful here. */
-#ifdef _0
-  puts(__func__);
-#endif
-  return r;
-}
-
 /* Divided into smaller blocks. Otherwise -pedantic objects. */
 
 #define LICENSE_1 \
@@ -239,77 +228,6 @@ static void supported(quvi_t quvi)
     }
 
   exit(rc);
-}
-
-static const char depr_msg[] =
-  "Warning:\n"
-  "   '--format list' is deprecated and will be removed in\n"
-  "   quvi 0.2.20. Use --query-formats instead.";
-
-static void format_help(quvi_t quvi)
-{
-  int quit = 0;
-
-  if (strcmp(opts->format_arg, "help") == 0)
-    {
-      printf(
-        "Usage:\n"
-        "   --format arg                get format arg of media\n"
-        "   --format list               print domains with formats\n"
-        "   --format list arg           match arg to supported domain names\n"
-        "Examples:\n"
-        "   --format list youtube       print youtube formats\n"
-        "   --format fmt34_360p         get format fmt34_360p of media\n"
-        "%s\n",
-        depr_msg);
-      quit = 1;
-    }
-
-  else if (strcmp(opts->format_arg, "list") == 0)
-    {
-      int done = 0;
-      char *d, *f;
-
-      while(!done)
-        {
-          const int rc =
-            quvi_next_supported_website(quvi, &d, &f);
-
-          switch (rc)
-            {
-
-            case QUVI_OK:
-            {
-              int print = 1;
-
-              /* -f list <pattern> */
-              if (opts->inputs_num > 0)
-                print = strstr(d, (char *)opts->inputs[0]) != 0;
-
-              /* -f list */
-              if (print)
-                printf("%s:\n  %s\n\n", d, f);
-
-              quvi_free(d);
-              quvi_free(f);
-            }
-            break;
-
-            case QUVI_LAST:
-              done = 1;
-              break;
-
-            default:
-              spew_e("%s\n", quvi_strerror(quvi, rc));
-              break;
-            }
-        }
-      spew_qe("%s\n", depr_msg);
-      quit = 1;
-    }
-
-  if (quit)
-    exit(0);
 }
 
 /* Query which formats are available for the URL */
@@ -662,11 +580,6 @@ static quvi_t init_quvi()
   if (opts->format_given)
     quvi_setopt(quvi, QUVIOPT_FORMAT, opts->format_arg);
 
-  if (opts->no_shortened_given)
-    {
-      spew_e("warning: --no-shortened is deprecated, "
-             "use --no-resolve instead\n");
-    }
   quvi_setopt(quvi, QUVIOPT_NORESOLVE, opts->no_resolve_given);
   quvi_setopt(quvi, QUVIOPT_NOVERIFY, opts->no_verify_given);
 
@@ -688,7 +601,6 @@ static quvi_t init_quvi()
     }
 
   quvi_setopt(quvi, QUVIOPT_STATUSFUNCTION, status_callback);
-  quvi_setopt(quvi, QUVIOPT_WRITEFUNCTION, write_callback);
 
   /* Use the quvi created cURL handle. */
 
@@ -900,9 +812,6 @@ int main(int argc, char *argv[])
 
   if (opts->support_given)
     support(quvi);
-
-  if (opts->format_given)
-    format_help(quvi);
 
   /* User input */
 

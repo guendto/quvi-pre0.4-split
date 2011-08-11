@@ -29,9 +29,6 @@ option "exec"
     string typestr="arg"
     optional
 
-option "no-shortened"
-    s "Do not decompress shortened URLs (depr. use -r instead)"
-    optional
 option "no-resolve"
     r "Do not resolve redirections"
     optional
