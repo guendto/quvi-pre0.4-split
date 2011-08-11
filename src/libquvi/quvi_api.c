@@ -233,8 +233,6 @@ static QUVIcode _getinfo(_quvi_t quvi, QUVIinfo info, ...)
     {
     case QUVIINFO_CURL:
       _set_v(quvi->curl);
-    case QUVIINFO_CURLCODE:
-      _set_from_value_n(lp, quvi->curlcode);
     case QUVIINFO_RESPONSECODE:
       _set_from_value_n(lp, quvi->resp_code);
     default:

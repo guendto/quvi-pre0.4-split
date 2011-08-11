@@ -77,9 +77,6 @@ typedef enum
   QUVI_ICONV,
   QUVI_LUA,
   /* Add new ones below */
-  /* Deprecated: */
-  QUVI_PCRE = 0x40,
-  QUVI_CURL = 0x42
 } QUVIcode;
 
 /*
@@ -97,8 +94,6 @@ typedef enum
   QUVISTATUS_VERIFY,
   QUVISTATUS_RESOLVE,
   /* Add new ones below */
-  /* Deprecated: */
-  QUVISTATUS_SHORTENED = 0x2
 } QUVIstatus;
 
 /*
@@ -144,9 +139,6 @@ typedef enum
   QUVIOPT_RESOLVEFUNCTION,
   QUVIOPT_VERIFYFUNCTION,
   /* Add new ones below */
-  /* Deprecated: */
-  QUVIOPT_WRITEFUNCTION = 0x03,
-  QUVIOPT_NOSHORTENED = 0x4
 } QUVIoption;
 
 /*
@@ -188,9 +180,6 @@ typedef enum
   QUVIINFO_CURL         = QUVIINFO_VOID+1,
   QUVIINFO_RESPONSECODE = QUVIINFO_LONG+3,
   /* Add new ones below */
-  /* Deprecated: */
-  QUVIINFO_CURLCODE      = QUVIINFO_LONG+2,
-  QUVIINFO_HTTPCODE      = QUVIINFO_LONG+3,
 } QUVIinfo;
 
 #define QUVIPROPERTY_STRING     0x100000 /**< string type */
@@ -243,14 +232,6 @@ typedef enum
   QUVIPROP_MEDIATHUMBNAILURL  = QUVIPROPERTY_STRING+12,
   QUVIPROP_MEDIADURATION      = QUVIPROPERTY_DOUBLE+13,
   /* Add new ones below */
-  /* Deprecated: */
-  QUVIPROP_VIDEOID  = QUVIPROPERTY_STRING+4,
-  QUVIPROP_VIDEOURL = QUVIPROPERTY_STRING+5,
-  QUVIPROP_VIDEOFILELENGTH  = QUVIPROPERTY_DOUBLE+6,
-  QUVIPROP_VIDEOCONETNTTYPE = QUVIPROPERTY_STRING+7,
-  QUVIPROP_VIDEOFILESUFFIX  = QUVIPROPERTY_STRING+8,
-  QUVIPROP_HTTPCODE    = QUVIPROPERTY_LONG+9,
-  QUVIPROP_VIDEOFORMAT = QUVIPROPERTY_STRING+10
 } QUVIproperty;
 
 /*
@@ -281,7 +262,6 @@ typedef enum
 typedef void *quvi_t;
 typedef void *quvi_media_t;
 typedef void *quvi_ident_t;
-typedef void *quvi_video_t;
 
 /*
  * Typedef: Callbacks
@@ -331,7 +311,6 @@ extern "C" {
   QUVIcode quvi_query_formats(quvi_t, char *url, char **formats);
 
   QUVIcode quvi_next_media_url(quvi_media_t);
-  QUVIcode quvi_next_videolink(quvi_video_t);
 
   QUVIcode quvi_supported(quvi_t, char *url);
   QUVIcode quvi_supported_ident(quvi_t, char *url, quvi_ident_t*);
