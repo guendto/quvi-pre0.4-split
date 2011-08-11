@@ -2,7 +2,6 @@ ACLOCAL_AMFLAGS = -I m4
 
 EXTRA_DIST = \
 libquvi.pc.in \
-libquvi.ver \
 ChangeLog.pre-gitlog
 
 pkgconfigdir = $(libdir)/pkgconfig
