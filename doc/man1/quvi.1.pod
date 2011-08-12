@@ -26,22 +26,6 @@ Read also:
  * <http://en.wikipedia.org/wiki/Adobe_Flash#Flash_client_security>
  * <http://en.wikipedia.org/wiki/Adobe_Flash#Alternatives_to_Flash>
 
-=head1 NOTES - PROTOCOL CATEGORIES
-
-quvi supports "protocol categories", but for historical reasons it does not
-consider the non-HTTP webscripts unless explicitly told to do so. This
-behaviour will change in 0.2.20. Until then, the category switches must be
-used with quvi, e.g.:
-
- % quvi                    # HTTP protocol category (default)
- % quvi --category-rtmp    # RTMP protocol category webscripts only
- % quvi --category-all     # Webscripts of all supported categories
-
-For example:
-
- % quvi "RTMP_URL"      # No support
- % quvi -a "RTMP_URL"   # OK
-
 =head1 OPTIONS
 
 Unless an arg is specified in the command line, quvi reads from the
