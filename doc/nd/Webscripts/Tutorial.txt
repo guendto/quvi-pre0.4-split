@@ -95,17 +95,6 @@ such as RTMP, RTSP and MMS were later. This means that if your website
 uses, say RTMP, then you must define this in the `ident' function of
 your webscript. See francetelevisions.lua for an example of this.
 
-For historical reasons, quvi defaults to HTTP category scripts. This is
-likely changed in the 0.2.20. Until then, make sure you use the
---category-all (-a) or the --category-$scheme option when you run quvi.
-Otherwise quvi ignores the non-HTTP category scripts.
-
-For example:
-(start code)
-quvi --category-rtmp URL
-quvi -a URL
-(end)
-
 
 About: Additional reading
 
