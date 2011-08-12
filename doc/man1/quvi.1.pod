@@ -57,11 +57,6 @@ formats are available to an URL, use C<--query-formats> instead.
 
 Print the media details in XML.
 
-=item B<--old>
-
-Print the media details in the format used in the prior E<lt>0.2.4 versions
-of quvi.
-
 =item B<-q, --quiet>
 
 Turn off all output printed to stderr (excl. any errors). If

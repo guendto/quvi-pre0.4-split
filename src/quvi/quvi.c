@@ -354,20 +354,6 @@ static void dump_media_url_xml(parsed_url_t p, int i)
   _free(media_url);
 }
 
-static void dump_media_url_old(parsed_url_t p, int i)
-{
-  spew("link %02d  : %s\n", i, p->media_url);
-
-  if (p->content_length)
-    spew(":: length: %.0f\n", p->content_length);
-
-  if (strlen(p->file_suffix))
-    spew(":: suffix: %s\n", p->file_suffix);
-
-  if (strlen(p->content_type))
-    spew(":: content-type: %s\n", p->content_type);
-}
-
 static void dump_media_url_json(parsed_url_t p, int i, int prepend_newln)
 {
   if (prepend_newln)
@@ -406,8 +392,6 @@ static void dump_media_urls(quvi_media_t media)
 
       if (opts->xml_given)
         dump_media_url_xml(&p,i);
-      else if (opts->old_given)
-        dump_media_url_old(&p,i);
       else
         {
           dump_media_url_json(&p, i, i>1);
@@ -475,30 +459,6 @@ static void dump_media_xml(parsed_t p)
     }
 }
 
-static void dump_media_old(parsed_t p)
-{
-  spew(" > Dump media:\n"
-       "host    : %s\n"
-       "url     : %s\n"
-       "title   : %s\n"
-       "id      : %s\n"
-       "format  : %s (requested)\n",
-       p->host,
-       p->page_url,
-       p->page_title,
-       p->media_id,
-       p->format);
-
-  if (strlen(p->start_time))
-    spew("start time: %s\n", p->start_time);
-
-  if (strlen(p->thumb_url))
-    spew("thumbnail url: %s\n", p->thumb_url);
-
-  if (p->duration)
-    spew("duration: %.0f\n", p->duration);
-}
-
 static void dump_media_json(parsed_t p)
 {
   char *t;
@@ -549,8 +509,6 @@ static void dump_media(quvi_media_t media)
 
   if (opts->xml_given)
     dump_media_xml(&p);
-  else if (opts->old_given)
-    dump_media_old(&p);
   else
     dump_media_json(&p);
 
@@ -558,7 +516,6 @@ static void dump_media(quvi_media_t media)
 
   if (opts->xml_given)
     spew("</media>\n");
-  else if (opts->old_given) ;
   else
     spew("  ]\n}\n");
 }
