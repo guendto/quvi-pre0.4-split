@@ -89,7 +89,7 @@ QUVIcode quvi_init(quvi_t *session)
 
   /* Set quvi defaults. */
   quvi_setopt(quvi, QUVIOPT_FORMAT, "default");
-  quvi_setopt(quvi, QUVIOPT_CATEGORY, QUVIPROTO_HTTP);
+  quvi_setopt(quvi, QUVIOPT_CATEGORY, QUVIPROTO_ALL);
 
   return (init_lua(quvi));
 }
