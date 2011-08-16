@@ -293,16 +293,24 @@ static void support(quvi_t quvi)
 
 static void invoke_exec(quvi_media_t media)
 {
-  char *cmd, *media_url,  *q_media_url;
+  char *cmd, *media_url, *q_media_url;
+  char *page_title, *q_page_title, *t;
   int rc;
 
-  quvi_getprop(media, QUVIPROP_MEDIAURL, &media_url);
+  quvi_getprop(media, QUVIPROP_PAGETITLE, &page_title);
+  t = strdup(page_title);
+  t = strepl(t, "\"", "\\\""); /* Escape existing double quotation marks */
+  asprintf(&q_page_title, "\"%s\"", t); /* Put inside quotation marks */
+  _free(t);
 
+  quvi_getprop(media, QUVIPROP_MEDIAURL, &media_url);
   asprintf(&q_media_url, "\"%s\"", media_url);
 
   cmd = strdup(opts->exec_arg);
+  cmd = strepl(cmd, "%t", q_page_title);
   cmd = strepl(cmd, "%u", q_media_url);
 
+  _free(q_page_title);
   _free(q_media_url);
 
   rc = system(cmd);
