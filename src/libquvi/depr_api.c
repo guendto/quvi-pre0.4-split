@@ -26,7 +26,7 @@
 /*
  * Function: quvi_next_videolink
  *
- * Deprecated since 0.2.15. Removed in 0.2.20, use
+ * Deprecated since 0.2.15. Removed in 0.4.0, use
  * <quvi_next_media_url> instead.
  */
 QUVIcode quvi_next_videolink(void *handle);
@@ -34,7 +34,7 @@ QUVIcode quvi_next_videolink(void *handle);
 /*
  * Function: quvi_next_host
  *
- * Deprecated since 0.2.0. Removed in 0.2.20, use
+ * Deprecated since 0.2.0. Removed in 0.4.0, use
  * <quvi_next_supported_website> instead.
  */
 QUVIcode quvi_next_host(char **domain, char **formats);

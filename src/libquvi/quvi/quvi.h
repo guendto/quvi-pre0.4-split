@@ -53,8 +53,8 @@ typedef enum
  * QUVI_CALLBACK  - Network callback error occurred
  * QUVI_ICONV     - libiconv error occurred
  * QUVI_LUA       - liblua (or webscript) error occurred
- * QUVI_PCRE      - Deprecated since 0.2.9, removed in 0.2.20
- * QUVI_CURL      - Deprecated since 0.2.16, removed in 0.2.20,
+ * QUVI_PCRE      - Deprecated since 0.2.9, removed in 0.4.0
+ * QUVI_CURL      - Deprecated since 0.2.16, removed in 0.4.0,
  *                    use <QUVI_CALLBACK> instead
  */
 typedef enum
@@ -85,7 +85,7 @@ typedef enum
  * QUVISTATUS_FETCH   - Status changed to 'fetch' from URL
  * QUVISTATUS_VERIFY  - Status changed to 'verify' URL
  * QUVISTATUS_RESOLVE - Status changed to 'resolve' URL
- * QUVISTATUS_SHORTENED - Deprecated since 0.2.16, removed in 0.2.20,
+ * QUVISTATUS_SHORTENED - Deprecated since 0.2.16, removed in 0.4.0,
  *                          use <QUVISTATUS_RESOLVE> instead
  */
 typedef enum
@@ -124,8 +124,8 @@ typedef enum
  * QUVIOPT_FETCHFUNCTION   - Callback function for fetching URLs
  * QUVIOPT_RESOLVEFUNCTION - Callback function for resolving URL redirections
  * QUVIOPT_VERIFYFUNCTION  - Callback function for verifying media URLs
- * QUVIOPT_WRITEFUNCTION   - Deprecated since 0.2.17, removed in 0.2.20
- * QUVIOPT_NOSHORTENED     - Deprecated since 0.2.16, removed in 0.2.20,
+ * QUVIOPT_WRITEFUNCTION   - Deprecated since 0.2.17, removed in 0.4.0
+ * QUVIOPT_NOSHORTENED     - Deprecated since 0.2.16, removed in 0.4.0,
  *                            use <QUVIOPT_NORESOLVE> instead
  */
 typedef enum
@@ -171,8 +171,8 @@ typedef enum
  *
  * QUVIINFO_CURL         - libcurl session handle
  * QUVIINFO_RESPONSECODE - Last response code returned by server
- * QUVIINFO_CURLCODE     - Deprecated since 0.2.16, removed in 0.2.20
- * QUVIINFO_HTTPCODE     - Deprecated since 0.2.16, removed in 0.2.20
+ * QUVIINFO_CURLCODE     - Deprecated since 0.2.16, removed in 0.4.0
+ * QUVIINFO_HTTPCODE     - Deprecated since 0.2.16, removed in 0.4.0
  */
 typedef enum
 {
