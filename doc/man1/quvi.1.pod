@@ -70,8 +70,10 @@ Turn on libcurl verbose mode.
 =item B<--exec> I<arg>
 
 Invoke I<arg> after each successfully parsed URL. Each occurence of the
-following specifiers will be replaced (and double-quoted) in the I<arg>:
+following specifiers will be replaced (and quoted with double quatation
+marks) within the I<arg>:
 
+ %t  Page title
  %u  Media URL
 
 =item B<-r, --no-resolve>
