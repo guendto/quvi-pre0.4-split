@@ -16,7 +16,7 @@ plan skip_all =>
   'valgrind required for testing, specify with --valgrind-path'
   unless $c->{valgrind_path};
 
-plan tests => 11;
+plan tests => 9;
 
 # invalid option, make an exception to redirect to /dev/null),
 # gengetopt produced code checks and exits if this error occurs.
@@ -35,18 +35,6 @@ is($r, 0x0, "exit status == 0x0");    # 0x0 = QUVI_OK
 ($r) = $q->run_with_valgrind('--support');
 is($r, 0x0, "exit status == 0x0");    # 0x0 = QUVI_OK
 
-# --format help
-($r) = $q->run_with_valgrind('-qf', 'help');
-is($r, 0x0, "exit status == 0x0");    # 0x0 = QUVI_OK
-
-# --format list
-($r) = $q->run_with_valgrind('-qf', 'list');
-is($r, 0x0, "exit status == 0x0");    # 0x0 = QUVI_OK
-
-# --format list arg
-($r) = $q->run_with_valgrind('-qf', 'list', 'dailym');
-is($r, 0x0, "exit status == 0x0");    # 0x0 = QUVI_OK
-
 # --support arg
 ($r) =
   $q->run_with_valgrind('http://vimeo.com/1485507', '--support -qr');
@@ -54,6 +42,11 @@ is($r, 0x0, "exit status == 0x0");
 
 # fetch, parse, exit
 ($r) = $q->run_with_valgrind('http://vimeo.com/1485507', '-qr');
+is($r, 0x0, "exit status == 0x0");
+
+# fetch, parse, exec and exit
+($r) = $q->run_with_valgrind('http://vimeo.com/1485507',
+                             '-qr --exec "echo %t ; echo %u"');
 is($r, 0x0, "exit status == 0x0");
 
 # (fetch, parse) x 2, exit
@@ -74,3 +67,5 @@ is($r, 0x0, "exit status == 0x0");
                         '-qr'
                        );
 is($r, 0x0, "exit status == 0x0");
+
+# vim: set ts=2 sw=2 tw=72 expandtab:
