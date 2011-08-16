@@ -1,0 +1,10 @@
+-l=72
+-i=2
+-gnu
+-b
+-bext=~
+-pt=2
+-sbt=2
+-bt=2
+-bbt=2
+-nsfs
