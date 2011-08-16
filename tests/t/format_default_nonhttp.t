@@ -27,14 +27,16 @@ my $j = $q->get_json_obj;
 
 foreach (@files)
 {
-    my $e = $q->read_json($_);
-    my ($r, $o) = $q->run($e->{page_url}, '-qra');
-    is($r, 0, "quvi exit status == 0")
+  my $e = $q->read_json($_);
+  my ($r, $o) = $q->run($e->{page_url}, '-qra');
+  is($r, 0, "quvi exit status == 0")
+    or diag $e->{page_url};
+SKIP:
+  {
+    skip 'quvi exit status != 0', 1 if $r != 0;
+    cmp_deeply($j->decode($o), $e, "compare with $_")
       or diag $e->{page_url};
-  SKIP:
-    {
-        skip 'quvi exit status != 0', 1 if $r != 0;
-        cmp_deeply($j->decode($o), $e, "compare with $_")
-          or diag $e->{page_url};
-    }
+  }
 }
+
+# vim: set ts=2 sw=2 tw=72 expandtab:

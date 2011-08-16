@@ -23,8 +23,8 @@ test_redirect_url(    # Test self.redirect_url in academicearth.lua
                  );
 
 test_redirect_url(    # Test self.redirect_url in collegehumor.lua
-    "http://www.dorkly.com/embed/17349/ridiculous-way-to-get-ammo-to-teammates-in-battlefield-bad-company-2",
-    "data/resolve/redirect_url_dorkly.json"
+  "http://www.dorkly.com/embed/17349/ridiculous-way-to-get-ammo-to-teammates-in-battlefield-bad-company-2",
+  "data/resolve/redirect_url_dorkly.json"
                  );
 
 test_url_shortener(    # Test URL shortener support
@@ -34,30 +34,32 @@ test_url_shortener(    # Test URL shortener support
 
 sub test_redirect_url
 {
-    my ($url, $json) = @_;
-    my ($r, $o) = $q->run($url, "-q");
-    is($r, 0, "quvi exit status == 0") or diag $url;
-  SKIP:
-    {
-        skip 'quvi exit status != 0', 1 if $r != 0;
-        my $e = $q->read_json($json, 1)
-          ;    # 1=prepend --data-root (if specified in cmdline)
-        cmp_deeply($j->decode($o), $e, "compare with $json")
-          or diag $url;
-    }
+  my ($url, $json) = @_;
+  my ($r, $o) = $q->run($url, "-q");
+  is($r, 0, "quvi exit status == 0") or diag $url;
+SKIP:
+  {
+    skip 'quvi exit status != 0', 1 if $r != 0;
+    my $e = $q->read_json($json, 1)
+      ;    # 1=prepend --data-root (if specified in cmdline)
+    cmp_deeply($j->decode($o), $e, "compare with $json")
+      or diag $url;
+  }
 }
 
 sub test_url_shortener
 {
-    my ($url, $json) = @_;
-    my ($r, $o) = $q->run($url, "-q");
-    is($r, 0, "quvi exit status == 0") or diag $url;
-  SKIP:
-    {
-        skip 'quvi exit status != 0', 1 if $r != 0;
-        my $e = $q->read_json($json, 1)
-          ;    # 1=prepend --data-root (if specified in cmdline)
-        cmp_deeply($j->decode($o), $e, "compare with $json")
-          or diag $url;
-    }
+  my ($url, $json) = @_;
+  my ($r, $o) = $q->run($url, "-q");
+  is($r, 0, "quvi exit status == 0") or diag $url;
+SKIP:
+  {
+    skip 'quvi exit status != 0', 1 if $r != 0;
+    my $e = $q->read_json($json, 1)
+      ;    # 1=prepend --data-root (if specified in cmdline)
+    cmp_deeply($j->decode($o), $e, "compare with $json")
+      or diag $url;
+  }
 }
+
+# vim: set ts=2 sw=2 tw=72 expandtab:

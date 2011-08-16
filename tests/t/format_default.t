@@ -34,17 +34,19 @@ my $ign = qr|/ignore/(.*?)/|;
 
 foreach (@files)
 {
-    my $e = $q->read_json($_);
+  my $e = $q->read_json($_);
 
-    $q->mark_ignored(\$e, $1) if $_ =~ /$ign/;
+  $q->mark_ignored(\$e, $1) if $_ =~ /$ign/;
 
-    my ($r, $o) = $q->run($e->{page_url}, "-qr");
-    is($r, 0, "quvi exit status == 0")
+  my ($r, $o) = $q->run($e->{page_url}, "-qr");
+  is($r, 0, "quvi exit status == 0")
+    or diag $e->{page_url};
+SKIP:
+  {
+    skip 'quvi exit status != 0', 1 if $r != 0;
+    cmp_deeply($j->decode($o), $e, "compare with $_")
       or diag $e->{page_url};
-  SKIP:
-    {
-        skip 'quvi exit status != 0', 1 if $r != 0;
-        cmp_deeply($j->decode($o), $e, "compare with $_")
-          or diag $e->{page_url};
-    }
+  }
 }
+
+# vim: set ts=2 sw=2 tw=72 expandtab:

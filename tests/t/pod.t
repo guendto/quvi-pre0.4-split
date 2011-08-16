@@ -16,3 +16,5 @@ my @dirs = @{$config{pod_dir}} if $config{pod_dir};
 plan skip_all => "Nothing to test" if scalar @dirs == 0;
 
 all_pod_files_ok(all_pod_files(@dirs));
+
+# vim: set ts=2 sw=2 tw=72 expandtab:
