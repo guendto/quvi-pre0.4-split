@@ -130,7 +130,9 @@ Arguments to tests
 
 Environment:
 
-    Set TEST_VERBOSE to amp up the verbosity level of the tests.
+    Set TEST_VERBOSE to amp up the verbosity level of the tests. If you
+    run the tests manually with prove(1), use -v with prove command
+    instead. TEST_VERBOSE is only picked by the "make check".
 
 Data: JSON
 
