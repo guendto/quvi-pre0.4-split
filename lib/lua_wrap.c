@@ -717,14 +717,59 @@ QUVIcode run_ident_func(_quvi_ident_t ident, _quvi_llst_node_t node)
   return (rc);
 }
 
+static QUVIcode run_query_formats_func(_quvi_llst_node_t n,
+                                       _quvi_media_t m,
+                                       char **formats)
+{
+  static const char *f = "query_formats";
+  _quvi_lua_script_t s;
+  _quvi_t quvi;
+  lua_State *l;
+
+  assert(n != NULL);
+  assert(m != NULL);
+  assert(formats != NULL);
+
+  s = (_quvi_lua_script_t) n->data;
+  quvi = m->quvi;           /* seterr macro needs this. */
+  l = quvi->lua;
+
+  lua_getglobal(l,f);
+
+  if (!lua_isfunction(l, -1))
+    luaL_error(l, "%s: `%s' function not found", s->path, f);
+
+  lua_newtable(l);
+  setfield_reg_userdata(l, USERDATA_QUVI_MEDIA_T, m);
+  setfield_s(l, "page_url", m->page_url);
+  setfield_s(l, "redirect_url", "");
+
+  if (lua_pcall(l, 1, 1, 0))
+    {
+      freprintf(&quvi->errmsg, "%s", lua_tostring(l, -1));
+      return (QUVI_LUA);
+    }
+
+  if (lua_istable(l, -1))
+    {
+      freprintf(&m->redirect_url, "%s", getfield_s(l, "redirect_url", s, f));
+      if (strlen(m->redirect_url) == 0)
+        freprintf(formats, "%s", getfield_s(l, "formats", s, f));
+    }
+  else
+    luaL_error(l, "%s: expected `%s' function return a table", s->path, f);
+
+  lua_pop(l, 1);
+
+  return (QUVI_OK);
+}
+
 /* Executes the host script's "parse" function. */
 
-static QUVIcode
-run_parse_func(_quvi_llst_node_t n, _quvi_media_t m)
+static QUVIcode run_parse_func(_quvi_llst_node_t n, _quvi_media_t m)
 {
   static const char *f = "parse";
   _quvi_lua_script_t s;
-  char *script_dir;
   _quvi_t quvi;
   lua_State *l;
   QUVIcode rc;
@@ -746,19 +791,14 @@ run_parse_func(_quvi_llst_node_t n, _quvi_media_t m)
       return (QUVI_LUA);
     }
 
-  script_dir = dirname_from(s->path);
-
   lua_newtable(l);
   setfield_reg_userdata(l, USERDATA_QUVI_MEDIA_T, m);
   setfield_s(l, "requested_format", m->quvi->format);
   setfield_s(l, "page_url", m->page_url);
-  setfield_s(l, "script_dir", script_dir);
   setfield_s(l, "thumbnail_url", "");
   setfield_s(l, "redirect_url", "");
   setfield_s(l, "start_time", "");
   setfield_n(l, "duration", 0);
-
-  _free(script_dir);
 
   if (lua_pcall(l, 1, 1, 0))
     {
@@ -854,7 +894,7 @@ find_host_script_node(_quvi_media_t media, _quvi_ident_t *dst, QUVIcode *rc)
   return (NULL);
 }
 
-/* Match host script to the url */
+/* Match host script to the URL */
 QUVIcode find_host_script(_quvi_media_t media, _quvi_ident_t *ident)
 {
   QUVIcode rc;
@@ -862,7 +902,7 @@ QUVIcode find_host_script(_quvi_media_t media, _quvi_ident_t *ident)
   return (rc);
 }
 
-/* Match host script to the url and run parse func */
+/* Match host script to the URL and run parse func */
 QUVIcode find_host_script_and_parse(_quvi_media_t m)
 {
   _quvi_llst_node_t script;
@@ -874,6 +914,22 @@ QUVIcode find_host_script_and_parse(_quvi_media_t m)
 
   /* Found a script that handles the URL. */
   return (run_parse_func(script, m));
+}
+
+/* Match host script to the URL and query formats */
+QUVIcode find_host_script_and_query_formats(quvi_media_t m, char **formats)
+{
+  _quvi_llst_node_t script;
+  QUVIcode rc;
+
+  assert(formats != NULL);
+
+  script = find_host_script_node(m, NULL, &rc);
+  if (script == NULL)
+    return (rc);
+
+  /* Found a script that handles the URL. */
+  return (run_query_formats_func(script, m, formats));
 }
 
 /* vim: set ts=2 sw=2 tw=72 expandtab: */

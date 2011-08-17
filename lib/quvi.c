@@ -103,6 +103,78 @@ QUVIcode quvi_supported(quvi_t quvi, char *url)
   return quvi_supported_ident(quvi, url, NULL);
 }
 
+static QUVIcode resolve_unless_disabled(_quvi_media_t media)
+{
+  QUVIcode rc = QUVI_OK;
+
+  if (!media->quvi->no_resolve)
+    {
+      char *redirect_url = NULL;
+
+      rc = resolve_wrapper(media->quvi, media->page_url, &redirect_url);
+
+      if (rc != QUVI_OK)
+        return (rc);
+      else
+        {
+          if (redirect_url)
+            {
+              freprintf(&media->page_url, "%s", redirect_url);
+              _free(redirect_url);
+            }
+        }
+    }
+  return (rc);
+}
+
+
+typedef enum
+{
+  ParseFunc=0x00,
+  QueryFormatsFunc
+} FindScriptFunc;
+
+
+static QUVIcode resolve_and_find_script(_quvi_media_t m,
+                                        FindScriptFunc func,
+                                        char **formats)
+{
+  QUVIcode rc = resolve_unless_disabled(m);
+
+  if (rc != QUVI_OK)
+    return (rc);
+
+  while (1)
+    {
+      switch (func)
+        {
+        case ParseFunc:
+        default:
+          rc = find_host_script_and_parse(m);
+          break;
+        case QueryFormatsFunc:
+          rc = find_host_script_and_query_formats(m, formats);
+          break;
+        }
+      if (rc != QUVI_OK)
+        return (rc);
+      else
+        {
+          /* Check for "in-script redirection URL". Not to be confused
+           * with "resolving redirection URLs". */
+          if (strlen(m->redirect_url))
+            {
+              freprintf(&m->page_url, "%s", m->redirect_url);
+              continue;
+            }
+          else
+            break;
+        }
+    }
+  return (rc);
+}
+
+
 /* quvi_parse */
 
 QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
@@ -124,42 +196,9 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
 
   freprintf(&media->page_url, "%s", url);
 
-  if (!media->quvi->no_resolve)
-    {
-      char *redirect_url = NULL;
-
-      rc = resolve_wrapper(quvi, media->page_url, &redirect_url);
-
-      if (rc != QUVI_OK)
-        return (rc);
-      else
-        {
-          if (redirect_url)
-            {
-              freprintf(&media->page_url, "%s", redirect_url);
-              _free(redirect_url);
-            }
-        }
-    }
-
-  while (1)
-    {
-      rc = find_host_script_and_parse(media);
-      if (rc != QUVI_OK)
-        return (rc);
-      else
-        {
-          if (strlen(media->redirect_url))
-            {
-              /* Found an "in-script redirection instruction", not be
-               * confused with "resolving redirection" */
-              freprintf(&media->page_url, "%s", media->redirect_url);
-              continue;
-            }
-          else
-            break;
-        }
-    }
+  rc = resolve_and_find_script(media, ParseFunc, NULL);
+  if (rc != QUVI_OK)
+    return (rc);
 
 #ifdef HAVE_ICONV               /* Convert character set encoding to utf8. */
   if (media->charset)
@@ -175,9 +214,6 @@ QUVIcode quvi_parse(quvi_t quvi, char *url, quvi_media_t * dst)
       while (curr)
         {
           rc = verify_wrapper(media->quvi, curr);
-#ifdef _0
-          rc = query_file_length(media->quvi, curr);
-#endif
           if (rc != QUVI_OK)
             break;
           curr = curr->next;
@@ -652,6 +688,31 @@ QUVIcode quvi_getprop(quvi_media_t media, QUVIproperty prop, ...)
   va_end(arg);
 
   return (_getprop(media, prop, p));
+}
+
+/* quvi_query_formats - backported from 0.2.17 */
+QUVIcode quvi_query_formats(quvi_t session, char *url, char **formats)
+{
+  _quvi_media_t m;
+  QUVIcode rc;
+
+  is_badhandle(session);
+  is_invarg(url);
+  is_invarg(formats);
+  *formats = NULL;
+
+  m = calloc(1, sizeof(*m));
+  if (!m)
+    return (QUVI_MEM);
+
+  m->quvi = session;
+  freprintf(&m->page_url, "%s", url);
+
+  rc = resolve_and_find_script(m, QueryFormatsFunc, formats);
+
+  quvi_parse_close((quvi_media_t)&m);
+
+  return (rc);
 }
 
 /* quvi_next_media_url */
