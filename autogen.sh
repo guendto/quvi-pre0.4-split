@@ -14,7 +14,7 @@ gen_cmdline()
 gen_manual()
 {
   echo "Generate manual..."
-  M4=m4/version.m4 ; MAN=man1/quvi.1 ; POD=$MAN.pod
+  M4=m4/version.m4 ; MAN=doc/man1/quvi.1 ; POD=$MAN.pod
   VER=`perl -n -e'/(\d+)\.(\d+)\.(\d+)/ && print "$1.$2.$3"' < $M4` \
     && pod2man -c "quvi manual" -n quvi -s 1 -r $VER $POD $MAN
   return $?

@@ -232,8 +232,8 @@ AC_CONFIG_FILES([
     src/libquvi/quvi/Makefile
     src/libquvi/Makefile
     src/quvi/Makefile
-    man1/Makefile
     share/Makefile
+    doc/man1/Makefile
     doc/Makefile
     examples/Makefile
     tests/Makefile
