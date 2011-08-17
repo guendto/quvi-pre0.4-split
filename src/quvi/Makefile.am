@@ -29,3 +29,5 @@ quvi_LDADD =  \
     $(LTLIBICONV)
 
 endif # ENABLE_QUVI
+
+EXTRA_DIST = cmdline.ggo
