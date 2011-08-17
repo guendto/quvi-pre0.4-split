@@ -24,17 +24,18 @@
 -- on France Televisions
 
 -- Identify the script.
-function ident (self)
-    local t      = {}
-    t.domain     = "pluzz.fr"
-    t.formats    = "default"
+function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
-    t.categories = C.proto_mms
-    -- TODO: Use quvi/util:handles instead
-    t.handles    =
-        (self.page_url ~= nil and self.page_url:find (t.domain) ~= nil)
-    return t
+    local r      = {}
+    r.domain     = "pluzz.fr"
+    r.formats    = "default"
+    r.categories = C.proto_mms
+    local U      = require 'quvi/util'
+    r.handles    = U.handles(self.page_url,
+                    {r.domain}, {"/.-%d+-%d+-%d+-%d+h-%d+%.html"})
+-- http://www.pluzz.fr/sale-temps-pour-la-planete-2011-08-16-20h39.html
+    return r
 end
 
 -- Query available formats.
@@ -44,17 +45,17 @@ function query_formats(self)
 end
 
 -- Parse media URL.
-function parse (self)
-    self.host_id = "pluzz"
+function parse(self)
+    local page = quvi.fetch(self.page_url)
 
-    local page   = quvi.fetch (self.page_url)
-    local _,_,s  = page:find('<div id="playerCtnr">.-<a href="(.-)"')
+    local s = page:match('class="alert">(.-)<')
+    if s then
+        local H = require 'quvi/html'
+        error(string.gsub(s, '&#(%d+);', H.to_utf8))
+    end
 
-    local errmsg = 
-        "no match: media id (note: pluzz.fr videos expire 7 days after "
-        .. "their original broadcast on France Televisions)"
-
-    self.redirect_url = s or error (errmsg)
+    self.redirect_url = page:match('<div id="playerCtnr">.-<a href="(.-)"')
+                            or error("no match: redirect url")
 
     return self
 end
