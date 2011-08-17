@@ -968,6 +968,36 @@ extern "C" {
    */
   void quvi_free(void *ptr);
 
+  /**
+   * Queries available formats to the URL.  The query is done over an
+   * Internet connection.  It resolves any shortened URLs unless
+   * QUVIOPT_NORESOLVE is set explicitly with quvi_setopt.  This function
+   * checks also if an URL is supported, similarly to that quvi_supported.
+   *
+   * Unlike quvi_supported, quvi_supported_ident and
+   * quvi_next_supported_website which all return a static format ID list as
+   * specified in the webscript’s `ident’ function, quvi_query_formats
+   * constructs the list of format IDs dynamically for each URL.
+   *
+   * Please note that this function returns only ‘default’ to those URLs that
+   * have their corresponding webscripts handle only one (1) format. e.g.  No
+   * internet connection is required in such case and a static string
+   * (‘default’) is returned to the caller instead.
+   *
+   * @param session  Session handle
+   * @param url      URL (null-terminated string)
+   * @param formats  Null-terminated string (receives)
+   *
+   * @returns A non-zero value if an error occurred
+   *
+   * @note "formats" string must be quvi_free()d after use
+   *
+   * @since 0.2.16.1, backported from 0.2.17
+   */
+  QUVIcode quvi_query_formats(quvi_t session,
+                              char *url,
+                              char **formats);
+
   /** @} */ /* End of libquvi_util group. */
 
 #ifdef __cplusplus
