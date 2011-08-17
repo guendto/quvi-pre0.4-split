@@ -310,6 +310,41 @@ static void format_help(quvi_t quvi)
     exit(0);
 }
 
+static void dump_error(quvi_t quvi, QUVIcode rc)
+{
+  fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
+}
+
+/* Query which formats are available for the URL */
+static void query_formats(quvi_t quvi)
+{
+  QUVIcode rc;
+  int i;
+
+  if (opts->inputs_num < 1)
+    {
+      spew_qe("error: no input URLs\n");
+      exit (QUVI_INVARG);
+    }
+
+  for (i=0; i<opts->inputs_num; ++i)
+    {
+      char *formats = NULL;
+
+      rc = quvi_query_formats(quvi, (char*)opts->inputs[i], &formats);
+      if (rc == QUVI_OK)
+        {
+          spew("%10s : %s\n", formats, opts->inputs[i]);
+          quvi_free(formats);
+        }
+      else
+        dump_error(quvi,rc);
+    }
+
+  exit(rc);
+}
+
+
 /* dumps all supported hosts to stdout. */
 static void support(quvi_t quvi)
 {
@@ -614,11 +649,6 @@ static void dump_media(quvi_media_t media)
     spew("  ]\n}\n");
 }
 
-static void dump_error(quvi_t quvi, QUVIcode rc)
-{
-  fprintf(stderr, "error: %s\n", quvi_strerror(quvi, rc));
-}
-
 static quvi_t init_quvi()
 {
   QUVIcode rc;
@@ -868,6 +898,9 @@ int main(int argc, char *argv[])
   verbose_flag = !opts->quiet_given;
 
   quvi = init_quvi();
+
+  if (opts->query_formats_given)
+    query_formats(quvi);
 
   if (opts->support_given)
     support(quvi);
