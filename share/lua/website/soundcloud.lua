@@ -20,6 +20,8 @@
 -- 02110-1301  USA
 --
 
+local Soundcloud = {} -- Utility functions unique to this script
+
 -- Identify the script.
 function ident(self)
     package.path = self.script_dir .. '/?.lua'
@@ -29,13 +31,22 @@ function ident(self)
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url, {r.domain}, {"/.+/.+$"})
+    r.handles    = U.handles(self.page_url,
+                    {r.domain}, {"/.+/.+$", "/player.swf"})
     return r
 end
 
--- Parse video URL.
+-- Query available formats.
+function query_formats(self)
+    self.formats = 'default'
+    return self
+end
+
+-- Parse media URL.
 function parse(self)
     self.host_id  = "soundcloud"
+
+    Soundcloud.normalize(self)
 
     local page = quvi.fetch(self.page_url)
 
@@ -43,10 +54,10 @@ function parse(self)
     local metadata = s or error("no match: metadata")
 
     local _,_,s = metadata:find('"uid":"(%w-)"')
-    self.id = s or error("no match: video id")
+    self.id = s or error("no match: media id")
 
     local _,_,s = metadata:find('"title":"(.-)"')
-    local title  = s or error("no match: video title")
+    local title  = s or error("no match: media title")
     -- Unescape the Unicode strings if any
     -- the HTML will be unescaped by quvi itself
     self.title = string.gsub(title, "\\u(%d+)",
@@ -64,6 +75,22 @@ function parse(self)
     self.url  = { s }  or error("no match: stream URL")
 
     return self
+end
+
+--
+-- Utility functions
+--
+
+function Soundcloud.normalize(self) -- "Normalize" an embedded URL
+    local url = self.page_url:match('swf%?url=(.-)$')
+    if not url then return end
+
+    local U = require 'quvi/util'
+    local oe_url = string.format(
+        'http://soundcloud.com/oembed?url=%s&format=json', U.unescape(url))
+
+    local s = quvi.fetch(oe_url):match('href=\\"(.-)\\"')
+    self.page_url = s or error('no match: page url')
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:

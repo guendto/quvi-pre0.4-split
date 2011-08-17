@@ -23,26 +23,19 @@
 -- Based on get-flash-videos' Blip.pm
 -- <https://github.com/monsieurvideo/get-flash-videos/>
 
+local Blip = {} -- Utility functions unique to this script.
+
 -- Identify the script.
 function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
     r.domain     = "blip.tv"
-    --
-    -- Typically available formats: source ('Source'), sd ("Blip SD"),
-    -- hd ("Blip HD"). There are others but these three seem to be the
-    -- most widely available ones.
-    --
-    -- 'best' is determined by parsing the available formats, picking
-    -- the one with the highest resolution. 'default' to whatever the
-    -- website defines as such.
-    --
-    r.formats    = "default|best|sd|hd"
+    r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
     r.handles    = U.handles(self.page_url, {r.domain},
-                    -- paths: Room for improvement.
+                    -- Paths: Room for improvement.
                     {"/file/%d+",
                      "/play/%w+",
                      "/flash/%d+",
@@ -51,11 +44,49 @@ function ident(self)
     return r
 end
 
--- Parse video URL.
-function parse(self)
-    self.host_id  = "blip"
+-- Query formats.
+function query_formats(self)
+    local config  = Blip.get_config(self)
+    local formats = Blip.iter_formats(config)
 
-    local U = require 'quvi/util'
+    local t = {}
+    for _,v in pairs(formats) do
+        table.insert(t, Blip.to_s(v))
+    end
+
+    table.sort(t)
+    self.formats = table.concat(t, "|")
+
+    return self
+end
+
+-- Parse media URL.
+function parse(self)
+    self.host_id   = "blip"
+    local config,U = Blip.get_config(self)
+
+    local _,_,s = config:find('media:title>(.-)</')
+    self.title  = s or error('no match: media title')
+
+    local _,_,s   = config:find('<blip:smallThumbnail>(.-)<')
+    self.thumbnail_url = s or ''
+
+    local formats = Blip.iter_formats(config)
+    self.url      = {U.choose_format(self, formats,
+                                     Blip.choose_best,
+                                     Blip.choose_default,
+                                     Blip.to_s).url
+                        or error('no match: media url')}
+
+    return self
+end
+
+--
+-- Utility functions
+--
+
+function Blip.get_config(self)
+    local U       = require 'quvi/util'
     self.page_url = U.unescape(self.page_url)
 
     local _,_,id = self.page_url:find('/flash/(%d+)')
@@ -71,35 +102,14 @@ function parse(self)
         local page = quvi.fetch(self.page_url)
         _,_,id = page:find('data%-posts%-id="(.-)"')
     end
-    self.id = id or error('no match: video id')
+    self.id = id or error('no match: media id')
 
     local config_url = 'http://blip.tv/rss/flash/' .. self.id
-    local config = quvi.fetch(config_url, {fetch_type = 'config'})
 
-    local _,_,s = config:find('media:title>(.-)</')
-    self.title = s or error('no match: title')
-
-    local _,_,s   = config:find('<blip:smallThumbnail>(.-)<')
-    self.thumbnail_url = s or ''
- 
-    -- Choose format.
-    local found = iter_media(config)
-    local r_fmt = self.requested_format
-
-    local url = (r_fmt == 'default' or not found[r_fmt])
-                    and choose_default(found)
-                    or  found[r_fmt].url
-
-    url = (r_fmt == 'best')
-            and choose_best(found).url
-            or  url
-
-    self.url = {url or error('no match: media url')}
-
-    return self
+    return quvi.fetch(config_url, {fetch_type = 'config'}), U
 end
- 
-function iter_media(config)
+
+function Blip.iter_formats(config)
     local p = '<media:content url="(.-)"'
            .. '.-blip:role="(.-)"'
            .. '.-height="(.-)"'
@@ -107,44 +117,44 @@ function iter_media(config)
            .. '.-width="(.-)"'
     local t = {}
     for u,r,h,d,w in config:gfind(p) do
-        r = string.lower(r):gsub('blip%s+','')
-        r = r:gsub('%s+%d+','')
+        r = string.lower(r)
         r = r:gsub(' ','_')
---        print(string.format('(%s)',r))
-        w = (w ~= nil) and tonumber(w) or 0
-        h = (h ~= nil) and tonumber(h) or 0
---        print('iter_media:', u, r, w, h, d)
-        t[r] = {width=w, height=h, url=u, default=d}
+        r = r:gsub('[()]','')
+        w = (w ~= nil) and tonumber(w) or 0 -- Some media do not have 'width'
+        h = (h ~= nil) and tonumber(h) or 0 -- or 'height', e.g. audio
+        local _,_,s = u:find('%.(%w+)$')
+        table.insert(t, {width=w, height=h, url=u, default=d,
+                         role=r,  container=s})
     end
     return t
 end
 
-function choose_best(t)
-    local best = {role=nil, width=0, height=0, url=nil}
-    for k,v in pairs(t) do
-        if v.height > best.height then
-            if v.width >  best.width then
-                best.width  = v.width
-                best.height = v.height
-                best.url    = v.url
-                best.role   = k
-            end
+function Blip.choose_best(formats) -- Highest quality available
+    local r = {width=0, height=0, url=nil}
+    local U = require 'quvi/util'
+    for _,v in pairs(formats) do
+        if U.is_higher_quality(v,r) then
+            r = v
         end
     end
---    print('choose_best:', best.url, best.role, best.width, best.height)
-    return best
+--    for k,v in pairs(r) do print(k,v) end
+    return r
 end
- 
-function choose_default(t)
-    local url
-    for k,v in pairs(t) do
+
+function Blip.choose_default(formats) -- Website sets this flag, reuse it.
+    for _,v in pairs(formats) do
         if v.default == 'true' then
-            url = v.url
-            break
+--            for k,_v in pairs(v) do print(k,_v) end
+            return v
         end
     end
---    print('choose_default:', url)
-    return url
+    error('no match: default')
+end
+
+function Blip.to_s(t)
+    return (t.height > 0)
+        and string.format("%s_%s_%sp", t.container, t.role, t.height)
+        or  string.format("%s_%s", t.container, t.role)
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
