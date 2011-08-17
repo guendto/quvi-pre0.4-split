@@ -13,102 +13,15 @@ TESTS_POD_T = t/pod.t
 
 TESTS_LIB = lib/Test/Quvi.pm
 
-JSON = \
-data/resolve/inscript_redirect.json \
-data/resolve/shortened.json \
-data/format/default/megavideo.json \
-data/format/default/charlierose.json \
-data/format/default/liveleak.json \
-data/format/default/publicsenat.json \
-data/format/default/tmunderground.json \
-data/format/default/gaskrank.json \
-data/format/default/spiegel.json \
-data/format/default/funnyordie.json \
-data/format/default/funnyhub.json \
-data/format/default/academicearth.json \
-data/format/default/theonion.json \
-data/format/default/ted.json \
-data/format/default/tagtele.json \
-data/format/default/bikeradar.json \
-data/format/default/break.json \
-data/format/default/youtube.json \
-data/format/default/golem.json \
-data/format/default/google.json \
-data/format/default/guardian.json \
-data/format/default/guardian_audio.json \
-data/format/default/soundcloud.json \
-data/format/default/globo.json \
-data/format/default/cbsnews.json \
-data/format/default/sapo.json \
-data/format/default/bloomberg.json \
-data/format/default/buzzhumor.json \
-data/format/default/vimeo.json \
-data/format/default/blip.json \
-data/format/default/collegehumor.json \
-data/format/other/cbsnews_mp4_240p.json \
-data/format/other/ted_best.json \
-data/format/other/spiegel_best.json \
-data/format/other/spiegel_vp6_315p.json \
-data/format/other/spiegel_vp6_544p.json \
-data/format/other/cbsnews_mp4_480p.json \
-data/format/other/youtube_flv_360p.json \
-data/format/other/youtube_flv_480p.json \
-data/format/other/youtube_mp4_360p.json \
-data/format/other/youtube_mp4_720p.json \
-data/format/other/youtube_mp4_3072p.json \
-data/format/other/youtube_mp4_1080p.json \
-data/format/other/youtube_best.json \
-data/format/other/cbsnews_m4v_360p.json \
-data/format/other/golem_ipod.json \
-data/format/other/cbsnews_best.json \
-data/format/other/cbsnews_mp4_180p.json \
-data/format/other/cbsnews_m4v_480p.json \
-data/format/other/vimeo_best.json \
-data/format/other/golem_best.json \
-data/format/other/blip_best.json \
-data/format/other/blip_hd.json \
-data/format/other/blip_sd.json \
-data/format/other/collegehumor_best.json
-
-JSON_IGNORE = \
-data/format/default/ignore/length_bytes/dailymotion.json \
-data/format/other/ignore/length_bytes/dailymotion_h264_480p.json \
-data/format/other/ignore/length_bytes/dailymotion_best.json
-
-JSON_TODO = \
-data/format/default/todo/tvlux.json
-
-JSON_NLFY = \
-data/format/default/nlfy/sevenload.json \
-data/format/default/nlfy/clipfish.json
-
-JSON_NSFW = \
-data/format/default/nsfw/xvideos.json \
-data/format/default/nsfw/tube8.json \
-data/format/default/nsfw/keezmovies.json \
-data/format/default/nsfw/xhamster.json \
-data/format/default/nsfw/youjizz.json \
-data/format/default/nsfw/pornhub.json \
-data/format/default/nsfw/spankwire.json
-
-README = \
-README \
-data/format/default/ignore/README \
-data/format/default/todo/README \
-data/format/default/non-http/README \
-data/format/other/ignore/README
+JSON = data
 
 EXTRA_DIST = \
  $(README) $(TESTS_LIB) \
  $(TESTS_T) $(TESTS_NSFW_T) $(TESTS_D_T) $(TESTS_POD_T) \
- $(JSON) $(JSON_IGNORE) $(JSON_TODO) $(JSON_NLFY) $(JSON_NSFW)
+ $(JSON)
 
 
 PROVE_OPTS_COMMON = --nocolor
-
-if ENABLE_VERBOSE_TESTS
-PROVE_OPTS_COMMON += -v
-endif
 
 # Options for those tests that use Test::Quvi.
 
@@ -145,12 +58,13 @@ PROVE_OPTS_POD = $(PROVE_OPTS_COMMON)
 TESTQUVI_OPTS_POD = -p $(top_srcdir)/man1
 
 test: all
-	@ ok=1; for t in $(TESTS_T); do \
-		( $(PROVE) $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
+	@verbose=; test -n "$$TEST_VERBOSE" && verbose=-v; \
+	ok=1; for t in $(TESTS_T); do \
+		( $(PROVE) $$verbose $(PROVE_OPTS) $(top_srcdir)/tests/$$t \
 		:: $(TESTQUVI_OPTS) ) || ok=; \
 	done; \
 	for t in $(TESTS_POD_T); do \
-		( $(PROVE) $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
+		( $(PROVE) $$verbose $(PROVE_OPTS_POD) $(top_srcdir)/tests/$$t \
 		:: $(TESTQUVI_OPTS_POD) ) || ok=; \
 	done; \
 	if test -z "$$ok"; then exit 1; fi
