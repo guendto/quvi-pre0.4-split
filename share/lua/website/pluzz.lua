@@ -51,7 +51,7 @@ function parse(self)
     local s = page:match('class="alert">(.-)<')
     if s then
         local H = require 'quvi/html'
-        error(string.gsub(s, '&#(%d+);', H.to_utf8))
+        error(s:gsub('&#(%d+);', H.to_utf8))
     end
 
     self.redirect_url = page:match('<div id="playerCtnr">.-<a href="(.-)"')
