@@ -148,6 +148,10 @@ Enable category RTMP website scripts.
 
 Enable all categories of website scripts.
 
+=item B<-F, --query-formats>
+
+Query available formats to an URL.
+
 =item B<-f, --format> I<arg>
 
 Query for I<arg> format. I<arg> can also be C<help>. The resulting
@@ -180,59 +184,42 @@ Default is 30.
 
 =head1 EXAMPLES
 
+Put the URLs inside quotes when they are specified as the command line
+arguments to the program. This is the recommended practice.
+
 =over 4
 
-=item quvi URL
+=item quvi "URL"
 
-Query URL.
+Typical use.
 
-=item quvi --support
-
-Print supported website in the HTTP category.
-
-=item quvi --support --category-rtmp
-
-Same but in the RTMP category. See also L</NOTES - PROTOCOL CATEGORIES>.
-
-=item quvi --support URL
-
-Query (without an Internet connection) if libquvi can handle the URL.
-Note that this will fail with most "shortened" URLs.
-
-=item quvi YOUTUBE_URL
-
-Query for YouTube media stream URL.
-
-=item quvi YOUTUBE_URL -f best
-
-Query for "best" (available format).
-
-=item quvi YOUTUBE_URL -f best --xml
+=item quvi --xml "URL"
 
 Same but print the results in XML.
 
-=item quvi -f list youtube
+=item quvi -f best "URL"
 
-Match the search pattern "youtube" to those domain names returned
-by libquvi and print the results.
+Get for the best available format of the media. This assumes E<gt>1
+formats are supported, otherwise will fallback to default format.
 
-=item quvi -f list yout
+=item quvi -F "URL"
 
-Yields the same results.
+Query available formats to the URL. Use one of the returned format
+strings from this list with C<--format>.
 
-=item echo "URL" | quvi
+=item quvi --support
 
-Read input from the pipeline. Similarly:
+Print supported website in the HTTP category and exit.
 
-  % cat >> URLs
-  URL1
-  URL2
-  (^D)
-  % quvi < URLs
-  Or:
-  % quvi URLs
+=item quvi --support --category-rtmp
 
-Separate each URL with a newline.
+Same but print only those from the RTMP category. See also
+L</NOTES - PROTOCOL CATEGORIES>.
+
+=item quvi --support "URL"
+
+Check whether the URL is supported. This does not require an Internet
+connection but will fail with most "shortened" URLs.
 
 =back
 
