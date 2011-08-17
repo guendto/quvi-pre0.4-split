@@ -7,8 +7,8 @@ cachedir=autom4te.cache
 gen_cmdline()
 {
   echo "Generate cmdline..."
-  gengetopt < src/cmdline.ggo \
-    -C --unamed-opts=URL --output-dir src/ --no-version
+  gengetopt < src/quvi/cmdline.ggo \
+    -C --unamed-opts=URL --output-dir src/quvi/ --no-version
 }
 
 gen_manual()

@@ -29,7 +29,7 @@ PROVE_OPTS = -I $(top_srcdir)/tests/lib/
 PROVE_OPTS += $(PROVE_OPTS_COMMON)
 
 TESTQUVI_OPTS = \
- -q $(top_builddir)/src/quvi \
+ -q $(top_builddir)/src/quvi/quvi \
  -d $(top_srcdir)/tests \
  -b $(top_srcdir)/share
 

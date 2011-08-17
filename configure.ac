@@ -19,7 +19,7 @@ AC_SUBST(QUVI_CURRENT)
 AC_SUBST(QUVI_REVISION)
 AC_SUBST(QUVI_AGE)
 
-AC_CONFIG_SRCDIR([lib/quvi.c])
+AC_CONFIG_SRCDIR([src/libquvi/quvi.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([config.aux])
 AC_CONFIG_MACRO_DIR([m4])
@@ -240,14 +240,13 @@ AM_CONDITIONAL([HAVE_GNU_LD], [test x"$with_gnu_ld" = "xyes"])
 
 AC_CONFIG_FILES([
     Makefile
-    include/Makefile
-    include/quvi/Makefile
-    include/quvi/quvi.h
-    lib/Makefile
+    src/Makefile
+    src/libquvi/quvi/Makefile
+    src/libquvi/Makefile
+    src/quvi/Makefile
     man1/Makefile
     share/Makefile
     doc/Makefile
-    src/Makefile
     examples/Makefile
     tests/Makefile
     scripts/Makefile

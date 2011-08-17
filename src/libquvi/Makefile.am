@@ -1,4 +1,6 @@
 
+SUBDIRS = quvi
+
 if HAVE_GNU_LD
 EXTRA_LIBQUVI_LDFLAGS += -Wl,--version-script=$(top_srcdir)/libquvi.ver
 endif
@@ -28,8 +30,6 @@ lib_LTLIBRARIES = libquvi.la
 libquvi_la_SOURCES = $(src) $(hdr)
 
 libquvi_la_CPPFLAGS = \
-    -I$(top_builddir)/include \
-    -I$(top_srcdir)/include \
     -DDATADIR='"$(datadir)"' \
     -DPKGDATADIR='"$(pkgdatadir)"' \
     $(libcurl_CFLAGS) \
