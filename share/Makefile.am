@@ -22,7 +22,6 @@ lua/website/charlierose.lua \
 lua/website/clipfish.lua \
 lua/website/collegehumor.lua \
 lua/website/dailymotion.lua \
-lua/website/foundrymusic.lua \
 lua/website/foxnews.lua \
 lua/website/francetelevisions.lua \
 lua/website/funnyhub.lua \
@@ -51,13 +50,14 @@ lua/website/youtube.lua
 
 if ENABLE_NSFW
 DIST_lua += \
+lua/website/foundrymusic.lua \
 lua/website/keezmovies.lua \
 lua/website/tube8.lua \
+lua/website/spankwire.lua \
+lua/website/totallynsfw.lua \
 lua/website/xhamster.lua \
 lua/website/xvideos.lua \
-lua/website/youjizz.lua \
-lua/website/spankwire.lua \
-lua/website/totallynsfw.lua
+lua/website/youjizz.lua
 endif
 
 if ENABLE_TODO
