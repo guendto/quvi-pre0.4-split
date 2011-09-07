@@ -44,6 +44,7 @@ lua/website/tagtele.lua \
 lua/website/ted.lua \
 lua/website/tmunderground.lua \
 lua/website/theonion.lua \
+lua/website/videobash.lua \
 lua/website/vimeo.lua \
 lua/website/yfrog.lua \
 lua/website/youtube.lua
