@@ -47,7 +47,7 @@ function parse (self)
     local _,_,s = page:find("<title>(.-)%s+-")
     self.title  = s or error ("no match: media title")
 
-    local _,_,s = page:find("%?id=(.-)&")
+    local _,_,s = page:find("addFavorite%((%d+)")
     self.id     = s or error ("no match: media id")
 
     local _,_,s = page:find("video_url=(.-)%?")
