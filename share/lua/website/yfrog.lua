@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010-2011  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2011  Toni Gundogdu <legatvs@gmail.com>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -20,52 +20,43 @@
 -- 02110-1301  USA
 --
 
--- academicearth.org hosts videos at either blip.tv or youtube.com
--- This webscript uses the "redirect_url" to point to the source.
-
-local AcademicEarth = {} -- Utility functions specific to this script
-
 -- Identify the script.
 function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "academicearth%.org"
+    r.domain     = "yfrog%.com"
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url, {r.domain}, {"/lectures/"})
+    r.handles    = U.handles(self.page_url, {r.domain}, {"/%w+"})
     return r
 end
 
 -- Query available formats.
 function query_formats(self)
-    return AcademicEarth.get_redirect_url(self)
+    self.formats = 'default'
+    return self
 end
 
 -- Parse media URL.
 function parse(self)
-    return AcademicEarth.get_redirect_url(self)
-end
+    self.host_id = "yfrog"
 
---
--- Utility functions
---
+    self.id = self.page_url:match('%.com/(%w+)')
+                or error('no match: media id')
 
-function AcademicEarth.get_redirect_url(self)
     local page = quvi.fetch(self.page_url)
 
-    local _,_,s = page:find('ytID = "(.-)"')
-    if s then
-        self.redirect_url = 'http://youtube.com/e/' .. s
-    else
-        local _,_,s = page:find('embed src="(.-)"') -- blip
-        if s then
-            self.redirect_url = s
-        else
-            error('no match: blip or youtube pattern')
-        end
-    end
+    self.title = page:match('og:title" content="(.-)"')
+                    or error('no match: media title')
+
+    self.thumbnail_url = page:match('"og:image" content="(.-)"')
+                    or ''
+
+    self.url   = {page:match('input class="readonly" value="(.-)"')
+                    or error('no match: media url')}
+
     return self
 end
 

@@ -25,7 +25,7 @@ function ident (self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "sevenload.com"
+    r.domain     = "sevenload%.com"
     r.formats    = "default"
     r.categories = C.proto_http
     -- TODO: Use quvi/util:handles instead

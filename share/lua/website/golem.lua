@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010,2011  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2010-2011  Toni Gundogdu <legatvs@gmail.com>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -27,7 +27,7 @@ function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "video.golem.de"
+    r.domain     = "video%.golem%.de"
     r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'

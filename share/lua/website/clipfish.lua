@@ -25,7 +25,7 @@ function ident (self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "clipfish.de"
+    r.domain     = "clipfish%.de"
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'

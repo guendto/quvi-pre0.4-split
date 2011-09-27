@@ -29,7 +29,7 @@ function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "megavideo.com"
+    r.domain     = "megavideo%.com"
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'

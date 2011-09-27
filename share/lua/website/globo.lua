@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010,2011  quvi project
+-- Copyright (C) 2010-2011  quvi project
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -29,7 +29,7 @@ function ident (self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "video.globo.com"
+    r.domain     = "video%.globo%.com"
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'

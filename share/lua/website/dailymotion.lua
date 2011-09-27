@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010,2011  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2010-2011  Toni Gundogdu <legatvs@gmail.com>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -30,7 +30,7 @@ function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "dailymotion."
+    r.domain     = "dailymotion%.%w+"
     r.formats    = "default|best"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
@@ -117,13 +117,13 @@ function Dailymotion.iter_formats(page, U)
         error(e)
     end
     seq = U.unescape(seq)
-
+--[[
     local _,_,msg = seq:find('"message":"(.-)[<"]')
     if msg then
         msg = msg:gsub('+',' ')
         error(msg:gsub('\\',''))
     end
-
+]]--
     local _,_,vpp = seq:find('"videoPluginParameters":{(.-)}')
     if not vpp then
         -- See also <http://sourceforge.net/apps/trac/clive/ticket/4>

@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010,2011  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2010-2011  Toni Gundogdu <legatvs@gmail.com>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -29,7 +29,7 @@ function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "youtube.com"
+    r.domain     = "youtube%.com"
     r.formats    = "default|best"
     r.categories  = C.proto_http
     self.page_url = YouTube.normalize(self.page_url)
@@ -70,14 +70,23 @@ end
 -- Utility functions
 --
 
-function YouTube.normalize(url)
-    if not url then return url end
-    url = url:gsub("-nocookie", "")        -- youtube-nocookie.com
-    url = url:gsub("/v/", "/watch?v=")     -- embedded
-    url = url:gsub("/embed/", "/watch?v=") -- embedded
-    url = url:gsub("/e/", "/watch?v=")     -- embedded
-    url = url:gsub("youtu%.be/","youtube.com/watch?v=") -- youtu.be
-    return url
+function YouTube.normalize(s)
+    if not s then return s end
+    local U = require 'quvi/url'
+    local t = U.parse(s)
+    t.host = t.host:gsub('youtu%.be', 'youtube.com')
+    t.host = t.host:gsub('-nocookie', '')
+    if t.path then
+        local p = {'/embed/([-_%w]+)', '/%w/([-_%w]+)', '/([-_%w]+)'}
+        for _,v in pairs(p) do
+            local m = t.path:match(v)
+            if m and not t.query then
+                t.query = 'v=' .. m
+                t.path  = '/watch'
+            end
+        end
+    end
+    return U.build(t)
 end
 
 function YouTube.get_config(self)
@@ -218,5 +227,43 @@ end
 function YouTube.to_s(t)
     return string.format("fmt%02d_%sp", t.fmt_id, t.height)
 end
+
+--[[
+local a = {
+  {u='http://youtu.be/3WSQH__H1XE',             -- u=page url
+   e='http://youtube.com/watch?v=3WSQH__H1XE'}, -- e=expected url
+  {u='http://youtu.be/watch?v=3WSQH__H1XE',
+   e='http://youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://youtu.be/embed/3WSQH__H1XE',
+   e='http://youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://youtu.be/v/3WSQH__H1XE',
+   e='http://youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://youtu.be/e/3WSQH__H1XE',
+   e='http://youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://youtube.com/watch?v=3WSQH__H1XE',
+   e='http://youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://youtube.com/embed/3WSQH__H1XE',
+   e='http://youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://jp.youtube.com/watch?v=3WSQH__H1XE',
+   e='http://jp.youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://jp.youtube-nocookie.com/e/3WSQH__H1XE',
+   e='http://jp.youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://jp.youtube.com/embed/3WSQH__H1XE',
+   e='http://jp.youtube.com/watch?v=3WSQH__H1XE'},
+  {u='http://youtube.com/3WSQH__H1XE', -- invalid page url
+   e='http://youtube.com/watch?v=3WSQH__H1XE'}
+}
+local e = 0
+for i,v in pairs(a) do
+  local s = YouTube.normalize(v.u)
+  if s ~= v.e then
+    print('\n   input: ' .. v.u .. " (#" .. i .. ")")
+    print('expected: '   .. v.e)
+    print('     got: '   .. s)
+    e = e + 1
+  end
+end
+print('\nerrors: ' .. e)
+]]--
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:

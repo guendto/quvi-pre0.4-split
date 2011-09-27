@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010,2011  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2010-2011  Toni Gundogdu <legatvs@gmail.com>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -25,11 +25,12 @@ function ident (self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "liveleak.com"
+    r.domain     = "liveleak%.com"
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url, {r.domain}, {"view"}, {"i=[%d_+]"})
+    r.handles    = U.handles(self.page_url,
+                    {r.domain}, {"view"}, {"i=[%w_]+"})
     return r
 end
 

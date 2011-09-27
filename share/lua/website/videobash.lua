@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010-2011  Toni Gundogdu <legatvs@gmail.com>
+-- Copyright (C) 2011  Thomas Preud'homme <robotux@celest.fr>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -20,52 +20,39 @@
 -- 02110-1301  USA
 --
 
--- academicearth.org hosts videos at either blip.tv or youtube.com
--- This webscript uses the "redirect_url" to point to the source.
-
-local AcademicEarth = {} -- Utility functions specific to this script
-
 -- Identify the script.
-function ident(self)
+function ident (self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "academicearth%.org"
+    r.domain     = "videobash%.com"
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url, {r.domain}, {"/lectures/"})
+    r.handles    = U.handles(self.page_url, {r.domain}, {"/video_show/"})
     return r
 end
 
 -- Query available formats.
 function query_formats(self)
-    return AcademicEarth.get_redirect_url(self)
+    self.formats = 'default'
+    return self
 end
 
 -- Parse media URL.
-function parse(self)
-    return AcademicEarth.get_redirect_url(self)
-end
+function parse (self)
+    self.host_id = "videobash"
+    local page   = quvi.fetch(self.page_url)
 
---
--- Utility functions
---
+    local _,_,s = page:find("<title>(.-)%s+-")
+    self.title  = s or error ("no match: media title")
 
-function AcademicEarth.get_redirect_url(self)
-    local page = quvi.fetch(self.page_url)
+    local _,_,s = page:find("addFavorite%((%d+)")
+    self.id     = s or error ("no match: media id")
 
-    local _,_,s = page:find('ytID = "(.-)"')
-    if s then
-        self.redirect_url = 'http://youtube.com/e/' .. s
-    else
-        local _,_,s = page:find('embed src="(.-)"') -- blip
-        if s then
-            self.redirect_url = s
-        else
-            error('no match: blip or youtube pattern')
-        end
-    end
+    local _,_,s = page:find("video_url=(.-)%?")
+    self.url    = {s or error ("no match: flv")}
+
     return self
 end
 

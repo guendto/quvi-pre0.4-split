@@ -28,7 +28,7 @@ function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    local domains= {"collegehumor.com", "dorkly.com"}
+    local domains= {"collegehumor%.com", "dorkly%.com"}
     r.domain     = table.concat(domains, "|")
     r.formats    = "default|best"
     r.categories = C.proto_http

@@ -25,7 +25,7 @@ function ident (self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "videos.sapo.pt"
+    r.domain     = "videos%.sapo%.pt"
     r.formats    = "default"
     r.categories = C.proto_http
     -- TODO: Replace with LUA equivalent to Perl's "\w{20}".
