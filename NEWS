@@ -1,4 +1,13 @@
 
+0.2.16.2  Wed Oct 05 2011  Toni Gundogdu
+
+Changes: Webscripts
+    - Backport missing scripts from 0.4.0
+
+Fixes: Webscripts
+    - Backport from 0.4.0
+
+
 0.2.16.1  Thu Aug 18 2011  Toni Gundogdu
 
 Changes: API
