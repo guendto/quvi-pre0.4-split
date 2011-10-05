@@ -24,6 +24,7 @@ lua/website/clipfish.lua \
 lua/website/collegehumor.lua \
 lua/website/dailymotion.lua \
 lua/website/gaskrank.lua \
+lua/website/foundrymusic.lua \
 lua/website/foxnews.lua \
 lua/website/francetelevisions.lua \
 lua/website/funnyhub.lua \
@@ -51,7 +52,6 @@ lua/website/videobash.lua \
 lua/website/vimeo.lua \
 lua/website/yfrog.lua \
 lua/website/youtube.lua
-
 
 if ENABLE_NSFW
 DIST_lua += \
