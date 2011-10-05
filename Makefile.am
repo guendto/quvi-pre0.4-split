@@ -38,7 +38,8 @@ local-clean:
 
 ChangeLog:
 	@if test -f $(top_srcdir)/.git/HEAD; then \
-		git log --stat --after="Sun Nov 14 11:03:50 2010" > $@; \
+		git log --stat --name-only --date=short --abbrev-commit  \
+				--after="Sun Nov 14 11:03:50 2010" >$@; \
 	fi
 
 dist: ChangeLog
