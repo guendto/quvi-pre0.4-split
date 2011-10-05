@@ -55,7 +55,7 @@ endif
 # Test::Quvi) set of options.
 PROVE_OPTS_POD = $(PROVE_OPTS_COMMON)
 
-TESTQUVI_OPTS_POD = -p $(top_srcdir)/man1
+TESTQUVI_OPTS_POD = -p $(top_srcdir)/doc/man1
 
 test: all
 	@verbose=; test -n "$$TEST_VERBOSE" && verbose=-v; \
