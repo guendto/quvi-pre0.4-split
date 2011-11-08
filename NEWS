@@ -1,4 +1,9 @@
 
+0.2.16.3  Tue Nov 08 2011  Toni Gundogdu
+Changes:
+  - Backport scripts from libquvi-scripts 0.4.1
+
+
 0.2.16.2  Wed Oct 05 2011  Toni Gundogdu
 
 Changes: Webscripts
