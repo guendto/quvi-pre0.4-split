@@ -377,14 +377,31 @@ static void support(quvi_t quvi)
   exit(0);
 }
 
+static char * shell_escape( char *str )
+{
+  size_t len = strlen( str );
+  int i;
+  str = realloc( str, 2 * len + 1 );
+  if ( !str ) abort();
+  for ( i = len - 1; i >= 0; --i )
+    {
+      str[ 2 * i + 1 ] = str[ i ];
+      str[ 2 * i ]     = '\\';
+    }
+  str[ 2 * len ] = 0;
+  return str;
+}
+
 static void invoke_exec(quvi_media_t media)
 {
-  char *cmd, *media_url,  *q_media_url;
+  char *cmd, *media_url,  *q_media_url, *u;
   int rc;
 
   quvi_getprop(media, QUVIPROP_MEDIAURL, &media_url);
-
-  asprintf(&q_media_url, "\"%s\"", media_url);
+  u = strdup(media_url);
+  u = shell_escape(u);
+  asprintf(&q_media_url, "%s", u);
+  _free(u);
 
   cmd = strdup(opts->exec_arg);
   cmd = strepl(cmd, "%u", q_media_url);
