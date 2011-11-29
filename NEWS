@@ -1,4 +1,11 @@
 
+
+0.2.16.4  Tue Nov 29 2011  Toni Gundogdu
+Changes:
+  - Backport "Properly escape strings passed to shell" from quvi 0.4.1
+  - Backport scripts from libquvi-scripts 0.4.2
+
+
 0.2.16.3  Tue Nov 08 2011  Toni Gundogdu
 Changes:
   - Backport scripts from libquvi-scripts 0.4.1
