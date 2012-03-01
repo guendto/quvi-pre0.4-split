@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010  quvi project
+-- Copyright (C) 2012 Paul Kocialkowski <contact@paulk.fr>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -21,16 +21,15 @@
 --
 
 -- Identify the script.
-function ident (self)
+function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "youjizz%.com"
+    r.domain     = "pornhub%.com"
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url,
-                    {r.domain}, {"/videos/.-%.html"})
+    r.handles    = U.handles(self.page_url, {r.domain}, {"view_video.php"})
     return r
 end
 
@@ -41,18 +40,21 @@ function query_formats(self)
 end
 
 -- Parse media URL.
-function parse (self)
-    self.host_id = "youjizz"
+function parse(self)
+    self.host_id = "pornhub"
     local page   = quvi.fetch(self.page_url)
+    local U      = require 'quvi/util'
 
-    local _,_,s = page:find("<title>(.-)</")
-    self.title  = s or error ("no match: media title")
+    self.title = page:match('\'video_title\'%s+:%s+"(.-)"')
+                  or error("no match: media title")
+    self.title = self.title:gsub('+',' ')
 
-    local _,_,s = page:find("%?id=(%d+)")
-    self.id     = s or error ("no match: media id")
+    local s  = page:match('\'video_url\'%s+:%s+"(.-)"')
+                or error ("no match: config url")
+    self.url = { U.unescape(s) }
 
-    local _,_,s = page:find('addVariable%("file",encodeURIComponent%("(.-)"')
-    self.url    = {s or error ("no match: file")}
+    self.id = self.page_url:match('viewkey=(%d+)')
+                or error ("no match: media id")
 
     return self
 end

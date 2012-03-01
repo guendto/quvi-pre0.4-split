@@ -1,6 +1,6 @@
 
 -- quvi
--- Copyright (C) 2010  quvi project
+-- Copyright (C) 2012 Paul Kocialkowski <contact@paulk.fr>
 --
 -- This file is part of quvi <http://quvi.sourceforge.net/>.
 --
@@ -21,16 +21,15 @@
 --
 
 -- Identify the script.
-function ident (self)
+function ident(self)
     package.path = self.script_dir .. '/?.lua'
     local C      = require 'quvi/const'
     local r      = {}
-    r.domain     = "youjizz%.com"
+    r.domain     = "tnaflix%.com"
     r.formats    = "default"
     r.categories = C.proto_http
     local U      = require 'quvi/util'
-    r.handles    = U.handles(self.page_url,
-                    {r.domain}, {"/videos/.-%.html"})
+    r.handles    = U.handles(self.page_url, {r.domain}, {"/video"})
     return r
 end
 
@@ -41,18 +40,26 @@ function query_formats(self)
 end
 
 -- Parse media URL.
-function parse (self)
-    self.host_id = "youjizz"
+function parse(self)
+    self.host_id = "tnaflix"
     local page   = quvi.fetch(self.page_url)
 
-    local _,_,s = page:find("<title>(.-)</")
-    self.title  = s or error ("no match: media title")
+    self.title  = page:match('"og:title"%s+content="(.-)"')
+                    or error("no match: media title")
 
-    local _,_,s = page:find("%?id=(%d+)")
-    self.id     = s or error ("no match: media id")
+    local s     = page:match('%sflashvars.config = escape%("(.-)"')
+    local c_url = s or error ("no match: config url")
 
-    local _,_,s = page:find('addVariable%("file",encodeURIComponent%("(.-)"')
-    self.url    = {s or error ("no match: file")}
+    local c = quvi.fetch(c_url, {fetch_type='config'})
+
+    self.id = c:match('<VID>(.-)</VID>')
+                or error ("no match: media id")
+
+    local s = c:match('<videoLink>(.-)</videoLink>')
+                or error ("no match: video link")
+
+    local U     = require 'quvi/util'
+    self.url    = { U.unescape(s) }
 
     return self
 end
