@@ -21,9 +21,9 @@
 --
 
 -- Parse charset from data.
-function charset_from_data (data)
+function charset_from_data(data)
     local _,_,s = data:lower():find('charset="?([%w-_]+)')
-    return (s)
+    return s
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:

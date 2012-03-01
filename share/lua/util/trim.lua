@@ -20,20 +20,20 @@
 -- 02110-1301  USA
 --
 
-function trim_fields (video)
-    for k,v in pairs (video) do
-        if (type (v) == 'table') then
-            video[k] = trim_fields (v)
-        elseif (type (v) == 'string') then
-            video[k] = trim (v)
+function trim_fields(video)
+    for k,v in pairs(video) do
+        if (type(v) == 'table') then
+            video[k] = trim_fields(v)
+        elseif (type(v) == 'string') then
+            video[k] = trim(v)
         end
     end
     return video
 end
 
-function trim (s) -- Based on http://lua-users.org/wiki/StringTrim (trim1)
-    s = (s:gsub ("^%s*(.-)%s*$", "%1"))
-    return (s:gsub ("%s%s+", " "))
+function trim(s) -- Based on http://lua-users.org/wiki/StringTrim (trim1)
+    s = (s:gsub("^%s*(.-)%s*$", "%1"))
+    return (s:gsub("%s%s+", " "))
 end
 
 -- vim: set ts=4 sw=4 tw=72 expandtab:
