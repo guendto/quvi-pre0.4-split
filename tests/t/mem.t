@@ -60,7 +60,7 @@ is($r, 0x0, "exit status == 0x0");
 ($r) =
   $q->run_with_valgrind(
                         'http://vimeo.com/1485507',
-                        'http://megavideo.com/?v=HJVPVMTV',
+                        'http://vimeo.com/35798934',
                         '-qr'
                        );
 is($r, 0x0, "exit status == 0x0");
@@ -70,7 +70,7 @@ is($r, 0x0, "exit status == 0x0");
 ($r) =
   $q->run_with_valgrind(
                         'http://ww.vimeo.com/1485507',
-                        'http://megavideo.com/?v=HJVPVMTV',
+                        'http://vimeo.com/35798934',
                         '-qr'
                        );
 is($r, 0x0, "exit status == 0x0");
