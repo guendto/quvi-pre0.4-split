@@ -1,3 +1,82 @@
+v0.2.16.6 (2012-03-27) / Toni Gundogdu
+
+Toni Gundogdu:
+  - Backport: libquvi-scripts 0.4.4: Test data [30ad036]
+  - Backport: libquvi-scripts 0.4.4: util [f48f651]
+  - Backport: libquvi-scripts 0.4.4: webscript [56a2e14]
+  - FIX: Lua 5.2: Use luaL_newstate instead (#89) [2ea4b6e]
+  - FIX: Make verify c/b check against correct option [1706675]
+  - FIX: Use dirname(3) properly [144a413]
+
+ m4/version.m4                                  |    4 +-
+ share/Makefile.am                              |  120 ++++++++--------
+ share/lua/util/charset.lua                     |    5 +-
+ share/lua/util/content_type.lua                |   60 ++++----
+ share/lua/website/academicearth.lua            |    7 +-
+ share/lua/website/arte.lua                     |   21 +--
+ share/lua/website/bikeradar.lua                |   24 ++--
+ share/lua/website/blip.lua                     |   42 +++---
+ share/lua/website/bloomberg.lua                |   28 ++--
+ share/lua/website/break.lua                    |   28 ++--
+ share/lua/website/cbsnews.lua                  |   30 ++--
+ share/lua/website/charlierose.lua              |   22 +--
+ share/lua/website/clipfish.lua                 |   30 ++--
+ share/lua/website/collegehumor.lua             |   45 +++---
+ share/lua/website/dailymotion.lua              |   32 ++---
+ share/lua/website/foxnews.lua                  |   28 ++--
+ share/lua/website/francetelevisions.lua        |   24 ++--
+ share/lua/website/funnyhub.lua                 |   21 +--
+ share/lua/website/funnyordie.lua               |    2 +-
+ share/lua/website/gaskrank.lua                 |   19 +--
+ share/lua/website/globo.lua                    |   32 ++---
+ share/lua/website/golem.lua                    |   21 +--
+ share/lua/website/google.lua                   |   22 +--
+ share/lua/website/guardian.lua                 |    2 +-
+ share/lua/website/imdb.lua                     |    2 +-
+ share/lua/website/keezmovies.lua               |   19 +--
+ share/lua/website/liveleak.lua                 |   29 ++--
+ share/lua/website/metacafe.lua                 |   40 +++---
+ share/lua/website/mgnetwork.lua                |    2 +-
+ share/lua/website/publicsenat.lua              |   29 ++--
+ share/lua/website/quvi/url.lua                 |    4 +-
+ share/lua/website/quvi/util.lua                |    2 +-
+ share/lua/website/sapo.lua                     |   32 ++---
+ share/lua/website/sevenload.lua                |   33 ++---
+ share/lua/website/soundcloud.lua               |    2 +-
+ share/lua/website/spankwire.lua                |   23 +--
+ share/lua/website/spiegel.lua                  |   18 +--
+ share/lua/website/tagtele.lua                  |   26 ++--
+ share/lua/website/theonion.lua                 |   29 ++--
+ share/lua/website/tmunderground.lua            |   23 +--
+ share/lua/website/totallynsfw.lua              |   30 ++--
+ share/lua/website/tube8.lua                    |   19 +--
+ share/lua/website/videobash.lua                |   20 +--
+ share/lua/website/vimeo.lua                    |   44 +++---
+ share/lua/website/xhamster.lua                 |   26 ++--
+ share/lua/website/xvideos.lua                  |   32 +++--
+ share/lua/website/youjizz.lua                  |   21 +--
+ share/lua/website/youtube.lua                  |   43 +++---
+ src/libquvi/lua_wrap.c                         |   21 ++-
+ src/libquvi/net_wrap.c                         |    2 +-
+ src/libquvi/util.c                             |    9 --
+ src/libquvi/util.h                             |    1 -
+ tests/data/format/default/bikeradar.json       |   17 ---
+ tests/data/format/default/clipfish.json        |   17 +++
+ tests/data/format/default/fixme/README         |    4 +
+ tests/data/format/default/fixme/bikeradar.json |   17 +++
+ tests/data/format/default/fixme/globo.json     |   17 +++
+ tests/data/format/default/fixme/tube8.json     |   16 +++
+ tests/data/format/default/nlfy/clipfish.json   |   16 ---
+ tests/data/format/default/non-http/README      |   11 --
+ tests/data/format/default/todo/README          |    8 --
+ tests/data/format/default/todo/globo.json      |   17 ---
+ tests/data/format/default/todo/tube8.json      |   16 ---
+ tests/data/resolve/redirect_url_tcmag.json     |   18 +++
+ tests/data/resolve/redirect_url_ted.json       |   18 +++
+ tests/t/mem.t                                  |    4 +-
+ 66 files changed, 744 insertions(+), 702 deletions(-)
+
+
 0.2.16.5  Thu Mar 01 2012  Toni Gundogdu
 Changes:
   - Backport scripts from libquvi-scripts 0.4.3
